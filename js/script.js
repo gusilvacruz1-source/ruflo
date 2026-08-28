@@ -39,16 +39,17 @@ if (supportsHover && !reduceMotion) {
   });
 }
 
-// Logo da hero: inclina seguindo o mouse do visitante e gira ao clicar
-const heroSection = document.querySelector('.hero');
+// Logo da hero: gira sozinha por padrão, e reage ao mouse do visitante
+// só quando o cursor está sobre ela (evita travar a rotação automática
+// sempre que o mouse passa em qualquer ponto da hero).
 const heroLogo = document.querySelector('.hero__logo-3d');
 const heroLogoSpin = document.querySelector('.hero__logo-spin');
 
-if (heroSection && heroLogo && heroLogoSpin && supportsHover && !reduceMotion) {
+if (heroLogo && heroLogoSpin && supportsHover && !reduceMotion) {
   const maxLogoTilt = 26;
 
-  heroSection.addEventListener('mousemove', (e) => {
-    const rect = heroSection.getBoundingClientRect();
+  heroLogo.addEventListener('mousemove', (e) => {
+    const rect = heroLogo.getBoundingClientRect();
     const px = (e.clientX - rect.left) / rect.width;
     const py = (e.clientY - rect.top) / rect.height;
     const rotateY = (px - 0.5) * maxLogoTilt * 2;
@@ -58,7 +59,7 @@ if (heroSection && heroLogo && heroLogoSpin && supportsHover && !reduceMotion) {
     heroLogoSpin.style.transform = `rotateY(${rotateY}deg) rotateX(${rotateX}deg)`;
   });
 
-  heroSection.addEventListener('mouseleave', () => {
+  heroLogo.addEventListener('mouseleave', () => {
     heroLogoSpin.classList.remove('is-tracking');
     heroLogoSpin.style.transform = '';
   });
