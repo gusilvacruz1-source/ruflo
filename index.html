@@ -230,14 +230,15 @@
       <header class="head reveal">
         <span class="eyebrow">Agendamento</span>
         <h2 class="h2">Monte seu horário</h2>
-        <p class="lede">Três passos rápidos. No final abrimos o WhatsApp com tudo escrito — é só enviar e confirmar.</p>
+        <p class="lede">Quatro toques: serviço, barbeiro, dia e hora. No final abrimos o WhatsApp do profissional com tudo escrito — é só enviar e confirmar.</p>
       </header>
 
       <div class="booker reveal" id="booker">
         <ol class="steps" id="steps">
           <li class="is-active"><b>1</b> Serviço</li>
-          <li><b>2</b> Dia</li>
-          <li><b>3</b> Horário</li>
+          <li><b>2</b> Profissional</li>
+          <li><b>3</b> Dia</li>
+          <li><b>4</b> Horário</li>
         </ol>
 
         <div class="booker__body">
@@ -261,14 +262,46 @@
           </div>
 
           <!-- passo 2 -->
+          <!-- PARA EDITAR OS BARBEIROS: troque o nome e o data-phone de cada botão.
+               O data-phone é o WhatsApp que recebe o agendamento, no formato
+               55 + DDD + número, sem espaços nem traços. -->
           <div class="step" data-step="2" hidden>
+            <p class="step__q">Com quem você quer cortar?</p>
+            <div class="pros" id="proList">
+              <button type="button" class="pro pro--any" data-phone="5542998356212">
+                <span class="pro__av" aria-hidden="true">
+                  <svg viewBox="0 0 24 24"><path d="M20 6 9 17l-5-5"/></svg>
+                </span>
+                <b>Tanto faz</b>
+                <small>quem estiver livre</small>
+              </button>
+              <button type="button" class="pro" data-phone="5542999105509">
+                <span class="pro__av" aria-hidden="true">X</span>
+                <b>Xandinho</b>
+                <small>(42) 99910-5509</small>
+              </button>
+              <button type="button" class="pro" data-phone="5542999867017">
+                <span class="pro__av" aria-hidden="true">D</span>
+                <b>Danilo</b>
+                <small>(42) 99986-7017</small>
+              </button>
+              <button type="button" class="pro" data-phone="5542998356212">
+                <span class="pro__av" aria-hidden="true">A</span>
+                <b>Adriel</b>
+                <small>(42) 99835-6212</small>
+              </button>
+            </div>
+          </div>
+
+          <!-- passo 3 -->
+          <div class="step" data-step="3" hidden>
             <p class="step__q">Escolha o dia</p>
             <div class="days" id="dayList"></div>
             <p class="note">Domingo a barbearia não abre — por isso ele não aparece na lista.</p>
           </div>
 
-          <!-- passo 3 -->
-          <div class="step" data-step="3" hidden>
+          <!-- passo 4 -->
+          <div class="step" data-step="4" hidden>
             <p class="step__q">Escolha o horário</p>
             <div class="slots" id="slotList"></div>
             <p class="note" id="slotNote"></p>
@@ -279,6 +312,7 @@
         <div class="booker__foot">
           <div class="summary" id="summary" aria-live="polite">
             <span class="summary__item" data-k="svc">Serviço: <b>—</b></span>
+            <span class="summary__item" data-k="pro">Com: <b>—</b></span>
             <span class="summary__item" data-k="day">Dia: <b>—</b></span>
             <span class="summary__item" data-k="time">Horário: <b>—</b></span>
           </div>
@@ -376,7 +410,12 @@
           </li>
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-wa"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.2 16.1L2 22l6.1-1.2A10.4 10.4 0 1 0 20.5 3.5Z"/></svg>
-            <div><b>WhatsApp</b><a href="https://wa.me/5542998356212?text=Ol%C3%A1%2C%20Barbearia%20Danber!" target="_blank" rel="noopener">(42) 99835-6212</a></div>
+            <div>
+              <b>WhatsApp dos barbeiros</b>
+              <a href="https://wa.me/5542999105509?text=Ol%C3%A1%2C%20Xandinho!%20Vim%20pelo%20site%20da%20Danber." target="_blank" rel="noopener">Xandinho — (42) 99910-5509</a>
+              <a href="https://wa.me/5542999867017?text=Ol%C3%A1%2C%20Danilo!%20Vim%20pelo%20site%20da%20Danber." target="_blank" rel="noopener">Danilo — (42) 99986-7017</a>
+              <a href="https://wa.me/5542998356212?text=Ol%C3%A1%2C%20Adriel!%20Vim%20pelo%20site%20da%20Danber." target="_blank" rel="noopener">Adriel — (42) 99835-6212</a>
+            </div>
           </li>
           <li>
             <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>

@@ -8,7 +8,7 @@
   var $$ = function (s, c) { return Array.prototype.slice.call((c || document).querySelectorAll(s)); };
 
   var REDUCED = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  var WHATS   = '5542998356212';
+  var WHATS   = '5542998356212';   // número principal (Adriel) — usado como reserva
 
   /* Horário de funcionamento: [abre, fecha] em horas. null = fechado.
      Domingo = 0 ... Sábado = 6                                        */
@@ -253,6 +253,7 @@
      AGENDAMENTO
      ======================================================= */
   var svcChips = $('#svcChips');
+  var proList  = $('#proList');
   var dayList  = $('#dayList');
   var slotList = $('#slotList');
   var slotNote = $('#slotNote');
@@ -262,8 +263,9 @@
   var stepsEl  = $$('#steps li');
   var stepPanes = $$('.step');
 
-  var pick = { svc: null, date: null, time: null };
+  var pick = { svc: null, pro: null, date: null, time: null };
   var step = 1;
+  var LAST_STEP = 4;
 
   /* --- passo 1: os chips vêm do HTML, aqui só ligamos o clique --- */
   $$('.chip', svcChips).forEach(function (b) {
@@ -271,6 +273,16 @@
       $$('.chip', svcChips).forEach(function (c) { c.classList.remove('is-on'); });
       b.classList.add('is-on');
       pick.svc = b.textContent.trim();
+      syncUI();
+    });
+  });
+
+  /* --- passo 2: barbeiro escolhido decide pra qual WhatsApp vai --- */
+  $$('.pro', proList).forEach(function (b) {
+    b.addEventListener('click', function () {
+      $$('.pro', proList).forEach(function (c) { c.classList.remove('is-on'); });
+      b.classList.add('is-on');
+      pick.pro = { name: $('b', b).textContent.trim(), phone: b.dataset.phone };
       syncUI();
     });
   });
@@ -365,8 +377,8 @@
       li.classList.toggle('is-done', i + 1 < n);
     });
     backBtn.hidden = n === 1;
-    if (n === 2) buildDays();
-    if (n === 3) buildSlots();
+    if (n === 3) buildDays();
+    if (n === 4) buildSlots();
     syncUI();
   }
 
@@ -375,32 +387,46 @@
   }
 
   function syncUI() {
-    var set = { svc: pick.svc, day: pick.date ? fmtDate(pick.date) : null, time: pick.time };
+    var set = {
+      svc:  pick.svc,
+      pro:  pick.pro ? pick.pro.name : null,
+      day:  pick.date ? fmtDate(pick.date) : null,
+      time: pick.time
+    };
     $$('.summary__item').forEach(function (el) {
       var v = set[el.dataset.k];
       el.classList.toggle('is-set', !!v);
       $('b', el).textContent = v || '—';
     });
 
-    var ready = (step === 1 && pick.svc) || (step === 2 && pick.date) || (step === 3 && pick.time);
+    var ready = (step === 1 && pick.svc)  ||
+                (step === 2 && pick.pro)  ||
+                (step === 3 && pick.date) ||
+                (step === 4 && pick.time);
     nextBtn.disabled = !ready;
-    nextBtn.textContent = step === 3 ? 'Enviar no WhatsApp' : 'Continuar';
+    nextBtn.textContent = step === LAST_STEP ? 'Enviar no WhatsApp' : 'Continuar';
   }
 
   nextBtn.addEventListener('click', function () {
-    if (step < 3) { showStep(step + 1); return; }
+    if (step < LAST_STEP) { showStep(step + 1); return; }
 
     var nome = (nameInput.value || '').trim();
+    var pro  = pick.pro || {};
+    /* "Tanto faz" não vira nome próprio na mensagem */
+    var comQuem = (pro.name && pro.name !== 'Tanto faz') ? pro.name : null;
+
     var msg =
-      'Olá, Barbearia Danber! 👋\n' +
+      (comQuem ? 'Olá, ' + comQuem + '! 👋\n' : 'Olá, Barbearia Danber! 👋\n') +
       'Gostaria de agendar um horário:\n\n' +
       '• Serviço: ' + pick.svc + '\n' +
+      (comQuem ? '• Profissional: ' + comQuem + '\n' : '• Profissional: quem estiver livre\n') +
       '• Dia: ' + fmtDate(pick.date) + '\n' +
       '• Horário: ' + pick.time + '\n' +
       (nome ? '• Nome: ' + nome + '\n' : '') +
       '\nVim pelo site 💈';
 
-    window.open('https://wa.me/' + WHATS + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+    window.open('https://wa.me/' + (pro.phone || WHATS) + '?text=' + encodeURIComponent(msg),
+                '_blank', 'noopener');
   });
 
   backBtn.addEventListener('click', function () { if (step > 1) showStep(step - 1); });
