@@ -682,6 +682,20 @@ svg{ width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:1.6; st
 .slot:hover{ border-color:var(--gold-dim); background:rgba(201,187,142,.08); transform:translateY(-2px); }
 .slot.is-on{ background:var(--gold); border-color:var(--gold); color:#151206; font-weight:600; }
 
+/* horário já reservado por outro cliente */
+.slot--off{
+  color:var(--muted-2);
+  background:transparent;
+  border-color:var(--line);
+  border-style:dashed;
+  text-decoration:line-through;
+  cursor:not-allowed;
+}
+.slot--off:hover{
+  transform:none; background:transparent; border-color:var(--line);
+}
+.slots[aria-busy="true"]{ opacity:.5; pointer-events:none; }
+
 .note{ font-size:.83rem; color:var(--muted-2); margin:0; }
 .note--warn{ color:var(--gold); }
 

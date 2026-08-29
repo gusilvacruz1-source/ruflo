@@ -16,6 +16,11 @@
   var SLOT_MIN = 40;   // duração de cada janela de atendimento
   var DAYS_AHEAD = 21; // quantos dias o calendário mostra
 
+  /* Endereço do app da planilha do Google que guarda as marcações.
+     Vazio = o site funciona como antes: mostra todos os horários e só
+     abre o WhatsApp, sem reservar nada. Instruções em agenda/COMO-INSTALAR.md */
+  var AGENDA_URL = '';
+
   /* =======================================================
      PRELOADER
      ======================================================= */
@@ -339,7 +344,59 @@
     return out;
   }
 
-  function buildSlots() {
+  /* =======================================================
+     AGENDA — conversa com a planilha
+     ======================================================= */
+
+  /* nome -> whatsapp, lido dos próprios botões do passo 2 */
+  var TELEFONES = {};
+  var NOMES = [];
+  $$('.pro', proList).forEach(function (b) {
+    var nome = $('b', b).textContent.trim();
+    TELEFONES[nome] = b.dataset.phone;
+    if (!b.classList.contains('pro--any')) NOMES.push(nome);
+  });
+
+  var agendaCache = {};   // 'aaaa-mm-dd' -> { 'hora|barbeiro': true }
+
+  function iso(d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+
+  /* Devolve null quando não há planilha configurada ou a consulta falhou —
+     nesse caso o site trata todos os horários como livres, que é o
+     comportamento antigo. Melhor mostrar demais do que travar o cliente. */
+  function buscarMarcados(dia, cb) {
+    if (!AGENDA_URL) { cb(null); return; }
+    if (agendaCache[dia]) { cb(agendaCache[dia]); return; }
+
+    var url = AGENDA_URL + (AGENDA_URL.indexOf('?') === -1 ? '?' : '&') +
+              'acao=ocupados&de=' + dia + '&ate=' + dia;
+
+    fetch(url, { method: 'GET' })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        if (!d || !d.ok) { cb(null); return; }
+        var mapa = {};
+        (d.marcados || []).forEach(function (m) {
+          var partes = m.split('|');          // data|hora|barbeiro
+          if (partes[0] === dia) mapa[partes[1] + '|' + partes[2]] = true;
+        });
+        agendaCache[dia] = mapa;
+        cb(mapa);
+      })
+      .catch(function () { cb(null); });
+  }
+
+  /* "Tanto faz" só está ocupado quando os três barbeiros estão. */
+  function estaOcupado(mapa, hora) {
+    if (!mapa) return false;
+    var nome = pick.pro && pick.pro.name;
+    if (nome && NOMES.indexOf(nome) !== -1) return !!mapa[hora + '|' + nome];
+    return NOMES.every(function (n) { return !!mapa[hora + '|' + n]; });
+  }
+
+  function buildSlots(aviso) {
     slotList.innerHTML = '';
     if (!pick.date) return;
 
@@ -350,21 +407,56 @@
       return;
     }
 
-    slotNote.textContent = 'Janelas sugeridas de ' + SLOT_MIN + ' minutos. A confirmação final é feita pela equipe no WhatsApp.';
+    var dia = iso(pick.date);
+    slotNote.textContent = AGENDA_URL ? 'Consultando a agenda…' : ' ';
     slotNote.className = 'note';
+    slotList.setAttribute('aria-busy', 'true');
 
-    list.forEach(function (t) {
-      var b = document.createElement('button');
-      b.type = 'button';
-      b.className = 'slot';
-      b.textContent = t;
-      b.addEventListener('click', function () {
-        $$('.slot', slotList).forEach(function (x) { x.classList.remove('is-on'); });
-        b.classList.add('is-on');
-        pick.time = t;
-        syncUI();
+    buscarMarcados(dia, function (mapa) {
+      /* o cliente pode ter voltado e trocado de dia enquanto isso carregava */
+      if (!pick.date || iso(pick.date) !== dia || step !== LAST_STEP) return;
+
+      slotList.innerHTML = '';
+      slotList.removeAttribute('aria-busy');
+      var livres = 0;
+
+      list.forEach(function (t) {
+        var ocupado = estaOcupado(mapa, t);
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.className = 'slot' + (ocupado ? ' slot--off' : '');
+        b.textContent = t;
+
+        if (ocupado) {
+          b.disabled = true;
+          b.title = 'Horário já reservado';
+        } else {
+          livres++;
+          b.addEventListener('click', function () {
+            $$('.slot', slotList).forEach(function (x) { x.classList.remove('is-on'); });
+            b.classList.add('is-on');
+            pick.time = t;
+            syncUI();
+          });
+        }
+        slotList.appendChild(b);
       });
-      slotList.appendChild(b);
+
+      /* o aviso de conflito é escrito aqui dentro, senão a consulta
+         terminaria depois dele e apagaria a mensagem */
+      if (aviso) {
+        slotNote.textContent = aviso;
+        slotNote.className = 'note note--warn';
+      } else if (!livres && mapa) {
+        slotNote.textContent = 'Este dia já está todo reservado — escolha outra data.';
+        slotNote.className = 'note note--warn';
+      } else if (mapa) {
+        slotNote.textContent = 'Os horários riscados já foram reservados.';
+        slotNote.className = 'note';
+      } else {
+        slotNote.textContent = 'Janelas de ' + SLOT_MIN + ' minutos. A confirmação final é feita pela equipe no WhatsApp.';
+        slotNote.className = 'note';
+      }
     });
   }
 
@@ -407,13 +499,30 @@
     nextBtn.textContent = step === LAST_STEP ? 'Enviar no WhatsApp' : 'Continuar';
   }
 
-  nextBtn.addEventListener('click', function () {
-    if (step < LAST_STEP) { showStep(step + 1); return; }
+  /* Abre a conversa já escrita com o barbeiro que ficou com o horário. */
+  function abrirWhatsApp(comQuem) {
+    var nome = (nameInput.value || '').trim();
+    var fone = TELEFONES[comQuem] || (pick.pro && pick.pro.phone) || WHATS;
 
+    var msg =
+      'Olá, ' + comQuem + '! 👋\n' +
+      'Acabei de reservar um horário pelo site:\n\n' +
+      '• Serviço: ' + pick.svc + '\n' +
+      '• Profissional: ' + comQuem + '\n' +
+      '• Dia: ' + fmtDate(pick.date) + '\n' +
+      '• Horário: ' + pick.time + '\n' +
+      (nome ? '• Nome: ' + nome + '\n' : '') +
+      '\nVim pelo site 💈';
+
+    window.open('https://wa.me/' + fone + '?text=' + encodeURIComponent(msg),
+                '_blank', 'noopener');
+  }
+
+  /* Sem planilha configurada a mensagem é um pedido, não uma reserva. */
+  function abrirWhatsAppSemReserva() {
     var nome = (nameInput.value || '').trim();
     var pro  = pick.pro || {};
-    /* "Tanto faz" não vira nome próprio na mensagem */
-    var comQuem = (pro.name && pro.name !== 'Tanto faz') ? pro.name : null;
+    var comQuem = (pro.name && NOMES.indexOf(pro.name) !== -1) ? pro.name : null;
 
     var msg =
       (comQuem ? 'Olá, ' + comQuem + '! 👋\n' : 'Olá, Barbearia Danber! 👋\n') +
@@ -427,6 +536,57 @@
 
     window.open('https://wa.me/' + (pro.phone || WHATS) + '?text=' + encodeURIComponent(msg),
                 '_blank', 'noopener');
+  }
+
+  nextBtn.addEventListener('click', function () {
+    if (step < LAST_STEP) { showStep(step + 1); return; }
+
+    if (!AGENDA_URL) { abrirWhatsAppSemReserva(); return; }
+
+    var dia = iso(pick.date);
+    nextBtn.disabled = true;
+    nextBtn.textContent = 'Reservando…';
+
+    fetch(AGENDA_URL, {
+      method: 'POST',
+      /* text/plain de propósito: evita a checagem prévia de CORS, que o
+         Apps Script não responde. O corpo continua sendo JSON. */
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        data:     dia,
+        hora:     pick.time,
+        barbeiro: pick.pro && NOMES.indexOf(pick.pro.name) !== -1 ? pick.pro.name : '',
+        cliente:  (nameInput.value || '').trim(),
+        telefone: '',
+        servico:  pick.svc
+      })
+    })
+      .then(function (r) { return r.json(); })
+      .then(function (d) {
+        nextBtn.textContent = 'Enviar no WhatsApp';
+
+        if (d && d.ok) {
+          delete agendaCache[dia];       // o horário que acabou de sair da lista
+          abrirWhatsApp(d.barbeiro);
+          nextBtn.disabled = false;
+          return;
+        }
+
+        /* Alguém pegou o horário no meio do caminho: recarrega e avisa. */
+        delete agendaCache[dia];
+        pick.time = null;
+        buildSlots(d && d.motivo === 'lotado'
+          ? 'Esse horário acabou de lotar com os três barbeiros. Escolha outro.'
+          : 'Esse horário acabou de ser reservado por outra pessoa. Escolha outro.');
+        syncUI();
+      })
+      .catch(function () {
+        /* Planilha fora do ar não pode impedir o cliente de agendar:
+           segue pelo WhatsApp e o barbeiro confirma na mão. */
+        nextBtn.textContent = 'Enviar no WhatsApp';
+        nextBtn.disabled = false;
+        abrirWhatsAppSemReserva();
+      });
   });
 
   backBtn.addEventListener('click', function () { if (step > 1) showStep(step - 1); });
