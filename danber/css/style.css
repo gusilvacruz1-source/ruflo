@@ -600,6 +600,50 @@ svg{ width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:1.6; st
 .field input::placeholder{ color:var(--muted-2); }
 .field input:focus{ outline:none; border-color:var(--gold); background:rgba(0,0,0,.5); }
 
+/* ------- escolha do profissional ------- */
+.pros{
+  display:grid; gap:10px;
+  grid-template-columns:repeat(auto-fit, minmax(148px, 1fr));
+  margin-bottom:8px;
+}
+.pro{
+  display:grid; justify-items:center; gap:3px;
+  padding:20px 12px 16px;
+  background:rgba(255,255,255,.03);
+  border:1px solid var(--line-2); border-radius:16px;
+  cursor:pointer; text-align:center;
+  transition:all .28s var(--ease);
+}
+.pro:hover{
+  border-color:var(--gold-dim); background:rgba(201,187,142,.07);
+  transform:translateY(-3px);
+}
+.pro__av{
+  display:grid; place-items:center;
+  width:52px; height:52px; margin-bottom:7px;
+  border-radius:50%;
+  background:rgba(201,187,142,.12);
+  border:1px solid rgba(201,187,142,.3);
+  color:var(--gold);
+  font-size:.9rem; font-weight:600; letter-spacing:.04em;
+  overflow:hidden;
+  transition:background .3s, border-color .3s, color .3s;
+}
+.pro__av svg{ width:22px; height:22px; stroke-width:2; }
+.pro__av img{ width:100%; height:100%; object-fit:cover; }
+.pro b{
+  font-family:var(--head); font-size:1.06rem; font-weight:600;
+  letter-spacing:-.01em; line-height:1.25;
+}
+.pro small{ font-size:.75rem; color:var(--muted); }
+.pro.is-on{ background:var(--gold); border-color:var(--gold); color:#151206; }
+.pro.is-on small{ color:rgba(21,18,6,.7); }
+.pro.is-on .pro__av{
+  background:rgba(21,18,6,.16); border-color:rgba(21,18,6,.3); color:#151206;
+}
+.pro--any .pro__av{ background:rgba(255,255,255,.06); border-color:var(--line-2); color:var(--muted); }
+.pro--any.is-on .pro__av{ background:rgba(21,18,6,.16); border-color:rgba(21,18,6,.3); color:#151206; }
+
 .days{
   display:grid; gap:10px;
   grid-template-columns:repeat(auto-fill, minmax(94px, 1fr));
@@ -765,6 +809,9 @@ svg{ width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:1.6; st
 
 .contact__list{ list-style:none; margin:8px 0 26px; padding:0; display:grid; gap:18px; }
 .contact__list li{ display:flex; gap:15px; align-items:flex-start; }
+/* o bloco do WhatsApp tem três links empilhados — grid mantém um por linha
+   e o justify-items:start impede o sublinhado de esticar até a borda */
+.contact__list li > div{ display:grid; gap:4px; justify-items:start; }
 .contact__list svg{ width:21px; height:21px; color:var(--gold); flex:none; margin-top:3px; }
 .contact__list b{
   display:block; font-size:.7rem; font-weight:600; letter-spacing:.16em;
@@ -983,7 +1030,9 @@ svg{ width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:1.6; st
   .cards{ grid-template-columns:1fr; }
   .days{ grid-template-columns:repeat(3, 1fr); }
   .slots{ grid-template-columns:repeat(3, 1fr); }
-  .steps li{ font-size:.72rem; gap:7px; padding:13px 6px; }
+  .steps li{ font-size:.66rem; gap:5px; padding:12px 4px; }
+  .steps li b{ width:20px; height:20px; font-size:.65rem; }
+  .pros{ grid-template-columns:repeat(2, 1fr); }
   .fab{ right:14px; bottom:14px; }
 }
 
@@ -997,13 +1046,14 @@ svg{ width:1em; height:1em; fill:none; stroke:currentColor; stroke-width:1.6; st
   .chip:hover,
   .day:hover,
   .slot:hover,
+  .pro:hover,
   .shot:hover{ transform:none; }
 
-  .chip:hover, .day:hover, .slot:hover{
+  .chip:hover, .day:hover, .slot:hover, .pro:hover{
     background:rgba(255,255,255,.03);
     border-color:var(--line-2);
   }
-  .chip.is-on:hover, .day.is-on:hover, .slot.is-on:hover{
+  .chip.is-on:hover, .day.is-on:hover, .slot.is-on:hover, .pro.is-on:hover{
     background:var(--gold); border-color:var(--gold);
   }
   .card:hover{ border-color:var(--line); box-shadow:none; }
