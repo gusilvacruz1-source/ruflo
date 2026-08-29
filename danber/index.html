@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#0A0A0B">
+<title>Barbearia Danber | Imbaú - PR</title>
+<meta name="description" content="Barbearia Danber em Imbaú - PR. Corte, barba, navalhado e acabamento de verdade. Rua Antônio Borges de Oliveira, 140. Agende pelo WhatsApp.">
+<meta name="author" content="Barbearia Danber">
+
+<!-- Cartão de pré-visualização (WhatsApp, Instagram, Google).
+     Exige URL absoluta — troque o domínio se o site mudar de endereço. -->
+<link rel="canonical" href="https://gusilvacruz1-source.github.io/ruflo/danber/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Barbearia Danber">
+<meta property="og:title" content="Barbearia Danber | Imbaú - PR">
+<meta property="og:description" content="Corte, barba e navalhado em Imbaú - PR. Segunda a sábado. Agende pelo WhatsApp.">
+<meta property="og:url" content="https://gusilvacruz1-source.github.io/ruflo/danber/">
+<meta property="og:image" content="https://gusilvacruz1-source.github.io/ruflo/danber/assets/og-danber.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Equipe da Barbearia Danber nas três cadeiras, com a logo ao centro">
+<meta property="og:locale" content="pt_BR">
+<meta name="twitter:card" content="summary_large_image">
+
+<link rel="icon" href="assets/logo-circle.png" type="image/png">
+<link rel="apple-touch-icon" href="assets/logo-circle.png">
+
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/inter-var-latin.woff2" crossorigin>
+<link rel="preload" as="font" type="font/woff2" href="assets/fonts/playfair-var-latin.woff2" crossorigin>
+<link rel="preload" as="image" href="assets/hero-barbearia.jpg" fetchpriority="high">
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+
+<!-- Marca que o JS está vivo. Sem isso o preloader e as animações de entrada
+     ficam desligados, então o site continua legível se o script falhar. -->
+<script>document.documentElement.className += ' js';</script>
+
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "HairSalon",
+  "name": "Barbearia Danber",
+  "url": "https://gusilvacruz1-source.github.io/ruflo/danber/",
+  "image": "https://gusilvacruz1-source.github.io/ruflo/danber/assets/og-danber.jpg",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "Rua Antônio Borges de Oliveira, 140",
+    "addressLocality": "Imbaú",
+    "addressRegion": "PR",
+    "addressCountry": "BR"
+  },
+  "telephone": "+5542998356212",
+  "sameAs": ["https://www.instagram.com/barbeariadanber/"],
+  "openingHoursSpecification": [
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": ["Monday","Tuesday","Wednesday","Thursday","Friday"], "opens": "09:00", "closes": "19:00" },
+    { "@type": "OpeningHoursSpecification", "dayOfWeek": "Saturday", "opens": "09:00", "closes": "18:00" }
+  ]
+}
+</script>
+</head>
+<body>
+
+<!-- ============ PRELOADER ============ -->
+<div class="preloader" id="preloader" aria-hidden="true">
+  <div class="preloader__mark">
+    <img src="assets/logo.png" alt="" width="263" height="211">
+    <div class="preloader__bar"><span></span></div>
+  </div>
+</div>
+
+<!-- ============ GRAIN + PROGRESS ============ -->
+<div class="grain" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollProgress" aria-hidden="true"></div>
+
+<!-- ============ HEADER ============ -->
+<header class="header" id="header">
+  <div class="shell header__inner">
+    <a href="#inicio" class="brand" aria-label="Barbearia Danber - início">
+      <img src="assets/logo.png" alt="Barbearia Danber" class="brand__img" width="263" height="211">
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navegação principal">
+      <a href="#servicos" class="nav__link">Serviços</a>
+      <a href="#agendar" class="nav__link">Agendar</a>
+      <a href="#casa" class="nav__link">A casa</a>
+      <a href="#galeria" class="nav__link">Galeria</a>
+      <a href="#contato" class="nav__link">Contato</a>
+      <a href="https://wa.me/5542998356212?text=Ol%C3%A1%2C%20Barbearia%20Danber!%20Vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener" class="btn btn--gold nav__cta">Agendar horário</a>
+    </nav>
+
+    <div class="header__right">
+      <span class="status status--sm" id="statusHeader" hidden><i></i><b></b></span>
+      <a href="#agendar" class="btn btn--gold btn--sm header__cta">Agendar</a>
+      <button class="burger" id="burger" aria-label="Abrir menu" aria-expanded="false" aria-controls="nav">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ HERO ============ -->
+  <section class="hero" id="inicio">
+    <div class="hero__media" id="heroMedia">
+      <img src="assets/hero-barbearia.jpg" alt="Equipe da Barbearia Danber sentada nas cadeiras da barbearia" class="hero__img" id="heroImg" width="828" height="862" fetchpriority="high">
+      <div class="hero__spot" id="heroSpot" aria-hidden="true"></div>
+      <div class="hero__scrim" aria-hidden="true"></div>
+      <div class="hero__vignette" aria-hidden="true"></div>
+    </div>
+
+    <div class="shell hero__content" id="heroContent">
+      <span class="status" id="statusHero" hidden><i></i><b></b></span>
+
+      <img src="assets/logo.png" alt="Barbearia Danber" class="hero__logo" width="263" height="211">
+
+      <h1 class="hero__title">
+        <span class="line"><span>O corte que</span></span>
+        <span class="line"><span>te representa,</span></span>
+        <span class="line"><span><em>toda semana.</em></span></span>
+      </h1>
+
+      <p class="hero__sub">
+        Barbearia em <strong>Imbaú&nbsp;-&nbsp;PR</strong>. Corte, barba e navalhado com acabamento
+        feito com calma — do jeito que tem que ser.
+      </p>
+
+      <div class="hero__actions">
+        <a href="#agendar" class="btn btn--gold btn--lg">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 2v3M16 2v3M3.5 9h17M5 5h14a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2Z"/></svg>
+          Agendar horário
+        </a>
+        <a href="https://wa.me/5542998356212?text=Ol%C3%A1%2C%20Barbearia%20Danber!%20Vim%20pelo%20site%20e%20gostaria%20de%20agendar%20um%20hor%C3%A1rio." target="_blank" rel="noopener" class="btn btn--ghost btn--lg">
+          <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-wa"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.2 16.1L2 22l6.1-1.2A10.4 10.4 0 1 0 20.5 3.5Z"/><path d="M8.4 7.6c.2-.5.4-.5.7-.5h.6c.2 0 .5 0 .7.6l.9 2.1c.1.3 0 .5-.1.7l-.5.6c-.2.2-.3.4-.1.7a8 8 0 0 0 3.6 3.1c.3.1.5 0 .7-.1l.6-.7c.2-.2.4-.2.6-.1l2 1c.3.1.4.3.4.5a2 2 0 0 1-1.4 1.7c-.6.2-1.4.3-4-1a12 12 0 0 1-4.7-4.7c-.9-1.7-.9-2.7-.8-3.2Z"/></svg>
+          Chamar no WhatsApp
+        </a>
+      </div>
+
+      <ul class="hero__facts">
+        <li><b>Seg a Sex</b><span>9h às 19h</span></li>
+        <li><b>Sábado</b><span>9h às 18h</span></li>
+        <li><b>Onde</b><span>R. Antônio B. de Oliveira, 140</span></li>
+      </ul>
+    </div>
+
+    <a href="#servicos" class="hero__cue" aria-label="Rolar para serviços"><span></span>role</a>
+  </section>
+
+  <!-- ============ MARQUEE ============ -->
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee__track" id="marqueeTrack">
+      <span>Corte na tesoura</span><i>✦</i><span>Barba na navalha</span><i>✦</i><span>Degradê</span><i>✦</i>
+      <span>Pigmentação</span><i>✦</i><span>Sobrancelha</span><i>✦</i><span>Acabamento</span><i>✦</i>
+    </div>
+  </div>
+
+  <!-- ============ SERVIÇOS ============ -->
+  <section class="section" id="servicos">
+    <div class="shell">
+      <header class="head reveal">
+        <span class="eyebrow">O que fazemos</span>
+        <h2 class="h2">Serviços da casa</h2>
+        <p class="lede">Toque em um serviço para já levá-lo pro agendamento. Valores confirmados na hora, direto com a equipe.</p>
+      </header>
+
+      <!-- Para editar: mude o texto e o data-svc de cada card (o data-svc é o nome enviado no WhatsApp). -->
+      <div class="cards" id="serviceGrid">
+        <button class="card tilt reveal" data-svc="Corte">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><circle cx="6" cy="6" r="3"/><circle cx="6" cy="18" r="3"/><path d="M20 4 8.5 15.5M20 20 8.5 8.5"/></svg>
+          </span>
+          <h3>Corte</h3>
+          <p>Máquina, tesoura e degradê. Lavagem, finalização e o acabamento que faz diferença.</p>
+          <span class="card__go">Agendar <b>→</b></span>
+        </button>
+
+        <button class="card tilt reveal" data-svc="Barba">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M4 5v5a8 8 0 0 0 16 0V5"/><path d="M8 13a4 4 0 0 0 8 0"/></svg>
+          </span>
+          <h3>Barba</h3>
+          <p>Toalha quente, navalha e alinhamento do contorno. Sai com a pele confortável.</p>
+          <span class="card__go">Agendar <b>→</b></span>
+        </button>
+
+        <button class="card tilt reveal card--star" data-svc="Corte + Barba">
+          <span class="card__tag">Mais pedido</span>
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3v18M3 12h18"/><path d="M6.5 6.5 17.5 17.5M17.5 6.5 6.5 17.5"/></svg>
+          </span>
+          <h3>Corte + Barba</h3>
+          <p>O combo completo, feito em sequência sem correria. O visual inteiro resolvido.</p>
+          <span class="card__go">Agendar <b>→</b></span>
+        </button>
+
+        <button class="card tilt reveal" data-svc="Navalhado">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M3 16 16 3l5 5L8 21H3v-5Z"/><path d="M13 6l5 5"/></svg>
+          </span>
+          <h3>Navalhado</h3>
+          <p>Risco e contorno na navalha, com a linha desenhada do jeito que você pedir.</p>
+          <span class="card__go">Agendar <b>→</b></span>
+        </button>
+
+        <button class="card tilt reveal" data-svc="Sobrancelha">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M2 13c3-6 8-8 10-8s7 2 10 8"/><path d="M7 10.5c2-1.5 4-2 5-2"/></svg>
+          </span>
+          <h3>Sobrancelha</h3>
+          <p>Limpeza e design no traço certo, respeitando o formato natural do rosto.</p>
+          <span class="card__go">Agendar <b>→</b></span>
+        </button>
+
+        <button class="card tilt reveal" data-svc="Pigmentação">
+          <span class="card__ico" aria-hidden="true">
+            <svg viewBox="0 0 24 24"><path d="M12 3s6 6.5 6 10a6 6 0 0 1-12 0c0-3.5 6-10 6-10Z"/></svg>
+          </span>
+          <h3>Pigmentação</h3>
+          <p>Preenchimento de falhas no cabelo e na barba pra fechar o desenho com naturalidade.</p>
+          <span class="card__go">Agendar <b>→</b></span>
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ AGENDAMENTO ============ -->
+  <section class="section section--book" id="agendar">
+    <div class="shell">
+      <header class="head reveal">
+        <span class="eyebrow">Agendamento</span>
+        <h2 class="h2">Monte seu horário</h2>
+        <p class="lede">Três passos rápidos. No final abrimos o WhatsApp com tudo escrito — é só enviar e confirmar.</p>
+      </header>
+
+      <div class="booker reveal" id="booker">
+        <ol class="steps" id="steps">
+          <li class="is-active"><b>1</b> Serviço</li>
+          <li><b>2</b> Dia</li>
+          <li><b>3</b> Horário</li>
+        </ol>
+
+        <div class="booker__body">
+
+          <!-- passo 1 -->
+          <div class="step" data-step="1">
+            <p class="step__q">Qual serviço você quer?</p>
+            <!-- Para mudar a lista de serviços, edite só estes botões. -->
+            <div class="chips" id="svcChips">
+              <button type="button" class="chip">Corte</button>
+              <button type="button" class="chip">Barba</button>
+              <button type="button" class="chip">Corte + Barba</button>
+              <button type="button" class="chip">Navalhado</button>
+              <button type="button" class="chip">Sobrancelha</button>
+              <button type="button" class="chip">Pigmentação</button>
+            </div>
+            <label class="field">
+              <span>Seu nome <i>(opcional)</i></span>
+              <input type="text" id="nameInput" placeholder="Como podemos te chamar?" autocomplete="name" maxlength="40">
+            </label>
+          </div>
+
+          <!-- passo 2 -->
+          <div class="step" data-step="2" hidden>
+            <p class="step__q">Escolha o dia</p>
+            <div class="days" id="dayList"></div>
+            <p class="note">Domingo a barbearia não abre — por isso ele não aparece na lista.</p>
+          </div>
+
+          <!-- passo 3 -->
+          <div class="step" data-step="3" hidden>
+            <p class="step__q">Escolha o horário</p>
+            <div class="slots" id="slotList"></div>
+            <p class="note" id="slotNote"></p>
+          </div>
+
+        </div>
+
+        <div class="booker__foot">
+          <div class="summary" id="summary" aria-live="polite">
+            <span class="summary__item" data-k="svc">Serviço: <b>—</b></span>
+            <span class="summary__item" data-k="day">Dia: <b>—</b></span>
+            <span class="summary__item" data-k="time">Horário: <b>—</b></span>
+          </div>
+          <div class="booker__btns">
+            <button class="btn btn--ghost" id="backBtn" hidden>Voltar</button>
+            <button class="btn btn--gold" id="nextBtn" disabled>Continuar</button>
+          </div>
+        </div>
+      </div>
+
+      <p class="booker__hint reveal">Prefere só conversar? <a href="https://wa.me/5542998356212?text=Ol%C3%A1%2C%20Barbearia%20Danber!" target="_blank" rel="noopener">Chama no WhatsApp</a>.</p>
+    </div>
+  </section>
+
+  <!-- ============ A CASA ============ -->
+  <section class="section" id="casa">
+    <div class="shell casa">
+      <div class="casa__text reveal">
+        <span class="eyebrow">A casa</span>
+        <h2 class="h2">Três cadeiras, uma régua só:<br><em>bem feito.</em></h2>
+        <p>A Danber nasceu pra ser o ponto de encontro de quem gosta de sair da cadeira com o visual resolvido. Ambiente tranquilo, som na medida, conversa boa e barbeiro que ouve o que você quer antes de ligar a máquina.</p>
+        <p>Sem pressa e sem enrolação: cada corte tem o tempo que precisa ter. É por isso que a maioria dos nossos clientes já sai daqui com o próximo horário marcado.</p>
+
+        <!-- o número já vem escrito: o JS só anima a contagem até ele -->
+        <ul class="stats">
+          <li><b data-count="3">3</b><span>cadeiras na casa</span></li>
+          <li><b data-count="6">6</b><span>dias por semana</span></li>
+          <li><b data-count="250" data-suffix="+">250+</b><span>na comunidade</span></li>
+        </ul>
+
+        <a href="https://www.instagram.com/barbeariadanber/" target="_blank" rel="noopener" class="btn btn--ghost">Seguir @barbeariadanber</a>
+      </div>
+
+      <figure class="casa__img reveal">
+        <img src="assets/fachada.jpg" alt="Fachada iluminada da Barbearia Danber à noite" loading="lazy" width="274" height="365">
+        <figcaption>Rua Antônio Borges de Oliveira, 140 — Imbaú, PR</figcaption>
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ GALERIA ============ -->
+  <section class="section" id="galeria">
+    <div class="shell">
+      <header class="head reveal">
+        <span class="eyebrow">Galeria</span>
+        <h2 class="h2">Direto do nosso Instagram</h2>
+        <p class="lede">Clique para ampliar. O resto está lá no perfil, atualizado toda semana.</p>
+      </header>
+
+      <div class="gallery" id="gallery">
+        <button class="shot reveal" data-src="assets/ig-produto.jpg" data-cap="Finalização e produto na cadeira"><img src="assets/ig-produto.jpg" alt="Barbeiro finalizando o corte de um cliente" loading="lazy" width="274" height="365"></button>
+        <button class="shot reveal" data-src="assets/ig-corte-janela.jpg" data-cap="Corte com a luz da janela"><img src="assets/ig-corte-janela.jpg" alt="Cliente sendo atendido na cadeira" loading="lazy" width="274" height="365"></button>
+        <button class="shot reveal" data-src="assets/ig-clipper.jpg" data-cap="As ferramentas da casa"><img src="assets/ig-clipper.jpg" alt="Barbeiro mostrando máquina e produtos" loading="lazy" width="274" height="365"></button>
+        <button class="shot reveal" data-src="assets/ig-equipe.jpg" data-cap="A equipe Danber"><img src="assets/ig-equipe.jpg" alt="Equipe da Danber nas cadeiras" loading="lazy" width="274" height="365"></button>
+        <button class="shot reveal" data-src="assets/ig-jornal.jpg" data-cap="Novo barbeiro no time"><img src="assets/ig-jornal.jpg" alt="Barbeiro segurando jornal com a manchete Novo barbeiro no time" loading="lazy" width="274" height="365"></button>
+
+        <a class="shot shot--cta reveal" href="https://www.instagram.com/barbeariadanber/" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>
+          <b>@barbeariadanber</b>
+          <span>Ver o perfil completo</span>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ CONTATO / HORÁRIOS ============ -->
+  <section class="section section--contact" id="contato">
+    <div class="shell contact">
+
+      <div class="contact__col reveal">
+        <span class="eyebrow">Horários</span>
+        <h2 class="h2">Quando estamos abertos</h2>
+        <table class="hours" id="hoursTable">
+          <tbody>
+            <tr data-day="1"><th>Segunda</th><td>09h — 19h</td></tr>
+            <tr data-day="2"><th>Terça</th><td>09h — 19h</td></tr>
+            <tr data-day="3"><th>Quarta</th><td>09h — 19h</td></tr>
+            <tr data-day="4"><th>Quinta</th><td>09h — 19h</td></tr>
+            <tr data-day="5"><th>Sexta</th><td>09h — 19h</td></tr>
+            <tr data-day="6"><th>Sábado</th><td>09h — 18h</td></tr>
+            <tr data-day="0" class="is-off"><th>Domingo</th><td>Fechado</td></tr>
+          </tbody>
+        </table>
+        <span class="status" id="statusHours" hidden><i></i><b></b></span>
+      </div>
+
+      <div class="contact__col reveal">
+        <span class="eyebrow">Onde nos achar</span>
+        <h2 class="h2">Imbaú, Paraná</h2>
+
+        <ul class="contact__list">
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-5.7 7-11a7 7 0 1 0-14 0c0 5.3 7 11 7 11Z"/><circle cx="12" cy="10" r="2.6"/></svg>
+            <div><b>Endereço</b><a href="https://www.google.com/maps/search/?api=1&query=Rua+Ant%C3%B4nio+Borges+de+Oliveira%2C+140%2C+Imba%C3%BA+-+PR" target="_blank" rel="noopener">Rua Antônio Borges de Oliveira, 140 — Imbaú/PR</a></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true" class="ico-wa"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.2 16.1L2 22l6.1-1.2A10.4 10.4 0 1 0 20.5 3.5Z"/></svg>
+            <div><b>WhatsApp</b><a href="https://wa.me/5542998356212?text=Ol%C3%A1%2C%20Barbearia%20Danber!" target="_blank" rel="noopener">(42) 99835-6212</a></div>
+          </li>
+          <li>
+            <svg viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.2" cy="6.8" r="1.2" fill="currentColor" stroke="none"/></svg>
+            <div><b>Instagram</b><a href="https://www.instagram.com/barbeariadanber/" target="_blank" rel="noopener">@barbeariadanber</a></div>
+          </li>
+        </ul>
+
+        <div class="map">
+          <iframe
+            title="Mapa da Barbearia Danber em Imbaú - PR"
+            src="https://www.google.com/maps?q=Rua%20Ant%C3%B4nio%20Borges%20de%20Oliveira%2C%20140%2C%20Imba%C3%BA%20-%20PR&output=embed"
+            loading="lazy" referrerpolicy="no-referrer-when-downgrade" allowfullscreen></iframe>
+          <a class="map__out" href="https://www.google.com/maps/search/?api=1&query=Rua+Ant%C3%B4nio+Borges+de+Oliveira%2C+140%2C+Imba%C3%BA+-+PR" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M14 4h6v6M20 4l-9 9"/><path d="M18 14v5a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V7a1 1 0 0 1 1-1h5"/></svg>
+            Abrir no Google Maps
+          </a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+</main>
+
+<!-- ============ FOOTER ============ -->
+<footer class="footer">
+  <div class="shell footer__inner">
+    <img src="assets/logo.png" alt="Barbearia Danber" class="footer__logo" width="263" height="211" loading="lazy">
+    <nav class="footer__nav" aria-label="Rodapé">
+      <a href="#servicos">Serviços</a>
+      <a href="#agendar">Agendar</a>
+      <a href="#casa">A casa</a>
+      <a href="#galeria">Galeria</a>
+      <a href="#contato">Contato</a>
+    </nav>
+    <p class="footer__meta">Imbaú — Paraná · Segunda a sábado</p>
+    <p class="footer__copy">© <span id="year">2026</span> Barbearia Danber. Todos os direitos reservados.</p>
+  </div>
+</footer>
+
+<!-- ============ FLOATING ============ -->
+<a href="https://wa.me/5542998356212?text=Ol%C3%A1%2C%20Barbearia%20Danber!%20Vim%20pelo%20site." target="_blank" rel="noopener" class="fab" id="fab" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A10.4 10.4 0 0 0 3.2 16.1L2 22l6.1-1.2A10.4 10.4 0 1 0 20.5 3.5Z"/><path d="M8.4 7.6c.2-.5.4-.5.7-.5h.6c.2 0 .5 0 .7.6l.9 2.1c.1.3 0 .5-.1.7l-.5.6c-.2.2-.3.4-.1.7a8 8 0 0 0 3.6 3.1c.3.1.5 0 .7-.1l.6-.7c.2-.2.4-.2.6-.1l2 1c.3.1.4.3.4.5a2 2 0 0 1-1.4 1.7c-.6.2-1.4.3-4-1a12 12 0 0 1-4.7-4.7c-.9-1.7-.9-2.7-.8-3.2Z"/></svg>
+  <span>Fale com a gente</span>
+</a>
+
+<!-- ============ LIGHTBOX ============ -->
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-label="Foto ampliada" hidden>
+  <button class="lightbox__close" id="lbClose" aria-label="Fechar">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Anterior">&#8249;</button>
+  <figure class="lightbox__fig">
+    <img src="" alt="" id="lbImg">
+    <figcaption id="lbCap"></figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Próxima">&#8250;</button>
+</div>
+
+<script src="js/script.js"></script>
+</body>
+</html>
