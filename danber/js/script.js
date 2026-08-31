@@ -19,7 +19,7 @@
   /* Endereço do app da planilha do Google que guarda as marcações.
      Vazio = o site funciona como antes: mostra todos os horários e só
      abre o WhatsApp, sem reservar nada. Instruções em agenda/COMO-INSTALAR.md */
-  var AGENDA_URL = 'https://script.google.com/macros/s/AKfycbwpbBHWUqjd3zCNeE0zo7z5VMORJqZNw2XXKHMmg5uOWcWl6Em0z7wZNajWmdCG2oJu6w/exec';
+  var AGENDA_URL = 'https://script.google.com/macros/s/AKfycbyLKYqsRXp0A54YhTJEhJzj9s8Tbw28XqPYMguTaamBEb1w0ivcH9ptg3EzEHdM_kqw4Q/exec';
 
   /* =======================================================
      PRELOADER
