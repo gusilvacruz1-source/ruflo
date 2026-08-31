@@ -1,45 +1,68 @@
 /**
  * BARBEARIA DANBER — agenda
  *
- * Este código roda dentro da planilha do Google (Extensões > Apps Script).
- * Ele faz duas coisas:
- *   1. responde quais horários já estão marcados, pro site apagá-los da lista;
+ * Roda dentro da planilha do Google (Extensões > Apps Script) e faz duas coisas:
+ *   1. responde quais horários já estão marcados, pro site riscá-los;
  *   2. grava uma marcação nova, conferindo antes se o horário ainda está livre.
  *
- * As instruções de instalação estão em agenda/COMO-INSTALAR.md
+ * Instalação: agenda/COMO-INSTALAR.md
  */
 
+const VERSAO     = 2;   // confere se a implantação nova entrou no ar
 const ABA        = 'Agendamentos';
 const BARBEIROS  = ['Xandinho', 'Danilo', 'Adriel'];
 const CANCELADO  = 'cancelado';
 
-/* Colunas da planilha, na ordem em que são escritas. */
 const COLUNAS = ['Marcado em', 'Data', 'Hora', 'Barbeiro', 'Cliente', 'Telefone', 'Serviço', 'Status'];
 
+/* Índices das colunas (0 = coluna A) */
+const C_DATA = 1, C_HORA = 2, C_BARB = 3, C_STATUS = 7;
+
 /* ------------------------------------------------------------------ */
-/* Leitura: quais horários já estão ocupados                           */
+/* Leitura                                                             */
 /* ------------------------------------------------------------------ */
 function doGet(e) {
   try {
     const de  = (e.parameter.de  || '').slice(0, 10);
     const ate = (e.parameter.ate || '').slice(0, 10);
-    return responde({ ok: true, marcados: marcados(de, ate) });
+
+    /* ?acao=debug mostra como cada célula foi lida. Só data, hora e
+       barbeiro — nome de cliente nunca sai daqui. */
+    if (e.parameter.acao === 'debug') {
+      const vis = aba().getDataRange().getDisplayValues().slice(1, 11);
+      return responde({
+        ok: true, versao: VERSAO,
+        linhas: vis.map(function (l) {
+          return {
+            celula: { data: l[C_DATA], hora: l[C_HORA], barbeiro: l[C_BARB], status: l[C_STATUS] },
+            lido:   { data: comoData(l[C_DATA]), hora: comoHora(l[C_HORA]) }
+          };
+        }),
+        marcados: marcados(de, ate)
+      });
+    }
+
+    return responde({ ok: true, versao: VERSAO, marcados: marcados(de, ate) });
   } catch (err) {
     return responde({ ok: false, erro: String(err) });
   }
 }
 
 function marcados(de, ate) {
-  const linhas = aba().getDataRange().getValues();
+  /* getDisplayValues devolve o texto exatamente como aparece na célula.
+     Com getValues, uma célula de hora volta como objeto Date de 1899 e
+     qualquer conversão de fuso desloca o horário em alguns minutos. */
+  const vis = aba().getDataRange().getDisplayValues();
   const saida = [];
 
-  for (let i = 1; i < linhas.length; i++) {
-    const l = linhas[i];
-    const data = texto(l[1]), hora = texto(l[2]), barbeiro = texto(l[3]);
-    const status = texto(l[7]).toLowerCase();
+  for (let i = 1; i < vis.length; i++) {
+    const data     = comoData(vis[i][C_DATA]);
+    const hora     = comoHora(vis[i][C_HORA]);
+    const barbeiro = comoTexto(vis[i][C_BARB]);
+    const status   = comoTexto(vis[i][C_STATUS]).toLowerCase();
 
     if (!data || !hora || !barbeiro) continue;
-    if (status === CANCELADO) continue;              // horário cancelado volta a ficar livre
+    if (status === CANCELADO) continue;          // cancelado libera o horário
     if (de && data < de) continue;
     if (ate && data > ate) continue;
 
@@ -49,7 +72,7 @@ function marcados(de, ate) {
 }
 
 /* ------------------------------------------------------------------ */
-/* Escrita: grava a marcação                                           */
+/* Escrita                                                             */
 /* ------------------------------------------------------------------ */
 function doPost(e) {
   /* O site manda o corpo como text/plain de propósito: assim o navegador
@@ -61,12 +84,12 @@ function doPost(e) {
     return responde({ ok: false, erro: 'corpo inválido' });
   }
 
-  const data     = texto(p.data).slice(0, 10);
-  const hora     = texto(p.hora).slice(0, 5);
-  const pedido   = texto(p.barbeiro);
-  const cliente  = texto(p.cliente).slice(0, 60);
-  const telefone = texto(p.telefone).slice(0, 30);
-  const servico  = texto(p.servico).slice(0, 60);
+  const data     = comoData(p.data);
+  const hora     = comoHora(p.hora);
+  const pedido   = comoTexto(p.barbeiro);
+  const cliente  = comoTexto(p.cliente).slice(0, 60);
+  const telefone = comoTexto(p.telefone).slice(0, 30);
+  const servico  = comoTexto(p.servico).slice(0, 60);
 
   if (!data || !hora || !servico) {
     return responde({ ok: false, erro: 'faltam dados' });
@@ -85,9 +108,9 @@ function doPost(e) {
     const ocupados = {};
     marcados(data, data).forEach(function (m) { ocupados[m] = true; });
 
-    /* "Tanto faz" vira um barbeiro de verdade: o primeiro livre naquele horário. */
+    /* "Tanto faz" vira um barbeiro de verdade: o primeiro livre no horário. */
     let barbeiro = pedido;
-    if (!barbeiro || BARBEIROS.indexOf(barbeiro) === -1) {
+    if (BARBEIROS.indexOf(barbeiro) === -1) {
       barbeiro = null;
       for (let i = 0; i < BARBEIROS.length; i++) {
         if (!ocupados[data + '|' + hora + '|' + BARBEIROS[i]]) { barbeiro = BARBEIROS[i]; break; }
@@ -100,7 +123,7 @@ function doPost(e) {
     }
 
     aba().appendRow([new Date(), data, hora, barbeiro, cliente, telefone, servico, 'Confirmado']);
-    return responde({ ok: true, barbeiro: barbeiro });
+    return responde({ ok: true, versao: VERSAO, barbeiro: barbeiro });
 
   } finally {
     trava.releaseLock();
@@ -119,17 +142,31 @@ function aba() {
     a.getRange(1, 1, 1, COLUNAS.length).setFontWeight('bold');
     a.setFrozenRows(1);
   }
+  /* Sem isto o Sheets converte "2026-09-01" em data e "09:00" em hora.
+     Como texto, o que é gravado é exatamente o que é lido de volta. */
+  a.getRange('B:C').setNumberFormat('@');
   return a;
 }
 
-/* Data pode voltar da planilha como texto ou como objeto Date, dependendo
-   de como a célula foi preenchida. Normaliza os dois para texto. */
-function texto(v) {
-  if (v === null || v === undefined) return '';
-  if (Object.prototype.toString.call(v) === '[object Date]') {
-    return Utilities.formatDate(v, Session.getScriptTimeZone(), 'yyyy-MM-dd');
-  }
-  return String(v).trim();
+function comoTexto(v) {
+  return (v === null || v === undefined) ? '' : String(v).trim();
+}
+
+/* Aceita 2026-09-01 e também 01/09/2026, que é como o Sheets mostra data
+   em planilha configurada em português. Devolve sempre aaaa-mm-dd. */
+function comoData(v) {
+  const t = comoTexto(v);
+  let m = t.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (m) return m[1] + '-' + m[2] + '-' + m[3];
+  m = t.match(/^(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (m) return m[3] + '-' + ('0' + m[2]).slice(-2) + '-' + ('0' + m[1]).slice(-2);
+  return '';
+}
+
+/* Aceita 9:00, 09:00 e 09:00:00. Devolve sempre HH:mm. */
+function comoHora(v) {
+  const m = comoTexto(v).match(/^(\d{1,2}):(\d{2})/);
+  return m ? ('0' + m[1]).slice(-2) + ':' + m[2] : '';
 }
 
 function responde(obj) {

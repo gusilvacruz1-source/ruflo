@@ -90,6 +90,17 @@ para quem visita o site.
 
 ## Se mudar o código depois
 
-Não basta salvar: é preciso **Implantar → Gerenciar implantações →
+Não basta salvar. É preciso **Implantar → Gerenciar implantações →
 ícone de lápis → Versão: Nova versão → Implantar**. O endereço continua
 o mesmo.
+
+Para conferir se a versão nova entrou no ar, abra o endereço com
+`?acao=ocupados` no fim: a resposta traz um campo `versao`. Se o número
+não mudou, a implantação não foi feita — só o salvamento.
+
+## Diagnóstico
+
+Abrindo o endereço com `?acao=debug` no fim, a resposta mostra o que há
+em cada célula de data e hora e como o código leu cada uma. Serve para
+descobrir por que um horário não está aparecendo como ocupado. Nomes de
+clientes não aparecem nessa resposta.
