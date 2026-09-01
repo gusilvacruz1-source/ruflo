@@ -1,101 +1,135 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 1300" width="740" height="1300" role="img" aria-label="Flor rosa em aquarela">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 736 1308" width="736" height="1308" role="img" aria-label="Camélia rosa em aquarela">
   <defs>
-    <linearGradient id="petalA" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#f6bfd0"/>
-      <stop offset="55%" stop-color="#eb92ae"/>
-      <stop offset="100%" stop-color="#c9556f"/>
+    <linearGradient id="pPale" x1=".1" y1="0" x2=".9" y2="1">
+      <stop offset="0%" stop-color="#fbe2e8"/>
+      <stop offset="42%" stop-color="#f3bccb"/>
+      <stop offset="100%" stop-color="#dd8ea3"/>
     </linearGradient>
-    <linearGradient id="petalB" x1="1" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#fadbe4"/>
-      <stop offset="60%" stop-color="#f0a2ba"/>
-      <stop offset="100%" stop-color="#d06d84"/>
+    <linearGradient id="pPale2" x1=".9" y1="0" x2=".1" y2="1">
+      <stop offset="0%" stop-color="#f9dbe3"/>
+      <stop offset="48%" stop-color="#efb2c4"/>
+      <stop offset="100%" stop-color="#d78ba1"/>
     </linearGradient>
-    <linearGradient id="petalC" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0%" stop-color="#c04c68"/>
-      <stop offset="45%" stop-color="#e78ea8"/>
-      <stop offset="100%" stop-color="#f8ccda"/>
+    <linearGradient id="pDeep" x1=".2" y1="0" x2=".8" y2="1">
+      <stop offset="0%" stop-color="#e3a0b3"/>
+      <stop offset="45%" stop-color="#cf7189"/>
+      <stop offset="100%" stop-color="#b45770"/>
     </linearGradient>
-    <linearGradient id="leafA" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#5c7a55"/>
-      <stop offset="50%" stop-color="#3f5c3c"/>
-      <stop offset="100%" stop-color="#25391f"/>
+    <linearGradient id="pSoft" x1="0" y1=".2" x2="1" y2=".9">
+      <stop offset="0%" stop-color="#fae6ec"/>
+      <stop offset="55%" stop-color="#f2c2ce"/>
+      <stop offset="100%" stop-color="#e09fb2"/>
     </linearGradient>
-    <linearGradient id="leafB" x1="1" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#6d8a60"/>
-      <stop offset="55%" stop-color="#43613e"/>
-      <stop offset="100%" stop-color="#2b4326"/>
+    <linearGradient id="lfDark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#5d7a58"/>
+      <stop offset="38%" stop-color="#3c5a3c"/>
+      <stop offset="100%" stop-color="#22381f"/>
+    </linearGradient>
+    <linearGradient id="lfMid" x1="1" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#8ba474"/>
+      <stop offset="45%" stop-color="#5d7c53"/>
+      <stop offset="100%" stop-color="#3a5535"/>
+    </linearGradient>
+    <linearGradient id="lfOlive" x1=".2" y1="0" x2=".9" y2="1">
+      <stop offset="0%" stop-color="#7c8a55"/>
+      <stop offset="50%" stop-color="#55663c"/>
+      <stop offset="100%" stop-color="#33421f"/>
     </linearGradient>
     <linearGradient id="stemG" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0%" stop-color="#8d5f3a"/>
-      <stop offset="45%" stop-color="#a8703f"/>
-      <stop offset="100%" stop-color="#5f3f27"/>
+      <stop offset="0%" stop-color="#7d4a2a"/>
+      <stop offset="42%" stop-color="#b1703f"/>
+      <stop offset="100%" stop-color="#6d3f24"/>
     </linearGradient>
-    <radialGradient id="glowC" cx="50%" cy="50%" r="50%">
-      <stop offset="0%" stop-color="#ffd98a" stop-opacity=".85"/>
-      <stop offset="100%" stop-color="#ffd98a" stop-opacity="0"/>
-    </radialGradient>
-    <filter id="soft" x="-25%" y="-25%" width="150%" height="150%">
-      <feGaussianBlur stdDeviation="7"/>
+    <filter id="aquarela" x="-12%" y="-12%" width="124%" height="124%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.014" numOctaves="4" seed="7" result="t"/>
+      <feDisplacementMap in="SourceGraphic" in2="t" scale="9" xChannelSelector="R" yChannelSelector="G"/>
     </filter>
-    <filter id="grain" x="-10%" y="-10%" width="120%" height="120%">
-      <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3" result="n"/>
+    <filter id="papel" x="-6%" y="-6%" width="112%" height="112%">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="3" result="n"/>
       <feColorMatrix in="n" type="saturate" values="0"/>
-      <feComponentTransfer result="g"><feFuncA type="linear" slope=".16"/></feComponentTransfer>
+      <feComponentTransfer result="g"><feFuncA type="linear" slope=".2"/></feComponentTransfer>
       <feComposite in="SourceGraphic" in2="g" operator="over"/>
     </filter>
   </defs>
 
-  <g filter="url(#grain)">
-    <!-- caule -->
-    <path d="M405 470 C 400 640, 372 800, 336 950 C 306 1075, 288 1180, 282 1288"
-          stroke="url(#stemG)" stroke-width="13" stroke-linecap="round" fill="none"/>
-    <path d="M405 470 C 400 640, 372 800, 336 950 C 306 1075, 288 1180, 282 1288"
-          stroke="#e8c9a0" stroke-width="2.5" stroke-linecap="round" fill="none" opacity=".35"/>
+  <g filter="url(#papel)">
+  <g filter="url(#aquarela)">
+
+    <!-- ===== FOLHAS DE TRÁS ===== -->
+    <!-- folha alta, à esquerda -->
+    <path d="M248 58 C 344 132, 406 236, 404 340 C 330 330, 268 218, 248 58 Z" fill="url(#lfMid)"/>
+    <path d="M248 58 C 296 178, 350 272, 404 340" stroke="#cfdcb8" stroke-width="4" fill="none" opacity=".4"/>
+    <!-- folha oliva, à direita -->
+    <path d="M560 116 C 540 176, 482 238, 424 306 C 412 202, 470 130, 560 116 Z" fill="url(#lfOlive)"/>
+    <path d="M560 116 C 500 168, 452 240, 424 306" stroke="#c6cf9e" stroke-width="3.5" fill="none" opacity=".38"/>
+
+    <!-- ===== CAULE ===== -->
+    <path d="M366 474 C 424 548, 452 652, 454 772 C 456 906, 424 1064, 380 1218 C 368 1262, 360 1290, 356 1308"
+          stroke="url(#stemG)" stroke-width="14" stroke-linecap="round" fill="none"/>
+    <path d="M366 474 C 424 548, 452 652, 454 772 C 456 906, 424 1064, 380 1218 C 368 1262, 360 1290, 356 1308"
+          stroke="#e8bd90" stroke-width="2.6" stroke-linecap="round" fill="none" opacity=".32"/>
+
+    <!-- ===== FOLHAS DO CAULE ===== -->
+    <!-- pequena, à esquerda do caule -->
+    <path d="M388 548 C 432 574, 456 608, 460 646 C 412 636, 388 598, 380 560 Z" fill="url(#lfMid)"/>
+    <!-- pequena, à direita do caule -->
+    <path d="M450 574 C 498 556, 542 566, 572 594 C 526 626, 476 616, 446 594 Z" fill="url(#lfDark)"/>
 
     <!-- folha grande esquerda -->
-    <path d="M352 880 C 250 830, 140 750, 62 622 C 190 640, 300 720, 356 856 Z" fill="url(#leafA)"/>
-    <path d="M352 880 C 262 838, 168 762, 84 640" stroke="#c9dcb6" stroke-width="3" fill="none" opacity=".45"/>
+    <path d="M48 582 C 198 598, 352 748, 404 942 C 262 900, 104 750, 48 582 Z" fill="url(#lfDark)"/>
+    <path d="M48 582 C 160 668, 300 812, 404 942" stroke="#cfdcb8" stroke-width="4.5" fill="none" opacity=".42"/>
 
     <!-- folha grande direita -->
-    <path d="M330 1010 C 452 986, 574 1030, 686 1140 C 552 1178, 420 1140, 322 1044 Z" fill="url(#leafB)"/>
-    <path d="M330 1010 C 448 1004, 566 1052, 664 1136" stroke="#cfe0bd" stroke-width="3" fill="none" opacity=".45"/>
+    <path d="M706 826 C 682 946, 544 1082, 420 1142 C 488 952, 592 852, 706 826 Z" fill="url(#lfDark)"/>
+    <path d="M706 826 C 618 916, 500 1042, 420 1142" stroke="#cfdcb8" stroke-width="4.5" fill="none" opacity=".42"/>
 
-    <!-- folhas do cálice -->
-    <path d="M410 480 C 470 452, 546 424, 618 428 C 560 494, 480 522, 414 512 Z" fill="url(#leafB)"/>
-    <path d="M398 470 C 386 520, 372 570, 348 612 C 336 548, 348 496, 380 462 Z" fill="url(#leafA)"/>
-    <path d="M404 452 C 448 440, 486 448, 512 470 C 470 486, 428 482, 398 464 Z" fill="#3f5c3c"/>
-    <path d="M398 456 C 372 424, 356 388, 358 352 C 392 382, 408 418, 408 452 Z" fill="url(#leafA)"/>
+    <!-- folha inferior esquerda -->
+    <path d="M196 1006 C 300 1050, 374 1156, 392 1256 C 272 1224, 208 1110, 196 1006 Z" fill="url(#lfMid)"/>
+    <path d="M196 1006 C 268 1096, 340 1180, 392 1256" stroke="#cfdcb8" stroke-width="4" fill="none" opacity=".38"/>
 
-    <!-- pétalas de trás -->
-    <path d="M392 300 C 300 214, 176 206, 96 268 C 168 356, 286 388, 386 336 Z" fill="url(#petalB)" opacity=".92"/>
-    <path d="M406 274 C 388 168, 300 84, 196 78 C 214 190, 288 268, 396 300 Z" fill="url(#petalC)" opacity=".9"/>
-
-    <!-- pétalas frontais -->
-    <path d="M414 306 C 350 226, 348 118, 424 52 C 492 122, 500 232, 438 320 Z" fill="url(#petalA)"/>
-    <path d="M434 316 C 512 254, 618 260, 674 336 C 594 396, 486 386, 428 336 Z" fill="url(#petalB)"/>
-    <path d="M426 342 C 494 372, 552 452, 540 542 C 452 512, 404 436, 410 350 Z" fill="url(#petalC)"/>
-    <path d="M400 344 C 352 400, 336 470, 356 540 C 300 486, 292 400, 340 336 Z" fill="url(#petalA)" opacity=".85"/>
+    <!-- ===== PÉTALAS ===== -->
+    <!-- inferior -->
+    <path d="M300 424 C 306 484, 296 528, 262 552 C 306 562, 346 532, 358 486 C 356 452, 332 428, 306 418 Z" fill="url(#pSoft)"/>
+    <!-- inferior esquerda -->
+    <path d="M288 434 C 232 470, 168 490, 128 522 C 166 550, 240 546, 290 512 C 306 488, 304 458, 294 438 Z" fill="url(#pPale2)"/>
+    <!-- esquerda -->
+    <path d="M292 404 C 238 382, 166 368, 106 386 C 62 400, 58 434, 92 464 C 144 492, 224 470, 288 434 Z" fill="url(#pPale)"/>
+    <!-- superior esquerda, mais escura -->
+    <path d="M296 400 C 268 328, 240 268, 212 234 C 186 264, 172 322, 186 376 C 208 404, 256 412, 294 408 Z" fill="url(#pDeep)"/>
+    <!-- superior direita, grande -->
+    <path d="M300 406 C 306 320, 352 248, 426 230 C 480 244, 508 300, 500 358 C 470 394, 388 414, 320 420 Z" fill="url(#pPale)"/>
+    <!-- direita inferior -->
+    <path d="M318 418 C 396 418, 466 400, 498 366 C 508 420, 464 474, 398 484 C 356 482, 328 454, 314 430 Z" fill="url(#pPale2)"/>
 
     <!-- veios das pétalas -->
-    <g stroke="#a83e5c" stroke-width="2" fill="none" opacity=".3" stroke-linecap="round">
-      <path d="M418 320 C 404 250, 408 160, 428 88"/>
-      <path d="M432 328 C 500 296, 578 292, 646 328"/>
-      <path d="M424 342 C 470 392, 508 452, 520 518"/>
-      <path d="M398 330 C 344 292, 270 276, 190 288"/>
+    <g stroke="#b8556e" stroke-width="2.2" fill="none" opacity=".26" stroke-linecap="round">
+      <path d="M306 402 C 322 336, 366 274, 428 244"/>
+      <path d="M306 404 C 336 350, 390 300, 458 274"/>
+      <path d="M310 412 C 372 410, 442 396, 492 366"/>
+      <path d="M312 424 C 372 434, 428 448, 462 468"/>
+      <path d="M296 400 C 268 340, 244 288, 218 250"/>
+      <path d="M292 406 C 232 390, 158 380, 104 394"/>
+      <path d="M290 424 C 236 460, 178 486, 140 516"/>
+      <path d="M300 430 C 300 476, 292 516, 268 544"/>
     </g>
 
-    <!-- centro -->
-    <circle cx="416" cy="330" r="62" fill="url(#glowC)" filter="url(#soft)"/>
-    <g stroke="#e8a324" stroke-width="4" stroke-linecap="round">
-      <path d="M416 330 L 390 276"/><path d="M416 330 L 416 268"/><path d="M416 330 L 444 274"/>
-      <path d="M416 330 L 464 292"/><path d="M416 330 L 368 292"/><path d="M416 330 L 470 330"/>
-      <path d="M416 330 L 362 334"/><path d="M416 330 L 442 380"/><path d="M416 330 L 392 378"/>
+    <!-- ===== CÁLICE ===== -->
+    <path d="M312 428 C 348 442, 378 476, 392 518 C 356 512, 326 484, 306 448 Z" fill="#9a6a3c"/>
+    <path d="M330 444 C 372 462, 402 500, 410 540 C 372 530, 340 496, 322 458 Z" fill="url(#lfOlive)"/>
+
+    <!-- ===== ESTAMES ===== -->
+    <g stroke="#e0a028" stroke-width="3.4" stroke-linecap="round" opacity=".95">
+      <path d="M300 442 L 252 372"/><path d="M300 442 L 272 362"/><path d="M300 442 L 296 356"/>
+      <path d="M300 442 L 320 364"/><path d="M300 442 L 344 380"/><path d="M300 442 L 238 400"/>
+      <path d="M300 442 L 246 428"/><path d="M300 442 L 356 410"/><path d="M300 442 L 268 388"/>
     </g>
-    <g fill="#ffd257">
-      <circle cx="390" cy="274" r="6"/><circle cx="416" cy="266" r="6"/><circle cx="445" cy="272" r="6"/>
-      <circle cx="466" cy="290" r="6"/><circle cx="366" cy="290" r="6"/><circle cx="472" cy="330" r="6"/>
-      <circle cx="360" cy="334" r="6"/><circle cx="444" cy="382" r="6"/><circle cx="390" cy="380" r="6"/>
+    <g fill="#f7cf4e">
+      <circle cx="250" cy="368" r="6.5"/><circle cx="270" cy="358" r="6.5"/><circle cx="296" cy="352" r="6.5"/>
+      <circle cx="322" cy="360" r="6.5"/><circle cx="346" cy="377" r="6.5"/><circle cx="235" cy="399" r="6.5"/>
+      <circle cx="243" cy="427" r="6.5"/><circle cx="359" cy="408" r="6.5"/><circle cx="265" cy="385" r="6"/>
     </g>
-    <circle cx="416" cy="330" r="13" fill="#c4762a"/>
+    <ellipse cx="300" cy="444" rx="15" ry="11" fill="#c58a3a"/>
+
+  </g>
   </g>
 </svg>
