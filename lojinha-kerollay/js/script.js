@@ -1,6 +1,6 @@
 /* =====================================================================
-   LOJINHA KEROLLAY — catálogo + carrinho + checkout no WhatsApp
-   Mude os dados da loja em CONFIG (logo abaixo).
+   LOJINHA KEROLLAY — catálogo, carrinho e checkout no WhatsApp
+   Dados da loja em CONFIG. Catálogo em js/produtos.js.
    ===================================================================== */
 
 const CONFIG = {
@@ -10,44 +10,56 @@ const CONFIG = {
 };
 
 const brl = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
-const $  = (sel) => document.querySelector(sel);
+const $ = (sel) => document.querySelector(sel);
 
 const el = {
-  filtros:    $('#filtros'),
-  grid:       $('#gridProdutos'),
-  gridVazio:  $('#gridVazio'),
-  cartBtn:    $('#cartBtn'),
-  cartCount:  $('#cartCount'),
-  drawer:     $('#drawer'),
-  overlay:    $('#drawerOverlay'),
-  fechar:     $('#drawerFechar'),
-  lista:      $('#cartLista'),
-  vazio:      $('#drawerVazio'),
-  total:      $('#cartTotal'),
-  aviso:      $('#drawerAviso'),
-  finalizar:  $('#btnFinalizar'),
-  limpar:     $('#btnLimpar'),
-  nome:       $('#campoNome'),
-  entrega:    $('#campoEntrega'),
-  toast:      $('#toast'),
-  header:     $('#header'),
-  navToggle:  $('#navToggle')
+  filtros:   $('#filtros'),
+  grid:      $('#gridProdutos'),
+  gridVazio: $('#gridVazio'),
+  cartBtn:   $('#cartBtn'),
+  cartCount: $('#cartCount'),
+  gaveta:    $('#drawer'),
+  veu:       $('#drawerOverlay'),
+  fechar:    $('#drawerFechar'),
+  lista:     $('#cartLista'),
+  vazio:     $('#drawerVazio'),
+  total:     $('#cartTotal'),
+  aviso:     $('#drawerAviso'),
+  finalizar: $('#btnFinalizar'),
+  limpar:    $('#btnLimpar'),
+  nome:      $('#campoNome'),
+  entrega:   $('#campoEntrega'),
+  toast:     $('#toast')
 };
 
-/* ---------------------------------------------------------------
-   ESTADO
-   --------------------------------------------------------------- */
-
 let carrinho = carregarCarrinho();
-let timerToast;
 let categoriaAtiva = 'todos';
 let ultimoFoco = null;
+let timerToast;
+
+/* ---------------------------------------------------------------
+   ÍCONES
+   --------------------------------------------------------------- */
+
+function icone(id, classe = 'ico') {
+  const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+  svg.setAttribute('class', classe);
+  svg.setAttribute('viewBox', '0 0 24 24');
+  svg.setAttribute('aria-hidden', 'true');
+  const use = document.createElementNS('http://www.w3.org/2000/svg', 'use');
+  use.setAttribute('href', `#${id}`);
+  svg.appendChild(use);
+  return svg;
+}
+
+/* ---------------------------------------------------------------
+   CARRINHO: estado
+   --------------------------------------------------------------- */
 
 function carregarCarrinho() {
   try {
     const salvo = JSON.parse(localStorage.getItem(CONFIG.chaveStorage) || '[]');
     if (!Array.isArray(salvo)) return [];
-    // descarta itens que não existem mais no catálogo
     return salvo
       .filter((item) => PRODUTOS.some((p) => p.id === item.id))
       .map((item) => ({ id: item.id, qtd: Math.max(1, parseInt(item.qtd, 10) || 1) }));
@@ -98,7 +110,6 @@ function montarGrid() {
 
   el.grid.innerHTML = '';
   el.gridVazio.hidden = lista.length > 0;
-
   lista.forEach((p) => el.grid.appendChild(criarCard(p)));
 }
 
@@ -106,10 +117,13 @@ function criarCard(p) {
   const card = document.createElement('article');
   card.className = 'produto';
 
+  // Envelope que vira duas colunas nos ladrilhos largos do bento.
+  const interno = document.createElement('div');
+  interno.className = 'produto__interno';
+
   const foto = document.createElement('div');
   foto.className = 'produto__foto';
 
-  // Desenho de reserva: fica na tela ate uma foto de verdade carregar.
   const inicial = document.createElement('span');
   inicial.className = 'produto__inicial';
   inicial.textContent = p.nome.trim().charAt(0).toUpperCase();
@@ -121,18 +135,17 @@ function criarCard(p) {
 
   foto.append(inicial, marca);
 
-  // A foto e procurada pelo id do produto: basta salvar o arquivo como
-  // img/<id>.jpg (ou .png, .jpeg, .webp) que ela aparece sozinha. O campo
-  // 'img' do produto, quando preenchido, tem prioridade sobre isso.
+  // A foto é procurada pelo id do produto: basta salvar o arquivo como
+  // img/<id>.jpg ou img/<id>.png que ela aparece sozinha. Só essas duas
+  // extensões: cada uma que não existe custa uma requisição 404 no 4G da
+  // cliente, e quatro delas por produto somavam 72 numa página de 18 itens.
   const candidatas = p.img
     ? [p.img]
-    : ['jpg', 'png', 'jpeg', 'webp'].map((ext) => `img/${p.id}.${ext}`);
+    : ['jpg', 'png'].map((ext) => `img/${p.id}.${ext}`);
 
   const img = document.createElement('img');
   img.alt = p.nome;
   img.loading = 'lazy';
-  // Nada de hidden aqui: imagem em display:none com loading="lazy" nunca
-  // chega a ser buscada. Ela nasce transparente e aparece ao carregar.
 
   let tentativa = 0;
   img.addEventListener('error', () => {
@@ -160,7 +173,6 @@ function criarCard(p) {
   corpo.className = 'produto__corpo';
 
   const nome = document.createElement('h3');
-  nome.className = 'produto__nome';
   nome.textContent = p.nome;
 
   const desc = document.createElement('p');
@@ -180,13 +192,13 @@ function criarCard(p) {
     corpo.appendChild(ul);
   }
 
-  const rodape = document.createElement('div');
-  rodape.className = 'produto__rodape';
+  const pe = document.createElement('div');
+  pe.className = 'produto__pe';
 
   const preco = document.createElement('div');
   if (typeof p.preco === 'number') {
     preco.className = 'produto__preco';
-    preco.innerHTML = `${brl.format(p.preco)}<small>à vista</small>`;
+    preco.textContent = brl.format(p.preco);
   } else {
     preco.className = 'produto__preco produto__preco--consultar';
     preco.textContent = 'Sob encomenda';
@@ -198,15 +210,16 @@ function criarCard(p) {
   add.textContent = typeof p.preco === 'number' ? 'Adicionar' : 'Fazer orçamento';
   add.addEventListener('click', () => adicionar(p.id));
 
-  rodape.append(preco, add);
-  corpo.appendChild(rodape);
-  card.append(foto, corpo);
+  pe.append(preco, add);
+  corpo.appendChild(pe);
+  interno.append(foto, corpo);
+  card.appendChild(interno);
 
   return card;
 }
 
 /* ---------------------------------------------------------------
-   CARRINHO
+   CARRINHO: ações
    --------------------------------------------------------------- */
 
 function adicionar(id) {
@@ -217,11 +230,11 @@ function adicionar(id) {
   salvarCarrinho();
   renderCarrinho();
 
-  el.cartBtn.classList.remove('pulou');
+  el.cartBtn.classList.remove('pulsa');
   void el.cartBtn.offsetWidth;      // reinicia a animação
-  el.cartBtn.classList.add('pulou');
+  el.cartBtn.classList.add('pulsa');
 
-  mostrarToast(`${acharProduto(id).nome} foi para o carrinho 💕`);
+  mostrarToast(`${acharProduto(id).nome} foi para o carrinho`);
 }
 
 function mudarQtd(id, delta) {
@@ -248,20 +261,19 @@ function totalCarrinho() {
   }, 0);
 }
 
-function temSobEncomenda() {
-  return carrinho.some((item) => typeof acharProduto(item.id).preco !== 'number');
-}
+const temSobEncomenda = () =>
+  carrinho.some((item) => typeof acharProduto(item.id).preco !== 'number');
 
 function renderCarrinho() {
   const totalItens = carrinho.reduce((s, i) => s + i.qtd, 0);
 
   el.cartCount.textContent = totalItens;
   el.cartCount.hidden = totalItens === 0;
-  el.cartBtn.setAttribute('aria-label', `Abrir carrinho (${totalItens} ${totalItens === 1 ? 'item' : 'itens'})`);
+  el.cartBtn.setAttribute('aria-label',
+    `Abrir carrinho (${totalItens} ${totalItens === 1 ? 'item' : 'itens'})`);
 
   el.vazio.hidden = carrinho.length > 0;
   el.limpar.hidden = carrinho.length === 0;
-
   el.aviso.hidden = !temSobEncomenda();
 
   el.lista.innerHTML = '';
@@ -271,22 +283,22 @@ function renderCarrinho() {
     const temPreco = typeof p.preco === 'number';
 
     const li = document.createElement('li');
-    li.className = 'cart-item';
+    li.className = 'item';
 
     const info = document.createElement('div');
     const nome = document.createElement('p');
-    nome.className = 'cart-item__nome';
+    nome.className = 'item__nome';
     nome.textContent = p.nome;
 
     const preco = document.createElement('p');
-    preco.className = 'cart-item__preco';
+    preco.className = 'item__preco';
     preco.textContent = temPreco ? `${brl.format(p.preco)} cada` : 'Valor a combinar';
     info.append(nome, preco);
 
     const btnRemover = document.createElement('button');
     btnRemover.type = 'button';
-    btnRemover.className = 'cart-item__remover';
-    btnRemover.innerHTML = '&times;';
+    btnRemover.className = 'item__remover';
+    btnRemover.appendChild(icone('i-x', 'ico ico--sm'));
     btnRemover.setAttribute('aria-label', `Remover ${p.nome} do carrinho`);
     btnRemover.addEventListener('click', () => remover(p.id));
 
@@ -295,7 +307,7 @@ function renderCarrinho() {
 
     const menos = document.createElement('button');
     menos.type = 'button';
-    menos.textContent = '−';
+    menos.appendChild(icone('i-menos', 'ico ico--sm'));
     menos.setAttribute('aria-label', `Diminuir quantidade de ${p.nome}`);
     menos.addEventListener('click', () => mudarQtd(p.id, -1));
 
@@ -304,7 +316,7 @@ function renderCarrinho() {
 
     const mais = document.createElement('button');
     mais.type = 'button';
-    mais.textContent = '+';
+    mais.appendChild(icone('i-mais', 'ico ico--sm'));
     mais.setAttribute('aria-label', `Aumentar quantidade de ${p.nome}`);
     mais.addEventListener('click', () => mudarQtd(p.id, 1));
 
@@ -326,7 +338,7 @@ function renderCarrinho() {
    --------------------------------------------------------------- */
 
 function montarMensagem() {
-  const linhas = [`Olá, Kerollay! 💕 Vim pelo site e quero fazer um pedido:`, ''];
+  const linhas = ['Olá, Kerollay! 💕 Vim pelo site e quero fazer um pedido:', ''];
 
   carrinho.forEach((item, i) => {
     const p = acharProduto(item.id);
@@ -340,10 +352,7 @@ function montarMensagem() {
 
   linhas.push('');
   linhas.push(`*Total dos itens com preço: ${brl.format(totalCarrinho())}*`);
-
-  if (temSobEncomenda()) {
-    linhas.push('_Os itens sob encomenda entram no orçamento._');
-  }
+  if (temSobEncomenda()) linhas.push('_Os itens sob encomenda entram no orçamento._');
 
   const nome = el.nome.value.trim();
   linhas.push('');
@@ -353,7 +362,7 @@ function montarMensagem() {
   return linhas.join('\n');
 }
 
-// O botao e um link de verdade, com o href refeito a cada mudanca do
+// O botão é um link de verdade, com o href refeito a cada mudança do
 // carrinho: window.open cai em bloqueador de pop-up e dentro de iframe.
 function atualizarLinkFinalizar() {
   if (!carrinho.length) {
@@ -366,38 +375,34 @@ function atualizarLinkFinalizar() {
 }
 
 /* ---------------------------------------------------------------
-   DRAWER, MENU E TOAST
+   GAVETA E AVISO
    --------------------------------------------------------------- */
 
-function abrirDrawer() {
-  // esconde um aviso que ainda esteja na tela: no celular ele cobre
-  // o botão de finalizar assim que o carrinho abre
+function abrirGaveta() {
   clearTimeout(timerToast);
   el.toast.classList.remove('aparece');
 
   ultimoFoco = document.activeElement;
-  el.overlay.hidden = false;
-  requestAnimationFrame(() => el.overlay.classList.add('aberto'));
-  el.drawer.classList.add('aberto');
-  el.drawer.setAttribute('aria-hidden', 'false');
+  el.veu.hidden = false;
+  requestAnimationFrame(() => el.veu.classList.add('aberto'));
+  el.gaveta.classList.add('aberto');
+  el.gaveta.setAttribute('aria-hidden', 'false');
   document.body.style.overflow = 'hidden';
   el.fechar.focus();
 }
 
-function fecharDrawer() {
-  el.overlay.classList.remove('aberto');
-  el.drawer.classList.remove('aberto');
-  el.drawer.setAttribute('aria-hidden', 'true');
+function fecharGaveta() {
+  el.veu.classList.remove('aberto');
+  el.gaveta.classList.remove('aberto');
+  el.gaveta.setAttribute('aria-hidden', 'true');
   document.body.style.overflow = '';
 
-  setTimeout(() => { el.overlay.hidden = true; }, 300);
+  setTimeout(() => { el.veu.hidden = true; }, 340);
   if (ultimoFoco) ultimoFoco.focus();
 }
 
 function mostrarToast(texto) {
-  // com o carrinho aberto o item já aparece na lista: o aviso só atrapalharia
-  // (no celular ele cobre o botão de finalizar)
-  if (el.drawer.classList.contains('aberto')) return;
+  if (el.gaveta.classList.contains('aberto')) return;
 
   el.toast.textContent = texto;
   el.toast.classList.add('aparece');
@@ -409,14 +414,14 @@ function mostrarToast(texto) {
    START
    --------------------------------------------------------------- */
 
-el.cartBtn.addEventListener('click', abrirDrawer);
-el.fechar.addEventListener('click', fecharDrawer);
-el.overlay.addEventListener('click', fecharDrawer);
+el.cartBtn.addEventListener('click', abrirGaveta);
+el.fechar.addEventListener('click', fecharGaveta);
+el.veu.addEventListener('click', fecharGaveta);
+
 el.finalizar.addEventListener('click', (e) => {
   if (el.finalizar.getAttribute('aria-disabled') === 'true') e.preventDefault();
 });
 
-// nome e entrega entram na mensagem: o href precisa acompanhar
 el.nome.addEventListener('input', atualizarLinkFinalizar);
 el.entrega.addEventListener('change', atualizarLinkFinalizar);
 
@@ -427,19 +432,7 @@ el.limpar.addEventListener('click', () => {
 });
 
 document.addEventListener('keydown', (e) => {
-  if (e.key === 'Escape' && el.drawer.classList.contains('aberto')) fecharDrawer();
-});
-
-el.navToggle.addEventListener('click', () => {
-  const aberto = el.header.classList.toggle('nav-aberto');
-  el.navToggle.setAttribute('aria-expanded', String(aberto));
-});
-
-document.querySelectorAll('.nav a').forEach((link) => {
-  link.addEventListener('click', () => {
-    el.header.classList.remove('nav-aberto');
-    el.navToggle.setAttribute('aria-expanded', 'false');
-  });
+  if (e.key === 'Escape' && el.gaveta.classList.contains('aberto')) fecharGaveta();
 });
 
 $('#year').textContent = new Date().getFullYear();
