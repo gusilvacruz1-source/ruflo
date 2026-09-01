@@ -155,13 +155,48 @@
   }
 
   /* ---------------------------------------------------
-     3. Revelação ao entrar na tela
+     3. O facho sobre a grade
+     A luz acompanha o cursor e acende a peça por onde passa.
+     É o nome da marca virando comportamento.
+     O transform vai direto no elemento: mexer numa variável
+     CSS do pai recalcularia o estilo de todos os filhos.
+     --------------------------------------------------- */
+  function ligarFacho() {
+    var lamp = document.getElementById("lamp");
+    var grade = document.getElementById("grid");
+    if (!lamp || !grade) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    if (!window.matchMedia("(hover: hover) and (pointer: fine)").matches) return;
+
+    var x = 0, y = 0, pedido = false;
+
+    function pintar() {
+      pedido = false;
+      lamp.style.transform = "translate3d(" + x + "px," + y + "px,0)";
+    }
+
+    grade.addEventListener("pointermove", function (e) {
+      if (e.pointerType !== "mouse") return;
+      var caixa = grade.getBoundingClientRect();
+      x = e.clientX - caixa.left;
+      y = e.clientY - caixa.top;
+      if (!lamp.classList.contains("is-on")) lamp.classList.add("is-on");
+      if (!pedido) { pedido = true; requestAnimationFrame(pintar); }
+    }, { passive: true });
+
+    grade.addEventListener("pointerleave", function () {
+      lamp.classList.remove("is-on");
+    });
+  }
+
+  /* ---------------------------------------------------
+     4. Revelação ao entrar na tela
      --------------------------------------------------- */
   function ligarRevelacao() {
     var alvos = [];
     var word = document.querySelector(".hero__word");
     if (word) { word.classList.add("js-open"); alvos.push(word); }
-    document.querySelectorAll(".card, .rows, .block__head, .note, .foot__line")
+    document.querySelectorAll(".card, .rows, .block__head, .note, .band__line, .band__sub, .foot__line")
       .forEach(function (el) { el.classList.add("js-rise"); alvos.push(el); });
 
     if (!("IntersectionObserver" in window)) {
@@ -195,6 +230,7 @@
     ligarCoracoes();
     ligarBandeja();
     ligarBusca();
+    ligarFacho();
     ligarRevelacao();
   }
 

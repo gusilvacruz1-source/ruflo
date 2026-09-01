@@ -98,6 +98,11 @@ conversa. Para mostrar valor, troque o conteúdo de `<span class="card__price">`
 - **Peças salvas**: a cliente marca no coração, e a lista fica guardada no
   navegador dela. Uma bandeja aparece embaixo com "Copiar e abrir o WhatsApp",
   que copia a lista pronta e abre a conversa.
+- **Facho de luz** sobre a grade: no computador, uma luz quente acompanha o
+  cursor e acende a peça por onde passa. É o nome da marca virando
+  comportamento. Some no celular e com movimento reduzido.
+- **Revelação por luz**: a peça entra na tela levemente apagada e acende.
+  Funciona igual quando as fotos reais estiverem no lugar.
 - Toda a navegação funciona por teclado, com foco visível.
 - Respeita `prefers-reduced-motion`.
 
@@ -114,7 +119,12 @@ como diretório publicado. Não há passo de build.
 
 - **Paleta** amostrada da imagem de referência que você mandou, não escolhida
   de memória: creme com viés oliva (`#e9e7da`), célula de produto (`#ece9e3`),
-  faixa taupe. O acento oliva (`#636144`) é o único, e passa 5.1:1 no papel.
+  faixa taupe. O acento é o **dourado da própria Lumière** (`#7a5d28`),
+  escurecido até passar 5.0:1 no papel. Ele é o único acento da página, e
+  aparece na barra das categorias e no coração quando a peça está salva.
+- **A estrutura vem da referência, a voz é da Lumière.** A frase da marca
+  abre o hero, e uma faixa editorial em Bodoni quebra o ritmo de grade entre
+  a coleção e as categorias. Sem ela a página serviria para qualquer loja.
 - **Tipografia**: Bodoni Moda italic no logotipo, Archivo em todo o resto.
   Auto-hospedadas, então a página não depende do Google estar no ar nem pisca
   fonte de sistema no carregamento.

@@ -20,7 +20,8 @@
 
   --ink:    #14120d;   /* 15.2:1 sobre o papel */
   --ink-2:  #57544a;   /*  6.1:1 sobre o papel */
-  --olive:  #636144;   /*  5.1:1 sobre o papel, único acento */
+  --brass:  #7a5d28;   /*  5.0:1 sobre o papel. O dourado da marca,
+                          escurecido ate ficar legivel. Unico acento. */
   --rule:   #cbc7b6;   /* fio de 1px */
 
   --ui:   "Archivo", system-ui, -apple-system, sans-serif;
@@ -56,10 +57,10 @@ body {
 ::-webkit-scrollbar { width: 11px; }
 ::-webkit-scrollbar-track { background: var(--ground); }
 ::-webkit-scrollbar-thumb { background: #b6b2a0; }
-::-webkit-scrollbar-thumb:hover { background: var(--olive); }
+::-webkit-scrollbar-thumb:hover { background: var(--brass); }
 html { scrollbar-color: #b6b2a0 var(--ground); scrollbar-width: thin; }
 
-:focus-visible { outline: 2px solid var(--olive); outline-offset: 3px; }
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
 
 a { color: inherit; text-decoration: none; }
 img { max-width: 100%; display: block; }
@@ -169,7 +170,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   border: 0;
   border-bottom: 1px solid var(--rule);
   padding: .4rem 0;
-  caret-color: var(--olive);
+  caret-color: var(--brass);
 }
 .search__field::placeholder { color: #8d8a7c; }
 .search__field:focus { outline: none; border-bottom-color: var(--ink); }
@@ -189,8 +190,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   overflow: hidden;
   background: var(--taupe-d);
   border-bottom: 1px solid var(--rule);
-  display: grid;
-  place-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 /* camada 0: a fotografia (ou a placa que a substitui) */
@@ -242,6 +245,18 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   width: 100%; height: 100%;
   object-fit: cover;
   pointer-events: none;
+}
+
+.hero__tag {
+  position: relative;
+  z-index: 1;
+  margin-top: .9rem;
+  font-size: clamp(.6875rem, 1.5vw, .8rem);
+  font-weight: 600;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-align: center;
 }
 
 .hero__btn {
@@ -306,6 +321,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
    Grade de produtos: fios contínuos, como uma tabela
    ========================================================= */
 .grid {
+  position: relative;
   display: grid;
   grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 1px;
@@ -378,7 +394,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 .fav svg { width: 17px; height: 17px; }
 .fav:active { transform: scale(.9); }
-.fav[aria-pressed="true"] { color: var(--olive); background: var(--white); }
+.fav[aria-pressed="true"] { color: var(--brass); background: var(--white); }
 .fav[aria-pressed="true"] svg { fill: currentColor; }
 
 .card__foot {
@@ -403,6 +419,58 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   color: var(--ink-2);
 }
 
+/* facho de luz sobre a grade. E o nome da marca virando
+   comportamento: a peca acende quando a luz passa por ela. */
+.beam {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+.beam__lamp {
+  position: absolute;
+  top: 0; left: 0;
+  width: 32rem; height: 32rem;
+  margin: -16rem 0 0 -16rem;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(circle closest-side,
+              rgba(255, 244, 219, .85),
+              rgba(255, 244, 219, .30) 46%,
+              transparent 72%);
+  mix-blend-mode: soft-light;
+  transition: opacity .55s var(--out);
+  will-change: transform;
+}
+.beam__lamp.is-on { opacity: 1; }
+
+/* =========================================================
+   Faixa editorial: o unico momento da pagina que nao e grade
+   ========================================================= */
+.band {
+  padding: 4rem 1.5rem;
+  padding-block: clamp(4rem, 9vw, 7.5rem);
+  padding-inline: var(--pad);
+  background: #e3e0d0;
+  border-top: 1px solid var(--rule);
+}
+.band__line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.75rem, 5vw, 3.4rem);
+  line-height: 1.18;
+  letter-spacing: -.01em;
+  max-width: 17ch;
+}
+.band__sub {
+  margin-top: 2rem;
+  max-width: 46ch;
+  font-size: .95rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
 /* =========================================================
    Linhas: categorias e entrega
    ========================================================= */
@@ -417,7 +485,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   border-bottom: 1px solid var(--rule);
 }
 .row__k { font-size: clamp(1rem, 2vw, 1.3rem); }
-.row__slash { color: var(--olive); }
+.row__slash { color: var(--brass); }
 .row__v {
   font-size: .75rem;
   font-weight: 600;
@@ -453,15 +521,12 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .foot__line {
   font-family: var(--serif);
   font-style: italic;
-  font-size: clamp(1.15rem, 2.6vw, 1.6rem);
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
   line-height: 1.45;
-  max-width: 24ch;
+  max-width: 22ch;
 }
 .foot__place {
-  font-size: .75rem;
-  font-weight: 600;
-  letter-spacing: .12em;
-  text-transform: uppercase;
+  font-size: .85rem;
   color: var(--ink-2);
 }
 .foot__nav {
@@ -513,6 +578,10 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 .js-rise.is-in { opacity: 1; transform: none; }
 
+/* as pecas nao apenas sobem: elas entram na luz */
+.card.js-rise .shot { filter: brightness(.88) saturate(.82); transition: filter 1s var(--out); transition-delay: var(--wait, 0ms); }
+.card.js-rise.is-in .shot { filter: none; }
+
 .js-open { clip-path: inset(0 0 100% 0); transition: clip-path .95s var(--inout); }
 .js-open.is-in { clip-path: inset(0 0 0 0); }
 
@@ -526,8 +595,9 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   .more:hover { color: var(--ink); }
   .more:hover svg { transform: translateX(4px); }
   .row:hover .row__arrow { transform: translateX(6px); }
-  .row:hover .row__k { color: var(--olive); }
+  .row:hover .row__k { color: var(--brass); }
   .card:hover .shot > img { transform: scale(1.04); }
+  .card:hover .shot { filter: brightness(1.05); }
   .fav:hover { background: var(--white); }
   .foot__nav a:hover { border-color: var(--ink); }
 }
@@ -561,6 +631,8 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
   .js-rise { opacity: 0; transform: none; transition: opacity .3s ease; }
+  .card.js-rise .shot, .card.js-rise.is-in .shot { filter: none; transition: none; }
+  .beam { display: none; }
   .js-rise.is-in { opacity: 1; }
   .js-open { clip-path: none; transition: none; }
   .btn, .ico, .fav, .row__arrow, .more svg, .shot > img { transition-duration: .01ms; }
