@@ -15,12 +15,12 @@ lumiere/
   js/script.js
 ```
 
-## O que você precisa trocar antes de publicar
+## O que você precisa trocar antes de divulgar
 
 ### 1. O link do WhatsApp (importante)
 
 Foi lido da bio do Instagram a partir de uma captura de tela, então
-**pode estar errado**. Confira antes de publicar.
+**pode estar errado**. Confira antes de divulgar.
 
 Ele aparece em dois lugares:
 
@@ -35,80 +35,79 @@ Troque nos dois.
 
 ### 2. As fotos
 
-Nenhuma foto foi inventada. No lugar delas há placas de luz, marcadas com
-"Foto da peça" e "Foto do hero".
+Nenhuma foto foi inventada. No lugar delas há placas de luz, marcadas na
+tela com "Foto do hero", "Foto da peça" e "Foto editorial".
 
-**Foto do hero** (`index.html`, seção `.hero`): troque
-
-```html
-<span class="hero__plate" aria-hidden="true"></span>
-```
-
-por
+**Hero, duas fotos lado a lado.** Troque cada `<span class="hero__plate">` por:
 
 ```html
-<img class="hero__photo" src="img/hero.jpg" alt="Modelos vestindo peças da Lumière">
+<img class="hero__photo" src="img/hero-1.jpg" alt="Modelo vestindo peça da Lumière">
 ```
 
-Ideal: 2400x1200, com as modelos nas laterais para o nome respirar no meio.
+Formato quadrado, por volta de 1200x1200. Deixe a modelo mais para a
+borda externa, porque o nome fica no meio, sobre a emenda das duas.
 
-**Modelo na frente das letras** (o efeito da referência, opcional): salve um
-PNG de fundo transparente e troque
+**Peças, doze fotos.** Em cada cartão, troque `<span class="shot__plate">` por:
 
 ```html
-<span class="hero__front" aria-hidden="true"></span>
+<img src="img/alice.jpg" alt="Vestido longo Alice">
 ```
 
-por
+Proporção 4x5, por exemplo 900x1125.
+
+**Faixa editorial, três fotos.** Troque cada `<span class="strip__plate">` por:
 
 ```html
-<img class="hero__cut" src="img/hero-frente.png" alt="">
+<img src="img/editorial-1.jpg" alt="">
 ```
 
-**Fotos das peças**: em cada cartão, troque
+Quadradas. São fotos de clima, não de produto.
 
-```html
-<span class="shot__plate" style="--lx:42%; --ly:24%;"></span>
-```
-
-por
-
-```html
-<img src="img/vestido-longo-alice.jpg" alt="Vestido longo Alice">
-```
-
-Proporção 3x4 (por exemplo 900x1200). Depois que todas entrarem, apague os
-blocos `.shot__plate` e `.hero__plate` do `css/style.css`.
+Depois que todas entrarem, apague os blocos `.hero__plate`, `.shot__plate`
+e `.strip__plate` do `css/style.css`.
 
 ### 3. Os nomes das peças
 
-As oito peças são **exemplo**, não produtos reais. Em cada `<article class="card">`
-troque `data-nome`, o `aria-label` do link, o `aria-label` do botão de salvar
-e o `<span class="card__name">`. O `data-id` pode ser qualquer texto curto e
-único (ele guarda os favoritos no navegador da cliente).
+As doze peças são **exemplo**, não produtos reais. Em cada
+`<article class="card">` troque:
+
+- `data-nome` (usado pela busca)
+- `data-cat` (liga a peça ao filtro da nav: `vestidos`, `alfaiataria`,
+  `tricot` ou `acessorios`)
+- `data-id` (qualquer texto curto e único, guarda os favoritos)
+- o `aria-label` do link e o do botão de salvar
+- o `<span class="card__name">`
 
 ### 4. Os preços
 
 Estão como "Sob consulta", que é verdade hoje: a negociação acontece na
 conversa. Para mostrar valor, troque o conteúdo de `<span class="card__price">`.
 
+### 5. A barra de aviso
+
+O texto que rola no topo está em `index.html`, na variável do bloco
+`.ticker`. Ele aparece duas vezes seguidas (é assim que a rolagem fica
+contínua), então **troque nas duas cópias**.
+
 ## O que o site faz
 
-- **Busca** que filtra as peças pelo nome, ignorando acento ("olivia" acha "Olívia").
+- **Filtro por categoria** na nav: Vestidos, Alfaiataria, Tricot, Acessórios.
+- **Busca** por nome, ignorando acento ("olivia" acha "Olívia"). Combina com
+  o filtro: Tricot mais "lia" devolve só o Cardigã Lia.
 - **Peças salvas**: a cliente marca no coração, e a lista fica guardada no
-  navegador dela. Uma bandeja aparece embaixo com "Copiar e abrir o WhatsApp",
-  que copia a lista pronta e abre a conversa.
+  navegador dela. Uma bandeja aparece embaixo com "Copiar e abrir o
+  WhatsApp", que copia a lista pronta e abre a conversa.
 - **Facho de luz** sobre a grade: no computador, uma luz quente acompanha o
-  cursor e acende a peça por onde passa. É o nome da marca virando
-  comportamento. Some no celular e com movimento reduzido.
-- **Revelação por luz**: a peça entra na tela levemente apagada e acende.
-  Funciona igual quando as fotos reais estiverem no lugar.
+  cursor e acende a peça por onde passa. Some no celular e com movimento
+  reduzido.
+- A barra de aviso **pausa** quando o cursor entra nela ou quando recebe
+  foco de teclado.
 - Toda a navegação funciona por teclado, com foco visível.
 - Respeita `prefers-reduced-motion`.
 
-Não existe carrinho nem conta de usuário, de propósito: seria um botão que não
-leva a lugar nenhum. A venda continua acontecendo na conversa, que é como a
-loja já vende.
+Não existe carrinho nem conta de usuário, de propósito: seria um botão que
+não leva a lugar nenhum. A venda continua acontecendo na conversa, que é
+como a loja já vende.
 
 ## Publicar
 
@@ -117,18 +116,21 @@ como diretório publicado. Não há passo de build.
 
 ## Decisões de projeto
 
-- **Paleta** amostrada da imagem de referência que você mandou, não escolhida
-  de memória: creme com viés oliva (`#e9e7da`), célula de produto (`#ece9e3`),
-  faixa taupe. O acento é o **dourado da própria Lumière** (`#7a5d28`),
-  escurecido até passar 5.0:1 no papel. Ele é o único acento da página, e
-  aparece na barra das categorias e no coração quando a peça está salva.
-- **A estrutura vem da referência, a voz é da Lumière.** A frase da marca
-  abre o hero, e uma faixa editorial em Bodoni quebra o ritmo de grade entre
-  a coleção e as categorias. Sem ela a página serviria para qualquer loja.
-- **Tipografia**: Bodoni Moda italic no logotipo, Archivo em todo o resto.
-  Auto-hospedadas, então a página não depende do Google estar no ar nem pisca
-  fonte de sistema no carregamento.
-- **Ícones** da biblioteca Phosphor, embutidos no HTML. Nenhum foi desenhado
-  à mão.
-- **Contraste** verificado: texto principal 15.2:1, secundário 6.1:1,
-  logotipo do hero 4.8:1 sobre a faixa.
+- **Estrutura** copiada da referência que você mandou: barra de aviso
+  rolando, nav com categorias, hero em duas imagens com o nome por cima,
+  fileira densa de seis produtos, faixa de três fotos editoriais.
+- **A voz é da Lumière.** O dourado da marca (`#7a5d28`) é o único acento.
+  A frase "Vista-se de luz" abre o hero. A faixa em Bodoni entre a coleção
+  e a entrega é o único momento que não é grade, e existe para a página não
+  servir para qualquer loja.
+- **Tipografia**: Bodoni Moda italic no logotipo e no hero, Archivo em todo
+  o resto. Auto-hospedadas, então a página não depende do Google estar no ar
+  nem pisca fonte de sistema no carregamento.
+- **Ícones** da biblioteca Phosphor, embutidos no HTML. Nenhum desenhado à mão.
+- **Contraste medido nos pixels renderizados**, não estimado: texto
+  principal 18.9:1, secundário 5.3:1, dourado do hero 5.75:1 sobre a faixa
+  escurecida. O escurecimento atrás do nome existe justamente para o
+  contraste continuar válido quando entrar uma foto clara.
+- A barra de aviso está em caixa normal, não em caixa alta como a
+  referência: são mais de cem caracteres rolando, e caixa alta nesse volume
+  atrapalha a leitura.

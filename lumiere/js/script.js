@@ -111,14 +111,49 @@
   }
 
   /* ---------------------------------------------------
-     2. Busca
+     2. Filtro: categoria da nav e busca por nome
+     Os dois trabalham juntos. Escolher "Tricot" e digitar
+     "lia" deixa so o cardiga, nao um ou outro.
      --------------------------------------------------- */
+  var catAtual = "todas";
+  var termoAtual = "";
+
+  function limpaAcento(s) {
+    return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
+  }
+
+  function aplicarFiltro() {
+    var vistos = 0;
+    document.querySelectorAll(".card").forEach(function (card) {
+      var okCat = catAtual === "todas" || card.getAttribute("data-cat") === catAtual;
+      var okTermo = !termoAtual || limpaAcento(card.getAttribute("data-nome")).indexOf(termoAtual) !== -1;
+      var bate = okCat && okTermo;
+      card.hidden = !bate;
+      if (bate) vistos++;
+    });
+
+    var conta = document.getElementById("searchTally");
+    var vazio = document.getElementById("empty");
+    var filtrando = termoAtual || catAtual !== "todas";
+    if (conta) conta.textContent = termoAtual ? (vistos === 1 ? "1 peça" : vistos + " peças") : "";
+    if (vazio) vazio.hidden = !(filtrando && vistos === 0);
+  }
+
+  function ligarCategorias() {
+    var links = document.querySelectorAll(".nav__link");
+    links.forEach(function (link) {
+      link.addEventListener("click", function () {
+        catAtual = link.getAttribute("data-cat");
+        links.forEach(function (o) { o.classList.toggle("is-on", o === link); });
+        aplicarFiltro();
+      });
+    });
+  }
+
   function ligarBusca() {
     var botao = document.getElementById("searchBtn");
     var caixa = document.getElementById("searchBox");
     var campo = document.getElementById("searchInput");
-    var conta = document.getElementById("searchTally");
-    var vazio = document.getElementById("empty");
     if (!botao || !caixa || !campo) return;
 
     botao.addEventListener("click", function () {
@@ -128,26 +163,16 @@
       if (aberta) campo.focus();
     });
 
-    function limpaAcento(s) {
-      return s.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase();
-    }
-
     campo.addEventListener("input", function () {
-      var termo = limpaAcento(campo.value.trim());
-      var vistos = 0;
-      document.querySelectorAll(".card").forEach(function (card) {
-        var bate = !termo || limpaAcento(card.getAttribute("data-nome")).indexOf(termo) !== -1;
-        card.hidden = !bate;
-        if (bate) vistos++;
-      });
-      conta.textContent = termo ? (vistos === 1 ? "1 peça" : vistos + " peças") : "";
-      if (vazio) vazio.hidden = vistos !== 0;
+      termoAtual = limpaAcento(campo.value.trim());
+      aplicarFiltro();
     });
 
     campo.addEventListener("keydown", function (e) {
       if (e.key !== "Escape") return;
       campo.value = "";
-      campo.dispatchEvent(new Event("input"));
+      termoAtual = "";
+      aplicarFiltro();
       caixa.hidden = true;
       botao.setAttribute("aria-expanded", "false");
       botao.focus();
@@ -194,9 +219,9 @@
      --------------------------------------------------- */
   function ligarRevelacao() {
     var alvos = [];
-    var word = document.querySelector(".hero__word");
+    var word = document.querySelector(".hero__line");
     if (word) { word.classList.add("js-open"); alvos.push(word); }
-    document.querySelectorAll(".card, .rows, .block__head, .note, .band__line, .band__sub, .foot__line")
+    document.querySelectorAll(".card, .rows, .wanted__title, .note, .band__line, .band__sub, .foot__line")
       .forEach(function (el) { el.classList.add("js-rise"); alvos.push(el); });
 
     if (!("IntersectionObserver" in window)) {
@@ -229,6 +254,7 @@
     pintarBandeja();
     ligarCoracoes();
     ligarBandeja();
+    ligarCategorias();
     ligarBusca();
     ligarFacho();
     ligarRevelacao();
