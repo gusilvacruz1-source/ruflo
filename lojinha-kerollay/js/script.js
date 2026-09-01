@@ -240,7 +240,7 @@ function renderCarrinho() {
 
   el.vazio.hidden = carrinho.length > 0;
   el.limpar.hidden = carrinho.length === 0;
-  el.finalizar.disabled = carrinho.length === 0;
+
   el.aviso.hidden = !temSobEncomenda();
 
   el.lista.innerHTML = '';
@@ -297,6 +297,7 @@ function renderCarrinho() {
   });
 
   el.total.textContent = brl.format(totalCarrinho());
+  atualizarLinkFinalizar();
 }
 
 /* ---------------------------------------------------------------
@@ -331,10 +332,16 @@ function montarMensagem() {
   return linhas.join('\n');
 }
 
-function finalizar() {
-  if (!carrinho.length) return;
-  const url = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(montarMensagem())}`;
-  window.open(url, '_blank', 'noopener');
+// O botao e um link de verdade, com o href refeito a cada mudanca do
+// carrinho: window.open cai em bloqueador de pop-up e dentro de iframe.
+function atualizarLinkFinalizar() {
+  if (!carrinho.length) {
+    el.finalizar.removeAttribute('href');
+    el.finalizar.setAttribute('aria-disabled', 'true');
+    return;
+  }
+  el.finalizar.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(montarMensagem())}`;
+  el.finalizar.setAttribute('aria-disabled', 'false');
 }
 
 /* ---------------------------------------------------------------
@@ -384,7 +391,13 @@ function mostrarToast(texto) {
 el.cartBtn.addEventListener('click', abrirDrawer);
 el.fechar.addEventListener('click', fecharDrawer);
 el.overlay.addEventListener('click', fecharDrawer);
-el.finalizar.addEventListener('click', finalizar);
+el.finalizar.addEventListener('click', (e) => {
+  if (el.finalizar.getAttribute('aria-disabled') === 'true') e.preventDefault();
+});
+
+// nome e entrega entram na mensagem: o href precisa acompanhar
+el.nome.addEventListener('input', atualizarLinkFinalizar);
+el.entrega.addEventListener('change', atualizarLinkFinalizar);
 
 el.limpar.addEventListener('click', () => {
   carrinho = [];

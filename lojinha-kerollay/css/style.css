@@ -101,7 +101,9 @@ a{color:inherit}
   box-shadow:0 12px 30px rgba(255,95,162,.32);
 }
 .btn--primary:hover{transform:translateY(-2px); box-shadow:0 16px 38px rgba(255,95,162,.45)}
-.btn--primary:disabled{opacity:.45; cursor:not-allowed; transform:none; box-shadow:none}
+.btn--primary:disabled,
+.btn--primary[aria-disabled="true"]{opacity:.45; cursor:not-allowed; transform:none; box-shadow:none}
+.btn--primary[aria-disabled="true"]:hover{transform:none; box-shadow:none}
 .btn--ghost{background:rgba(255,255,255,.06); border-color:var(--borda-forte); color:var(--texto)}
 .btn--ghost:hover{background:rgba(255,255,255,.12); transform:translateY(-2px)}
 .btn--lg{padding:15px 30px; font-size:1rem}
