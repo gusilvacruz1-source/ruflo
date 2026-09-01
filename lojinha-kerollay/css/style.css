@@ -1,7 +1,27 @@
 /* =====================================================================
    LOJINHA KEROLLAY — moodboard editorial em bento grid
    Fundo areia, blocos vinho, cantos generosos, controles em pill.
+
+   As três fontes são servidas pelo próprio site (pasta fonts/, subconjunto
+   latino, ~112 KB no total). Nada de Google Fonts: menos uma conexão a
+   terceiros para abrir a página no 4G da cliente.
    ===================================================================== */
+
+@font-face{
+  font-family:'Plus Jakarta Sans';
+  src:url('../fonts/jakarta.woff2') format('woff2');
+  font-weight:400 800;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:'Bodoni Moda';
+  src:url('../fonts/bodoni.woff2') format('woff2');
+  font-weight:400 700;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:'Pinyon Script';
+  src:url('../fonts/pinyon.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap;
+}
 
 :root{
   --areia:#C4B29E;
@@ -18,6 +38,7 @@
   --tinta:#2A1512;
   --tinta-suave:#513328;
 
+  --script:'Pinyon Script','Apple Chancery','Segoe Script',cursive;
   --display:'Bodoni Moda',Didot,'Times New Roman',Georgia,serif;
   --ui:'Plus Jakarta Sans',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
 
@@ -154,6 +175,16 @@ p{margin:0}
 }
 .ladrilho--vinho{background:var(--vinho);color:var(--creme)}
 .ladrilho--areia{background:var(--areia-clara);color:var(--tinta)}
+
+/* A caligráfica fica só nos dois ladrilhos grandes. Ela tem altura-de-x
+   pequena e hastes finas: em corpo pequeno some, e em texto corrido cansa.
+   Por isso vem maior, com entrelinha folgada, e não desce para o catálogo. */
+.ladrilho--capa h1,
+.ladrilho--sobre h2{
+  font-family:var(--script);font-weight:400;letter-spacing:.005em;
+}
+.ladrilho--capa h1{font-size:clamp(3.1rem,6.6vw,5.4rem);line-height:1.18}
+.ladrilho--sobre h2{font-size:clamp(2.2rem,4.2vw,3.2rem);line-height:1.22}
 
 /* capa */
 .bento--capa{margin-top:26px}
@@ -363,7 +394,8 @@ p{margin:0}
   .marca__nome{font-size:1.05rem}
   .ladrilho{padding:24px}
   .ladrilho--flor{min-height:230px}
-  .capa__acoes .btn{flex:1;min-width:0}
+  .capa__acoes{flex-direction:column;align-items:stretch}
+  .capa__acoes .btn{width:100%}
   .ladrilho--nota,.ladrilho--marcas{grid-column:span 12}
   .produto,.produto:nth-child(6n+1),.produto:nth-child(6n+6){grid-column:span 6}
   .produto:nth-child(6n+1) .produto__interno,.produto:nth-child(6n+6) .produto__interno{display:contents}

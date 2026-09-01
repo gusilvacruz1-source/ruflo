@@ -27,11 +27,26 @@ Texto secundário é tingido do próprio matiz, nunca cinza.
 
 ## Tipografia
 
-Duas vozes.
+Três vozes, todas servidas pelo próprio site em `fonts/` (subconjunto
+latino, ~112 KB somadas). Sem Google Fonts: a página não faz **nenhuma**
+requisição a terceiros.
+
+**Caligráfica — Pinyon Script** (`--script`), peso 400. Só no h1 do ladrilho
+da capa e no h2 do ladrilho do sobre — os dois blocos grandes. Escolhida a
+partir de uma referência de script clássica trazida pelo cliente, entre quatro
+candidatas testadas com os acentos do português.
+
+- Capa `clamp(3.1rem, 6.6vw, 5.4rem)`, entrelinha 1.18
+- Sobre `clamp(2.2rem, 4.2vw, 3.2rem)`, entrelinha 1.22
+
+Vem grande e com entrelinha folgada de propósito: altura-de-x pequena e hastes
+finas exigem tamanho, e as ascendentes e descendentes longas colidem em
+entrelinha apertada. **Não desce para o catálogo nem para o carrinho** —
+caligráfica em texto de interface cansa e em corpo pequeno some.
 
 **Display — Bodoni Moda** (`--display`), serifada didone de alto contraste,
-com `font-optical-sizing: auto`. Carrega h1, h2 e a marca no topo. Escolhida a
-partir de uma referência de cartaz de museu trazida pelo cliente.
+com `font-optical-sizing: auto`. Carrega os títulos de seção sobre a areia e a
+marca no topo. Escolhida a partir de uma referência de cartaz de museu.
 
 - h1 `clamp(2.6rem, 5.6vw, 4.6rem)`, peso 500, tracking `-.008em`
 - h2 `clamp(1.85rem, 3.6vw, 2.75rem)`, peso 500
