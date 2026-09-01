@@ -78,14 +78,14 @@ a{color:inherit}
 
 @media (max-width:820px){
   .bg-flor{
-    background-position:center top -40px;
-    background-size:150% auto;
-    opacity:.42;
+    background-position:center top -30px;
+    background-size:145% auto;
+    opacity:.55;
   }
   .bg-veu{
     background:
-      radial-gradient(700px 520px at 50% 0%, rgba(255,95,162,.24), transparent 62%),
-      linear-gradient(180deg, rgba(13,7,12,.72) 0%, rgba(13,7,12,.93) 46%, rgba(13,7,12,.97) 100%);
+      radial-gradient(700px 520px at 50% 0%, rgba(255,95,162,.20), transparent 62%),
+      linear-gradient(180deg, rgba(13,7,12,.52) 0%, rgba(13,7,12,.86) 44%, rgba(13,7,12,.96) 100%);
   }
 }
 
