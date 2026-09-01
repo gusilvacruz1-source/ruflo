@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Lojinha Kerollay | Makes, Kits, Acessórios e Personalizados</title>
+<meta name="description" content="Makes, body splash, kits Victoria's Secret, acessórios, lembrancinhas e personalizados para todas as ocasiões. Peça pelo WhatsApp (42) 98808-4236.">
+<meta name="theme-color" content="#120a10">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="Lojinha Kerollay | Personalizados, Makes e Acessórios">
+<meta property="og:description" content="Makes, kits de perfumaria, acessórios, lembrancinhas e presentes criativos. Monte seu carrinho e finalize no WhatsApp.">
+<meta property="og:locale" content="pt_BR">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,600;0,700;1,600&family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<a href="#catalogo" class="skip-link">Ir para o catálogo</a>
+
+<!-- FUNDO DE FLOR -->
+<div class="bg-flor" aria-hidden="true"></div>
+<div class="bg-veu" aria-hidden="true"></div>
+
+<header class="header" id="header">
+  <div class="container header__inner">
+    <a href="#inicio" class="logo">
+      <span class="logo__badge">
+        <svg viewBox="0 0 24 24" width="20" height="20" fill="none" aria-hidden="true">
+          <path d="M12 20s-7-4.3-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.7-7 9-7 9z" fill="#fff"/>
+        </svg>
+      </span>
+      <span class="logo__text">Kerollay<small>Personalizados &amp; Acessórios</small></span>
+    </a>
+
+    <nav class="nav" id="nav" aria-label="Navegação principal">
+      <a href="#inicio">Início</a>
+      <a href="#catalogo">Catálogo</a>
+      <a href="#sobre">Sobre</a>
+      <a href="#contato">Contato</a>
+    </nav>
+
+    <div class="header__actions">
+      <button class="cart-btn" id="cartBtn" aria-label="Abrir carrinho">
+        <svg viewBox="0 0 24 24" width="21" height="21" fill="none" aria-hidden="true">
+          <path d="M4 5h2l2.2 10.4a2 2 0 002 1.6h7.1a2 2 0 002-1.5L21 8H7" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle cx="10" cy="20" r="1.4" fill="currentColor"/><circle cx="18" cy="20" r="1.4" fill="currentColor"/>
+        </svg>
+        <span class="cart-btn__count" id="cartCount" hidden>0</span>
+      </button>
+
+      <button class="nav-toggle" id="navToggle" aria-label="Abrir menu" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<main>
+
+  <!-- HERO -->
+  <section class="hero" id="inicio">
+    <div class="container hero__inner">
+      <p class="eyebrow">🎀 Personalizados para todas as ocasiões</p>
+      <h1>Presentes criativos que <span>ficam na memória</span>.</h1>
+      <p class="hero__lead">
+        Makes, body splash, kits de perfumaria, acessórios e lembrancinhas —
+        escolhidos com carinho e entregues do jeitinho que você imaginou.
+      </p>
+      <div class="hero__actions">
+        <a href="#catalogo" class="btn btn--primary btn--lg">Ver catálogo</a>
+        <a href="https://wa.me/5542988084236?text=Ol%C3%A1%2C%20Kerollay!%20Vim%20pelo%20site%20e%20quero%20saber%20mais%20%F0%9F%92%95" target="_blank" rel="noopener" class="btn btn--ghost btn--lg">Falar no WhatsApp</a>
+      </div>
+
+      <ul class="hero__tags">
+        <li>💄 Makes</li>
+        <li>🎁 Presentes criativos</li>
+        <li>💌 Lembrancinhas</li>
+        <li>🛍️ Acessórios</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- CATÁLOGO -->
+  <section class="section" id="catalogo">
+    <div class="container">
+      <p class="section__eyebrow">Catálogo</p>
+      <h2 class="section__title">Escolha os seus favoritos</h2>
+      <p class="section__lead">
+        Toque em <strong>Adicionar</strong> para montar o seu carrinho. No final, o pedido
+        vai pronto para o WhatsApp da Kerollay — sem cadastro, sem complicação.
+      </p>
+
+      <div class="filtros" id="filtros" role="group" aria-label="Filtrar por categoria"></div>
+
+      <div class="grid grid--produtos" id="gridProdutos"></div>
+      <p class="grid__vazio" id="gridVazio" hidden>Nenhum produto nesta categoria por enquanto.</p>
+    </div>
+  </section>
+
+  <!-- COMO FUNCIONA -->
+  <section class="section section--passos">
+    <div class="container">
+      <p class="section__eyebrow">Como funciona</p>
+      <h2 class="section__title">Pedir é rapidinho</h2>
+      <ol class="passos">
+        <li><span>1</span><strong>Monte o carrinho</strong><p>Adicione os produtos que você quer e escolha a quantidade.</p></li>
+        <li><span>2</span><strong>Finalize no WhatsApp</strong><p>O site monta a mensagem com os itens e o total. É só enviar.</p></li>
+        <li><span>3</span><strong>Combine o pagamento</strong><p>A Kerollay confirma tudo com você e combina entrega ou retirada.</p></li>
+      </ol>
+    </div>
+  </section>
+
+  <!-- SOBRE -->
+  <section class="section" id="sobre">
+    <div class="container sobre">
+      <div>
+        <p class="section__eyebrow">Sobre</p>
+        <h2 class="section__title">Feito com carinho, do jeitinho que você pediu</h2>
+        <p class="sobre__texto">
+          A Lojinha Kerollay nasceu do gosto por presentear bem. Aqui você encontra
+          makes e perfumaria das marcas que todo mundo ama, além de personalizados
+          e lembrancinhas criadas sob encomenda para aniversário, casamento, chá de bebê
+          e qualquer ocasião que mereça algo especial.
+        </p>
+        <p class="sobre__texto">
+          Cada pedido é combinado direto com a Kerollay pelo WhatsApp — assim dá para
+          ajustar cor, nome, tema e prazo com calma.
+        </p>
+        <a href="https://www.instagram.com/lojinha_kerollay" target="_blank" rel="noopener" class="link-insta">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="12" r="4" stroke="currentColor" stroke-width="1.8"/><circle cx="17.5" cy="6.5" r="1.2" fill="currentColor"/></svg>
+          @lojinha_kerollay — siga no Instagram
+        </a>
+      </div>
+      <div class="sobre__selos">
+        <div class="selo"><strong>🎀</strong><span>Personalizados sob encomenda</span></div>
+        <div class="selo"><strong>💄</strong><span>Makes e perfumaria</span></div>
+        <div class="selo"><strong>🎁</strong><span>Presentes criativos</span></div>
+        <div class="selo"><strong>💬</strong><span>Atendimento pelo WhatsApp</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CONTATO -->
+  <section class="section section--contato" id="contato">
+    <div class="container">
+      <p class="section__eyebrow">Fale com a gente</p>
+      <h2 class="section__title">Contato</h2>
+
+      <div class="contato">
+        <a class="contato__item" href="https://wa.me/5542988084236?text=Ol%C3%A1%2C%20Kerollay!%20Vim%20pelo%20site%20%F0%9F%92%95" target="_blank" rel="noopener">
+          <span class="contato__icone">💬</span>
+          <div><strong>WhatsApp</strong><p>(42) 98808-4236</p></div>
+        </a>
+        <a class="contato__item" href="https://www.instagram.com/lojinha_kerollay" target="_blank" rel="noopener">
+          <span class="contato__icone">📷</span>
+          <div><strong>Instagram</strong><p>@lojinha_kerollay</p></div>
+        </a>
+        <a class="contato__item" href="https://ig.me/m/lojinha_kerollay" target="_blank" rel="noopener">
+          <span class="contato__icone">📩</span>
+          <div><strong>Direct</strong><p>Chamar no direct</p></div>
+        </a>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="footer">
+  <div class="container footer__inner">
+    <div class="logo">
+      <span class="logo__badge">
+        <svg viewBox="0 0 24 24" width="18" height="18" fill="none" aria-hidden="true">
+          <path d="M12 20s-7-4.3-7-9a4 4 0 017-2.6A4 4 0 0119 11c0 4.7-7 9-7 9z" fill="#fff"/>
+        </svg>
+      </span>
+      <span class="logo__text">Kerollay<small>Personalizados &amp; Acessórios</small></span>
+    </div>
+    <p class="footer__copy">© <span id="year"></span> Lojinha Kerollay — Todos os direitos reservados.</p>
+    <a href="https://www.instagram.com/lojinha_kerollay" target="_blank" rel="noopener" class="footer__insta">Instagram</a>
+  </div>
+</footer>
+
+<!-- CARRINHO -->
+<div class="drawer-overlay" id="drawerOverlay" hidden></div>
+
+<aside class="drawer" id="drawer" aria-labelledby="drawerTitulo" aria-hidden="true">
+  <header class="drawer__topo">
+    <h2 id="drawerTitulo">Seu carrinho</h2>
+    <button class="drawer__fechar" id="drawerFechar" aria-label="Fechar carrinho">&times;</button>
+  </header>
+
+  <div class="drawer__corpo" id="drawerCorpo">
+    <p class="drawer__vazio" id="drawerVazio">
+      Seu carrinho está vazio.<br><span>Que tal começar pelas makes? 💕</span>
+    </p>
+    <ul class="cart-lista" id="cartLista"></ul>
+  </div>
+
+  <footer class="drawer__rodape">
+    <div class="drawer__campos">
+      <label>Seu nome
+        <input type="text" id="campoNome" placeholder="Como a Kerollay te chama?" autocomplete="name">
+      </label>
+      <label>Entrega
+        <select id="campoEntrega">
+          <option value="Combinar pelo WhatsApp">Combinar pelo WhatsApp</option>
+          <option value="Retirar com a Kerollay">Retirar com a Kerollay</option>
+          <option value="Entrega no meu endereço">Entrega no meu endereço</option>
+        </select>
+      </label>
+    </div>
+
+    <p class="drawer__aviso" id="drawerAviso" hidden>
+      Tem item sob encomenda no carrinho — o valor dele entra no orçamento pelo WhatsApp.
+    </p>
+
+    <div class="drawer__total">
+      <span>Total</span>
+      <strong id="cartTotal">R$ 0,00</strong>
+    </div>
+
+    <button class="btn btn--primary btn--full" id="btnFinalizar" disabled>
+      Finalizar no WhatsApp
+    </button>
+    <button class="drawer__limpar" id="btnLimpar" hidden>Esvaziar carrinho</button>
+  </footer>
+</aside>
+
+<a href="https://wa.me/5542988084236?text=Ol%C3%A1%2C%20Kerollay!%20Vim%20pelo%20site%20%F0%9F%92%95" target="_blank" rel="noopener" class="whats-float" aria-label="Falar no WhatsApp">
+  <svg viewBox="0 0 32 32" width="30" height="30" fill="#fff" aria-hidden="true"><path d="M16 3C9 3 3.3 8.7 3.3 15.7c0 2.5.7 4.8 1.9 6.9L3 29l6.6-2.1c2 1.1 4.2 1.7 6.4 1.7 7 0 12.7-5.7 12.7-12.7C28.7 8.7 23 3 16 3zm0 23.1c-2 0-4-.5-5.7-1.6l-.4-.2-4 1.3 1.3-3.9-.3-.4a10.4 10.4 0 01-1.7-5.6C5.2 9.9 10 5.1 16 5.1S26.8 9.9 26.8 15.7 22 26.1 16 26.1zm5.9-7.8c-.3-.2-1.9-.9-2.2-1s-.5-.2-.8.2-.9 1-1.1 1.3-.4.3-.7.1a8.6 8.6 0 01-2.6-1.6 9.6 9.6 0 01-1.8-2.2c-.2-.3 0-.5.1-.7l.5-.6c.2-.2.2-.3.3-.5s0-.4 0-.5-.8-1.9-1.1-2.6-.6-.6-.8-.6h-.7c-.2 0-.6.1-.9.4-.3.3-1.2 1.2-1.2 2.9s1.2 3.4 1.4 3.6c.2.3 2.4 3.7 5.9 5.1.8.3 1.4.5 1.9.7.8.2 1.5.2 2.1.1.6-.1 1.9-.8 2.2-1.5.3-.7.3-1.3.2-1.5-.1-.1-.3-.2-.6-.4z"/></svg>
+</a>
+
+<div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+<script src="js/produtos.js"></script>
+<script src="js/script.js"></script>
+</body>
+</html>
