@@ -27,14 +27,30 @@ Texto secundário é tingido do próprio matiz, nunca cinza.
 
 ## Tipografia
 
-Plus Jakarta Sans, 400 a 800. **Escolha fixada pelo cliente no brief** — o
-detector marca a fonte como batida e a regra do brief pinado prevalece.
+Duas vozes.
 
-- Display `clamp(2.35rem, 5.1vw, 4.15rem)`, peso 800, tracking `-.03em`
-- Seção `clamp(1.72rem, 3.3vw, 2.5rem)`, peso 800, tracking `-.025em`
+**Display — Bodoni Moda** (`--display`), serifada didone de alto contraste,
+com `font-optical-sizing: auto`. Carrega h1, h2 e a marca no topo. Escolhida a
+partir de uma referência de cartaz de museu trazida pelo cliente.
+
+- h1 `clamp(2.6rem, 5.6vw, 4.6rem)`, peso 500, tracking `-.008em`
+- h2 `clamp(1.85rem, 3.6vw, 2.75rem)`, peso 500
+- Marca `1.28rem`, peso 600, tracking 0
+
+Peso baixo de propósito: é o contraste grosso/fino que dá o ar editorial, e
+peso alto o achata. Tracking quase neutro — serifada de alto contraste não
+suporta o aperto que a sans aceita.
+
+**Interface — Plus Jakarta Sans** (`--ui`), 400 a 800. Corpo, botões,
+etiquetas, nomes de produto e todo o carrinho.
+
 - Corpo 16px/1.62, peso 500 · medida máxima 60ch
+- h3 (nome de produto) `1.02rem`, peso 700, tracking `-.015em`
 - Etiqueta `.74rem`, peso 700, caixa alta, tracking `.13em`
 - Números com `font-variant-numeric: tabular-nums` em preço, total e quantidade
+
+A serifada **não** desce para corpo pequeno: abaixo de ~1.2rem as hastes finas
+somem no celular. Nome de produto e preço ficam na sans por legibilidade.
 
 ## Forma
 
