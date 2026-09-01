@@ -75,7 +75,7 @@ site do Netlify abre a loja direto na raiz.
 
 1. Entre em **netlify.com** e faça login **com o GitHub**.
 2. **Add new site → Import an existing project → GitHub →** repositório `ruflo`.
-3. Em **Branch to deploy**, escolha `claude/grill-me-jpyv9r`
+3. Em **Branch to deploy**, escolha `loja-kerollay`
    (ou a branch para onde você tiver levado a loja).
 4. **Não mexa** em "Build command" nem em "Publish directory" — o
    `netlify.toml` já preenche. Clique em **Deploy**.
