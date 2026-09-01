@@ -109,24 +109,45 @@ function criarCard(p) {
   const foto = document.createElement('div');
   foto.className = 'produto__foto';
 
-  if (p.img) {
-    const img = document.createElement('img');
-    img.src = p.img;
-    img.alt = p.nome;
-    img.loading = 'lazy';
-    foto.appendChild(img);
-  } else {
-    const inicial = document.createElement('span');
-    inicial.className = 'produto__inicial';
-    inicial.textContent = p.nome.trim().charAt(0).toUpperCase();
-    inicial.setAttribute('aria-hidden', 'true');
+  // Desenho de reserva: fica na tela ate uma foto de verdade carregar.
+  const inicial = document.createElement('span');
+  inicial.className = 'produto__inicial';
+  inicial.textContent = p.nome.trim().charAt(0).toUpperCase();
+  inicial.setAttribute('aria-hidden', 'true');
 
-    const marca = document.createElement('span');
-    marca.className = 'produto__marca';
-    marca.textContent = CONFIG.nomeLoja;
+  const marca = document.createElement('span');
+  marca.className = 'produto__marca';
+  marca.textContent = CONFIG.nomeLoja;
 
-    foto.append(inicial, marca);
-  }
+  foto.append(inicial, marca);
+
+  // A foto e procurada pelo id do produto: basta salvar o arquivo como
+  // img/<id>.jpg (ou .png, .jpeg, .webp) que ela aparece sozinha. O campo
+  // 'img' do produto, quando preenchido, tem prioridade sobre isso.
+  const candidatas = p.img
+    ? [p.img]
+    : ['jpg', 'png', 'jpeg', 'webp'].map((ext) => `img/${p.id}.${ext}`);
+
+  const img = document.createElement('img');
+  img.alt = p.nome;
+  img.loading = 'lazy';
+  // Nada de hidden aqui: imagem em display:none com loading="lazy" nunca
+  // chega a ser buscada. Ela nasce transparente e aparece ao carregar.
+
+  let tentativa = 0;
+  img.addEventListener('error', () => {
+    tentativa += 1;
+    if (tentativa < candidatas.length) img.src = candidatas[tentativa];
+    else img.remove();
+  });
+  img.addEventListener('load', () => {
+    img.classList.add('carregada');
+    inicial.remove();
+    marca.remove();
+  });
+
+  foto.appendChild(img);
+  img.src = candidatas[0];
 
   if (p.tag) {
     const tag = document.createElement('span');

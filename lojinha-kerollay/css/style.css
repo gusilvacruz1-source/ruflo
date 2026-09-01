@@ -250,7 +250,12 @@ a{color:inherit}
   background:linear-gradient(150deg,#3a1c2c,#20111b);
   overflow:hidden;
 }
-.produto__foto img{width:100%; height:100%; object-fit:cover; display:block}
+.produto__foto img{
+  position:absolute; inset:0; width:100%; height:100%;
+  object-fit:cover; display:block;
+  opacity:0; transition:opacity .35s ease;
+}
+.produto__foto img.carregada{opacity:1}
 
 .produto__inicial{
   font-family:'Playfair Display',serif; font-size:3.6rem; font-weight:700;
