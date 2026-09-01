@@ -201,52 +201,6 @@ a { color: inherit; text-decoration: none; }
 .hero__glow--2 { width: 320px; height: 320px; background: var(--pink); bottom: -100px; left: -60px; opacity: .18; }
 .hero__glow--3 { width: 260px; height: 260px; background: var(--orange); top: 40%; left: 40%; opacity: .12; }
 
-.hero__logo-3d {
-  position: absolute;
-  top: 50%;
-  right: -20px;
-  width: min(42vw, 520px);
-  transform: translateY(-50%);
-  perspective: 1200px;
-  z-index: 0;
-  opacity: .55;
-  cursor: pointer;
-}
-.hero__logo-spin {
-  transform-style: preserve-3d;
-  filter: drop-shadow(0 30px 45px rgba(0,0,0,.5));
-  animation: heroLogoSpin 16s ease-in-out infinite;
-  transition: transform .35s ease-out, filter .35s ease-out;
-}
-.hero__logo-3d:hover .hero__logo-spin { filter: drop-shadow(0 30px 45px rgba(47,111,237,.55)); }
-.hero__logo-spin.is-tracking { animation: none; transition: transform 60ms linear; }
-.hero__logo-spin.is-clicked { animation: heroLogoClickSpin .9s cubic-bezier(.22,1,.36,1) 1; }
-.hero__logo-svg {
-  width: 100%;
-  height: auto;
-  display: block;
-}
-.hero__logo-word { fill: var(--text); }
-.hero__logo-icon-bg { fill: var(--blue); }
-.hero__logo-icon-fg { fill: #ffffff; }
-
-@keyframes heroLogoSpin {
-  0%, 100% { transform: rotateY(-24deg) rotateX(8deg) translateZ(0); }
-  50% { transform: rotateY(24deg) rotateX(-6deg) translateZ(30px); }
-}
-@keyframes heroLogoClickSpin {
-  0% { transform: rotateY(0deg) scale(1); }
-  45% { transform: rotateY(210deg) scale(1.1); }
-  100% { transform: rotateY(360deg) scale(1); }
-}
-@media (prefers-reduced-motion: reduce) {
-  .hero__logo-spin { animation: none; transform: rotateY(-16deg) rotateX(5deg); }
-  .hero__logo-spin.is-clicked { animation: none; }
-}
-@media (max-width: 860px) {
-  .hero__logo-3d { display: none; }
-}
-
 .hero__inner { position: relative; z-index: 1; max-width: 760px; }
 
 .eyebrow {
