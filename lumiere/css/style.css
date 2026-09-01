@@ -1,0 +1,640 @@
+@charset "UTF-8";
+
+/* =========================================================
+   Lumière | Moda & Estilo
+   Direção clara e editorial, fixada pelo usuário a partir de
+   uma referência real. A paleta foi amostrada da própria
+   imagem de referência, não escolhida de memória:
+   creme com viés oliva, célula de produto mais clara,
+   faixa taupe no hero.
+   Tema único e assumido. Toda cor é pintada explicitamente.
+   ========================================================= */
+
+:root {
+  --ground: #dedbcb;   /* fundo atrás do painel */
+  --paper:  #e9e7da;   /* painel da loja */
+  --cell:   #ece9e3;   /* célula de produto */
+  --taupe:  #c9beac;   /* fundo de foto de produto */
+  --taupe-d:#726a5c;   /* faixa do hero: creme sobre ele da 4.8:1 */
+  --white:  #f7f5ef;   /* preenchimento de botão sobre foto */
+
+  --ink:    #14120d;   /* 15.2:1 sobre o papel */
+  --ink-2:  #57544a;   /*  6.1:1 sobre o papel */
+  --brass:  #7a5d28;   /*  5.0:1 sobre o papel. O dourado da marca,
+                          escurecido ate ficar legivel. Unico acento. */
+  --rule:   #cbc7b6;   /* fio de 1px */
+
+  --ui:   "Archivo", system-ui, -apple-system, sans-serif;
+  --serif: "Bodoni Moda", "Times New Roman", serif;
+
+  --out:   cubic-bezier(0.23, 1, 0.32, 1);
+  --inout: cubic-bezier(0.77, 0, 0.175, 1);
+
+  --pad: clamp(1rem, 3.2vw, 2.75rem);
+  --bay: clamp(3rem, 6vw, 5rem);
+  --max: 1360px;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+/* o atributo hidden precisa vencer o display das classes abaixo */
+[hidden] { display: none !important; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--ink);
+  font-family: var(--ui);
+  font-size: 1rem;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* superfícies desenhadas pelo navegador, que também são design */
+::selection { background: var(--ink); color: var(--paper); }
+::-webkit-scrollbar { width: 11px; }
+::-webkit-scrollbar-track { background: var(--ground); }
+::-webkit-scrollbar-thumb { background: #b6b2a0; }
+::-webkit-scrollbar-thumb:hover { background: var(--brass); }
+html { scrollbar-color: #b6b2a0 var(--ground); scrollbar-width: thin; }
+
+:focus-visible { outline: 2px solid var(--brass); outline-offset: 3px; }
+
+a { color: inherit; text-decoration: none; }
+img { max-width: 100%; display: block; }
+h1, h2 { margin: 0; font-weight: 400; }
+p { margin: 0; }
+ul { margin: 0; padding: 0; list-style: none; }
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+
+.skip {
+  position: absolute; left: -9999px; top: 0; z-index: 200;
+  background: var(--ink); color: var(--paper);
+  font-size: .8rem; padding: .75rem 1.25rem;
+}
+.skip:focus { left: 0; }
+
+/* =========================================================
+   Painel
+   ========================================================= */
+.shell {
+  max-width: var(--max);
+  margin: clamp(0px, 2vw, 2rem) auto;
+  background: var(--paper);
+  border: 1px solid var(--rule);
+}
+
+/* =========================================================
+   Barra superior
+   ========================================================= */
+.bar {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 1rem;
+  padding: .75rem 1.5rem;
+  padding-inline: var(--pad);
+  border-bottom: 1px solid var(--rule);
+}
+.bar__side { display: flex; align-items: center; gap: .35rem; }
+.bar__side--end { justify-content: flex-end; }
+
+.word {
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 500;
+  font-size: clamp(1.35rem, 3.4vw, 1.85rem);
+  line-height: 1;
+  letter-spacing: .005em;
+  white-space: nowrap;
+}
+
+.ico {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 38px; height: 38px;
+  color: var(--ink);
+  border-radius: 2px;
+  transition: background .2s ease, transform .14s var(--out);
+}
+.ico svg { width: 19px; height: 19px; }
+.ico:active { transform: scale(.94); }
+.ico--sm { width: 30px; height: 30px; }
+.ico--sm svg { width: 15px; height: 15px; }
+
+.ico__badge {
+  position: absolute;
+  top: 3px; right: 2px;
+  min-width: 17px; height: 17px;
+  padding: 0 4px;
+  border-radius: 8px;
+  background: var(--ink);
+  color: var(--paper);
+  font-size: .6875rem;
+  font-weight: 600;
+  line-height: 17px;
+  text-align: center;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   Busca
+   ========================================================= */
+.search {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: .9rem 1.5rem;
+  padding-inline: var(--pad);
+  border-bottom: 1px solid var(--rule);
+}
+.search__label {
+  font-size: .6875rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  white-space: nowrap;
+}
+.search__field {
+  flex: 1;
+  min-width: 0;
+  font: inherit;
+  font-size: .95rem;
+  color: var(--ink);
+  background: transparent;
+  border: 0;
+  border-bottom: 1px solid var(--rule);
+  padding: .4rem 0;
+  caret-color: var(--brass);
+}
+.search__field::placeholder { color: #8d8a7c; }
+.search__field:focus { outline: none; border-bottom-color: var(--ink); }
+.search__tally {
+  font-size: .75rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   Hero: o nome ao fundo, as modelos por cima
+   ========================================================= */
+.hero {
+  position: relative;
+  aspect-ratio: 20 / 9;
+  overflow: hidden;
+  background: var(--taupe-d);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+/* camada 0: a fotografia (ou a placa que a substitui) */
+.hero__plate, .hero__photo {
+  position: absolute;
+  inset: 0;
+  width: 100%; height: 100%;
+  object-fit: cover;
+}
+.hero__plate {
+  background:
+    radial-gradient(40% 56% at 20% 30%, rgba(255, 250, 240, .22), transparent 66%),
+    radial-gradient(44% 60% at 80% 26%, rgba(255, 250, 240, .16), transparent 68%),
+    linear-gradient(164deg, #8b8071 0%, #726a5c 54%, #574f43 100%);
+}
+/* REMOVER quando a foto real entrar */
+.hero__plate::after {
+  content: "Foto do hero";
+  position: absolute;
+  left: var(--pad); top: .9rem;
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: #d9d3c6;
+}
+
+/* camada 1: o logotipo, atrás das modelas */
+.hero__word {
+  position: relative;
+  z-index: 1;
+  font-family: var(--serif);
+  font-style: italic;
+  font-weight: 400;
+  font-size: clamp(3.25rem, 15.5vw, 12rem);
+  line-height: .9;
+  letter-spacing: -.005em;
+  color: var(--white);
+  padding-bottom: .08em;
+  user-select: none;
+}
+
+/* camada 2: recorte em PNG transparente, para uma modelo passar
+   na frente das letras como na referência */
+.hero__front, .hero__cut {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  width: 100%; height: 100%;
+  object-fit: cover;
+  pointer-events: none;
+}
+
+.hero__tag {
+  position: relative;
+  z-index: 1;
+  margin-top: .9rem;
+  font-size: clamp(.6875rem, 1.5vw, .8rem);
+  font-weight: 600;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--white);
+  text-align: center;
+}
+
+.hero__btn {
+  position: absolute;
+  z-index: 3;
+  right: var(--pad);
+  bottom: clamp(1rem, 3vw, 2rem);
+}
+
+/* =========================================================
+   Botões
+   ========================================================= */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  background: var(--white);
+  color: var(--ink);
+  border: 1px solid transparent;
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  padding: .85rem 1.9rem;
+  transition: background .22s ease, color .22s ease, transform .14s var(--out);
+}
+.btn:active { transform: scale(.97); }
+.btn--sm { padding: .6rem 1.1rem; font-size: .6875rem; }
+
+/* =========================================================
+   Blocos
+   ========================================================= */
+.block { padding: 3rem 1.5rem; padding-block: var(--bay); padding-inline: var(--pad); }
+.block + .block { border-top: 1px solid var(--rule); }
+
+.block__head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1.5rem;
+  margin-bottom: 1.4rem;
+}
+.label {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--ink);
+}
+.more {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .75rem;
+  color: var(--ink-2);
+  transition: color .2s ease;
+}
+.more svg { width: 15px; height: 15px; transition: transform .28s var(--out); }
+
+/* =========================================================
+   Grade de produtos: fios contínuos, como uma tabela
+   ========================================================= */
+.grid {
+  position: relative;
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+}
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  background: var(--cell);
+}
+.card__hit { display: block; }
+
+.shot {
+  position: relative;
+  display: block;
+  aspect-ratio: 3 / 4;
+  overflow: hidden;
+  background: var(--taupe);
+}
+.shot > img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--out); }
+
+/* placa de luz no lugar da fotografia.
+   REMOVER este bloco quando as fotos reais entrarem. */
+.shot__plate {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(62% 46% at var(--lx, 50%) var(--ly, 22%), rgba(255, 252, 246, .34), transparent 78%),
+    linear-gradient(154deg, #ded7cb 0%, #cfc5b4 44%, var(--taupe) 72%, #ac9f8b 100%);
+}
+.shot__plate::after {
+  content: "Foto da peça";
+  position: absolute;
+  left: .8rem; bottom: .75rem;
+  font-size: .6875rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: #6f6555;
+}
+
+.tag {
+  position: absolute;
+  top: .6rem; left: .6rem;
+  background: var(--white);
+  color: var(--ink);
+  font-size: .6875rem;
+  font-weight: 700;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  padding: .3rem .55rem;
+}
+
+.fav {
+  position: absolute;
+  top: .45rem; right: .45rem;
+  z-index: 2;
+  width: 32px; height: 32px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--ink);
+  background: rgba(247, 245, 239, .82);
+  backdrop-filter: blur(3px);
+  -webkit-backdrop-filter: blur(3px);
+  border-radius: 2px;
+  transition: transform .14s var(--out), color .2s ease, background .2s ease;
+}
+.fav svg { width: 17px; height: 17px; }
+.fav:active { transform: scale(.9); }
+.fav[aria-pressed="true"] { color: var(--brass); background: var(--white); }
+.fav[aria-pressed="true"] svg { fill: currentColor; }
+
+.card__foot {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+  padding: .7rem .8rem;
+  border-top: 1px solid var(--rule);
+}
+.card__name { font-size: .8125rem; line-height: 1.3; }
+.card__price {
+  font-size: .8125rem;
+  color: var(--ink-2);
+  white-space: nowrap;
+  font-variant-numeric: tabular-nums;
+}
+
+.empty {
+  margin-top: 1.5rem;
+  font-size: .9rem;
+  color: var(--ink-2);
+}
+
+/* facho de luz sobre a grade. E o nome da marca virando
+   comportamento: a peca acende quando a luz passa por ela. */
+.beam {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  overflow: hidden;
+  pointer-events: none;
+}
+.beam__lamp {
+  position: absolute;
+  top: 0; left: 0;
+  width: 32rem; height: 32rem;
+  margin: -16rem 0 0 -16rem;
+  border-radius: 50%;
+  opacity: 0;
+  background: radial-gradient(circle closest-side,
+              rgba(255, 244, 219, .85),
+              rgba(255, 244, 219, .30) 46%,
+              transparent 72%);
+  mix-blend-mode: soft-light;
+  transition: opacity .55s var(--out);
+  will-change: transform;
+}
+.beam__lamp.is-on { opacity: 1; }
+
+/* =========================================================
+   Faixa editorial: o unico momento da pagina que nao e grade
+   ========================================================= */
+.band {
+  padding: 4rem 1.5rem;
+  padding-block: clamp(4rem, 9vw, 7.5rem);
+  padding-inline: var(--pad);
+  background: #e3e0d0;
+  border-top: 1px solid var(--rule);
+}
+.band__line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.75rem, 5vw, 3.4rem);
+  line-height: 1.18;
+  letter-spacing: -.01em;
+  max-width: 17ch;
+}
+.band__sub {
+  margin-top: 2rem;
+  max-width: 46ch;
+  font-size: .95rem;
+  line-height: 1.75;
+  color: var(--ink-2);
+}
+
+/* =========================================================
+   Linhas: categorias e entrega
+   ========================================================= */
+.rows { border-top: 1px solid var(--rule); }
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1.5rem;
+  padding: 1rem .25rem;
+  padding-block: clamp(.85rem, 1.8vw, 1.15rem);
+  border-bottom: 1px solid var(--rule);
+}
+.row__k { font-size: clamp(1rem, 2vw, 1.3rem); }
+.row__slash { color: var(--brass); }
+.row__v {
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+  color: var(--ink-2);
+  text-align: right;
+}
+.row__arrow { width: 24px; height: 24px; flex: none; transition: transform .3s var(--out); }
+.row--static { cursor: default; }
+
+.note {
+  margin-top: 1.75rem;
+  max-width: 58ch;
+  font-size: .95rem;
+  line-height: 1.7;
+  color: var(--ink-2);
+}
+
+/* =========================================================
+   Rodapé
+   ========================================================= */
+.foot {
+  border-top: 1px solid var(--rule);
+  padding: 3rem 1.5rem;
+  padding-block: var(--bay);
+  padding-inline: var(--pad);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  gap: 1.5rem 2.5rem;
+}
+.foot__line {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: clamp(1.15rem, 2.6vw, 1.5rem);
+  line-height: 1.45;
+  max-width: 22ch;
+}
+.foot__place {
+  font-size: .85rem;
+  color: var(--ink-2);
+}
+.foot__nav {
+  margin-left: auto;
+  display: flex;
+  gap: 1.5rem;
+  font-size: .75rem;
+  font-weight: 600;
+  letter-spacing: .12em;
+  text-transform: uppercase;
+}
+.foot__nav a { border-bottom: 1px solid var(--rule); padding-bottom: 2px; transition: border-color .2s ease; }
+
+/* =========================================================
+   Bandeja das peças salvas
+   ========================================================= */
+.tray {
+  position: fixed;
+  left: 50%;
+  bottom: clamp(.75rem, 2vw, 1.5rem);
+  transform: translateX(-50%);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  gap: .9rem;
+  padding: .55rem .55rem .55rem 1.1rem;
+  background: var(--ink);
+  color: var(--paper);
+  max-width: calc(100vw - 2rem);
+}
+.tray .btn { background: var(--paper); color: var(--ink); }
+.tray .ico { color: var(--paper); }
+.tray__txt {
+  font-size: .8125rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-variant-numeric: tabular-nums;
+}
+
+/* =========================================================
+   Movimento: contido, como pede uma vitrine clara
+   ========================================================= */
+.js-rise {
+  opacity: 0;
+  transform: translateY(14px);
+  transition: opacity .7s var(--out), transform .7s var(--out);
+  transition-delay: var(--wait, 0ms);
+}
+.js-rise.is-in { opacity: 1; transform: none; }
+
+/* as pecas nao apenas sobem: elas entram na luz */
+.card.js-rise .shot { filter: brightness(.88) saturate(.82); transition: filter 1s var(--out); transition-delay: var(--wait, 0ms); }
+.card.js-rise.is-in .shot { filter: none; }
+
+.js-open { clip-path: inset(0 0 100% 0); transition: clip-path .95s var(--inout); }
+.js-open.is-in { clip-path: inset(0 0 0 0); }
+
+/* =========================================================
+   Ponteiro fino apenas
+   ========================================================= */
+@media (hover: hover) and (pointer: fine) {
+  .ico:hover { background: rgba(20, 18, 13, .07); }
+  .btn:hover { background: var(--ink); color: var(--white); }
+  .tray .btn:hover { background: var(--white); color: var(--ink); }
+  .more:hover { color: var(--ink); }
+  .more:hover svg { transform: translateX(4px); }
+  .row:hover .row__arrow { transform: translateX(6px); }
+  .row:hover .row__k { color: var(--brass); }
+  .card:hover .shot > img { transform: scale(1.04); }
+  .card:hover .shot { filter: brightness(1.05); }
+  .fav:hover { background: var(--white); }
+  .foot__nav a:hover { border-color: var(--ink); }
+}
+
+/* =========================================================
+   Telas menores
+   ========================================================= */
+@media (max-width: 1000px) {
+  .grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .hero { aspect-ratio: 16 / 10; }
+}
+
+@media (max-width: 700px) {
+  .shell { margin: 0; border-left: 0; border-right: 0; }
+  .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .hero { aspect-ratio: 4 / 5; }
+  .hero__btn { right: 50%; transform: translateX(50%); }
+  .block__head { flex-direction: column; align-items: flex-start; gap: .6rem; }
+  .foot { flex-direction: column; align-items: flex-start; }
+  .foot__nav { margin-left: 0; }
+  .search { flex-wrap: wrap; gap: .5rem 1rem; }
+  .search__field { flex-basis: 100%; order: 3; }
+  .card__foot { flex-direction: column; align-items: flex-start; gap: .15rem; }
+  .tray { left: .75rem; right: .75rem; transform: none; max-width: none; }
+  .tray__txt { flex: 1; }
+}
+
+/* =========================================================
+   Movimento reduzido
+   ========================================================= */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .js-rise { opacity: 0; transform: none; transition: opacity .3s ease; }
+  .card.js-rise .shot, .card.js-rise.is-in .shot { filter: none; transition: none; }
+  .beam { display: none; }
+  .js-rise.is-in { opacity: 1; }
+  .js-open { clip-path: none; transition: none; }
+  .btn, .ico, .fav, .row__arrow, .more svg, .shot > img { transition-duration: .01ms; }
+  .btn:active, .ico:active, .fav:active { transform: none; }
+}
