@@ -157,6 +157,7 @@ function criarCard(p) {
     img.classList.add('carregada');
     inicial.remove();
     marca.remove();
+    prepararVideo(foto, img, p);
   });
 
   foto.appendChild(img);
@@ -216,6 +217,60 @@ function criarCard(p) {
   card.appendChild(interno);
 
   return card;
+}
+
+/* ---------------------------------------------------------------
+   VÍDEO DO PRODUTO
+   ---------------------------------------------------------------
+   Salve img/<id>.mp4 e o card ganha um botão de play sobre a foto.
+   A busca só acontece depois que a foto do produto carregou: produto
+   sem foto não gera requisição nenhuma, então o catálogo vazio não
+   paga por isso.
+   --------------------------------------------------------------- */
+
+function prepararVideo(foto, img, p) {
+  const video = document.createElement('video');
+  video.className = 'produto__video';
+  video.src = p.video || `img/${p.id}.mp4`;
+  video.preload = 'metadata';
+  video.playsInline = true;
+  video.controls = true;
+  video.hidden = true;
+
+  // Sem vídeo para este produto: some sem deixar rastro.
+  video.addEventListener('error', () => video.remove(), { once: true });
+
+  video.addEventListener('loadedmetadata', () => {
+    const play = document.createElement('button');
+    play.type = 'button';
+    play.className = 'produto__play';
+    play.setAttribute('aria-label', `Ver o vídeo de ${p.nome}`);
+    play.appendChild(icone('i-play', 'ico'));
+
+    const card = foto.closest('.produto');
+
+    play.addEventListener('click', () => {
+      img.hidden = true;
+      play.hidden = true;
+      video.hidden = false;
+      card.classList.add('tocando');
+      video.play().catch(() => {
+        // Autoplay barrado: o vídeo fica visível com os controles.
+      });
+    });
+
+    const voltarParaFoto = () => {
+      video.hidden = true;
+      img.hidden = false;
+      play.hidden = false;
+      card.classList.remove('tocando');
+    };
+
+    video.addEventListener('ended', voltarParaFoto);
+    foto.appendChild(play);
+  }, { once: true });
+
+  foto.appendChild(video);
 }
 
 /* ---------------------------------------------------------------

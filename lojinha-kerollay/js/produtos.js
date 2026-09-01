@@ -14,6 +14,9 @@
      tag       -> selo opcional no canto da foto (ex.: "Mais vendido")
      img       -> caminho da foto (ex.: "img/cherry-bomb.jpg").
                   Deixe null para usar o desenho automático.
+     video     -> opcional. Normalmente não precisa: o site procura
+                  img/<id>.mp4 sozinho e, se achar, põe um botão de play
+                  sobre a foto. Preencha só para apontar outro caminho.
    ===================================================================== */
 
 const PRODUTOS = [

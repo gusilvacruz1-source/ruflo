@@ -55,6 +55,22 @@ Mexa **só** em `js/produtos.js`. Cada produto é um bloco assim:
 - `img: null` desenha um card com a inicial do produto. Assim que você colocar as
   fotos reais na pasta `img/` e apontar o caminho, elas aparecem no lugar.
 
+## Vídeo do produto
+
+Salve o vídeo como **`img/<id>.mp4`** — mesmo nome da foto, trocando a
+extensão. Exemplo: `img/gloss-cherry-bomb.jpg` e `img/gloss-cherry-bomb.mp4`.
+
+O card mostra a foto com um botão de play em cima. A cliente toca e o vídeo
+substitui a foto ali mesmo, com controles. Quando acaba, volta para a foto.
+
+- **O produto precisa ter foto.** O site só procura vídeo depois que a foto
+  daquele produto carregou — é o que evita dezenas de requisições inúteis.
+- **Use .mp4.** Vídeo do iPhone costuma sair `.mov`: converta antes, porque
+  `.mov` não toca em todo navegador.
+- **Deixe abaixo de 5 MB** (uns 10 a 20 segundos). O GitHub recusa arquivo
+  acima de 100 MB, e vídeo pesado gasta a internet da cliente no 4G.
+- Grave **na vertical ou quadrado**: o card é quadrado e corta as laterais.
+
 ## Trocar o número do WhatsApp
 
 No topo de `js/script.js`:
