@@ -68,10 +68,31 @@ const CONFIG = {
 
 O número também aparece direto em `index.html` (botões e seção de contato).
 
-## Publicar
+## Publicar no Netlify (grátis)
 
-Qualquer hospedagem de site estático serve — GitHub Pages, Netlify, Vercel.
-Basta subir a pasta `lojinha-kerollay/` inteira.
+O `netlify.toml` na raiz do repositório já aponta para esta pasta, então o
+site do Netlify abre a loja direto na raiz.
+
+1. Entre em **netlify.com** e faça login **com o GitHub**.
+2. **Add new site → Import an existing project → GitHub →** repositório `ruflo`.
+3. Em **Branch to deploy**, escolha `claude/grill-me-jpyv9r`
+   (ou a branch para onde você tiver levado a loja).
+4. **Não mexa** em "Build command" nem em "Publish directory" — o
+   `netlify.toml` já preenche. Clique em **Deploy**.
+5. Depois: **Site configuration → Change site name →** digite
+   `lojinha-kerollay`.
+
+O link fica **https://lojinha-kerollay.netlify.app**.
+
+Se o Netlify disser que o nome já está em uso, tente `lojinhakerollay` ou
+`lojinha-kerollay-imbau`.
+
+A cada `git push` na branch escolhida, o Netlify republica sozinho.
+
+### Domínio próprio (opcional)
+
+Com um domínio comprado no registro.br (~R$ 40/ano), em
+**Domain management → Add a domain** o link vira `lojinhakerollay.com.br`.
 
 ## Pendências
 

@@ -1,0 +1,13 @@
+# Publica a loja da Kerollay que está na pasta lojinha-kerollay/.
+# Com isso, a raiz do site no Netlify já abre a loja direto.
+# (Para publicar o site da BETIM em outro site do Netlify, troque o
+#  "Publish directory" nas configurações daquele site.)
+
+[build]
+  publish = "lojinha-kerollay"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
