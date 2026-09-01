@@ -1,0 +1,23 @@
+Foto de fundo do site
+=====================
+
+Coloque a imagem de fundo NESTA PASTA com o nome exato:
+
+    img/fundo.jpg
+
+O CSS ja esta pronto e aponta para esse arquivo. Assim que ele existir,
+a foto aparece como fundo fixo de todas as secoes, com um veu escuro por
+cima para manter os textos legiveis.
+
+Se quiser usar outro nome ou outra extensao (.png, .webp), basta trocar
+uma linha em css/style.css:
+
+    :root { --site-bg-image: url("../img/o-nome-que-voce-quiser.png"); }
+
+Enquanto o arquivo nao existir, o site continua funcionando normalmente
+com o fundo preto.
+
+Dicas:
+- Imagem em pe (retrato) funciona bem: ela e recortada com "cover",
+  ancorada no topo.
+- Deixe o arquivo abaixo de ~500 KB para o site carregar rapido.
