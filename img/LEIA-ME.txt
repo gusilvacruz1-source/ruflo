@@ -1,23 +1,25 @@
 Foto de fundo do site
 =====================
 
-Coloque a imagem de fundo NESTA PASTA com o nome exato:
+A imagem de fundo e o arquivo:
 
     img/fundo.jpg
 
-O CSS ja esta pronto e aponta para esse arquivo. Assim que ele existir,
-a foto aparece como fundo fixo de todas as secoes, com um veu escuro por
-cima para manter os textos legiveis.
-
-Se quiser usar outro nome ou outra extensao (.png, .webp), basta trocar
-uma linha em css/style.css:
+Para trocar a foto, basta substituir esse arquivo mantendo o mesmo nome.
+Se quiser usar outro nome ou outra extensao (.png, .webp), troque uma
+linha em css/style.css:
 
     :root { --site-bg-image: url("../img/o-nome-que-voce-quiser.png"); }
 
-Enquanto o arquivo nao existir, o site continua funcionando normalmente
-com o fundo preto.
+Como ela e usada (css/style.css, logo apos a regra do body):
 
-Dicas:
-- Imagem em pe (retrato) funciona bem: ela e recortada com "cover",
-  ancorada no topo.
-- Deixe o arquivo abaixo de ~500 KB para o site carregar rapido.
+- Fica numa camada fixa atras de tudo, com um veu escuro por cima para
+  os textos continuarem legiveis.
+- No celular a ilustracao inteira aparece encaixada na largura da tela.
+- No computador ela desce para a margem esquerda, livre do texto.
+- O fundo da pagina e preto puro para casar com o preto da foto, entao
+  as bordas da imagem somem e a flor parece flutuar no site.
+
+Se o arquivo for apagado, o site continua funcionando com o fundo preto.
+
+Dica: deixe o arquivo abaixo de ~500 KB para o site carregar rapido.

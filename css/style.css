@@ -41,20 +41,35 @@ body::before {
   z-index: -2;
   background-color: #000;
   background-image: var(--site-bg-image);
-  background-size: cover;
-  background-position: center top;
   background-repeat: no-repeat;
+  /* A foto e em pe. Em vez de recortar com "cover", mostramos a ilustracao
+     inteira: como o fundo dela e preto e o da pagina tambem, as bordas somem
+     e a flor parece flutuar no site. */
+  background-size: contain;
+  background-position: center top;
 }
 body::after {
+  /* Veu escuro. No celular o texto ocupa a largura toda e passa por cima da
+     flor, entao ele precisa ser mais forte que no desktop. */
   z-index: -1;
   background: linear-gradient(180deg,
-    rgba(0,0,0,.32) 0%,
-    rgba(0,0,0,.52) 45%,
-    rgba(0,0,0,.80) 100%);
+    rgba(0,0,0,.62) 0%,
+    rgba(0,0,0,.76) 45%,
+    rgba(0,0,0,.90) 100%);
 }
 
-@media (max-width: 860px) {
-  body::before { background-position: 62% top; }
+/* Telas largas: a flor desce para a margem esquerda, livre do texto. */
+@media (min-aspect-ratio: 3/4) {
+  body::before {
+    background-size: auto 82%;
+    background-position: 6% bottom;
+  }
+  body::after {
+    background: linear-gradient(180deg,
+      rgba(0,0,0,.32) 0%,
+      rgba(0,0,0,.52) 45%,
+      rgba(0,0,0,.80) 100%);
+  }
 }
 
 h1, h2, h3, .logo__text {
