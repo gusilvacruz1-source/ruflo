@@ -1,0 +1,129 @@
+@import 'tailwindcss';
+
+@theme {
+  /* Escuros: azul meia-noite, quase preto, com um toque de frio. */
+  --color-noite-900: #05080e;
+  --color-noite-800: #080c14;
+  --color-noite-700: #0d131e;
+  --color-noite-600: #141c2a;
+  --color-noite-500: #1e293a;
+
+  /* Claros: off-white quente, sem o branco clínico. */
+  --color-osso-100: #f6f3ec;
+  --color-osso-200: #ece7dc;
+  --color-osso-300: #ddd6c7;
+
+  /* Acento mostarda + laranja da marca Imbaú (usado com parcimônia). */
+  --color-ouro-400: #f0cf80;
+  --color-ouro-500: #e9b949;
+  --color-ouro-600: #cf9f34;
+  --color-marca: #ef7f1f;
+
+  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, sans-serif;
+
+  /* Curva única para tudo que se move: saída longa, chegada macia. */
+  --ease-suave: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    background-color: var(--color-noite-900);
+    color: var(--color-osso-100);
+    font-family: var(--font-display);
+    font-synthesis-weight: none;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  ::selection {
+    background: var(--color-ouro-500);
+    color: var(--color-noite-900);
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--color-ouro-500);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  /* Revelação no scroll: sobe e aparece, uma vez só. */
+  .revelar {
+    opacity: 0;
+    transform: translate3d(0, var(--revelar-y, 26px), 0);
+    transition:
+      opacity 1s var(--ease-suave) var(--revelar-atraso, 0ms),
+      transform 1s var(--ease-suave) var(--revelar-atraso, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .revelar[data-visivel='true'] {
+    opacity: 1;
+    transform: none;
+    will-change: auto;
+  }
+
+  /* Botão magnético: o elemento acompanha o cursor de leve. */
+  .magnetico {
+    transition: transform 0.6s var(--ease-suave);
+  }
+
+  /* Pílula de vidro do menu. */
+  .vidro {
+    background: color-mix(in srgb, var(--color-noite-800) 55%, transparent);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+
+  /* Linha de respiro entre blocos — some quase por completo, mas alinha. */
+  .fio {
+    background: linear-gradient(
+      90deg,
+      transparent,
+      color-mix(in srgb, currentColor 22%, transparent) 15%,
+      color-mix(in srgb, currentColor 22%, transparent) 85%,
+      transparent
+    );
+  }
+}
+
+@layer utilities {
+  .texto-fino {
+    font-weight: 275;
+    letter-spacing: -0.028em;
+  }
+
+  .sobretexto {
+    font-size: 0.6875rem;
+    font-weight: 500;
+    letter-spacing: 0.34em;
+    text-transform: uppercase;
+  }
+
+  /* Rolagem horizontal sem barra visível (vitrine no mobile). */
+  .sem-barra {
+    scrollbar-width: none;
+  }
+  .sem-barra::-webkit-scrollbar {
+    display: none;
+  }
+}
