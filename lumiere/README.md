@@ -35,8 +35,19 @@ Troque nos dois.
 
 ### 2. As fotos
 
-Nenhuma foto foi inventada. No lugar delas há placas de luz, marcadas na
-tela com "Foto do hero", "Foto da peça" e "Foto editorial".
+As dez fotos de peça são reais, da loja. Faltam o hero (duas, horizontais)
+e a faixa editorial (três), que ainda estão como placas de luz marcadas na
+tela.
+
+Para preparar fotos novas, use a ferramenta do repositório:
+
+```bash
+python3 ferramentas/otimizar-fotos.py <pasta> lumiere/img --largura 1400 --cortar-barras
+```
+
+O `--cortar-barras` remove a barra de status e a de navegação quando a
+imagem é captura de tela de celular. Ele não mexe em foto normal, mesmo
+que ela comece com teto escuro.
 
 **Hero, duas fotos lado a lado.** Troque cada `<span class="hero__plate">` por:
 
@@ -68,12 +79,12 @@ e `.strip__plate` do `css/style.css`.
 
 ### 3. Os nomes das peças
 
-As doze peças são **exemplo**, não produtos reais. Em cada
+As dez peças são **exemplo**, não produtos reais. Em cada
 `<article class="card">` troque:
 
 - `data-nome` (usado pela busca)
-- `data-cat` (liga a peça ao filtro da nav: `vestidos`, `alfaiataria`,
-  `tricot` ou `acessorios`)
+- `data-cat` (liga a peça ao filtro da nav: `vestidos`, `tricot`,
+  `casacos`, `alfaiataria` ou `saias`)
 - `data-id` (qualquer texto curto e único, guarda os favoritos)
 - o `aria-label` do link e o do botão de salvar
 - o `<span class="card__name">`
