@@ -95,8 +95,8 @@ export function Marca({ className = '', tamanho = 'h-9 w-9', claro = true }) {
         src={marca.simbolo}
         alt=""
         className={`${tamanho} shrink-0 object-contain`}
-        width="900"
-        height="917"
+        width="360"
+        height="367"
       />
       <span className="flex flex-col leading-none">
         <span
