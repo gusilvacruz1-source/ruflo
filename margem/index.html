@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#fafafa">
+<title>MARGEM</title>
+<meta name="description" content="Streetwear em edições curtas. Peças pesadas, corte solto, sem pressa.">
+
+<meta property="og:type" content="website">
+<meta property="og:title" content="MARGEM">
+<meta property="og:description" content="Streetwear em edições curtas.">
+<meta property="og:locale" content="pt_BR">
+
+<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="css/fonts.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<!--
+  ============================================================
+  MARGEM é um nome de marca de EXEMPLO, para o template ter uma
+  identidade coerente. Troque pelo nome real: procure por
+"MARGEM" aqui, no css/style.css e no favicon.svg.
+
+  Os seis nomes de peça e os preços também são exemplo.
+  Veja o README.md.
+  ============================================================
+-->
+
+<a class="pular" href="#colecao">Pular para a coleção</a>
+
+<header class="topo" id="topo">
+  <a class="marca" href="#inicio">Margem</a>
+
+  <nav class="menu" id="menu" aria-label="Navegação principal">
+    <a href="#colecao">Loja</a>
+    <a href="#editorial">Coleções</a>
+    <a href="#sobre">Sobre</a>
+  </nav>
+
+  <div class="ferramentas">
+    <button class="botao-ico" type="button" aria-label="Buscar"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M226.83,221.17l-52.7-52.7a84.1,84.1,0,1,0-5.66,5.66l52.7,52.7a4,4,0,0,0,5.66-5.66ZM36,112a76,76,0,1,1,76,76A76.08,76.08,0,0,1,36,112Z"/></svg></button>
+    <button class="botao-ico" type="button" aria-label="Sacola, 0 itens"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M216,44H40A12,12,0,0,0,28,56V200a12,12,0,0,0,12,12H216a12,12,0,0,0,12-12V56A12,12,0,0,0,216,44Zm4,156a4,4,0,0,1-4,4H40a4,4,0,0,1-4-4V56a4,4,0,0,1,4-4H216a4,4,0,0,1,4,4ZM172,88a44,44,0,0,1-88,0,4,4,0,0,1,8,0,36,36,0,0,0,72,0,4,4,0,0,1,8,0Z"/></svg><span class="conta">0</span></button>
+    <button class="botao-ico botao-ico--menu" id="abrirMenu" type="button" aria-label="Abrir menu" aria-expanded="false" aria-controls="menu"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M220,128a4,4,0,0,1-4,4H40a4,4,0,0,1,0-8H216A4,4,0,0,1,220,128ZM40,68H216a4,4,0,0,0,0-8H40a4,4,0,0,0,0,8ZM216,188H40a4,4,0,0,0,0,8H216a4,4,0,0,0,0-8Z"/></svg></button>
+  </div>
+</header>
+
+<main>
+
+  <!-- ============ CAMPANHA ============ -->
+  <section class="campanha" id="inicio">
+    <!--
+      FOTO DA CAMPANHA. Troque a <span class="campanha__chapa"> por
+      <img class="campanha__foto" src="img/campanha.jpg" alt="Campanha da coleção">
+      Formato paisagem larga, por volta de 2400x1400.
+    -->
+    <span class="campanha__chapa" aria-hidden="true"></span>
+
+    <div class="campanha__texto">
+      <h1 class="titulo-grande">Peso<br>e silêncio</h1>
+      <a class="fio" href="#colecao">Ver a coleção <svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M218.83,130.83l-72,72a4,4,0,0,1-5.66-5.66L206.34,132H40a4,4,0,0,1,0-8H206.34L141.17,58.83a4,4,0,0,1,5.66-5.66l72,72A4,4,0,0,1,218.83,130.83Z"/></svg></a>
+    </div>
+  </section>
+
+  <!-- ============ COLEÇÃO ============ -->
+  <section class="secao" id="colecao">
+    <h2 class="rotulo">Coleção</h2>
+
+    <!--
+      CADA PEÇA TEM DUAS FOTOS: a primeira aparece parada, a segunda
+      surge no hover. Troque as duas <span class="chapa"> pelos <img>
+      comentados logo acima de cada uma. Proporção 3x4 ou 4x5.
+    -->
+    <div class="grade">
+      <a class="peca peca--a " href="#" aria-label="Moletom Oversized Bruto, R$ 389,00">
+        <span class="peca__quadro" style="--prop:3 / 4;">
+          <!-- FOTO 1: <img class="peca__foto" src="img/moletom-1.jpg" alt="Moletom Oversized Bruto"> -->
+          <span class="chapa chapa--a" style="--lx:42%; --ly:26%;"></span>
+          <!-- FOTO 2, revelada no hover: <img class="peca__foto peca__foto--b" src="img/moletom-2.jpg" alt=""> -->
+          <span class="chapa chapa--b" style="--lx:64%; --ly:38%;"></span>
+        </span>
+        <span class="peca__pe">
+          <span class="peca__nome">Moletom Oversized Bruto</span>
+          <span class="peca__preco">R$ 389,00</span>
+        </span>
+      </a>
+      <a class="peca peca--b " href="#" aria-label="Camiseta Boxy Pesada, R$ 179,00">
+        <span class="peca__quadro" style="--prop:4 / 5;">
+          <!-- FOTO 1: <img class="peca__foto" src="img/camiseta-1.jpg" alt="Camiseta Boxy Pesada"> -->
+          <span class="chapa chapa--a" style="--lx:58%; --ly:20%;"></span>
+          <!-- FOTO 2, revelada no hover: <img class="peca__foto peca__foto--b" src="img/camiseta-2.jpg" alt=""> -->
+          <span class="chapa chapa--b" style="--lx:34%; --ly:44%;"></span>
+        </span>
+        <span class="peca__pe">
+          <span class="peca__nome">Camiseta Boxy Pesada</span>
+          <span class="peca__preco">R$ 179,00</span>
+        </span>
+      </a>
+      <a class="peca peca--c " href="#" aria-label="Calça Cargo Ripstop, R$ 429,00">
+        <span class="peca__quadro" style="--prop:4 / 5;">
+          <!-- FOTO 1: <img class="peca__foto" src="img/cargo-1.jpg" alt="Calça Cargo Ripstop"> -->
+          <span class="chapa chapa--a" style="--lx:36%; --ly:30%;"></span>
+          <!-- FOTO 2, revelada no hover: <img class="peca__foto peca__foto--b" src="img/cargo-2.jpg" alt=""> -->
+          <span class="chapa chapa--b" style="--lx:62%; --ly:22%;"></span>
+        </span>
+        <span class="peca__pe">
+          <span class="peca__nome">Calça Cargo Ripstop</span>
+          <span class="peca__preco">R$ 429,00</span>
+        </span>
+      </a>
+      <a class="peca peca--d " href="#" aria-label="Jaqueta Corta-vento, R$ 549,00">
+        <span class="peca__quadro" style="--prop:3 / 4;">
+          <!-- FOTO 1: <img class="peca__foto" src="img/jaqueta-1.jpg" alt="Jaqueta Corta-vento"> -->
+          <span class="chapa chapa--a" style="--lx:54%; --ly:24%;"></span>
+          <!-- FOTO 2, revelada no hover: <img class="peca__foto peca__foto--b" src="img/jaqueta-2.jpg" alt=""> -->
+          <span class="chapa chapa--b" style="--lx:28%; --ly:40%;"></span>
+        </span>
+        <span class="peca__pe">
+          <span class="peca__nome">Jaqueta Corta-vento</span>
+          <span class="peca__preco">R$ 549,00</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ EDITORIAL ============ -->
+  <section class="editorial" id="editorial">
+    <!--
+      FOTO EDITORIAL larga. Troque por
+      <img class="editorial__foto" src="img/editorial.jpg" alt="">
+    -->
+    <span class="editorial__chapa" aria-hidden="true"></span>
+    <p class="editorial__linha"><span>Cada peça sai em uma tiragem e não volta.</span></p>
+  </section>
+
+  <!-- ============ DUPLA ============ -->
+  <section class="secao secao--dupla" id="sobre">
+    <div class="grade grade--dupla">
+      <a class="peca peca--meia " href="#" aria-label="Bermuda de Moletom, R$ 249,00">
+        <span class="peca__quadro" style="--prop:4 / 5;">
+          <!-- FOTO 1: <img class="peca__foto" src="img/bermuda-1.jpg" alt="Bermuda de Moletom"> -->
+          <span class="chapa chapa--a" style="--lx:46%; --ly:28%;"></span>
+          <!-- FOTO 2, revelada no hover: <img class="peca__foto peca__foto--b" src="img/bermuda-2.jpg" alt=""> -->
+          <span class="chapa chapa--b" style="--lx:66%; --ly:34%;"></span>
+        </span>
+        <span class="peca__pe">
+          <span class="peca__nome">Bermuda de Moletom</span>
+          <span class="peca__preco">R$ 249,00</span>
+        </span>
+      </a>
+      <a class="peca peca--meia " href="#" aria-label="Boné Trucker Lona, R$ 139,00">
+        <span class="peca__quadro" style="--prop:4 / 5;">
+          <!-- FOTO 1: <img class="peca__foto" src="img/bone-1.jpg" alt="Boné Trucker Lona"> -->
+          <span class="chapa chapa--a" style="--lx:38%; --ly:34%;"></span>
+          <!-- FOTO 2, revelada no hover: <img class="peca__foto peca__foto--b" src="img/bone-2.jpg" alt=""> -->
+          <span class="chapa chapa--b" style="--lx:60%; --ly:20%;"></span>
+        </span>
+        <span class="peca__pe">
+          <span class="peca__nome">Boné Trucker Lona</span>
+          <span class="peca__preco">R$ 139,00</span>
+        </span>
+      </a>
+    </div>
+  </section>
+
+  <!-- ============ TEXTO ============ -->
+  <section class="prosa">
+    <p>Margem faz roupa pesada em tiragem curta. Modelagem solta, tecido que
+    aguenta lavagem, e nada que dependa de estação para continuar funcionando.</p>
+    <p>Cada lote sai numerado. Quando acaba, acabou.</p>
+  </section>
+
+</main>
+
+<footer class="rodape">
+  <span class="rodape__marca">Margem</span>
+  <nav class="rodape__nav" aria-label="Links do rodapé">
+    <a href="#colecao">Loja</a>
+    <a href="#editorial">Coleções</a>
+    <a href="#sobre">Sobre</a>
+  </nav>
+</footer>
+
+<script src="js/script.js"></script>
+</body>
+</html>
