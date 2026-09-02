@@ -25,6 +25,14 @@ export function Whatsapp({ className = 'h-4 w-4' }) {
   );
 }
 
+export function Estrela({ className = 'h-3 w-3' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="M12 2c.5 4.6 5.4 9.5 10 10-4.6.5-9.5 5.4-10 10-.5-4.6-5.4-9.5-10-10 4.6-.5 9.5-5.4 10-10Z" />
+    </svg>
+  );
+}
+
 export function Instagram({ className = 'h-4 w-4' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -174,13 +182,13 @@ export function Botao({
 export function Selo({ children, claro = true }) {
   return (
     <span
-      className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[0.7rem] font-medium tracking-wide ${
+      className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[0.72rem] font-medium tracking-wide ${
         claro
-          ? 'border-ouro-500/35 bg-ouro-500/10 text-ouro-400'
-          : 'border-noite-900/15 bg-white text-noite-900/70'
+          ? 'border-ouro-500/55 bg-ouro-500/8 text-ouro-400'
+          : 'border-ouro-500 bg-white text-noite-900'
       }`}
     >
-      <span className="h-1.5 w-1.5 rounded-full bg-ouro-500" />
+      <Estrela className={claro ? 'h-3 w-3 text-ouro-500' : 'h-3 w-3 text-noite-900'} />
       {children}
     </span>
   );

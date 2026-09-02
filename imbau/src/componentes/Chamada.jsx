@@ -4,11 +4,11 @@ import { Revelar } from './Movimento';
 
 export function Chamada() {
   return (
-    <section id="servicos" className="relative bg-osso-200 px-5 py-20 sm:px-8 sm:py-28">
+    <section id="avaliacao" className="relative bg-osso-200 px-5 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-[1280px]">
         <Revelar
           distancia={34}
-          className="relative overflow-hidden rounded-[2rem] bg-osso-100 shadow-[0_40px_90px_-60px_rgba(10,14,23,0.55)]"
+          className="relative overflow-hidden rounded-[2rem] border border-noite-900/8 bg-osso-100 shadow-[0_40px_90px_-60px_rgba(10,14,23,0.55)]"
         >
           {/* Círculos creme, quase imperceptíveis — só quebram a chapada do fundo. */}
           <div
@@ -28,13 +28,13 @@ export function Chamada() {
                 </Revelar>
 
                 <Revelar atraso={90}>
-                  <h2 className="texto-fino mt-7 text-[clamp(2.1rem,4.4vw,3.6rem)] leading-[1.02] text-noite-900">
+                  <h2 className="titulo mt-7 text-[clamp(2.1rem,4.4vw,3.6rem)] leading-[1.02] text-noite-900">
                     {chamada.titulo}
                   </h2>
                 </Revelar>
 
                 <Revelar atraso={170}>
-                  <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-noite-900/60">
+                  <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-noite-900/65">
                     {chamada.texto}
                   </p>
                 </Revelar>

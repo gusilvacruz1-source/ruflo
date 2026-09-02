@@ -30,6 +30,8 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
+    scrollbar-color: var(--color-noite-500) var(--color-noite-900);
+    scrollbar-width: thin;
   }
 
   body {
@@ -107,9 +109,16 @@
 }
 
 @layer utilities {
-  .texto-fino {
-    font-weight: 275;
-    letter-spacing: -0.028em;
+  /* Voz dos títulos: peso cheio e tracking fechado, como na referência. */
+  .titulo {
+    font-weight: 700;
+    letter-spacing: -0.035em;
+  }
+
+  /* Títulos da primeira dobra: um passo mais leve que os das seções. */
+  .titulo-hero {
+    font-weight: 600;
+    letter-spacing: -0.032em;
   }
 
   .sobretexto {

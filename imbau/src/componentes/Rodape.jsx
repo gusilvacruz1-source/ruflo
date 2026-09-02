@@ -4,12 +4,12 @@ import { Revelar } from './Movimento';
 
 export function Rodape() {
   return (
-    <footer id="contato" className="bg-noite-900 px-5 pb-10 pt-20 sm:px-8 sm:pt-28">
+    <footer className="border-t border-white/8 bg-noite-900 px-5 pb-10 pt-20 sm:px-8 sm:pt-24">
       <div className="mx-auto max-w-[1280px]">
         <Revelar className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Marca tamanho="h-11 w-11" />
-            <p className="texto-fino mt-8 max-w-md text-[clamp(1.7rem,3.4vw,2.7rem)] leading-[1.06] text-osso-100">
+            <p className="titulo mt-8 max-w-md text-[clamp(1.7rem,3.4vw,2.7rem)] leading-[1.06] text-osso-100">
               {rodape.frase}
             </p>
           </div>
@@ -25,7 +25,7 @@ export function Rodape() {
           className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3"
         >
           <div>
-            <h2 className="sobretexto text-osso-100/35">Atendimento</h2>
+            <h2 className="sobretexto text-osso-100/40">Atendimento</h2>
             <ul className="mt-5 space-y-3 text-sm text-osso-100/70">
               <li>
                 <a
@@ -54,7 +54,7 @@ export function Rodape() {
           </div>
 
           <div>
-            <h2 className="sobretexto text-osso-100/35">Serviços</h2>
+            <h2 className="sobretexto text-osso-100/40">Serviços</h2>
             <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm text-osso-100/70">
               {rodape.servicos.map((s) => (
                 <li key={s}>{s}</li>
@@ -63,7 +63,7 @@ export function Rodape() {
           </div>
 
           <div>
-            <h2 className="sobretexto text-osso-100/35">Responsável</h2>
+            <h2 className="sobretexto text-osso-100/40">Responsável</h2>
             <p className="mt-5 text-sm text-osso-100/70">
               {marca.corretora}
               <span className="block text-osso-100/45">{marca.cargo}</span>

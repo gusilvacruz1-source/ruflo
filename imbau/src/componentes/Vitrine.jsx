@@ -8,9 +8,10 @@ function Cartao({ imovel, indice }) {
       as="article"
       atraso={indice * 90}
       distancia={34}
-      className="group relative overflow-hidden rounded-[1.75rem] border border-white/10 bg-noite-800"
+      className="group relative rounded-[2rem] border border-ouro-500/30 bg-noite-800/70 p-1.5 transition-colors duration-700 hover:border-ouro-500/60"
     >
-      <div className="relative aspect-[4/5] w-full sm:aspect-[16/10] lg:aspect-[16/9]">
+      {/* A foto fica na frente do plano: moldura por fora, imagem encaixada dentro. */}
+      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[calc(2rem-0.375rem)] sm:aspect-[16/10] lg:aspect-[16/9]">
         <img
           src={imovel.imagem}
           alt={imovel.alt ?? imovel.nome}
@@ -27,7 +28,7 @@ function Cartao({ imovel, indice }) {
           {imovel.ficha.map((item) => (
             <li
               key={item}
-              className="rounded-full border border-white/15 bg-noite-900/45 px-3 py-1 text-[0.68rem] tracking-wide text-osso-100/80 backdrop-blur-sm"
+              className="rounded-full border border-white/15 bg-noite-900/45 px-3 py-1 text-[0.68rem] tracking-wide text-osso-100/85 backdrop-blur-sm"
             >
               {item}
             </li>
@@ -36,11 +37,11 @@ function Cartao({ imovel, indice }) {
 
         {/* Nome e local centralizados na base, como na referência */}
         <div className="absolute inset-x-0 bottom-0 flex flex-col items-center px-5 pb-7 text-center sm:pb-9">
-          <p className="sobretexto text-ouro-400/90">{imovel.local}</p>
-          <h3 className="texto-fino mt-3 text-[clamp(1.5rem,3.4vw,2.6rem)] text-osso-100">
+          <p className="sobretexto text-ouro-400">{imovel.local}</p>
+          <h3 className="titulo mt-3 text-[clamp(1.5rem,3.4vw,2.6rem)] text-osso-100">
             {imovel.nome}
           </h3>
-          <p className="mt-2 max-w-md text-[0.85rem] leading-relaxed text-osso-100/60">
+          <p className="mt-2 max-w-md text-[0.85rem] leading-relaxed text-osso-100/70">
             {imovel.resumo}
           </p>
 
@@ -68,12 +69,12 @@ export function Vitrine() {
             <Selo>{vitrine.selo}</Selo>
           </Revelar>
           <Revelar atraso={100}>
-            <h2 className="texto-fino mt-7 text-[clamp(2.1rem,5vw,3.9rem)] leading-[1.02] text-osso-100">
+            <h2 className="titulo mt-7 text-[clamp(2.1rem,5vw,3.9rem)] leading-[1.02] text-osso-100">
               {vitrine.titulo}
             </h2>
           </Revelar>
           <Revelar atraso={190}>
-            <p className="mx-auto mt-5 max-w-lg text-[0.95rem] leading-relaxed text-osso-100/55">
+            <p className="mx-auto mt-5 max-w-lg text-[0.95rem] leading-relaxed text-osso-100/60">
               {vitrine.texto}
             </p>
           </Revelar>
@@ -90,7 +91,7 @@ export function Vitrine() {
             href={zap(mensagens.menu)}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-3 text-sm text-osso-100/60 transition-colors duration-300 hover:text-osso-100"
+            className="group inline-flex items-center gap-3 text-sm text-osso-100/65 transition-colors duration-300 hover:text-osso-100"
           >
             {vitrine.botao}
             <span className="grid h-8 w-8 place-items-center rounded-full border border-white/15 transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:rotate-45">

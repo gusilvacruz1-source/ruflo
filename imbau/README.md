@@ -1,8 +1,12 @@
 # Imbaú Imobiliária — landing page
 
 Página única em React + Vite + Tailwind CSS, no estilo "alto luxo, moderno e
-minimalista": bloco escuro imersivo no topo, vitrine de imóveis em cartões
-grandes e quebra para um bloco claro na chamada final.
+minimalista": o site inteiro é uma placa arredondada apoiada sobre uma foto de
+fundo, com bloco escuro imersivo no topo, vitrine de imóveis em cartões grandes
+e quebra para um bloco claro na chamada final.
+
+A ordem das seções é: primeira dobra → serviços → imóveis → sobre a corretora →
+chamada para avaliação → dúvidas frequentes → contato → rodapé.
 
 ```bash
 npm install
@@ -19,6 +23,29 @@ domínio quanto dentro de um subdiretório.
 Quase tudo que muda no dia a dia está em **`src/conteudo.js`**: telefone,
 CRECI, redes, textos das seções, benefícios e a lista de imóveis. Os
 componentes só leem esse arquivo.
+
+| Bloco em `conteudo.js` | O que controla |
+| --- | --- |
+| `marca`, `mensagens` | Contatos e o texto que cada botão manda no WhatsApp |
+| `pagina` | A foto que fica atrás da placa do site |
+| `hero` | Primeira dobra: título, texto e os três pilares sobre a foto |
+| `servicos` | Os sete serviços e as quatro etapas do atendimento |
+| `imoveis`, `vitrine` | A carteira que aparece na vitrine |
+| `sobre` | Citação, ficha da corretora e o convite para conversar |
+| `chamada` | Bloco claro da avaliação gratuita |
+| `perguntas` | As dúvidas frequentes (abre e fecha na página) |
+| `contato` | Canais e as opções do montador de mensagem |
+
+### O montador de mensagem
+
+Na seção de contato a pessoa escolhe o que quer (comprar, vender, alugar…), o
+tipo de imóvel, o nome e um detalhe. O texto é montado por `montarMensagem` em
+`src/conteudo.js` e abre no WhatsApp já escrito — não existe formulário nem
+servidor por trás, nada some se ninguém responder.
+
+Para incluir uma opção nova, acrescente a palavra em `contato.objetivos` ou
+`contato.tipos` **e** a conjugação dela nos dois dicionários dentro de
+`montarMensagem` (`acoes` e `bens`). Sem isso a frase sai genérica.
 
 ### Publicar um imóvel novo
 
@@ -38,6 +65,7 @@ imóvel a pessoa quer falar.
 | --- | --- |
 | `imagens/casa-210m2-*.webp`, `imagens/casa-122m2.webp`, `imagens/imovel-rural-1723m2.webp` | Fotos reais dos anúncios do perfil `@imobiliaria.imbau` |
 | `imagens/hero-lago.svg` | Fundo da primeira dobra — cena ilustrativa, **não é um imóvel da carteira** |
+| `imagens/fundo-plano.svg` | O plano atrás da placa do site: a mesma cena, mais clara e desfocada |
 | `imagens/imovel-sem-foto.svg` | Reserva para imóvel anunciado antes da sessão de fotos |
 | `imagens/og.jpg` | Prévia que aparece ao compartilhar o link no WhatsApp |
 | `marca/imbau-simbolo.png` | Símbolo da marca, recortado do logotipo original |
@@ -46,13 +74,16 @@ As fotos vieram de prints do Instagram, então estão em 828 px de largura. Se a
 Raquel tiver os arquivos originais, vale substituir — a nitidez melhora bastante
 nos cartões grandes.
 
-O fundo da hero e a imagem de reserva são gerados por `tools/make-art.mjs`
-(`node tools/make-art.mjs`). Se um dia entrar uma fotografia noturna de verdade,
+O fundo da hero, o plano de fundo da página e a imagem de reserva são gerados
+por `tools/make-art.mjs` (`node tools/make-art.mjs`). Se um dia entrar uma fotografia noturna de verdade,
 é só trocar `hero.imagem` em `src/conteudo.js`.
 
 ## Antes de publicar
 
 - [ ] Confirmar com a Raquel se os três imóveis seguem disponíveis.
+- [ ] Ler com ela as respostas de `perguntas` e as descrições de `servicos`:
+      foram escritas a partir da placa e do perfil, mas quem responde é ela.
+- [ ] Conferir o horário de atendimento em `contato.horario`.
 - [ ] Trocar o domínio em `og:image` e no `link rel="canonical"` (`index.html`)
       se o endereço final não for `imobiliariaimbau.com.br`.
 - [ ] Substituir as fotos pelos arquivos originais, se existirem.
@@ -63,5 +94,9 @@ O fundo da hero e a imagem de reserva são gerados por `tools/make-art.mjs`
   `IntersectionObserver` (`src/componentes/Movimento.jsx`).
 - **Botão magnético** — no desktop o botão acompanha o cursor de leve e volta ao
   lugar; desligado em telas de toque.
+- **Fio nos serviços** — no desktop cada linha da lista desliza um pouco e um
+  fio mostarda se abre por baixo dela.
+- **Dúvidas** — a resposta cresce com `grid-template-rows`, sem pulo de layout,
+  e a cruz gira 45° virando um "fechar".
 - Tudo respeita `prefers-reduced-motion`: quem pede menos movimento no sistema
   recebe a página estática.

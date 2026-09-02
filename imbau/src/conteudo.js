@@ -36,6 +36,11 @@ export const mensagens = {
     `Olá! Vim pelo site e me interessei pelo imóvel "${nome}". Pode me passar mais detalhes?`,
 };
 
+/** O plano de fundo da página: a placa do site pousa em cima dele. */
+export const pagina = {
+  fundo: 'imagens/fundo-plano.svg',
+};
+
 export const hero = {
   sobretexto: 'Imbaú · Paraná',
   titulo: 'Seu imóvel no caminho certo',
@@ -130,4 +135,181 @@ export const rodape = {
     'Contratos',
     'Prestação de serviços',
   ],
+};
+
+/**
+ * Serviços da placa, agora com uma linha de explicação em cada um.
+ * A ordem aqui é a ordem que aparece na tela.
+ */
+export const servicos = {
+  selo: 'O que fazemos',
+  titulo: 'Do anúncio à escritura',
+  texto:
+    'A Imbaú acompanha o caminho inteiro do imóvel — não só a parte da venda. Cada serviço abaixo é conduzido por quem conhece o cartório, o banco e a rua.',
+  lista: [
+    {
+      nome: 'Venda',
+      texto:
+        'Anúncio, fotos, visitas e negociação. Você acompanha cada proposta antes de qualquer decisão.',
+    },
+    {
+      nome: 'Locação',
+      texto:
+        'Análise de cadastro, vistoria de entrada e contrato assinado — para o proprietário dormir tranquilo.',
+    },
+    {
+      nome: 'Administração',
+      texto:
+        'Cuidamos do imóvel alugado no dia a dia: recebimento, reajuste e a conversa com o inquilino.',
+    },
+    {
+      nome: 'Avaliação',
+      texto:
+        'Preço com base em imóveis parecidos na região, no estado real da construção e no que o mercado paga hoje.',
+    },
+    {
+      nome: 'Regularização',
+      texto:
+        'Escritura, matrícula e averbações encaminhadas junto ao cartório, com prazo e custo explicados antes.',
+    },
+    {
+      nome: 'Contratos',
+      texto:
+        'Compra, venda e locação escritos com clareza e revisados linha a linha antes da assinatura.',
+    },
+    {
+      nome: 'Prestação de serviços',
+      texto:
+        'Assessoria pontual: conferir uma documentação, acompanhar uma negociação ou orientar um financiamento.',
+    },
+  ],
+  etapasTitulo: 'O caminho até a chave',
+  etapas: [
+    {
+      numero: '01',
+      titulo: 'Conversa',
+      texto: 'Você conta o que precisa. A gente escuta antes de mostrar qualquer imóvel.',
+    },
+    {
+      numero: '02',
+      titulo: 'Avaliação',
+      texto: 'Visita ao imóvel ou seleção do que realmente combina com o que você procura.',
+    },
+    {
+      numero: '03',
+      titulo: 'Negociação',
+      texto: 'Proposta, contraproposta e ajustes com as duas partes sempre informadas.',
+    },
+    {
+      numero: '04',
+      titulo: 'Chaves',
+      texto: 'Contrato assinado, documentação conferida e a chave na mão de quem comprou.',
+    },
+  ],
+};
+
+export const sobre = {
+  titulo: 'Atendimento com nome, rosto e CRECI',
+  texto:
+    'Aqui não existe central de atendimento. Quem responde a mensagem é quem visita o imóvel, avalia o preço e senta na mesa da negociação — na cidade em que a gente mora.',
+  frase:
+    'Imóvel é a maior compra da vida da maioria das famílias. Merece conversa honesta e documento em ordem.',
+  /** Ficha da responsável. Só dado que já está na placa e no perfil. */
+  credenciais: [
+    { rotulo: 'Responsável', valor: 'Raquel Domingues' },
+    { rotulo: 'Registro', valor: 'CRECI 27892' },
+    { rotulo: 'Base', valor: 'Imbaú · Paraná' },
+    { rotulo: 'Atendimento', valor: 'WhatsApp e visita presencial' },
+  ],
+  botao: 'Conversar com a Raquel',
+};
+
+export const perguntas = {
+  titulo: 'O que perguntam antes de começar',
+  texto: 'Se a sua dúvida não estiver aqui, é só chamar no WhatsApp — a gente responde.',
+  itens: [
+    {
+      pergunta: 'A avaliação do meu imóvel é cobrada?',
+      resposta:
+        'Não. A avaliação é gratuita e sem compromisso: visitamos o imóvel, comparamos com o que está sendo negociado na região e apresentamos uma faixa de preço realista. Você decide depois se quer anunciar.',
+    },
+    {
+      pergunta: 'Como faço para anunciar meu imóvel?',
+      resposta:
+        'Mande uma mensagem com o endereço, o tamanho e algumas fotos. A partir daí agendamos a visita, combinamos o valor e o imóvel entra na carteira — inclusive aqui no site.',
+    },
+    {
+      pergunta: 'Vocês atendem quem vai comprar financiado?',
+      resposta:
+        'Sim. Acompanhamos a documentação que o banco pede e organizamos a papelada do vendedor para o processo não travar. A aprovação do crédito e as condições, no entanto, são sempre decisão da instituição financeira.',
+    },
+    {
+      pergunta: 'Meu imóvel não tem escritura. Dá para vender?',
+      resposta:
+        'Na maioria dos casos sim, mas antes é preciso regularizar. Verificamos a situação da matrícula, explicamos o que falta, quanto custa e quanto tempo leva — e só então o imóvel vai para a venda.',
+    },
+    {
+      pergunta: 'O atendimento é só em Imbaú?',
+      resposta:
+        'A base é Imbaú, e também atendemos os municípios vizinhos. Se o imóvel estiver mais longe, pergunte antes: dizemos com sinceridade se conseguimos atender bem.',
+    },
+    {
+      pergunta: 'Em quanto tempo meu imóvel vende?',
+      resposta:
+        'Depende do preço, do estado de conservação e da documentação. Não prometemos prazo: mostramos o movimento real dos imóveis parecidos e ajustamos a estratégia com você durante o anúncio.',
+    },
+  ],
+};
+
+/**
+ * Seção de contato. As listas alimentam o montador de mensagem: a pessoa
+ * escolhe as opções e o botão abre o WhatsApp com o texto já escrito.
+ */
+export const contato = {
+  selo: 'Fale com a gente',
+  titulo: 'Comece pela conversa',
+  texto:
+    'Monte a sua mensagem em três toques. Ela abre no WhatsApp já escrita — você só confere e envia.',
+  horario: 'Segunda a sábado, das 8h às 18h',
+  regiao: 'Imbaú e municípios vizinhos, com visita presencial combinada antes.',
+  rotulos: {
+    objetivo: 'Eu quero',
+    tipo: 'Tipo de imóvel',
+    detalhe: 'Mais detalhes',
+    detalhePlaceholder: 'Bairro, número de quartos, faixa de valor…',
+    nome: 'Seu nome',
+    nomePlaceholder: 'Como podemos te chamar?',
+    previa: 'Sua mensagem',
+  },
+  objetivos: ['Comprar', 'Vender', 'Alugar', 'Avaliar', 'Regularizar'],
+  tipos: ['Casa', 'Terreno', 'Apartamento', 'Chácara', 'Comercial', 'Outro'],
+  botao: 'Abrir no WhatsApp',
+};
+
+/**
+ * Monta o texto que vai para o WhatsApp a partir do que a pessoa escolheu.
+ * Campo em branco simplesmente não entra na frase.
+ */
+export const montarMensagem = ({ nome, objetivo, tipo, detalhe }) => {
+  const acoes = {
+    Comprar: 'comprar',
+    Vender: 'vender',
+    Alugar: 'alugar',
+    Avaliar: 'avaliar',
+    Regularizar: 'regularizar',
+  };
+  const bens = {
+    Casa: 'uma casa',
+    Terreno: 'um terreno',
+    Apartamento: 'um apartamento',
+    Chácara: 'uma chácara',
+    Comercial: 'um ponto comercial',
+    Outro: 'um imóvel',
+  };
+
+  const partes = ['Olá, Raquel! Vim pelo site da Imbaú Imobiliária.'];
+  if (nome?.trim()) partes.push(`Meu nome é ${nome.trim()}.`);
+  partes.push(`Gostaria de ${acoes[objetivo] ?? 'falar sobre'} ${bens[tipo] ?? 'um imóvel'}.`);
+  if (detalhe?.trim()) partes.push(detalhe.trim().replace(/\s+/g, ' '));
+  return partes.join(' ');
 };
