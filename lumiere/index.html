@@ -45,10 +45,9 @@
 
   <nav class="nav__cats" aria-label="Categorias">
     <button class="nav__link is-on" type="button" data-cat="todas">Tudo</button>
-      <button class="nav__link" type="button" data-cat="vestidos">Vestidos</button>
-      <button class="nav__link" type="button" data-cat="alfaiataria">Alfaiataria</button>
-      <button class="nav__link" type="button" data-cat="tricot">Tricot</button>
-      <button class="nav__link" type="button" data-cat="acessorios">Acessórios</button>
+    <button class="nav__link" type="button" data-cat="vestidos">Vestidos</button>
+    <button class="nav__link" type="button" data-cat="tricot">Tricot</button>
+    <button class="nav__link" type="button" data-cat="casacos">Casacos</button>
   </nav>
 
   <div class="nav__tools">
@@ -89,168 +88,75 @@
     <a class="wanted__more" href="https://instagram.com/lumiere.modaestilo" target="_blank" rel="noopener">Ver tudo no Instagram</a>
 
     <!--
-      OS DOZE NOMES DE PEÇA SÃO EXEMPLO. Troque data-nome, o aria-label
-      do link, o aria-label do botão de salvar e o card__name.
+      FOTOS REAIS DA LOJA. Os nomes abaixo foram escritos a partir do que
+      aparece em cada foto, não são os nomes oficiais da Lumière: troque
+      data-nome, o aria-label do link, o aria-label do botão de salvar e o
+      card__name quando tiver os nomes certos.
       O data-cat liga a peça ao filtro da nav.
     -->
     <div class="grid" id="grid">
+
       <div class="beam" aria-hidden="true"><span class="beam__lamp" id="lamp"></span></div>
-      <article class="card" data-id="alice" data-nome="Vestido Longo Alice" data-cat="vestidos">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Vestido Longo Alice, falar com a loja">
+
+      <article class="card" data-id="tricot-trancado" data-nome="Vestido Tricot Trançado" data-cat="tricot">
+        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Vestido Tricot Trançado, falar com a loja">
           <span class="shot">
-            <!-- FOTO: troque por <img src="img/alice.jpg" alt="Vestido Longo Alice"> -->
-            <span class="shot__plate" style="--lx:44%; --ly:26%;"></span>
+            <img src="img/1-vestido-tricot-trancado.webp" alt="Vestido curto de tricot trançado vermelho, usado com casaco de pelúcia bege" width="787" height="1400" loading="lazy" decoding="async">
           </span>
         </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Vestido Longo Alice"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
+        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Vestido Tricot Trançado"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
         <div class="card__foot">
-          <span class="card__name">Vestido Longo Alice</span>
+          <span class="card__name">Vestido Tricot Trançado</span>
           <span class="card__price">Sob consulta</span>
         </div>
       </article>
-      <article class="card" data-id="antonella" data-nome="Blazer Antonella" data-cat="alfaiataria">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Blazer Antonella, falar com a loja">
+      <article class="card" data-id="casaco-pelucia" data-nome="Casaco Pelúcia com Cinto" data-cat="casacos">
+        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Casaco Pelúcia com Cinto, falar com a loja">
           <span class="shot">
-            <!-- FOTO: troque por <img src="img/antonella.jpg" alt="Blazer Antonella"> -->
-            <span class="shot__plate" style="--lx:60%; --ly:20%;"></span>
+            <img src="img/2-casaco-pelucia-cinto.webp" alt="Casaco bege com gola, punhos e barra em pelúcia, com cinto na cintura" width="787" height="1400" loading="lazy" decoding="async">
             <span class="tag">Peça única</span>
           </span>
         </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Blazer Antonella"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
+        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Casaco Pelúcia com Cinto"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
         <div class="card__foot">
-          <span class="card__name">Blazer Antonella</span>
+          <span class="card__name">Casaco Pelúcia com Cinto</span>
           <span class="card__price">Sob consulta</span>
         </div>
       </article>
-      <article class="card" data-id="manu" data-nome="Tricot Manu" data-cat="tricot">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Tricot Manu, falar com a loja">
+      <article class="card" data-id="conjunto-listra" data-nome="Conjunto Tricot Listra Lateral" data-cat="tricot">
+        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Conjunto Tricot Listra Lateral, falar com a loja">
           <span class="shot">
-            <!-- FOTO: troque por <img src="img/manu.jpg" alt="Tricot Manu"> -->
-            <span class="shot__plate" style="--lx:32%; --ly:30%;"></span>
+            <img src="img/3-conjunto-tricot-listra.webp" alt="Conjunto de tricot cinza com listra preta na lateral, blusa e calça" width="787" height="1400" loading="lazy" decoding="async">
           </span>
         </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Tricot Manu"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
+        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Conjunto Tricot Listra Lateral"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
         <div class="card__foot">
-          <span class="card__name">Tricot Manu</span>
+          <span class="card__name">Conjunto Tricot Listra Lateral</span>
           <span class="card__price">Sob consulta</span>
         </div>
       </article>
-      <article class="card" data-id="lis" data-nome="Saia Midi Lis" data-cat="alfaiataria">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Saia Midi Lis, falar com a loja">
+      <article class="card" data-id="midi-canelado" data-nome="Vestido Midi Canelado" data-cat="vestidos">
+        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Vestido Midi Canelado, falar com a loja">
           <span class="shot">
-            <!-- FOTO: troque por <img src="img/lis.jpg" alt="Saia Midi Lis"> -->
-            <span class="shot__plate" style="--lx:54%; --ly:16%;"></span>
+            <img src="img/4-vestido-midi-canelado.webp" alt="Vestido midi canelado marrom, manga longa, com fenda frontal" width="787" height="1400" loading="lazy" decoding="async">
           </span>
         </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Saia Midi Lis"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
+        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Vestido Midi Canelado"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
         <div class="card__foot">
-          <span class="card__name">Saia Midi Lis</span>
+          <span class="card__name">Vestido Midi Canelado</span>
           <span class="card__price">Sob consulta</span>
         </div>
       </article>
-      <article class="card" data-id="olivia" data-nome="Camisa Olívia" data-cat="alfaiataria">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Camisa Olívia, falar com a loja">
+      <article class="card" data-id="salopete-couro" data-nome="Salopete de Couro" data-cat="vestidos">
+        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Salopete de Couro, falar com a loja">
           <span class="shot">
-            <!-- FOTO: troque por <img src="img/olivia.jpg" alt="Camisa Olívia"> -->
-            <span class="shot__plate" style="--lx:46%; --ly:22%;"></span>
-          </span>
-        </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Camisa Olívia"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
-        <div class="card__foot">
-          <span class="card__name">Camisa Olívia</span>
-          <span class="card__price">Sob consulta</span>
-        </div>
-      </article>
-      <article class="card" data-id="bruna" data-nome="Vestido Curto Bruna" data-cat="vestidos">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Vestido Curto Bruna, falar com a loja">
-          <span class="shot">
-            <!-- FOTO: troque por <img src="img/bruna.jpg" alt="Vestido Curto Bruna"> -->
-            <span class="shot__plate" style="--lx:58%; --ly:28%;"></span>
+            <img src="img/5-salopete-couro.webp" alt="Salopete midi de couro preto, usada sobre camisa branca de gola" width="787" height="1400" loading="lazy" decoding="async">
             <span class="tag">Últimas</span>
           </span>
         </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Vestido Curto Bruna"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
+        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Salopete de Couro"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
         <div class="card__foot">
-          <span class="card__name">Vestido Curto Bruna</span>
-          <span class="card__price">Sob consulta</span>
-        </div>
-      </article>
-      <article class="card" data-id="nina" data-nome="Calça Alfaiataria Nina" data-cat="alfaiataria">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Calça Alfaiataria Nina, falar com a loja">
-          <span class="shot">
-            <!-- FOTO: troque por <img src="img/nina.jpg" alt="Calça Alfaiataria Nina"> -->
-            <span class="shot__plate" style="--lx:38%; --ly:18%;"></span>
-          </span>
-        </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Calça Alfaiataria Nina"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
-        <div class="card__foot">
-          <span class="card__name">Calça Alfaiataria Nina</span>
-          <span class="card__price">Sob consulta</span>
-        </div>
-      </article>
-      <article class="card" data-id="helena" data-nome="Vestido Midi Helena" data-cat="vestidos">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Vestido Midi Helena, falar com a loja">
-          <span class="shot">
-            <!-- FOTO: troque por <img src="img/helena.jpg" alt="Vestido Midi Helena"> -->
-            <span class="shot__plate" style="--lx:50%; --ly:24%;"></span>
-          </span>
-        </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Vestido Midi Helena"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
-        <div class="card__foot">
-          <span class="card__name">Vestido Midi Helena</span>
-          <span class="card__price">Sob consulta</span>
-        </div>
-      </article>
-      <article class="card" data-id="lia" data-nome="Cardigã Lia" data-cat="tricot">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Cardigã Lia, falar com a loja">
-          <span class="shot">
-            <!-- FOTO: troque por <img src="img/lia.jpg" alt="Cardigã Lia"> -->
-            <span class="shot__plate" style="--lx:42%; --ly:32%;"></span>
-          </span>
-        </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Cardigã Lia"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
-        <div class="card__foot">
-          <span class="card__name">Cardigã Lia</span>
-          <span class="card__price">Sob consulta</span>
-        </div>
-      </article>
-      <article class="card" data-id="duda" data-nome="Suéter Duda" data-cat="tricot">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Suéter Duda, falar com a loja">
-          <span class="shot">
-            <!-- FOTO: troque por <img src="img/duda.jpg" alt="Suéter Duda"> -->
-            <span class="shot__plate" style="--lx:56%; --ly:20%;"></span>
-          </span>
-        </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Suéter Duda"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
-        <div class="card__foot">
-          <span class="card__name">Suéter Duda</span>
-          <span class="card__price">Sob consulta</span>
-        </div>
-      </article>
-      <article class="card" data-id="vera" data-nome="Bolsa Vera" data-cat="acessorios">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Bolsa Vera, falar com a loja">
-          <span class="shot">
-            <!-- FOTO: troque por <img src="img/vera.jpg" alt="Bolsa Vera"> -->
-            <span class="shot__plate" style="--lx:48%; --ly:30%;"></span>
-            <span class="tag">Peça única</span>
-          </span>
-        </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Bolsa Vera"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
-        <div class="card__foot">
-          <span class="card__name">Bolsa Vera</span>
-          <span class="card__price">Sob consulta</span>
-        </div>
-      </article>
-      <article class="card" data-id="rosa" data-nome="Cinto Rosa" data-cat="acessorios">
-        <a class="card__hit" href="https://chat.whatsapp.com/LsB4fxstlon49BFCeop9pT" target="_blank" rel="noopener" aria-label="Cinto Rosa, falar com a loja">
-          <span class="shot">
-            <!-- FOTO: troque por <img src="img/rosa.jpg" alt="Cinto Rosa"> -->
-            <span class="shot__plate" style="--lx:40%; --ly:26%;"></span>
-          </span>
-        </a>
-        <button class="fav" type="button" aria-pressed="false" aria-label="Salvar Cinto Rosa"><svg viewBox="0 0 256 256" fill="currentColor" aria-hidden="true"><path d="M178,40c-20.65,0-38.73,8.88-50,23.89C116.73,48.88,98.65,40,78,40a62.07,62.07,0,0,0-62,62c0,70,103.79,126.66,108.21,129a8,8,0,0,0,7.58,0C136.21,228.66,240,172,240,102A62.07,62.07,0,0,0,178,40ZM128,214.8C109.74,204.16,32,155.69,32,102A46.06,46.06,0,0,1,78,56c19.45,0,35.78,10.36,42.6,27a8,8,0,0,0,14.8,0c6.82-16.67,23.15-27,42.6-27a46.06,46.06,0,0,1,46,46C224,155.61,146.24,204.15,128,214.8Z"/></svg></button>
-        <div class="card__foot">
-          <span class="card__name">Cinto Rosa</span>
+          <span class="card__name">Salopete de Couro</span>
           <span class="card__price">Sob consulta</span>
         </div>
       </article>

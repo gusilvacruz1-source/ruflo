@@ -304,7 +304,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .grid {
   position: relative;
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 6px;
 }
 .card { position: relative; display: flex; flex-direction: column; }
