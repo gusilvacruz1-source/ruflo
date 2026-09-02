@@ -180,7 +180,30 @@
   }
 
   /* ---------------------------------------------------
-     3. O facho sobre a grade
+     3. Video do hero
+     Autoplay em loop e movimento continuo. Quem pediu menos
+     movimento no sistema fica com o quadro parado do poster.
+     --------------------------------------------------- */
+  function ligarVideo() {
+    var video = document.querySelector(".hero__fundo");
+    if (!video || !video.pause) return;
+    var calmo = window.matchMedia("(prefers-reduced-motion: reduce)");
+
+    function ajustar() {
+      if (calmo.matches) {
+        video.pause();
+        video.removeAttribute("autoplay");
+      } else {
+        var p = video.play();
+        if (p && p.catch) p.catch(function () {});
+      }
+    }
+    ajustar();
+    if (calmo.addEventListener) calmo.addEventListener("change", ajustar);
+  }
+
+  /* ---------------------------------------------------
+     4. O facho sobre a grade
      A luz acompanha o cursor e acende a peça por onde passa.
      É o nome da marca virando comportamento.
      O transform vai direto no elemento: mexer numa variável
@@ -215,7 +238,7 @@
   }
 
   /* ---------------------------------------------------
-     4. Revelação ao entrar na tela
+     5. Revelação ao entrar na tela
      --------------------------------------------------- */
   function ligarRevelacao() {
     var alvos = [];
@@ -256,6 +279,7 @@
     ligarBandeja();
     ligarCategorias();
     ligarBusca();
+    ligarVideo();
     ligarFacho();
     ligarRevelacao();
   }
