@@ -6,7 +6,8 @@ export function Hero() {
   return (
     <section
       id="inicio"
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-noite-900 sm:min-h-[calc(100svh-3rem)] lg:min-h-[calc(100svh-4rem)]"
+      data-tom="escuro"
+      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-noite-900 sm:min-h-[calc(100svh-2rem)] lg:min-h-[calc(100svh-2.5rem)]"
     >
       <img
         src={hero.imagem}

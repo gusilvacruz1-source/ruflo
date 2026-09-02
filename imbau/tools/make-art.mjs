@@ -285,42 +285,6 @@ const cenas = {
     ],
   }),
 
-  // Plano de fundo da página: o mesmo lago, mas no clarear do dia. Fica
-  // desfocado atrás da placa do site, então vale mais claridade que detalhe.
-  'fundo-plano': scene({
-    w: 2400,
-    h: 1500,
-    waterY: 0.72,
-    glowY: 0.6,
-    haze: '#c6d6e4',
-    vignette: 0.34,
-    grain: 0.05,
-    reflectOpacity: 0.34,
-    grade: ['#3d5a74', '#e0b071'],
-    sky: [
-      ['0', '#1c2b3e'],
-      ['.34', '#33475f'],
-      ['.62', '#5e7590'],
-      ['.86', '#93a8bd'],
-      ['1', '#b8c8d6'],
-    ],
-    ridges: [
-      { lift: 0.24, amp: 0.19, fill: '#4a6076', haze: 0.66, blur: 'Lg', seed: 3 },
-      { lift: 0.12, amp: 0.15, fill: '#33465c', haze: 0.46, blur: 'Md', seed: 11 },
-      { lift: 0.02, amp: 0.1, fill: '#22303f', haze: 0.24, blur: 'Md', seed: 23 },
-    ],
-    build: ({ w, horizon }) => `
-      ${volume({ x: w * 0.08, y: horizon - w * 0.04, w: w * 0.16, h: w * 0.04, bays: 4, seed: 8, dim: 0.3 })}
-      ${volume({ x: w * 0.38, y: horizon - w * 0.052, w: w * 0.4, h: w * 0.052, bays: 10, seed: 21, dim: 0.5 })}
-      <rect x="${n(w * 0.02)}" y="${n(horizon - 5)}" width="${n(w * 0.96)}" height="9" fill="#1a2432"/>`,
-    trees: [
-      { x: 0.03, h: 0.2, w: 0.034, fill: '#22303f', drop: 6 },
-      { x: 0.09, h: 0.14, w: 0.024, fill: '#2a394a', drop: 6 },
-      { x: 0.95, h: 0.24, w: 0.036, fill: '#22303f', drop: 6 },
-      { x: 0.89, h: 0.16, w: 0.026, fill: '#2a394a', drop: 6 },
-    ],
-  }),
-
 };
 
 mkdirSync(OUT, { recursive: true });

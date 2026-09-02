@@ -1,9 +1,9 @@
 # Imbaú Imobiliária — landing page
 
 Página única em React + Vite + Tailwind CSS, no estilo "alto luxo, moderno e
-minimalista": o site inteiro é uma placa arredondada apoiada sobre uma foto de
-fundo, com bloco escuro imersivo no topo, vitrine de imóveis em cartões grandes
-e quebra para um bloco claro na chamada final.
+minimalista": o site é uma placa arredondada apoiada sobre o creme da página.
+Dentro dela o escuro aparece só três vezes — a primeira dobra, a vitrine de
+imóveis e o rodapé; o resto respira no claro.
 
 A ordem das seções é: primeira dobra → serviços → imóveis → sobre a corretora →
 chamada para avaliação → dúvidas frequentes → contato → rodapé.
@@ -27,7 +27,6 @@ componentes só leem esse arquivo.
 | Bloco em `conteudo.js` | O que controla |
 | --- | --- |
 | `marca`, `mensagens` | Contatos e o texto que cada botão manda no WhatsApp |
-| `pagina` | A foto que fica atrás da placa do site |
 | `hero` | Primeira dobra: título, texto e os três pilares sobre a foto |
 | `servicos` | Os sete serviços e as quatro etapas do atendimento |
 | `imoveis`, `vitrine` | A carteira que aparece na vitrine |
@@ -65,7 +64,6 @@ imóvel a pessoa quer falar.
 | --- | --- |
 | `imagens/casa-210m2-*.webp`, `imagens/casa-122m2.webp`, `imagens/imovel-rural-1723m2.webp` | Fotos reais dos anúncios do perfil `@imobiliaria.imbau` |
 | `imagens/hero-lago.svg` | Fundo da primeira dobra — cena ilustrativa, **não é um imóvel da carteira** |
-| `imagens/fundo-plano.svg` | O plano atrás da placa do site: a mesma cena, mais clara e desfocada |
 | `imagens/imovel-sem-foto.svg` | Reserva para imóvel anunciado antes da sessão de fotos |
 | `imagens/og.jpg` | Prévia que aparece ao compartilhar o link no WhatsApp |
 | `marca/imbau-simbolo.png` | Símbolo da marca, recortado do logotipo original |
@@ -74,8 +72,8 @@ As fotos vieram de prints do Instagram, então estão em 828 px de largura. Se a
 Raquel tiver os arquivos originais, vale substituir — a nitidez melhora bastante
 nos cartões grandes.
 
-O fundo da hero, o plano de fundo da página e a imagem de reserva são gerados
-por `tools/make-art.mjs` (`node tools/make-art.mjs`). Se um dia entrar uma fotografia noturna de verdade,
+O fundo da hero e a imagem de reserva são gerados por `tools/make-art.mjs`
+(`node tools/make-art.mjs`). Se um dia entrar uma fotografia noturna de verdade,
 é só trocar `hero.imagem` em `src/conteudo.js`.
 
 ## Antes de publicar
@@ -87,6 +85,13 @@ por `tools/make-art.mjs` (`node tools/make-art.mjs`). Se um dia entrar uma fotog
 - [ ] Trocar o domínio em `og:image` e no `link rel="canonical"` (`index.html`)
       se o endereço final não for `imobiliariaimbau.com.br`.
 - [ ] Substituir as fotos pelos arquivos originais, se existirem.
+
+## Claro e escuro
+
+Cada bloco declara o próprio tom com `data-tom="claro"` ou `data-tom="escuro"`.
+O menu lê esse atributo do bloco que está passando debaixo dele e troca de
+roupa: sobre o creme a marca fica escura, a pílula vira vidro claro e o botão
+inverte. Ao criar uma seção nova, marque o tom dela — senão o menu não enxerga.
 
 ## Movimento
 

@@ -4,7 +4,7 @@ import { Revelar } from './Movimento';
 
 export function Chamada() {
   return (
-    <section id="avaliacao" className="relative bg-osso-200 px-5 py-20 sm:px-8 sm:py-28">
+    <section id="avaliacao" data-tom="claro" className="relative bg-osso-200 px-5 py-20 sm:px-8 sm:py-28">
       <div className="mx-auto max-w-[1280px]">
         <Revelar
           distancia={34}

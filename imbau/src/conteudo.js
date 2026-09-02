@@ -36,11 +36,6 @@ export const mensagens = {
     `Olá! Vim pelo site e me interessei pelo imóvel "${nome}". Pode me passar mais detalhes?`,
 };
 
-/** O plano de fundo da página: a placa do site pousa em cima dele. */
-export const pagina = {
-  fundo: 'imagens/fundo-plano.svg',
-};
-
 export const hero = {
   sobretexto: 'Imbaú · Paraná',
   titulo: 'Seu imóvel no caminho certo',
@@ -142,7 +137,6 @@ export const rodape = {
  * A ordem aqui é a ordem que aparece na tela.
  */
 export const servicos = {
-  selo: 'O que fazemos',
   titulo: 'Do anúncio à escritura',
   texto:
     'A Imbaú acompanha o caminho inteiro do imóvel — não só a parte da venda. Cada serviço abaixo é conduzido por quem conhece o cartório, o banco e a rua.',
@@ -266,7 +260,6 @@ export const perguntas = {
  * escolhe as opções e o botão abre o WhatsApp com o texto já escrito.
  */
 export const contato = {
-  selo: 'Fale com a gente',
   titulo: 'Comece pela conversa',
   texto:
     'Monte a sua mensagem em três toques. Ela abre no WhatsApp já escrita — você só confere e envia.',

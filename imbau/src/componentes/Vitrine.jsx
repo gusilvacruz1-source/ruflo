@@ -62,8 +62,10 @@ function Cartao({ imovel, indice }) {
 
 export function Vitrine() {
   return (
-    <section id="imoveis" className="relative bg-noite-900 py-24 sm:py-32 lg:py-40">
-      <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
+    <section id="imoveis" data-tom="claro" className="bg-osso-100 px-3 py-6 sm:px-6 sm:py-10">
+      {/* A vitrine é o bloco escuro da página — o resto respira no claro. */}
+      <div data-tom="escuro" className="mx-auto max-w-[1440px] rounded-[1.75rem] bg-noite-900 px-5 py-20 sm:px-10 sm:py-28 lg:rounded-[2.25rem] lg:py-32">
+        <div className="mx-auto max-w-[1180px]">
         <header className="mx-auto max-w-2xl text-center">
           <Revelar>
             <Selo>{vitrine.selo}</Selo>
@@ -99,6 +101,7 @@ export function Vitrine() {
             </span>
           </a>
         </Revelar>
+        </div>
       </div>
     </section>
   );

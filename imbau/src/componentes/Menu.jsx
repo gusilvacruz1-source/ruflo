@@ -10,6 +10,36 @@ const links = [
   { href: '#contato', texto: 'Contato' },
 ];
 
+/** Lê o tom do bloco que está passando embaixo do menu, para ele se vestir. */
+function useTomDoFundo() {
+  const [tom, setTom] = useState('escuro');
+
+  useEffect(() => {
+    const blocos = [...document.querySelectorAll('[data-tom]')];
+    if (!blocos.length) return;
+
+    const aoRolar = () => {
+      // O último que cruza a faixa do menu vence — assim o bloco escuro
+      // encaixado dentro de uma seção clara tem a última palavra.
+      const debaixo = blocos.filter((b) => {
+        const area = b.getBoundingClientRect();
+        return area.top <= 44 && area.bottom > 44;
+      });
+      setTom(debaixo.at(-1)?.dataset.tom ?? 'escuro');
+    };
+
+    aoRolar();
+    window.addEventListener('scroll', aoRolar, { passive: true });
+    window.addEventListener('resize', aoRolar);
+    return () => {
+      window.removeEventListener('scroll', aoRolar);
+      window.removeEventListener('resize', aoRolar);
+    };
+  }, []);
+
+  return tom;
+}
+
 /** Descobre em qual seção a pessoa está para acender o link certo. */
 function useSecaoAtiva() {
   const [ativa, setAtiva] = useState('#inicio');
@@ -40,6 +70,8 @@ export function Menu() {
   const [rolou, setRolou] = useState(false);
   const [aberto, setAberto] = useState(false);
   const ativa = useSecaoAtiva();
+  const tom = useTomDoFundo();
+  const claro = tom === 'escuro'; // texto claro sobre bloco escuro
 
   useEffect(() => {
     const aoRolar = () => setRolou(window.scrollY > 24);
@@ -65,19 +97,23 @@ export function Menu() {
   return (
     <header
       className={`fixed inset-x-0 top-0 z-50 transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] ${
-        rolou ? 'py-3' : 'py-6 sm:py-9'
+        rolou ? 'py-3' : 'py-5 sm:py-7'
       }`}
     >
       {/* Mesma margem da placa, para o menu nascer alinhado com o conteúdo. */}
-      <div className="mx-auto max-w-[1500px] px-0 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-[1520px] px-0 sm:px-4 lg:px-5">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-5 sm:px-8">
           <a href="#inicio" aria-label={`${marca.nome} ${marca.sobrenome} — início`}>
-            <Marca tamanho="h-9 w-9" />
+            <Marca tamanho="h-9 w-9" claro={claro} />
           </a>
 
           {/* Pílula de vidro, só no desktop */}
           <nav className="hidden lg:block" aria-label="Navegação principal">
-            <ul className="vidro flex items-center gap-1 rounded-full border border-white/10 p-1.5">
+            <ul
+              className={`flex items-center gap-1 rounded-full border p-1.5 transition-colors duration-500 ${
+                claro ? 'vidro border-white/10' : 'vidro-claro border-noite-900/10'
+              }`}
+            >
               {links.map((l) => (
                 <li key={l.href}>
                   <a
@@ -85,8 +121,12 @@ export function Menu() {
                     aria-current={ativa === l.href ? 'true' : undefined}
                     className={`block rounded-full px-5 py-2 text-sm transition-colors duration-300 ${
                       ativa === l.href
-                        ? 'bg-osso-100 text-noite-900'
-                        : 'text-osso-100/75 hover:bg-white/10 hover:text-osso-100'
+                        ? claro
+                          ? 'bg-osso-100 text-noite-900'
+                          : 'bg-noite-900 text-osso-100'
+                        : claro
+                          ? 'text-osso-100/75 hover:bg-white/10 hover:text-osso-100'
+                          : 'text-noite-900/65 hover:bg-noite-900/8 hover:text-noite-900'
                     }`}
                   >
                     {l.texto}
@@ -97,7 +137,11 @@ export function Menu() {
           </nav>
 
           <div className="hidden md:block">
-            <Botao href={zap(mensagens.menu)} variante="claro" icone="whatsapp">
+            <Botao
+              href={zap(mensagens.menu)}
+              variante={claro ? 'claro' : 'escuro'}
+              icone="whatsapp"
+            >
               Fale conosco
             </Botao>
           </div>
@@ -107,11 +151,17 @@ export function Menu() {
             onClick={() => setAberto(true)}
             aria-label="Abrir menu"
             aria-expanded={aberto}
-            className="vidro grid h-11 w-11 place-items-center rounded-full border border-white/10 md:hidden"
+            className={`grid h-11 w-11 place-items-center rounded-full border transition-colors duration-500 md:hidden ${
+              claro ? 'vidro border-white/10' : 'vidro-claro border-noite-900/12'
+            }`}
           >
             <span className="flex flex-col gap-[5px]">
-              <span className="block h-px w-5 bg-osso-100" />
-              <span className="block h-px w-5 bg-osso-100" />
+              <span
+                className={`block h-px w-5 ${claro ? 'bg-osso-100' : 'bg-noite-900'}`}
+              />
+              <span
+                className={`block h-px w-5 ${claro ? 'bg-osso-100' : 'bg-noite-900'}`}
+              />
             </span>
           </button>
         </div>

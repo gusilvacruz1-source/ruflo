@@ -4,15 +4,7 @@ import { Revelar } from './Movimento';
 
 export function Sobre() {
   return (
-    <section id="sobre" className="relative overflow-hidden bg-osso-100 px-5 py-24 sm:px-8 sm:py-32">
-      {/* Símbolo da marca em marca-d'água — profundidade sem enfeite. */}
-      <img
-        src={marca.simbolo}
-        alt=""
-        aria-hidden="true"
-        className="pointer-events-none absolute -right-16 -top-16 w-72 opacity-[0.045] sm:w-[24rem] lg:-right-28 lg:w-[30rem]"
-      />
-
+    <section id="sobre" data-tom="claro" className="relative bg-osso-100 px-5 py-24 sm:px-8 sm:py-32">
       <div className="relative mx-auto max-w-[1280px]">
         <Revelar className="max-w-4xl">
           <p className="titulo-hero text-[clamp(1.65rem,3.8vw,2.8rem)] leading-[1.14] text-noite-900">

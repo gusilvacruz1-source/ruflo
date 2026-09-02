@@ -17,6 +17,8 @@
   --color-ouro-400: #f0cf80;
   --color-ouro-500: #e9b949;
   --color-ouro-600: #cf9f34;
+  /* Ouro escuro: o único que se lê como texto sobre o creme. */
+  --color-ouro-700: #8a6414;
   --color-marca: #ef7f1f;
 
   --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system,
@@ -30,13 +32,13 @@
   html {
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
-    scrollbar-color: var(--color-noite-500) var(--color-noite-900);
+    scrollbar-color: var(--color-noite-500) var(--color-osso-200);
     scrollbar-width: thin;
   }
 
   body {
-    background-color: var(--color-noite-900);
-    color: var(--color-osso-100);
+    background-color: var(--color-osso-200);
+    color: var(--color-noite-900);
     font-family: var(--font-display);
     font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
@@ -89,7 +91,14 @@
     transition: transform 0.6s var(--ease-suave);
   }
 
-  /* Pílula de vidro do menu. */
+  /* Pílula de vidro do menu, sobre o creme. */
+  .vidro-claro {
+    background: color-mix(in srgb, var(--color-osso-100) 70%, transparent);
+    backdrop-filter: blur(18px) saturate(140%);
+    -webkit-backdrop-filter: blur(18px) saturate(140%);
+  }
+
+  /* Pílula de vidro do menu, sobre o escuro. */
   .vidro {
     background: color-mix(in srgb, var(--color-noite-800) 55%, transparent);
     backdrop-filter: blur(18px) saturate(140%);
