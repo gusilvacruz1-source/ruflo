@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { contato, marca, montarMensagem } from '../conteudo';
-import { Instagram, Whatsapp } from './Interface';
+import { Instagram, Local, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
 
 /** Pastilha de escolha única. Botão de verdade, para funcionar no teclado. */
@@ -88,6 +88,23 @@ export function Contato() {
                   </span>
                 </span>
               </a>
+              <a
+                href={marca.mapa}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="group flex items-center gap-4 text-noite-900"
+              >
+                <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full border border-noite-900/15 text-noite-900 transition-colors duration-500 group-hover:border-noite-900/45">
+                  <Local className="h-4.5 w-4.5" />
+                </span>
+                <span>
+                  <span className="block text-[1.05rem] leading-tight">{marca.endereco}</span>
+                  <span className="block text-[0.78rem] text-noite-900/50">
+                    {marca.bairro} · {marca.cidade} · {marca.cep}
+                  </span>
+                </span>
+              </a>
+
               <p className="mt-4 max-w-sm border-t border-noite-900/10 pt-6 text-[0.85rem] leading-relaxed text-noite-900/55">
                 {contato.regiao}
               </p>

@@ -1,3 +1,4 @@
+import { Avaliacoes } from './componentes/Avaliacoes';
 import { Chamada } from './componentes/Chamada';
 import { Contato } from './componentes/Contato';
 import { Hero } from './componentes/Hero';
@@ -21,6 +22,7 @@ export default function App() {
             <Servicos />
             <Vitrine />
             <Sobre />
+            <Avaliacoes />
             <Chamada />
             <Perguntas />
             <Contato />

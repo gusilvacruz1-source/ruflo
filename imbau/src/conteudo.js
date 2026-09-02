@@ -11,6 +11,11 @@ export const marca = {
   cargo: 'Corretora de Imóveis',
   creci: 'CRECI 27892',
   regiao: 'Imbaú · Paraná',
+  endereco: 'Tv. Pio XII, nº 93',
+  bairro: 'Bairro Bela Vista',
+  cidade: 'Imbaú · PR',
+  cep: '84250-000',
+  mapa: 'https://www.google.com/maps/search/?api=1&query=Imobili%C3%A1ria+Imba%C3%BA%2C+Tv.+Pio+XII%2C+93%2C+Imba%C3%BA+-+PR',
   telefoneExibicao: '(42) 98836-9168',
   whatsapp: '5542988369168',
   instagram: 'https://www.instagram.com/imobiliaria.imbau/',
@@ -32,6 +37,7 @@ export const mensagens = {
   hero: 'Olá, Raquel! Vim pelo site e quero encontrar o meu próximo imóvel.',
   avaliacao:
     'Olá, Raquel! Vim pelo site e gostaria de uma avaliação gratuita do meu imóvel.',
+  endereco: 'Olá! Vim pelo site e queria confirmar o horário para passar no escritório.',
   imovel: (nome) =>
     `Olá! Vim pelo site e me interessei pelo imóvel "${nome}". Pode me passar mais detalhes?`,
 };
@@ -218,6 +224,38 @@ export const sobre = {
   botao: 'Conversar com a Raquel',
 };
 
+/**
+ * Avaliações reais do perfil da imobiliária no Google.
+ * As duas primeiras estão cortadas no Google ("… Mais"); aqui entra só o
+ * trecho que dá para ler por inteiro — nada foi reescrito.
+ *
+ * Ao acrescentar uma avaliação nova, copie o texto do Google e atualize
+ * também `nota` e `quantidade`.
+ */
+export const avaliacoes = {
+  titulo: 'Quem já passou por aqui',
+  nota: '5,0',
+  quantidade: '3 avaliações no Google',
+  botao: 'Ver no Google',
+  itens: [
+    {
+      nome: 'Gedean Almeida',
+      texto:
+        'Excelente experiência! Equipe séria, transparente e muito profissional. Encontraram o imóvel ideal e facilitaram todo o processo burocrático. Recomendo de olhos fechados!',
+    },
+    {
+      nome: 'Maria Clara Lemes',
+      texto:
+        'Quero deixar meu agradecimento à equipe da Imobiliária Imbaú pelo excelente atendimento. Fui muito bem orientada durante todo o processo de financiamento da minha casa, sempre com clareza, paciência e profissionalismo.',
+    },
+    {
+      nome: 'Francieli Suchodolak Lima',
+      texto:
+        'Profissional competente e qualificada, comprometida com o cliente, dando todo o suporte necessário.',
+    },
+  ],
+};
+
 export const perguntas = {
   titulo: 'O que perguntam antes de começar',
   texto: 'Se a sua dúvida não estiver aqui, é só chamar no WhatsApp — a gente responde.',
@@ -263,8 +301,9 @@ export const contato = {
   titulo: 'Comece pela conversa',
   texto:
     'Monte a sua mensagem em três toques. Ela abre no WhatsApp já escrita — você só confere e envia.',
-  horario: 'Segunda a sábado, das 8h às 18h',
+  horario: 'Aberto a partir das 8h',
   regiao: 'Imbaú e municípios vizinhos, com visita presencial combinada antes.',
+  enderecoRotulo: 'Escritório',
   rotulos: {
     objetivo: 'Eu quero',
     tipo: 'Tipo de imóvel',

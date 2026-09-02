@@ -1,5 +1,5 @@
 import { marca, mensagens, rodape, zap } from '../conteudo';
-import { Botao, Instagram, Marca, Whatsapp } from './Interface';
+import { Botao, Instagram, Local, Marca, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
 
 export function Rodape() {
@@ -47,6 +47,22 @@ export function Rodape() {
                 >
                   <Instagram className="h-4 w-4 text-ouro-500" />
                   {marca.instagramExibicao}
+                </a>
+              </li>
+              <li>
+                <a
+                  href={marca.mapa}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-start gap-2.5 transition-colors duration-300 hover:text-osso-100"
+                >
+                  <Local className="mt-0.5 h-4 w-4 shrink-0 text-ouro-500" />
+                  <span>
+                    {marca.endereco}
+                    <span className="block text-osso-100/45">
+                      {marca.bairro} · {marca.cidade}
+                    </span>
+                  </span>
                 </a>
               </li>
               <li className="text-osso-100/45">{marca.site}</li>

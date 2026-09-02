@@ -31,9 +31,22 @@ componentes só leem esse arquivo.
 | `servicos` | Os sete serviços e as quatro etapas do atendimento |
 | `imoveis`, `vitrine` | A carteira que aparece na vitrine |
 | `sobre` | Citação, ficha da corretora e o convite para conversar |
+| `avaliacoes` | Nota e depoimentos copiados do perfil no Google |
 | `chamada` | Bloco claro da avaliação gratuita |
 | `perguntas` | As dúvidas frequentes (abre e fecha na página) |
-| `contato` | Canais e as opções do montador de mensagem |
+| `contato` | Canais, endereço e as opções do montador de mensagem |
+
+### Avaliações do Google
+
+Os três depoimentos e a nota vêm do perfil da Imobiliária Imbaú no Google. Os
+dois primeiros aparecem cortados lá ("… Mais") — no site entra só o trecho que
+dá para ler por inteiro, sem uma palavra reescrita. Se surgir avaliação nova,
+copie o texto do Google e atualize `nota` e `quantidade` junto.
+
+O endereço e o telefone também estão em `index.html`, num bloco
+`application/ld+json`, para o Google ler a ficha direto do site. As avaliações
+**não** entram nesse bloco de propósito: são do Google, e marcá-las como se
+fossem do próprio site vai contra as regras dele.
 
 ### O montador de mensagem
 
@@ -81,7 +94,12 @@ O fundo da hero e a imagem de reserva são gerados por `tools/make-art.mjs`
 - [ ] Confirmar com a Raquel se os três imóveis seguem disponíveis.
 - [ ] Ler com ela as respostas de `perguntas` e as descrições de `servicos`:
       foram escritas a partir da placa e do perfil, mas quem responde é ela.
-- [ ] Conferir o horário de atendimento em `contato.horario`.
+- [ ] Fechar o horário de atendimento: o Google só mostra que abre às 8h, então
+      `contato.horario` diz apenas isso. Com os dias e o fechamento em mãos,
+      atualize o texto e acrescente `openingHoursSpecification` ao bloco
+      `ld+json` de `index.html`.
+- [ ] Decidir o nome: o Google registra **Imobiliária Imbaú** e o site assina
+      **Imbaú Imobiliária**. Vale alinhar os dois — ajuda quem procura.
 - [ ] Trocar o domínio em `og:image` e no `link rel="canonical"` (`index.html`)
       se o endereço final não for `imobiliariaimbau.com.br`.
 - [ ] Substituir as fotos pelos arquivos originais, se existirem.

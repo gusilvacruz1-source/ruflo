@@ -33,6 +33,14 @@ export function Estrela({ className = 'h-3 w-3' }) {
   );
 }
 
+export function EstrelaCheia({ className = 'h-4 w-4' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="currentColor" className={className} aria-hidden="true">
+      <path d="m12 2.6 2.9 5.9 6.5.95-4.7 4.58 1.1 6.47L12 17.44 6.2 20.5l1.1-6.47L2.6 9.45l6.5-.95z" />
+    </svg>
+  );
+}
+
 export function Instagram({ className = 'h-4 w-4' }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
@@ -85,6 +93,20 @@ const beneficios = {
     </>
   ),
 };
+
+export function Local({ className = 'h-4 w-4' }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className} aria-hidden="true">
+      <path
+        d="M12 21s7-5.6 7-11a7 7 0 1 0-14 0c0 5.4 7 11 7 11"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinejoin="round"
+      />
+      <circle cx="12" cy="10" r="2.5" stroke="currentColor" strokeWidth="1.5" />
+    </svg>
+  );
+}
 
 export function IconeBeneficio({ nome, className = 'h-5 w-5' }) {
   return (
