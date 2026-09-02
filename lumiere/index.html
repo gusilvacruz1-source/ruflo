@@ -11,8 +11,11 @@
 <meta property="og:title" content="Lumière | Moda &amp; Estilo">
 <meta property="og:description" content="Moda feminina em Reserva, Paraná. Entregas em Imbaú e Telêmaco Borba.">
 <meta property="og:locale" content="pt_BR">
+<meta property="og:image" content="img/og.jpg">
+<meta name="twitter:card" content="summary_large_image">
 
-<link rel="icon" href="favicon.svg" type="image/svg+xml">
+<link rel="icon" href="favicon.png" type="image/png">
+<link rel="apple-touch-icon" href="favicon.png">
 <link rel="preload" href="fonts/bodoni-moda-italic-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="fonts/archivo-latin.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="css/fonts.css">
@@ -71,15 +74,25 @@
   <!-- ============ HERO: DUAS IMAGENS ============ -->
   <section class="hero" id="topo">
     <!--
-      DUAS FOTOS DO HERO. Troque cada <span class="hero__plate"> por
-      <img class="hero__photo" src="img/hero-1.jpg" alt="Modelo vestindo peça da Lumière">
-      Formato ideal: quadrado ou 4x5, uma modelo por foto.
+      FUNDO DA CAMPANHA. Hoje é o vídeo do casaco de pelúcia, cortado em
+      16:9 e comprimido. Para trocar por foto, substitua o <video> por
+      <img class="hero__fundo" src="img/campanha.jpg" alt="">
+      Se tiver duas fotos e quiser a faixa dividida em duas, me avise.
     -->
-    <div class="hero__half"><span class="hero__plate" style="--lx:38%; --ly:30%;" aria-hidden="true"></span></div>
-    <div class="hero__half"><span class="hero__plate" style="--lx:62%; --ly:26%;" aria-hidden="true"></span></div>
+    <video class="hero__fundo" poster="img/hero-poster.webp"
+           autoplay muted loop playsinline preload="metadata" aria-hidden="true" tabindex="-1">
+      <!-- WebM primeiro: Chromium sem codec proprietario e Firefox sem
+           os codecs do sistema nao leem H.264, e ficariam so com o poster.
+           O MP4 fica de reserva, para Safari e navegadores antigos. -->
+      <source src="img/hero.webm" type="video/webm">
+      <source src="img/hero.mp4" type="video/mp4">
+    </video>
 
     <div class="hero__over">
-      <h1 class="hero__line">Vista-se<br>de luz</h1>
+      <h1 class="hero__marca">
+        <img src="img/logo.webp" alt="Lumière, Moda &amp; Estilo" width="900" height="900" fetchpriority="high">
+      </h1>
+      <p class="hero__tag">Vista-se de luz</p>
       <a class="hero__link" href="#colecao">Ver a coleção</a>
     </div>
   </section>

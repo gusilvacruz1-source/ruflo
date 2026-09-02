@@ -49,14 +49,14 @@ O `--cortar-barras` remove a barra de status e a de navegação quando a
 imagem é captura de tela de celular. Ele não mexe em foto normal, mesmo
 que ela comece com teto escuro.
 
-**Hero, duas fotos lado a lado.** Troque cada `<span class="hero__plate">` por:
+**Hero.** Hoje é o vídeo do casaco de pelúcia, cortado em 16:9 e servido
+em WebM com MP4 de reserva. Para trocar por foto, substitua o `<video>` por:
 
 ```html
-<img class="hero__photo" src="img/hero-1.jpg" alt="Modelo vestindo peça da Lumière">
+<img class="hero__fundo" src="img/campanha.jpg" alt="">
 ```
 
-Formato quadrado, por volta de 1200x1200. Deixe a modelo mais para a
-borda externa, porque o nome fica no meio, sobre a emenda das duas.
+Formato deitado e largo, por volta de 2400x1080.
 
 **Peças, doze fotos.** Em cada cartão, troque `<span class="shot__plate">` por:
 
@@ -77,7 +77,19 @@ Quadradas. São fotos de clima, não de produto.
 Depois que todas entrarem, apague os blocos `.hero__plate`, `.shot__plate`
 e `.strip__plate` do `css/style.css`.
 
-### 3. Os nomes das peças
+### 3. O logo
+
+O logo oficial está em `img/logo.webp`, com transparência de verdade: o
+fundo preto virou alfa pela luminância, então ele compõe sobre qualquer
+foto escura sem caixa preta em volta.
+
+**Ele só funciona no escuro.** Sobre fundo claro o halo do brilho vira uma
+mancha cinza e aparece a borda. Por isso ele aparece no hero, e o cabeçalho
+mantém o nome em texto. `img/marca.png` é só a lâmpada, e `favicon.png` é
+a lâmpada sobre preto, porque ouro brilhando em fundo transparente sumiria
+na aba branca do navegador.
+
+### 4. Os nomes das peças
 
 As dez peças são **exemplo**, não produtos reais. Em cada
 `<article class="card">` troque:
@@ -89,12 +101,12 @@ As dez peças são **exemplo**, não produtos reais. Em cada
 - o `aria-label` do link e o do botão de salvar
 - o `<span class="card__name">`
 
-### 4. Os preços
+### 5. Os preços
 
 Estão como "Sob consulta", que é verdade hoje: a negociação acontece na
 conversa. Para mostrar valor, troque o conteúdo de `<span class="card__price">`.
 
-### 5. A barra de aviso
+### 6. A barra de aviso
 
 O texto que rola no topo está em `index.html`, na variável do bloco
 `.ticker`. Ele aparece duas vezes seguidas (é assim que a rolagem fica

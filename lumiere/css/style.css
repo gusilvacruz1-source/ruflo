@@ -17,7 +17,8 @@
   --ink:    #111111;   /* 18.9:1 sobre o branco */
   --ink-2:  #6b6b6b;   /*  5.3:1 sobre o branco */
   --brass:  #7a5d28;   /*  6.2:1 sobre o branco. O dourado da marca. */
-  --gold:   #d8ab68;   /* dourado do hero, sobre a foto escurecida */
+  --gold:   #d8ab68;   /* dourado do hero, em area grande */
+  --gold-c: #f0d3a3;   /* ouro claro, para texto miudo sobre o video */
   --rule:   #e6e0da;
 
   --ui:    "Archivo", system-ui, -apple-system, sans-serif;
@@ -89,7 +90,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   white-space: nowrap;
   font-size: .75rem;
   font-weight: 500;
-  letter-spacing: .1em;
+  letter-spacing: .03em;
 }
 /* letreiro infinito precisa poder parar: pausa ao passar o cursor
    e ao receber foco de teclado */
@@ -217,63 +218,67 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 .search__tally { font-size: .75rem; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
 
 /* =========================================================
-   Hero: duas imagens, o texto atravessa a emenda
+   Hero: faixa unica, video de fundo e o logo por cima
+   O logo e ouro brilhando sobre preto. Extraido com alfa pela
+   luminancia, ele compoe limpo sobre fundo escuro. Sobre claro
+   o halo vira sujeira, entao ele so aparece aqui.
    ========================================================= */
 .hero {
   position: relative;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  aspect-ratio: 20 / 9;
+  overflow: hidden;
+  background: #2a2622;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
-.hero__half { position: relative; aspect-ratio: 1 / 1; overflow: hidden; background: #5c554c; }
-.hero__photo { width: 100%; height: 100%; object-fit: cover; }
-.hero__plate {
+.hero__fundo {
   position: absolute;
   inset: 0;
-  background:
-    radial-gradient(40% 44% at var(--lx, 50%) var(--ly, 30%), rgba(255, 244, 226, .30), transparent 68%),
-    linear-gradient(158deg, #7d7368 0%, #635b51 50%, #443e37 100%);
-}
-/* REMOVER quando as fotos reais entrarem */
-.hero__plate::after {
-  content: "Foto do hero";
-  position: absolute;
-  left: 1rem; top: 1rem;
-  font-size: .6875rem;
-  font-weight: 600;
-  letter-spacing: .14em;
-  text-transform: uppercase;
-  color: #cfc6b8;
+  width: 100%; height: 100%;
+  object-fit: cover;
 }
 
 .hero__over {
-  position: absolute;
-  inset: 0;
+  position: relative;
   z-index: 2;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 1.5rem;
+  gap: 1.1rem;
   text-align: center;
   padding: var(--pad);
-  /* escurece o centro: garante o contraste do texto dourado
-     mesmo quando entrar uma foto clara no lugar da placa */
-  background: radial-gradient(58% 46% at 50% 48%, rgba(0, 0, 0, .54), transparent 74%);
+  width: 100%;
 }
-.hero__line {
-  font-family: var(--serif);
-  font-style: italic;
-  font-size: clamp(2.5rem, 8vw, 6rem);
-  line-height: 1.02;
-  letter-spacing: -.01em;
-  color: var(--gold);
+/* escurece o centro: o logo e o texto continuam legiveis por cima
+   de qualquer quadro do video */
+.hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  background: radial-gradient(60% 66% at 50% 48%, rgba(0, 0, 0, .72), rgba(0, 0, 0, .38) 82%);
+}
+
+.hero__marca { margin: 0; line-height: 0; }
+.hero__marca img {
+  width: clamp(11rem, 26vw, 20rem);
+  height: auto;
+}
+
+.hero__tag {
+  font-size: clamp(.6875rem, 1.4vw, .8rem);
+  font-weight: 600;
+  letter-spacing: .34em;
+  text-transform: uppercase;
+  color: var(--gold-c);
 }
 .hero__link {
   font-size: .75rem;
   font-weight: 600;
   letter-spacing: .18em;
   text-transform: uppercase;
-  color: var(--gold);
+  color: var(--gold-c);
   border-bottom: 1px solid currentColor;
   padding-bottom: 3px;
   transition: color .22s ease;
@@ -318,26 +323,6 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
   background: var(--blush);
 }
 .shot > img { width: 100%; height: 100%; object-fit: cover; transition: transform .7s var(--out); }
-
-/* placa de luz no lugar da fotografia.
-   REMOVER este bloco quando as fotos reais entrarem. */
-.shot__plate {
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(56% 44% at var(--lx, 50%) var(--ly, 24%), rgba(255, 253, 250, .85), transparent 76%),
-    linear-gradient(160deg, var(--blush) 0%, #f1e6de 52%, var(--blush-d) 100%);
-}
-.shot__plate::after {
-  content: "Foto da peça";
-  position: absolute;
-  left: .7rem; bottom: .6rem;
-  font-size: .6875rem;
-  font-weight: 600;
-  letter-spacing: .1em;
-  text-transform: uppercase;
-  color: #a08d7f;
-}
 
 .tag {
   position: absolute;
@@ -585,9 +570,7 @@ button { font: inherit; color: inherit; background: none; border: 0; padding: 0;
 }
 
 @media (max-width: 620px) {
-  .hero { grid-template-columns: 1fr; }
-  .hero__half:last-child { display: none; }
-  .hero__half { aspect-ratio: 4 / 5; }
+  .hero { aspect-ratio: 4 / 5; }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .strip { grid-template-columns: 1fr; }
   .strip__plate:last-child { display: none; }
