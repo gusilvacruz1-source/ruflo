@@ -1,6 +1,31 @@
 {
   "version": 1,
   "skills": {
+    "excalidraw-diagram": {
+      "source": "gusilvacruz1-source/ruflo",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/excalidraw-diagram/SKILL.md"
+    },
+    "excalidraw-visuals": {
+      "source": "gusilvacruz1-source/ruflo",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/excalidraw-visuals/SKILL.md"
+    },
+    "frontend-design": {
+      "source": "gusilvacruz1-source/ruflo",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/frontend-design/SKILL.md"
+    },
+    "layout-container-fix": {
+      "source": "gusilvacruz1-source/ruflo",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/layout-container-fix/SKILL.md"
+    },
+    "skill-builder": {
+      "source": "gusilvacruz1-source/ruflo",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/skill-builder/SKILL.md"
+    },
     "video-to-website": {
       "source": "gusilvacruz1-source/ruflo",
       "sourceType": "local",
