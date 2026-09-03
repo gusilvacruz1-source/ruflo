@@ -89,6 +89,14 @@ O fundo da hero e a imagem de reserva são gerados por `tools/make-art.mjs`
 (`node tools/make-art.mjs`). Se um dia entrar uma fotografia noturna de verdade,
 é só trocar `hero.imagem` em `src/conteudo.js`.
 
+## Documentação visual
+
+`docs/estrutura.excalidraw` traz o mapa do livro — a capa presa, as sete
+folhas por cima dela, a lombada. Abra em [excalidraw.com](https://excalidraw.com)
+para editar. É gerado por `node tools/faz-diagrama.mjs`, e não à mão: montar
+esse JSON manualmente é como se esquece uma ligação e a seta descola da caixa
+no primeiro arrasto.
+
 ## Antes de publicar
 
 - [ ] Confirmar com a Raquel se os três imóveis seguem disponíveis.
@@ -112,6 +120,25 @@ pílula vira vidro claro e o botão inverte. Quem decide é a faixa ocupada pela
 marca — o único elemento do menu sem fundo próprio —, e no empate ganha o
 claro, porque texto escuro ainda se lê sobre a metade escura. Ao criar uma
 seção nova, marque o tom dela; senão o menu não a enxerga.
+
+## Largura e alinhamento
+
+Existe **um** container de conteúdo, `.site-container`, com 1320 px de teto e
+o recuo lateral definido num lugar só (`src/index.css`). Toda seção usa ele —
+e nenhuma inventa a própria largura. É o que mantém o logotipo, os títulos e
+os textos começando exatamente na mesma coluna do topo ao rodapé.
+
+A divisão de responsabilidade é o que sustenta a regra:
+
+- a **seção** cuida do espaço vertical e da cor de fundo;
+- o **container** cuida da largura e do recuo lateral;
+- a **placa** (`.placa`, 1520 px) é a folha em que o site se apoia — moldura,
+  não conteúdo, e por isso mais larga que o container.
+
+Precisa de algo mais estreito (um texto corrido, um formulário)? Aninhe um
+limite de medida dentro do container, nunca um segundo container. Precisa
+sangrar até a borda (o bloco escuro dos imóveis)? Fica fora do container, com
+o container por dentro dele.
 
 ## O site é um livro
 
@@ -138,6 +165,14 @@ de bater com o `id` da seção; é assim que a lombada e o fólio se encontram.
 - **Abertura** — ao abrir a página a cena da primeira dobra se assenta (um
   zoom lento que termina em 2,6 s) e o título sobe por trás de uma máscara.
   É o único momento coreografado do site.
+- **Multiplano na capa** — a cena da primeira dobra é gerada em cinco planos
+  separados (céu, serras, cena, árvores, grão) e cada um anda a uma velocidade
+  na rolagem. É a câmera multiplano do cinema de animação: o céu quase não sai
+  do lugar, as árvores da frente correm. Custa 28 KB de SVG.
+
+  Uma sequência de quadros extraída de vídeo daria o mesmo efeito com material
+  fotográfico e custaria uns 6 MB — só vale para cena filmada de verdade.
+  Material vetorial se refaz em código, que é o caso aqui.
 - **Profundidade** — as fotos andam mais devagar que a página
   (`src/componentes/Profundidade.jsx`). Um único laço de `requestAnimationFrame`
   atende todas elas: cada foto se registra ali, e o scroll recalcula o conjunto

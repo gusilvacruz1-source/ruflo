@@ -76,6 +76,21 @@ export const hero = {
     { valor: 'Regularizações', rotulo: 'Documentação em dia' },
   ],
   imagem: 'imagens/hero-lago.svg',
+  /**
+   * A mesma cena em planos, do fundo para a frente. Cada um anda a uma
+   * velocidade na rolagem — é isso que dá profundidade de câmera em vez de
+   * uma foto deslizando. `taxa` é o quanto o plano sobe; `escala`, o quanto
+   * ele entra maior que a moldura para nunca mostrar borda.
+   *
+   * Quem pedir menos movimento recebe `imagem`, num arquivo só.
+   */
+  planos: [
+    { arquivo: 'imagens/hero-ceu.svg', taxa: 0.03, escala: 1.08 },
+    { arquivo: 'imagens/hero-serras.svg', taxa: 0.1, escala: 1.1 },
+    { arquivo: 'imagens/hero-cena.svg', taxa: 0.22, escala: 1.13 },
+    { arquivo: 'imagens/hero-arvores.svg', taxa: 0.44, escala: 1.2 },
+    { arquivo: 'imagens/hero-ar.svg', taxa: 0, escala: 1.02 },
+  ],
 };
 
 export const vitrine = {
@@ -249,8 +264,9 @@ export const sobre = {
  */
 export const avaliacoes = {
   titulo: 'Quem já passou por aqui',
-  nota: '5,0',
-  quantidade: '3 avaliações no Google',
+  nota: 5,
+  quantidade: 3,
+  fonte: 'avaliações no Google',
   botao: 'Ver no Google',
   itens: [
     {

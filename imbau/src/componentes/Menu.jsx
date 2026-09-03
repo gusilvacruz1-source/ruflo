@@ -73,8 +73,8 @@ export function Menu() {
       }`}
     >
       {/* Mesma margem da placa, para o menu nascer alinhado com o conteúdo. */}
-      <div className="mx-auto max-w-[1520px] px-0 sm:px-4 lg:px-5">
-        <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-5 sm:px-8">
+      <div className="placa px-0 sm:px-4 lg:px-5">
+        <div className="site-container flex items-center justify-between gap-6">
           <a href="#inicio" ref={assinatura} aria-label={`${marca.nome} ${marca.sobrenome} — início`}>
             <Marca tamanho="h-9 w-9" claro={claro} />
           </a>

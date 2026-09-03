@@ -1,4 +1,5 @@
 import { avaliacoes, marca } from '../conteudo';
+import { Contagem } from './Contagem';
 import { EstrelaCheia, Seta } from './Interface';
 import { Folio } from './Livro';
 import { Revelar } from './Movimento';
@@ -18,23 +19,31 @@ export function Avaliacoes() {
     <section
       id="avaliacoes"
       data-tom="claro"
-      className="border-t border-noite-900/10 bg-osso-100 px-5 py-24 sm:px-8 sm:py-28"
+      className="border-t border-noite-900/10 bg-osso-100 py-24 sm:py-28"
     >
-      <div className="mx-auto max-w-[1280px]">
+      <div className="site-container">
         <Folio id="avaliacoes" />
 
         <Revelar className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
-          <div>
-            <h2 className="titulo text-[clamp(1.8rem,3.6vw,2.7rem)] leading-[1.05] text-noite-900">
+          <div className="flex flex-wrap items-end gap-x-10 gap-y-6">
+            {/* A nota é o argumento da seção, então ela é que fica grande. */}
+            <p className="flex flex-col gap-3">
+              <Contagem
+                ate={avaliacoes.nota}
+                casas={1}
+                className="titulo text-[clamp(4rem,8vw,6.5rem)] leading-[0.85] text-noite-900"
+              />
+              <span className="flex items-center gap-3 text-sm text-noite-900/60">
+                <Estrelas />
+                <span>
+                  <Contagem ate={avaliacoes.quantidade} /> {avaliacoes.fonte}
+                </span>
+              </span>
+            </p>
+
+            <h2 className="titulo max-w-sm text-[clamp(1.7rem,3.2vw,2.4rem)] leading-[1.05] text-noite-900">
               {avaliacoes.titulo}
             </h2>
-            <p className="mt-4 flex flex-wrap items-center gap-3 text-sm text-noite-900/60">
-              <span className="titulo text-[1.6rem] leading-none text-noite-900">
-                {avaliacoes.nota}
-              </span>
-              <Estrelas />
-              {avaliacoes.quantidade}
-            </p>
           </div>
 
           <a

@@ -65,7 +65,7 @@ export function Perguntas() {
 
   return (
     <section id="perguntas" data-tom="claro" className="relative bg-osso-100 py-24 sm:py-32 lg:py-40">
-      <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
+      <div className="site-container">
         <Folio id="perguntas" />
 
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">

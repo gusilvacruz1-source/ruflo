@@ -17,7 +17,7 @@ export default function App() {
       <Lombada />
 
       {/* O site inteiro é uma placa apoiada no fundo claro da página. */}
-      <div className="mx-auto max-w-[1520px] p-0 sm:p-4 lg:p-5">
+      <div className="placa p-0 sm:p-4 lg:p-5">
         <div className="overflow-clip bg-osso-100 sm:rounded-[2rem] sm:shadow-[0_30px_80px_-45px_rgba(10,14,23,0.5)] lg:rounded-[2.5rem]">
           <main className="relative">
             {/* A capa fica onde está; as folhas do livro passam por cima dela. */}

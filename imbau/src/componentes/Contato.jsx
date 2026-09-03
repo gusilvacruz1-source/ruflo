@@ -39,7 +39,7 @@ export function Contato() {
 
   return (
     <section id="contato" data-tom="claro" className="relative bg-osso-100 pb-24 pt-10 sm:pb-32">
-      <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
+      <div className="site-container">
         <Folio id="contato" />
 
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">

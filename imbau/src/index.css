@@ -70,6 +70,20 @@
 }
 
 @layer components {
+  /* O único container de conteúdo do site. Largura e recuo lateral moram
+     aqui; a seção cuida do espaço vertical e da cor. Quando uma seção
+     inventa a própria largura, nada mais alinha entre blocos. */
+  .site-container {
+    @apply mx-auto w-full max-w-[1320px] px-6 md:px-10 xl:px-14;
+  }
+
+  /* A placa do livro: a folha em que o site inteiro se apoia. É moldura, não
+     conteúdo — por isso é mais larga que o container e mora aqui, num lugar
+     só, em vez de repetida no App e no menu. */
+  .placa {
+    @apply mx-auto w-full max-w-[1520px];
+  }
+
   /* Revelação no scroll: sobe e aparece, uma vez só. */
   .revelar {
     opacity: 0;

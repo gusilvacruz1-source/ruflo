@@ -2,7 +2,8 @@ import { useCallback, useRef } from 'react';
 import { hero, marca, mensagens, zap } from '../conteudo';
 import { Botao } from './Interface';
 import { Revelar } from './Movimento';
-import { ImagemProfunda, useCena } from './Profundidade';
+import { Multiplano } from './Multiplano';
+import { useCena } from './Profundidade';
 
 export function Hero() {
   const conteudo = useRef(null);
@@ -26,10 +27,8 @@ export function Hero() {
       data-tom="escuro"
       className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-noite-900 sm:min-h-[calc(100svh-2rem)] lg:min-h-[calc(100svh-2.5rem)]"
     >
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="assentar relative h-full w-full">
-          <ImagemProfunda src={hero.imagem} alt="" aria-hidden="true" forca={70} escala={1.16} />
-        </div>
+      <div className="assentar absolute inset-0">
+        <Multiplano />
       </div>
 
       {/* Véus: legibilidade do menu em cima, do texto no meio e dos números embaixo. */}
@@ -45,7 +44,7 @@ export function Hero() {
 
       <div
         ref={conteudo}
-        className="relative mx-auto w-full max-w-[1280px] px-5 pb-10 pt-28 sm:px-8 sm:pb-14 sm:pt-32"
+        className="site-container relative pb-10 pt-28 sm:pb-14 sm:pt-32"
       >
         <div className="max-w-4xl">
           <Revelar className="flex flex-wrap items-baseline gap-x-5 gap-y-1">

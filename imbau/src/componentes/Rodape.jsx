@@ -4,8 +4,8 @@ import { Revelar } from './Movimento';
 
 export function Rodape() {
   return (
-    <footer data-tom="escuro" className="border-t border-white/8 bg-noite-900 px-5 pb-10 pt-20 sm:px-8 sm:pt-24">
-      <div className="mx-auto max-w-[1280px]">
+    <footer data-tom="escuro" className="border-t border-white/8 bg-noite-900 pb-10 pt-20 sm:pt-24">
+      <div className="site-container">
         <Revelar className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Marca tamanho="h-11 w-11" />

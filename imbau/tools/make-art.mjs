@@ -121,7 +121,11 @@ function scene({
   reflectOpacity = 0.3,
 }) {
   const horizon = h * waterY;
-  const world = build({ w, h, horizon }) + treeSpec.map((t, i) => tree(t.x * w, horizon + (t.drop ?? 0), t.h * h, t.w * w, t.fill, 400 + i * 37)).join('');
+  const construcoes = build({ w, h, horizon });
+  const arvores = treeSpec
+    .map((t, i) => tree(t.x * w, horizon + (t.drop ?? 0), t.h * h, t.w * w, t.fill, 400 + i * 37))
+    .join('');
+  const world = construcoes + arvores;
 
   const cloudRand = rng(91);
   const cloudSvg = Array.from({ length: clouds }, (_, i) => {
@@ -141,7 +145,7 @@ function scene({
     })
     .join('');
 
-  return `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img">
+  const defs = `
   <defs>
     <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
       ${sky.map(([o, c]) => `<stop offset="${o}" stop-color="${c}"/>`).join('')}
@@ -190,14 +194,24 @@ function scene({
       <stop offset="1" stop-color="#000" stop-opacity="${vignette}"/>
     </radialGradient>
     <clipPath id="agua"><rect x="0" y="${n(horizon)}" width="${w}" height="${n(h - horizon)}"/></clipPath>
-  </defs>
+  </defs>`;
 
+  /**
+   * A cena em planos, do fundo para a frente. Juntos são a imagem única de
+   * sempre; separados, viram o multiplano da capa — cada plano andando a uma
+   * velocidade diferente na rolagem, que é o que produz profundidade de
+   * verdade em vez de uma foto deslizando.
+   */
+  const partes = {
+    ceu: `
   <rect width="${w}" height="${h}" fill="url(#sky)"/>
   ${cloudSvg}
-  <rect width="${w}" height="${h}" fill="url(#sun)"/>
-  ${ridgeSvg}
+  <rect width="${w}" height="${h}" fill="url(#sun)"/>`,
 
-  <g id="mundo">${world}</g>
+    serras: ridgeSvg,
+
+    cena: `
+  <g id="mundo">${construcoes}</g>
 
   <g clip-path="url(#agua)">
     <g transform="matrix(1 0 0 -1 0 ${n(horizon * 2)})" opacity="${reflectOpacity}" filter="url(#reflect)">${world}</g>
@@ -207,12 +221,27 @@ function scene({
       const y = horizon + (h - horizon) * Math.pow(t, 1.8);
       return `<rect x="${n(-w * 0.02)}" y="${n(y)}" width="${n(w * 1.04)}" height="${n(1 + t * 3)}" fill="#b9cfe4" opacity="${n(0.05 * (1 - t) + 0.008)}"/>`;
     }).join('')}
-  </g>
+  </g>`,
 
+    arvores: arvores,
+
+    ar: `
   <rect width="${w}" height="${h}" fill="url(#grade)" opacity=".16" style="mix-blend-mode:soft-light"/>
   <rect width="${w}" height="${h}" filter="url(#grain)" opacity="${grain}" style="mix-blend-mode:overlay"/>
-  <rect width="${w}" height="${h}" fill="url(#vig)"/>
+  <rect width="${w}" height="${h}" fill="url(#vig)"/>`,
+  };
+
+  const embrulha = (miolo) =>
+    `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid slice" role="img">${defs}
+${miolo}
 </svg>`;
+
+  return {
+    inteira: embrulha(Object.values(partes).join('\n')),
+    camadas: Object.fromEntries(
+      Object.entries(partes).map(([nome, miolo]) => [nome, embrulha(miolo)])
+    ),
+  };
 }
 
 /* ---------- as quatro cenas ---------- */
@@ -288,7 +317,16 @@ const cenas = {
 };
 
 mkdirSync(OUT, { recursive: true });
-for (const [nome, svg] of Object.entries(cenas)) {
+
+for (const [nome, cena] of Object.entries(cenas)) {
+  writeFileSync(resolve(OUT, `${nome}.svg`), cena.inteira.trim());
+  console.log('gerado:', `public/imagens/${nome}.svg`);
+}
+
+// A capa é a única que também sai em planos separados — é ela que ganha o
+// movimento de câmera na rolagem.
+for (const [plano, svg] of Object.entries(cenas['hero-lago'].camadas)) {
+  const nome = `hero-${plano}`;
   writeFileSync(resolve(OUT, `${nome}.svg`), svg.trim());
   console.log('gerado:', `public/imagens/${nome}.svg`);
 }
