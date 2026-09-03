@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<!-- CONFIRMAR: cidade/UF da Eloize para completar title, description e JSON-LD -->
+<title>Eloize Betim — Tatuagens autorais, florais e fine line | [CONFIRMAR cidade]</title>
+<meta name="description" content="Estúdio privado de tatuagem dedicado a mulheres. Artes autorais, florais e fine line, com atendimento reservado e hora marcada.">
+<meta name="theme-color" content="#0D0D0E">
+<link rel="canonical" href="https://elotattoos.com.br/"><!-- CONFIRMAR: domínio final -->
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:site_name" content="Estúdio Eloize Betim">
+<meta property="og:title" content="Eloize Betim — Tatuagens autorais, florais e fine line">
+<meta property="og:description" content="Estúdio privado de tatuagem dedicado a mulheres. Artes autorais, florais e fine line, com atendimento reservado e hora marcada.">
+<meta property="og:url" content="https://elotattoos.com.br/">
+<meta property="og:image" content="assets/img/og-image.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Estúdio Eloize Betim — tatuagens autorais, florais e fine line">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Eloize Betim — Tatuagens autorais, florais e fine line">
+<meta name="twitter:description" content="Estúdio privado de tatuagem dedicado a mulheres. Artes autorais, florais e fine line.">
+<meta name="twitter:image" content="assets/img/og-image.jpg">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500&family=Bodoni+Moda:opsz,wght@6..96,400;6..96,500&display=swap">
+
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/sections.css">
+
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+<script defer src="https://cdn.jsdelivr.net/npm/lenis@1.1.18/dist/lenis.min.js"></script>
+<script defer src="assets/js/main.js"></script>
+<script defer src="assets/js/gallery.js"></script>
+</head>
+
+<body>
+
+<!-- ==========================================================
+     01 · PRELOADER
+     ========================================================== -->
+<div class="preloader" id="preloader" role="status" aria-live="polite" aria-label="Carregando">
+  <span class="preloader__word"><span class="preloader__mask">Eloize Betim</span></span>
+</div>
+
+<!-- Camada única de grão. Só aparece sobre as seções escuras (opacidade
+     controlada no JS conforme a seção ativa). -->
+<div class="grain" aria-hidden="true"></div>
+
+<!-- Cursor customizado (desligado em touch pelo CSS e pelo JS) -->
+<div class="cursor" aria-hidden="true"><span class="cursor__label">ver</span></div>
+
+<a class="skip-link" href="#main">Pular para o conteúdo</a>
+
+<!-- ==========================================================
+     02 · HEADER
+     ========================================================== -->
+<header class="header" id="header">
+  <div class="site-container header__inner">
+    <a class="header__logo" href="#top" aria-label="Eloize Betim — início">EB</a>
+
+    <nav class="header__nav" aria-label="Navegação principal">
+      <ul class="header__list">
+        <li><a href="#top" class="navlink">Início</a></li>
+        <li><a href="#sobre" class="navlink">Sobre</a></li>
+        <li><a href="#galeria" class="navlink">Galeria</a></li>
+        <li><a href="#artes" class="navlink">Artes</a></li>
+        <li><a href="#cuidados" class="navlink">Cuidados</a></li>
+      </ul>
+    </nav>
+
+    <a class="btn btn--pill header__cta" data-wa href="#" data-magnetic>
+      <svg class="ico" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+        <path d="M3 21l1.7-5A8.2 8.2 0 1 1 8 19.4L3 21z"></path>
+        <path d="M8.6 9.1c.2 1 .8 2.2 1.7 3.1.9.9 2 1.5 3 1.7l1-1.2 2 1-.4 1.6c-1.9.5-4.2-.6-5.8-2.2C8.5 11.5 7.4 9.2 7.9 7.3L9.5 7l1 2-1.9 .1z"></path>
+      </svg>
+      Agendar
+    </a>
+
+    <button class="burger" id="burger" type="button" aria-expanded="false" aria-controls="drawer" aria-label="Abrir menu">
+      <span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<!-- Menu mobile em tela cheia -->
+<div class="drawer" id="drawer" hidden>
+  <nav class="drawer__nav site-container" aria-label="Navegação mobile">
+    <a href="#top">Início</a>
+    <a href="#sobre">Sobre</a>
+    <a href="#galeria">Galeria</a>
+    <a href="#artes">Artes</a>
+    <a href="#cuidados">Cuidados</a>
+    <a class="drawer__cta" data-wa href="#">Agendar pelo WhatsApp</a>
+  </nav>
+</div>
+
+<main id="main">
+
+<!-- ==========================================================
+     03 · HERO
+     ========================================================== -->
+<section class="section hero" id="top" data-theme="ink" aria-labelledby="hero-title">
+  <div class="site-container hero__inner">
+
+    <p class="micro hero__micro">
+      <!-- CONFIRMAR: cidade/UF -->
+      estúdio privado · [CONFIRMAR cidade/UF]
+    </p>
+
+    <h1 class="hero__title" id="hero-title">
+      <span class="line"><span>ELOIZE</span></span>
+      <span class="line"><span>BETIM</span></span>
+    </h1>
+
+    <!-- A foto em arco: a camada "front" mostra só o topo do arco e passa
+         na frente das letras; a camada "back" fica atrás do título. -->
+    <div class="hero__photo">
+      <figure class="media media--arch is-back" data-file="hero-eloize.webp" data-parallax="-8">
+        <img src="assets/img/hero-eloize.webp" alt="Retrato de Eloize Betim, tatuadora, no estúdio" width="1200" height="1600" fetchpriority="high" decoding="async">
+      </figure>
+      <figure class="media media--arch is-front" data-file="hero-eloize.webp" aria-hidden="true">
+        <img src="assets/img/hero-eloize.webp" alt="" width="1200" height="1600" aria-hidden="true" decoding="async">
+      </figure>
+    </div>
+
+    <div class="hero__foot">
+      <p class="hero__lead">Tatuagens autorais, florais e fine line. Um estúdio privado, feito por uma mulher, para mulheres.</p>
+      <div class="hero__actions">
+        <a class="btn btn--primary" data-wa data-magnetic href="#">Agendar pelo WhatsApp</a>
+        <a class="link-underline" href="#galeria">Ver a galeria</a>
+      </div>
+    </div>
+
+    <div class="scroll-cue" aria-hidden="true">
+      <span class="micro">role</span>
+      <span class="scroll-cue__line"></span>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================================
+     04 · MARQUEE
+     ========================================================== -->
+<div class="full-bleed marquee" data-theme="ink" aria-hidden="true">
+  <div class="marquee__track">
+    <span class="marquee__group">fine line <i>✳</i> florais <i>✳</i> artes autorais <i>✳</i> traço delicado <i>✳</i> atendimento privado <i>✳</i></span>
+    <span class="marquee__group">fine line <i>✳</i> florais <i>✳</i> artes autorais <i>✳</i> traço delicado <i>✳</i> atendimento privado <i>✳</i></span>
+  </div>
+</div>
+
+<!-- ==========================================================
+     05 · SOBRE
+     ========================================================== -->
+<section class="section sobre" id="sobre" data-theme="ink" aria-labelledby="sobre-title">
+  <div class="site-container sobre__grid">
+
+    <div class="sobre__text">
+      <p class="micro">estúdio privado</p>
+      <h2 class="h2 reveal" id="sobre-title">
+        <span class="line"><span>Um espaço</span></span>
+        <span class="line"><span>
+          <span class="scribble-wrap">só seu.
+            <!-- rabisco nº 1 · círculo à mão -->
+            <svg class="scribble scribble--circle" viewBox="0 0 220 96" fill="none" aria-hidden="true">
+              <path d="M112 8C64 4 18 20 10 46c-8 27 44 44 104 42 54-2 100-19 98-44C210 21 168 8 118 7" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+            </svg>
+          </span>
+        </span></span>
+      </h2>
+      <p class="body">
+        <!-- CONFIRMAR: ano em que a Eloize começou a tatuar -->
+        Sou a Eloize. Tatuo desde [CONFIRMAR ano] e montei um estúdio privado, dedicado a mulheres, onde cada atendimento acontece com hora marcada e sem plateia. Meu traço é delicado: florais, fine line e artes autorais desenhadas a partir da sua história. Aqui você não escolhe um desenho de catálogo — a gente cria junto, antes de qualquer agulha encostar na pele.
+      </p>
+    </div>
+
+    <figure class="media sobre__media" data-file="sobre-estudio.webp">
+      <img src="assets/img/sobre-estudio.webp" alt="Ambiente do estúdio privado de Eloize Betim, com maca e luminária" width="1000" height="1250" loading="lazy" decoding="async">
+    </figure>
+
+  </div>
+</section>
+
+<!-- ==========================================================
+     06 · NÚMEROS
+     ========================================================== -->
+<section class="numeros" data-theme="ink" aria-labelledby="numeros-title">
+  <h2 class="sr-only" id="numeros-title">Números do estúdio</h2>
+  <div class="site-container numeros__row">
+    <!-- CONFIRMAR: anos tatuando -->
+    <div class="stat"><span class="stat__num stat__num--pendente" data-count="[CONFIRMAR]">[CONFIRMAR]</span><span class="micro">anos tatuando</span></div>
+    <!-- CONFIRMAR: total de tatuagens feitas -->
+    <div class="stat"><span class="stat__num stat__num--pendente" data-count="[CONFIRMAR]">[CONFIRMAR]</span><span class="micro">tatuagens feitas</span></div>
+    <div class="stat"><span class="stat__num" data-count="5.9" data-suffix="K">5.9K</span><span class="micro">na comunidade do Instagram</span></div>
+    <div class="stat"><span class="stat__num" data-count="1">1</span><span class="micro">atendimento por vez</span></div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     07 · ESTILOS  (transição ink → paper)
+     ========================================================== -->
+<section class="section estilos" id="estilos" data-theme="paper" aria-labelledby="estilos-title">
+  <div class="site-container">
+    <h2 class="h2 reveal estilos__title" id="estilos-title"><span class="line"><span>Três traços,</span></span><span class="line"><span>uma mão só.</span></span></h2>
+
+    <div class="estilos__grid">
+      <article class="estilo estilo--1">
+        <figure class="media" data-file="estilo-fineline.webp">
+          <img src="assets/img/estilo-fineline.webp" alt="Tatuagem fine line de traço fino e contínuo no braço" width="800" height="1100" loading="lazy" decoding="async">
+        </figure>
+        <h3 class="h3">Fine line</h3>
+        <p class="body body--tight">Traço fino, contínuo e limpo. Para desenhos pequenos, discretos, que envelhecem bem na pele.</p>
+      </article>
+
+      <article class="estilo estilo--2">
+        <figure class="media" data-file="estilo-floral.webp">
+          <img src="assets/img/estilo-floral.webp" alt="Tatuagem floral com folhagens desenhadas à mão nas costelas" width="800" height="1100" loading="lazy" decoding="async">
+        </figure>
+        <h3 class="h3">Florais</h3>
+        <p class="body body--tight">Botânicas desenhadas à mão: folhagens, flores de campo e composições que acompanham a curva do corpo.</p>
+      </article>
+
+      <article class="estilo estilo--3">
+        <figure class="media" data-file="estilo-autoral.webp">
+          <img src="assets/img/estilo-autoral.webp" alt="Tatuagem autoral criada sob medida, desenho exclusivo no antebraço" width="800" height="1100" loading="lazy" decoding="async">
+        </figure>
+        <h3 class="h3">Autorais</h3>
+        <p class="body body--tight">Uma arte criada só para você, a partir de uma conversa, uma referência ou uma história que você quer carregar.</p>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     08 · GALERIA
+     ========================================================== -->
+<section class="section galeria" id="galeria" data-theme="paper" aria-labelledby="galeria-title">
+  <div class="site-container">
+    <p class="micro">portfólio</p>
+    <h2 class="h2 reveal" id="galeria-title"><span class="line"><span>Trabalhos</span></span></h2>
+
+    <div class="filtros" role="group" aria-label="Filtrar trabalhos por estilo">
+      <button type="button" class="chip is-active" data-filter="todas" aria-pressed="true">Todas</button>
+      <button type="button" class="chip" data-filter="florais" aria-pressed="false">Florais</button>
+      <button type="button" class="chip" data-filter="fineline" aria-pressed="false">Fine line</button>
+      <button type="button" class="chip" data-filter="autorais" aria-pressed="false">Autorais</button>
+      <button type="button" class="chip" data-filter="cicatrizadas" aria-pressed="false">Cicatrizadas</button>
+    </div>
+
+    <p class="body body--tight galeria__nota">Todas as fotos são de trabalhos autorais, tatuados por mim. “Cicatrizadas” mostra como as peças ficam depois da cura.</p>
+
+    <div class="galeria__grid" id="galeria-grid">
+      <button type="button" class="shot" data-cat="florais"      data-ratio="0.75"><figure class="media" data-file="galeria-01.webp"><img src="assets/img/galeria-01.webp" alt="Tatuagem floral fine line no antebraço, ramo de folhas" width="1000" height="1333" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="fineline"     data-ratio="1"><figure class="media" data-file="galeria-02.webp"><img src="assets/img/galeria-02.webp" alt="Tatuagem fine line de linha única no pulso" width="1000" height="1000" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="autorais"     data-ratio="0.8"><figure class="media" data-file="galeria-03.webp"><img src="assets/img/galeria-03.webp" alt="Tatuagem autoral nas costas, composição desenhada sob medida" width="1000" height="1250" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="florais"      data-ratio="0.66"><figure class="media" data-file="galeria-04.webp"><img src="assets/img/galeria-04.webp" alt="Tatuagem floral na costela, flores de campo em traço delicado" width="1000" height="1500" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="cicatrizadas" data-ratio="1"><figure class="media" data-file="galeria-05.webp"><img src="assets/img/galeria-05.webp" alt="Tatuagem floral já cicatrizada no braço, seis meses depois" width="1000" height="1000" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="fineline"     data-ratio="0.75"><figure class="media" data-file="galeria-06.webp"><img src="assets/img/galeria-06.webp" alt="Tatuagem fine line atrás da orelha, desenho miúdo" width="1000" height="1333" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="autorais"     data-ratio="0.66"><figure class="media" data-file="galeria-07.webp"><img src="assets/img/galeria-07.webp" alt="Tatuagem autoral no antebraço, arte exclusiva criada para a cliente" width="1000" height="1500" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="florais"      data-ratio="1"><figure class="media" data-file="galeria-08.webp"><img src="assets/img/galeria-08.webp" alt="Tatuagem floral no ombro, ramo com folhas finas" width="1000" height="1000" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="cicatrizadas" data-ratio="0.8"><figure class="media" data-file="galeria-09.webp"><img src="assets/img/galeria-09.webp" alt="Tatuagem fine line cicatrizada no tornozelo" width="1000" height="1250" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="fineline"     data-ratio="0.66"><figure class="media" data-file="galeria-10.webp"><img src="assets/img/galeria-10.webp" alt="Tatuagem fine line na coluna, linha vertical delicada" width="1000" height="1500" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="autorais"     data-ratio="1"><figure class="media" data-file="galeria-11.webp"><img src="assets/img/galeria-11.webp" alt="Tatuagem autoral na perna, desenho criado a partir de uma história" width="1000" height="1000" loading="lazy" decoding="async"></figure></button>
+      <button type="button" class="shot" data-cat="florais"      data-ratio="0.75"><figure class="media" data-file="galeria-12.webp"><img src="assets/img/galeria-12.webp" alt="Tatuagem floral no braço, folhagem acompanhando a curva" width="1000" height="1333" loading="lazy" decoding="async"></figure></button>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     09 · ARTES DISPONÍVEIS
+     ========================================================== -->
+<section class="section artes" id="artes" data-theme="paper" aria-labelledby="artes-title">
+  <div class="site-container">
+    <div class="artes__head">
+      <div>
+        <p class="micro">flash</p>
+        <h2 class="h2 reveal" id="artes-title"><span class="line"><span>Artes disponíveis</span></span></h2>
+      </div>
+      <p class="body body--tight">Desenhos autorais prontos, tatuados uma única vez. Quando alguém reserva, a arte sai daqui e não se repete.</p>
+    </div>
+
+    <!-- CONFIRMAR: nome, tamanho e status (disponível/reservada) de cada arte.
+         Os nomes "Arte 01…08" são provisórios e viram o nome real da peça. -->
+    <p class="body body--tight nota-confirmar">[CONFIRMAR: nome, tamanho aproximado e status real de cada uma das artes abaixo]</p>
+
+    <div class="artes__grid">
+      <article class="arte">
+        <figure class="media media--flash" data-file="arte-01.webp"><img src="assets/img/arte-01.webp" alt="Desenho autoral disponível: arte 01" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 01</h3><span class="badge badge--on">disponível</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <a class="btn btn--ghost btn--sm" data-wa data-arte="Arte 01" href="#">Reservar no WhatsApp</a>
+      </article>
+
+      <article class="arte">
+        <figure class="media media--flash" data-file="arte-02.webp"><img src="assets/img/arte-02.webp" alt="Desenho autoral disponível: arte 02" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 02</h3><span class="badge badge--on">disponível</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <a class="btn btn--ghost btn--sm" data-wa data-arte="Arte 02" href="#">Reservar no WhatsApp</a>
+      </article>
+
+      <article class="arte">
+        <figure class="media media--flash" data-file="arte-03.webp"><img src="assets/img/arte-03.webp" alt="Desenho autoral disponível: arte 03" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 03</h3><span class="badge badge--on">disponível</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <a class="btn btn--ghost btn--sm" data-wa data-arte="Arte 03" href="#">Reservar no WhatsApp</a>
+      </article>
+
+      <article class="arte">
+        <figure class="media media--flash" data-file="arte-04.webp"><img src="assets/img/arte-04.webp" alt="Desenho autoral disponível: arte 04" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 04</h3><span class="badge badge--on">disponível</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <a class="btn btn--ghost btn--sm" data-wa data-arte="Arte 04" href="#">Reservar no WhatsApp</a>
+      </article>
+
+      <article class="arte">
+        <figure class="media media--flash" data-file="arte-05.webp"><img src="assets/img/arte-05.webp" alt="Desenho autoral disponível: arte 05" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 05</h3><span class="badge badge--on">disponível</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <a class="btn btn--ghost btn--sm" data-wa data-arte="Arte 05" href="#">Reservar no WhatsApp</a>
+      </article>
+
+      <article class="arte">
+        <figure class="media media--flash" data-file="arte-06.webp"><img src="assets/img/arte-06.webp" alt="Desenho autoral disponível: arte 06" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 06</h3><span class="badge badge--on">disponível</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <a class="btn btn--ghost btn--sm" data-wa data-arte="Arte 06" href="#">Reservar no WhatsApp</a>
+      </article>
+
+      <article class="arte is-reservada">
+        <figure class="media media--flash" data-file="arte-07.webp"><img src="assets/img/arte-07.webp" alt="Desenho autoral já reservado: arte 07" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 07</h3><span class="badge">reservada</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <span class="btn btn--ghost btn--sm is-disabled" aria-disabled="true">Reservada</span>
+      </article>
+
+      <article class="arte is-reservada">
+        <figure class="media media--flash" data-file="arte-08.webp"><img src="assets/img/arte-08.webp" alt="Desenho autoral já reservado: arte 08" width="900" height="900" loading="lazy" decoding="async"></figure>
+        <div class="arte__meta"><h3 class="arte__nome">Arte 08</h3><span class="badge">reservada</span></div>
+        <p class="micro">[CONFIRMAR] cm</p>
+        <span class="btn btn--ghost btn--sm is-disabled" aria-disabled="true">Reservada</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     10 · COMO FUNCIONA
+     ========================================================== -->
+<section class="section etapas" id="como" data-theme="paper" aria-labelledby="etapas-title">
+  <div class="site-container">
+    <h2 class="h2 reveal" id="etapas-title"><span class="line"><span>Como funciona</span></span></h2>
+
+    <ol class="etapas__grid">
+      <li class="etapa">
+        <span class="micro etapa__n">01</span>
+        <h3 class="h3">Conversa</h3>
+        <p class="body body--tight">Você me chama no WhatsApp e conta a ideia: referência, local do corpo e o tamanho que imagina.</p>
+      </li>
+      <li class="etapa">
+        <span class="micro etapa__n">02</span>
+        <h3 class="h3">Orçamento e agenda</h3>
+        <!-- CONFIRMAR: política de sinal -->
+        <p class="body body--tight">Envio o valor, a duração estimada e as datas livres. A reserva é confirmada com sinal. [CONFIRMAR política de sinal]</p>
+      </li>
+      <li class="etapa etapa--seta">
+        <span class="micro etapa__n">03</span>
+        <h3 class="h3">Desenho</h3>
+        <p class="body body--tight">Finalizo a arte e mostro no dia. Ajustamos juntas antes de começar — o decalque só vai para a pele quando você aprovar.</p>
+        <!-- rabisco nº 2 · seta à mão entre a etapa 03 e a 04 -->
+        <svg class="scribble scribble--arrow" viewBox="0 0 160 60" fill="none" aria-hidden="true">
+          <path d="M4 34c26-14 60-20 94-16 14 2 28 6 40 12" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          <path d="M124 16c6 6 12 11 14 14-5 2-11 5-16 10" stroke="currentColor" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </li>
+      <li class="etapa">
+        <span class="micro etapa__n">04</span>
+        <h3 class="h3">Sessão e cura</h3>
+        <p class="body body--tight">Atendimento privado, material 100% descartável. Você sai com as orientações de cuidado por escrito.</p>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ==========================================================
+     11 · SEGURANÇA E CUIDADOS
+     ========================================================== -->
+<section class="section cuidados" id="cuidados" data-theme="paper" aria-labelledby="cuidados-title">
+  <div class="site-container cuidados__grid">
+
+    <div>
+      <p class="micro">biossegurança</p>
+      <h2 class="h2 reveal" id="cuidados-title"><span class="line"><span>Segurança</span></span><span class="line"><span>e cuidado</span></span></h2>
+
+      <ul class="pontos">
+        <li class="ponto"><span class="ponto__tick" aria-hidden="true"></span>Material 100% descartável, aberto na sua frente</li>
+        <li class="ponto"><span class="ponto__tick" aria-hidden="true"></span>Um atendimento por vez, com a porta fechada</li>
+        <!-- CONFIRMAR: normas/licença da vigilância sanitária -->
+        <li class="ponto"><span class="ponto__tick" aria-hidden="true"></span>Esterilização e biossegurança seguindo as normas da vigilância sanitária [CONFIRMAR]</li>
+        <!-- CONFIRMAR: marcas de tinta e agulha -->
+        <li class="ponto"><span class="ponto__tick" aria-hidden="true"></span>Tintas certificadas e agulhas lacradas [CONFIRMAR marcas]</li>
+      </ul>
+    </div>
+
+    <div class="cuidados__acc">
+      <h3 class="h3">Depois da sessão</h3>
+      <div class="acc" data-accordion>
+        <div class="acc__item">
+          <h4><button class="acc__btn" type="button" aria-expanded="false" id="acc-1-b" aria-controls="acc-1-p">Primeiras 24 horas<span class="acc__ico" aria-hidden="true"></span></button></h4>
+          <!-- CONFIRMAR: protocolo da Eloize -->
+          <div class="acc__panel" id="acc-1-p" role="region" aria-labelledby="acc-1-b"><p class="body body--tight">[CONFIRMAR protocolo da Eloize]</p></div>
+        </div>
+        <div class="acc__item">
+          <h4><button class="acc__btn" type="button" aria-expanded="false" id="acc-2-b" aria-controls="acc-2-p">Como higienizar<span class="acc__ico" aria-hidden="true"></span></button></h4>
+          <div class="acc__panel" id="acc-2-p" role="region" aria-labelledby="acc-2-b"><p class="body body--tight">[CONFIRMAR]</p></div>
+        </div>
+        <div class="acc__item">
+          <h4><button class="acc__btn" type="button" aria-expanded="false" id="acc-3-b" aria-controls="acc-3-p">O que evitar<span class="acc__ico" aria-hidden="true"></span></button></h4>
+          <div class="acc__panel" id="acc-3-p" role="region" aria-labelledby="acc-3-b"><p class="body body--tight">Sol direto, mar, piscina, academia e coçar a região até a cura completa.</p></div>
+        </div>
+        <div class="acc__item">
+          <h4><button class="acc__btn" type="button" aria-expanded="false" id="acc-4-b" aria-controls="acc-4-p">Cicatrização e retoque<span class="acc__ico" aria-hidden="true"></span></button></h4>
+          <!-- CONFIRMAR: prazo de cicatrização e política de retoque -->
+          <div class="acc__panel" id="acc-4-p" role="region" aria-labelledby="acc-4-b"><p class="body body--tight">[CONFIRMAR prazo e política de retoque]</p></div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ==========================================================
+     12 · DEPOIMENTOS
+     ========================================================== -->
+<section class="section depos" data-theme="paper-deep" aria-labelledby="depos-title">
+  <div class="site-container">
+    <h2 class="sr-only" id="depos-title">Depoimentos de clientes</h2>
+    <!-- CONFIRMAR: substituir pelos três depoimentos reais das clientes -->
+    <p class="body body--tight nota-confirmar">[CONFIRMAR: substituir pelos três depoimentos reais das clientes]</p>
+
+    <blockquote class="depo"><p>[CONFIRMAR depoimento 1]</p><cite>[CONFIRMAR nome] · [CONFIRMAR local do corpo]</cite></blockquote>
+    <blockquote class="depo"><p>[CONFIRMAR depoimento 2]</p><cite>[CONFIRMAR nome] · [CONFIRMAR local do corpo]</cite></blockquote>
+    <blockquote class="depo"><p>[CONFIRMAR depoimento 3]</p><cite>[CONFIRMAR nome] · [CONFIRMAR local do corpo]</cite></blockquote>
+  </div>
+</section>
+
+<!-- ==========================================================
+     13 · FAQ
+     ========================================================== -->
+<section class="section faq" id="faq" data-theme="paper" aria-labelledby="faq-title">
+  <div class="site-container">
+    <p class="micro">dúvidas</p>
+    <h2 class="h2 reveal" id="faq-title"><span class="line"><span>Perguntas frequentes</span></span></h2>
+
+    <div class="acc acc--faq" data-accordion>
+      <div class="acc__item">
+        <h3><button class="acc__btn" type="button" aria-expanded="false" id="faq-1-b" aria-controls="faq-1-p">Você atende homens?<span class="acc__ico" aria-hidden="true"></span></button></h3>
+        <!-- CONFIRMAR: o estúdio é dedicado a mulheres; escrever a resposta na voz dela -->
+        <div class="acc__panel" id="faq-1-p" role="region" aria-labelledby="faq-1-b"><p class="body body--tight">[CONFIRMAR — o estúdio é dedicado a mulheres; escrever a resposta na voz dela]</p></div>
+      </div>
+      <div class="acc__item">
+        <h3><button class="acc__btn" type="button" aria-expanded="false" id="faq-2-b" aria-controls="faq-2-p">Dói muito?<span class="acc__ico" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="faq-2-p" role="region" aria-labelledby="faq-2-b"><p class="body body--tight">Depende do lugar e do tamanho. Regiões com osso mais perto da pele incomodam mais. A gente faz pausas sempre que você precisar.</p></div>
+      </div>
+      <div class="acc__item">
+        <h3><button class="acc__btn" type="button" aria-expanded="false" id="faq-3-b" aria-controls="faq-3-p">Como faço um orçamento?<span class="acc__ico" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="faq-3-p" role="region" aria-labelledby="faq-3-b"><p class="body body--tight">Pelo WhatsApp. Me manda a referência, o local do corpo e o tamanho aproximado em centímetros.</p></div>
+      </div>
+      <div class="acc__item">
+        <h3><button class="acc__btn" type="button" aria-expanded="false" id="faq-4-b" aria-controls="faq-4-p">Posso levar acompanhante?<span class="acc__ico" aria-hidden="true"></span></button></h3>
+        <!-- CONFIRMAR -->
+        <div class="acc__panel" id="faq-4-p" role="region" aria-labelledby="faq-4-b"><p class="body body--tight">[CONFIRMAR]</p></div>
+      </div>
+      <div class="acc__item">
+        <h3><button class="acc__btn" type="button" aria-expanded="false" id="faq-5-b" aria-controls="faq-5-p">Você faz cobertura de cicatriz ou cover-up?<span class="acc__ico" aria-hidden="true"></span></button></h3>
+        <!-- CONFIRMAR -->
+        <div class="acc__panel" id="faq-5-p" role="region" aria-labelledby="faq-5-b"><p class="body body--tight">[CONFIRMAR]</p></div>
+      </div>
+      <div class="acc__item">
+        <h3><button class="acc__btn" type="button" aria-expanded="false" id="faq-6-b" aria-controls="faq-6-p">Tatua menor de idade?<span class="acc__ico" aria-hidden="true"></span></button></h3>
+        <div class="acc__panel" id="faq-6-p" role="region" aria-labelledby="faq-6-b"><p class="body body--tight">Não. Só atendo maiores de 18 anos, com documento.</p></div>
+      </div>
+      <div class="acc__item">
+        <h3><button class="acc__btn" type="button" aria-expanded="false" id="faq-7-b" aria-controls="faq-7-p">Formas de pagamento<span class="acc__ico" aria-hidden="true"></span></button></h3>
+        <!-- CONFIRMAR -->
+        <div class="acc__panel" id="faq-7-p" role="region" aria-labelledby="faq-7-b"><p class="body body--tight">[CONFIRMAR]</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ==========================================================
+     14 · CTA FINAL
+     ========================================================== -->
+<section class="section cta" id="agendar" data-theme="ink" aria-labelledby="cta-title">
+  <div class="site-container cta__grid">
+
+    <div class="cta__text">
+      <h2 class="h2 h2--big reveal" id="cta-title"><span class="line"><span>Vamos criar</span></span><span class="line"><span>a sua?</span></span></h2>
+      <p class="body">Me conta a ideia. Quem responde sou eu, não um robô.</p>
+
+      <div class="cta__actions">
+        <span class="cta__primary-wrap">
+          <a class="btn btn--primary" data-wa data-magnetic href="#">Chamar no WhatsApp</a>
+          <!-- rabisco nº 3 · sublinhado torto -->
+          <svg class="scribble scribble--underline" viewBox="0 0 260 24" fill="none" aria-hidden="true">
+            <path d="M6 15c40-8 92-11 140-8 32 2 66 7 108 4" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+          </svg>
+        </span>
+        <a class="btn btn--outline" href="https://instagram.com/elotattoos_" target="_blank" rel="noopener">Ver o Instagram</a>
+      </div>
+
+      <ul class="cta__infos">
+        <li class="micro">Atendimento com hora marcada</li>
+        <!-- CONFIRMAR: bairro/cidade -->
+        <li class="micro">[CONFIRMAR bairro/cidade]</li>
+        <!-- CONFIRMAR: dias e horários -->
+        <li class="micro">[CONFIRMAR dias e horários]</li>
+      </ul>
+    </div>
+
+    <figure class="media media--arch-inv cta__media" data-file="cta-estudio.webp" data-parallax="8">
+      <img src="assets/img/cta-estudio.webp" alt="Detalhe do espaço do estúdio Eloize Betim" width="1000" height="1400" loading="lazy" decoding="async">
+    </figure>
+
+  </div>
+</section>
+
+</main>
+
+<!-- ==========================================================
+     15 · RODAPÉ
+     ========================================================== -->
+<footer class="footer" data-theme="ink">
+  <div class="site-container">
+    <div class="footer__cols">
+      <div class="footer__col">
+        <p class="micro">navegar</p>
+        <ul><li><a href="#sobre">Sobre</a></li><li><a href="#galeria">Galeria</a></li><li><a href="#artes">Artes</a></li><li><a href="#faq">Perguntas frequentes</a></li></ul>
+      </div>
+      <div class="footer__col">
+        <p class="micro">falar comigo</p>
+        <ul>
+          <li><a data-wa href="#">WhatsApp</a></li>
+          <li><a href="https://instagram.com/elotattoos_" target="_blank" rel="noopener">@elotattoos_</a></li>
+        </ul>
+      </div>
+      <div class="footer__col">
+        <p class="micro">estúdio</p>
+        <!-- CONFIRMAR: endereço/região e horários -->
+        <ul><li>Estúdio Eloize Betim</li><li>[CONFIRMAR bairro/cidade]</li><li>[CONFIRMAR dias e horários]</li></ul>
+      </div>
+    </div>
+
+    <p class="footer__legal micro">© 2026 · Estúdio Eloize Betim · Não realizamos tatuagens em menores de 18 anos.</p>
+  </div>
+
+  <div class="footer__logo full-bleed" aria-hidden="true"><span>ELOIZE BETIM</span></div>
+</footer>
+
+<!-- Lightbox da galeria -->
+<div class="lightbox" id="lightbox" hidden role="dialog" aria-modal="true" aria-label="Foto ampliada">
+  <button class="lightbox__close" type="button" id="lb-close" aria-label="Fechar">✳</button>
+  <button class="lightbox__nav lightbox__nav--prev" type="button" id="lb-prev" aria-label="Foto anterior">‹</button>
+  <figure class="lightbox__fig"><div class="lightbox__holder" id="lb-holder"></div><figcaption class="micro" id="lb-cap"></figcaption></figure>
+  <button class="lightbox__nav lightbox__nav--next" type="button" id="lb-next" aria-label="Próxima foto">›</button>
+</div>
+
+<!-- Textura de grão (filtro SVG usado pela camada .grain) -->
+<svg width="0" height="0" aria-hidden="true" focusable="false" style="position:absolute">
+  <filter id="grainFilter"><feTurbulence type="fractalNoise" baseFrequency="0.8" numOctaves="3" stitchTiles="stitch"/></filter>
+</svg>
+
+<!-- CONFIRMAR: endereço, telefone e horários reais antes de publicar o JSON-LD -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "TattooParlor",
+  "name": "Estúdio Eloize Betim",
+  "description": "Estúdio privado de tatuagem dedicado a mulheres. Artes autorais, florais e fine line.",
+  "image": "assets/img/og-image.jpg",
+  "url": "https://elotattoos.com.br/",
+  "telephone": "[CONFIRMAR telefone]",
+  "priceRange": "$$",
+  "address": {
+    "@type": "PostalAddress",
+    "streetAddress": "[CONFIRMAR endereço]",
+    "addressLocality": "[CONFIRMAR cidade]",
+    "addressRegion": "[CONFIRMAR UF]",
+    "postalCode": "[CONFIRMAR CEP]",
+    "addressCountry": "BR"
+  },
+  "openingHoursSpecification": [{
+    "@type": "OpeningHoursSpecification",
+    "dayOfWeek": ["[CONFIRMAR dias]"],
+    "opens": "[CONFIRMAR]",
+    "closes": "[CONFIRMAR]"
+  }],
+  "sameAs": ["https://instagram.com/elotattoos_"]
+}
+</script>
+
+</body>
+</html>
