@@ -26,7 +26,7 @@ Não precisa mexer no código.
 | `galeria-01.webp` … `galeria-12.webp` | portfólio (12 fotos) | mínimo 1000px no lado maior |
 | `arte-01.webp` … `arte-08.webp` | desenhos disponíveis, fundo claro | 900×900 |
 | `cta-estudio.webp` | fachada ou detalhe do espaço, vertical | 1000×1400 |
-| `hero-eloize.mp4` | **vídeo de fundo do hero** (ver abaixo) | 720×960, vertical |
+| `hero-eloize.mp4` | ✅ **já feito** — vídeo de fundo do hero, 717 KB | 592×1206 |
 | `og-image.jpg` | imagem de compartilhamento (WhatsApp, Instagram) | 1200×630 |
 | `favicon.svg` | ✅ já feito (monograma EB) | — |
 
@@ -49,16 +49,30 @@ descrever a tatuagem de verdade (desenho + local do corpo).
 
 ---
 
-## Vídeo do hero — `hero-eloize.mp4`
+## Vídeo do hero — `hero-eloize.mp4` ✅ pronto
 
-O arco do hero aceita vídeo. O código já está pronto: é só salvar o arquivo
-com esse nome nesta pasta. Se ele não existir, fica a foto `hero-eloize.webp`;
-se ela também não existir, fica o placeholder. Nada quebra.
+O vídeo do decalque está no ar. Veio de um `.mov` de 8,3 MB gravado no
+iPhone (HEVC, 6,1 s, 60 fps, com áudio) e foi convertido aqui para:
+
+| | |
+|---|---|
+| **Codec** | H.264 Main, `yuv420p` — toca em todo navegador |
+| **Tamanho** | **717 KB** (era 8,3 MB) |
+| **Resolução** | 592×1206 (cortadas 74 px de barra preta no rodapé) |
+| **Taxa** | 30 fps, sem áudio |
+| **Extra** | `faststart` — começa a tocar antes de baixar o arquivo inteiro |
+
+O `hero-eloize.webp` é um frame desse mesmo vídeo, usado como poster (o que
+aparece antes de o vídeo carregar) e como fallback se o vídeo não tocar.
+
+**Para trocar o vídeo depois:** é só substituir os dois arquivos. Se o novo
+vídeo não existir, fica a foto; se ela também não existir, fica o
+placeholder. Nada quebra.
 
 O vídeo toca mudo, em loop, só enquanto está visível na tela, e fica parado
 para quem usa "reduzir movimento" no sistema.
 
-### Como exportar (importa)
+### Como exportar, se for trocar
 
 | | |
 |---|---|

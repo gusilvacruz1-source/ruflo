@@ -80,11 +80,10 @@ propósito, para não passar batido. Nada foi inventado.
     visual — **isso precisa ser corrigido com a informação real**.
 
 ### Fotos e vídeo
-15. Ver `assets/README.md` — 25 imagens, com dimensões sugeridas.
-16. **`hero-eloize.mp4`** — o vídeo de fundo do hero. O código está pronto e
-    testado; falta o arquivo em H.264/MP4, 4–8s, até 3–5 MB, sem áudio.
-    O `.mov` do iPhone (HEVC) **não serve** — só toca no Safari. O
-    `assets/README.md` explica como exportar.
+15. Ver `assets/README.md` — faltam 24 imagens, com dimensões sugeridas.
+16. ~~Vídeo do hero~~ — ✅ **pronto.** `hero-eloize.mp4`, 717 KB, H.264,
+    convertido do `.mov` do iPhone. O poster `hero-eloize.webp` saiu de um
+    frame dele.
 
 ---
 
