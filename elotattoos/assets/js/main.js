@@ -105,13 +105,24 @@
      4. PRELOADER — só na primeira visita da sessão, máx. 1.2s
      --------------------------------------------------------------- */
   var preloader = document.getElementById('preloader');
-  var jaVisto = sessionStorage.getItem('eb-preloader') === '1';
+
+  /* sessionStorage pode simplesmente lançar erro: aba anônima, dados de
+     site bloqueados, página dentro de iframe. Nunca deixar isso derrubar
+     o resto do JS. */
+  function lembrar(chave, valor) {
+    try {
+      if (valor === undefined) return sessionStorage.getItem(chave);
+      sessionStorage.setItem(chave, valor);
+    } catch (e) { return null; }
+  }
+
+  var jaVisto = lembrar('eb-preloader') === '1';
 
   function encerrarPreloader() {
     if (!preloader) return;
     preloader.classList.add('is-done');
     setTimeout(function () { preloader.remove(); }, 520);
-    sessionStorage.setItem('eb-preloader', '1');
+    lembrar('eb-preloader', '1');
     entradaDoHero();
   }
 
