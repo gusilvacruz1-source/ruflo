@@ -1,10 +1,12 @@
+import { useState } from 'react';
 import { imoveis, mensagens, vitrine, zap } from '../conteudo';
 import { Selo, Seta, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
 import { Caixa } from './Caixa';
+import { Galeria } from './Galeria';
 import { ImagemProfunda } from './Profundidade';
 
-function Cartao({ imovel, indice }) {
+function Cartao({ imovel, indice, aoAbrirFotos }) {
   // Alterna o lado da foto. Três cartões idênticos empilhados leem como
   // repetição; alternando, cada um parece uma página do catálogo.
   const invertido = indice % 2 === 1;
@@ -19,15 +21,18 @@ function Cartao({ imovel, indice }) {
         {/* A foto ocupa metade do cartão, não o cartão inteiro. As imagens
             têm 828 px de largura: esticadas para os 1.190 px do cartão elas
             perdiam nitidez, e nenhum efeito devolve o que a ampliação come. */}
-        <div
+        <button
+          type="button"
+          onClick={() => aoAbrirFotos(imovel)}
+          aria-label={`Ver as ${imovel.fotos.length} fotos de ${imovel.nome}`}
           className={`relative aspect-[4/3] overflow-hidden rounded-[calc(2rem-0.375rem)] ${
             invertido ? 'lg:order-2' : ''
           }`}
         >
           <div className="absolute inset-0 transition-transform duration-[1400ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.03]">
             <ImagemProfunda
-              src={imovel.imagem}
-              alt={imovel.alt ?? imovel.nome}
+              src={imovel.fotos[0].arquivo}
+              alt={imovel.fotos[0].alt}
               loading="lazy"
               decoding="async"
               forca={20}
@@ -35,7 +40,15 @@ function Cartao({ imovel, indice }) {
             />
           </div>
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-noite-900/45 to-transparent" />
-        </div>
+
+          {/* O contador só aparece quando há o que ver: um imóvel com uma
+              foto só não promete um álbum que não existe. */}
+          <span className="absolute bottom-4 left-4 inline-flex items-center gap-2 rounded-full border border-osso-100/25 bg-noite-900/55 px-4 py-1.5 text-[0.72rem] text-osso-100 backdrop-blur-sm">
+            {imovel.fotos.length > 1
+              ? `Ver ${imovel.fotos.length} fotos`
+              : 'Ver a foto'}
+          </span>
+        </button>
 
         {/* O painel de dados. A ficha sai de cima da foto e vira informação
             de verdade, alinhada e legível. */}
@@ -75,6 +88,8 @@ function Cartao({ imovel, indice }) {
 }
 
 export function Vitrine() {
+  const [aberto, setAberto] = useState(null);
+
   return (
     <section id="imoveis" data-tom="claro" className="bg-osso-100 px-3 py-6 sm:px-6 sm:py-10">
       {/* A vitrine é o bloco escuro da página — o resto respira no claro. */}
@@ -102,7 +117,7 @@ export function Vitrine() {
 
         <div className="mt-16 flex flex-col gap-6 sm:mt-20 sm:gap-8">
           {imoveis.map((imovel, i) => (
-            <Cartao key={imovel.id} imovel={imovel} indice={i} />
+            <Cartao key={imovel.id} imovel={imovel} indice={i} aoAbrirFotos={setAberto} />
           ))}
         </div>
 
@@ -121,6 +136,10 @@ export function Vitrine() {
         </Revelar>
         </div>
       </div>
+
+      {aberto && (
+        <Galeria fotos={aberto.fotos} aoFechar={() => setAberto(null)} />
+      )}
     </section>
   );
 }

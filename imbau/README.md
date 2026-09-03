@@ -73,13 +73,40 @@ Se um dia entrarem fotos maiores (1600 px ou mais), dá para dar mais espaço
 O lado da foto alterna a cada cartão: três cartões idênticos empilhados leem
 como repetição.
 
-### Publicar um imóvel novo
+### Publicar um imóvel novo, e as fotos dele
 
-1. Coloque a foto em `public/imagens/` (JPG ou WebP, de preferência com pelo
-   menos 1600 px de largura).
-2. Copie um bloco de `imoveis` em `src/conteudo.js`, troque os textos e aponte
-   `imagem` para o arquivo novo.
-3. Ainda sem foto? Use `'imagens/imovel-sem-foto.svg'`.
+Cada imóvel aceita **quantas fotos você quiser** — fachada, sala, cozinha,
+garagem, quintal. A primeira é a capa do cartão; o resto abre no visualizador
+quando alguém clica na foto.
+
+1. Coloque os arquivos em `public/imagens/`, com nomes que digam o que são:
+   `casa-122m2-garagem.webp`, `casa-122m2-cozinha.webp`. WebP ou JPG, de
+   preferência com pelo menos 1600 px de largura.
+2. Em `src/conteudo.js`, copie um bloco de `imoveis` e liste as fotos:
+
+```js
+fotos: [
+  { arquivo: 'imagens/casa-122m2.webp', alt: 'Fachada com garagem coberta e portão' },
+  { arquivo: 'imagens/casa-122m2-garagem.webp', alt: 'Garagem coberta para dois carros' },
+  { arquivo: 'imagens/casa-122m2-cozinha.webp', alt: 'Cozinha com armários planejados' },
+],
+```
+
+3. **A ordem é a ordem em que a pessoa vai ver.** Fachada primeiro, depois o
+   que convence — sala, cozinha, garagem, quintal.
+4. **O `alt` aparece duas vezes**: como legenda embaixo da foto no
+   visualizador e para quem usa leitor de tela. Escreva o que se vê, não
+   "foto 3": *"Garagem coberta para dois carros, com portão basculante"*.
+
+O visualizador anda com as setas do teclado, com o dedo no celular e com os
+botões; Esc ou clique no fundo fecham, e o foco volta para o cartão de onde
+saiu. O cartão só promete álbum quando existe: com uma foto só, o rótulo diz
+"Ver a foto".
+
+### Ainda sem foto?
+
+Não publique o imóvel. Uma ilustração de reserva no lugar de uma casa real é
+o que faz um site de imobiliária parecer catálogo genérico.
 
 Cada botão abre o WhatsApp com uma mensagem diferente, escrita em
 `mensagens` — assim quem atende já sabe de onde veio o contato e sobre qual

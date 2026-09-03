@@ -92,10 +92,13 @@ export const vitrine = {
 
 /**
  * Imóveis da carteira, tirados dos anúncios do próprio perfil.
- * Para publicar um novo: copie um bloco, troque os textos e aponte `imagem`
- * para a foto em public/imagens/. Sem foto ainda, não publique o imóvel: uma
- * ilustração de reserva no lugar de uma casa real é o que faz um site de
- * imobiliária parecer catálogo genérico.
+ * Para publicar um novo: copie um bloco, troque os textos e aponte cada
+ * entrada de `fotos` para um arquivo em public/imagens/. Quantas quiser — a
+ * primeira é a capa do cartão, as outras entram no visualizador.
+ *
+ * Sem foto ainda, não publique o imóvel: uma ilustração de reserva no lugar
+ * de uma casa real é o que faz um site de imobiliária parecer catálogo
+ * genérico.
  *
  * ⚠️ Confirme com a Raquel se os três seguem disponíveis antes de publicar.
  */
@@ -106,8 +109,19 @@ export const imoveis = [
     local: 'Imbaú · PR',
     resumo: 'Cozinha, sala de estar e sala de jantar, com área externa em volta',
     ficha: ['210 m² construídos', '3 quartos', '1 suíte'],
-    imagem: 'imagens/casa-210m2-fachada.webp',
-    alt: 'Fachada da casa de 210 m² em esquina, com muro claro e rua de paralelepípedo',
+    // A primeira é a capa do cartão; as outras aparecem no visualizador.
+    // Ordene pensando em quem vai olhar: fachada primeiro, depois o que
+    // convence — sala, cozinha, garagem, quintal.
+    fotos: [
+      {
+        arquivo: 'imagens/casa-210m2-fachada.webp',
+        alt: 'Fachada da casa de 210 m² em esquina, com muro claro e rua de paralelepípedo',
+      },
+      {
+        arquivo: 'imagens/casa-210m2-varanda.webp',
+        alt: 'Varanda com arcos e jardim da casa de 210 m²',
+      },
+    ],
   },
   {
     id: 'imovel-rural',
@@ -115,8 +129,12 @@ export const imoveis = [
     local: 'Imbaú · PR',
     resumo: 'Casa de 130 m² em terreno amplo e arborizado, com espaço para ampliar',
     ficha: ['1.723 m² de terreno', '130 m² construídos', 'Área verde'],
-    imagem: 'imagens/imovel-rural-1723m2.webp',
-    alt: 'Casa térrea com telhado de cerâmica em terreno amplo com árvores',
+    fotos: [
+      {
+        arquivo: 'imagens/imovel-rural-1723m2.webp',
+        alt: 'Casa térrea com telhado de cerâmica em terreno amplo com árvores',
+      },
+    ],
   },
   {
     id: 'casa-122m2',
@@ -124,10 +142,15 @@ export const imoveis = [
     local: 'Imbaú · PR',
     resumo: 'Terreno de 220 m² com garagem coberta e frente para rua calçada',
     ficha: ['122 m² construídos', '220 m² de terreno', 'Garagem coberta'],
-    imagem: 'imagens/casa-122m2.webp',
-    alt: 'Casa com garagem coberta e portão, vista da rua de paralelepípedo',
+    fotos: [
+      {
+        arquivo: 'imagens/casa-122m2.webp',
+        alt: 'Casa com garagem coberta e portão, vista da rua de paralelepípedo',
+      },
+    ],
   },
 ];
+
 
 export const chamada = {
   selo: 'Hora de mudar de endereço',
