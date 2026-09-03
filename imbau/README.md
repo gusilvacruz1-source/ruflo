@@ -100,6 +100,8 @@ no primeiro arrasto.
 ## Antes de publicar
 
 - [ ] Confirmar com a Raquel se os três imóveis seguem disponíveis.
+- [ ] Confirmar de qual imóvel é a filmagem da visita, se ele segue disponível
+      e se pode ser publicado — e ajustar `visita.alt` com o nome dele.
 - [ ] Ler com ela as respostas de `perguntas` e as descrições de `servicos`:
       foram escritas a partir da placa e do perfil, mas quem responde é ela.
 - [ ] Fechar o horário de atendimento: o Google só mostra que abre às 8h, então
@@ -159,6 +161,32 @@ A metáfora não é decoração: ela organiza a página.
 
 Os capítulos vivem em `capitulos`, em `src/conteudo.js`. O `id` de cada um tem
 de bater com o `id` da seção; é assim que a lombada e o fólio se encontram.
+
+## A visita
+
+O capítulo III é a filmagem de um imóvel percorrida pela rolagem: 160 quadros
+desenhados num canvas, avançando conforme a pessoa desce a página. Não é um
+`<video>` com `currentTime` — Safari e iOS não fazem busca exata de quadro sob
+rolagem e devolvem um vídeo que engasga. A sequência é exata por construção.
+
+### Trocar a filmagem
+
+```bash
+# precisa de ffmpeg e ffprobe no PATH
+bash ../.agents/skills/video-to-website/scripts/extrai-frames.sh \
+  filmagem.mov public/visita 160
+```
+
+O script gera `public/visita/desktop/` (160 quadros, 1440 px) e
+`public/visita/mobile/` (80 quadros, 800 px), e imprime o peso de cada
+conjunto. Depois, acerte `total` de cada um em `visita.conjuntos`, em
+`src/conteudo.js` — se o número não bater, a visita termina antes ou depois
+do fim da rolagem.
+
+Os tetos são 6 MB no desktop e 2,5 MB no celular. No celular o limite não é a
+banda: um quadro decodificado ocupa `largura × altura × 4` bytes, comprima-se
+o quanto for, e é isso que derruba a aba no iPhone. Por isso o conjunto de lá
+é menor de verdade, e não o mesmo com qualidade pior.
 
 ## Movimento
 

@@ -8,6 +8,7 @@ import { Perguntas } from './componentes/Perguntas';
 import { Rodape } from './componentes/Rodape';
 import { Servicos } from './componentes/Servicos';
 import { Sobre } from './componentes/Sobre';
+import { Visita } from './componentes/Visita';
 import { Vitrine } from './componentes/Vitrine';
 
 export default function App() {
@@ -28,6 +29,7 @@ export default function App() {
             <div className="relative z-10 shadow-[0_-30px_60px_-25px_rgba(5,8,14,0.75)]">
               <Servicos />
               <Vitrine />
+              <Visita />
               <Sobre />
               <Avaliacoes />
               <Chamada />

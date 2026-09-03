@@ -71,12 +71,14 @@ extrai() {
   local contados peso
   contados=$(find "$destino" -name '*.webp' | wc -l | tr -d ' ')
   peso=$(du -sk "$destino" | cut -f1)
-  echo "$nome: $contados frames · ${largura}px · $(awk -v k="$peso" 'BEGIN { printf "%.1f", k/1024 }') MB"
+  # O relatório vai para a saída de erro de propósito: quem chama captura a
+  # saída padrão para ler o peso, e o texto se perderia junto.
+  echo "$nome: $contados frames · ${largura}px · $(awk -v k="$peso" 'BEGIN { printf "%.1f", k/1024 }') MB" >&2
   echo "$peso"
 }
 
-PESO_DESKTOP=$(extrai desktop "$LARGURA_DESKTOP" "$FRAMES" | tail -1)
-PESO_MOBILE=$(extrai mobile "$LARGURA_MOBILE" $((FRAMES / 2)) | tail -1)
+PESO_DESKTOP=$(extrai desktop "$LARGURA_DESKTOP" "$FRAMES")
+PESO_MOBILE=$(extrai mobile "$LARGURA_MOBILE" $((FRAMES / 2)))
 
 avisa() {
   local nome=$1 peso_kb=$2 teto_mb=$3

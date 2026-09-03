@@ -32,11 +32,12 @@ export const marca = {
 export const capitulos = [
   { id: 'servicos', numero: 'I', nome: 'Serviços' },
   { id: 'imoveis', numero: 'II', nome: 'Imóveis' },
-  { id: 'sobre', numero: 'III', nome: 'A corretora' },
-  { id: 'avaliacoes', numero: 'IV', nome: 'Avaliações' },
-  { id: 'avaliacao-gratuita', numero: 'V', nome: 'Avaliação gratuita' },
-  { id: 'perguntas', numero: 'VI', nome: 'Dúvidas' },
-  { id: 'contato', numero: 'VII', nome: 'Contato' },
+  { id: 'visita', numero: 'III', nome: 'A visita' },
+  { id: 'sobre', numero: 'IV', nome: 'A corretora' },
+  { id: 'avaliacoes', numero: 'V', nome: 'Avaliações' },
+  { id: 'avaliacao-gratuita', numero: 'VI', nome: 'Avaliação gratuita' },
+  { id: 'perguntas', numero: 'VII', nome: 'Dúvidas' },
+  { id: 'contato', numero: 'VIII', nome: 'Contato' },
 ];
 
 /** Monta o link do WhatsApp já com a mensagem escrita para a pessoa enviar. */
@@ -91,6 +92,28 @@ export const hero = {
     { arquivo: 'imagens/hero-arvores.svg', taxa: 0.44, escala: 1.2 },
     { arquivo: 'imagens/hero-ar.svg', taxa: 0, escala: 1.02 },
   ],
+};
+
+/**
+ * A visita: a filmagem que a pessoa percorre rolando a página.
+ *
+ * Os frames saem de `tools/` com o script da skill video-to-website:
+ *   extrai-frames.sh entrada.mov public/visita 160
+ * `total` precisa bater com o número de arquivos de cada pasta — o script
+ * imprime os dois no fim.
+ *
+ * ⚠️ Confirmar com a Raquel de qual imóvel é a filmagem antes de publicar,
+ * e se ele segue disponível.
+ */
+export const visita = {
+  sobretexto: 'A visita',
+  titulo: 'Role para andar por dentro',
+  texto: 'O passo é seu: a casa avança no ritmo em que você rola a página.',
+  alt: 'Caminhada da entrada até a área coberta de um imóvel da carteira',
+  conjuntos: {
+    desktop: { caminho: 'visita/desktop', total: 160, largura: 1440 },
+    mobile: { caminho: 'visita/mobile', total: 80, largura: 800 },
+  },
 };
 
 export const vitrine = {
