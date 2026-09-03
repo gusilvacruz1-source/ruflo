@@ -1,9 +1,25 @@
+import { useCallback, useRef } from 'react';
 import { hero, marca, mensagens, zap } from '../conteudo';
 import { Botao } from './Interface';
 import { Revelar } from './Movimento';
-import { ImagemProfunda } from './Profundidade';
+import { ImagemProfunda, useCena } from './Profundidade';
 
 export function Hero() {
+  const conteudo = useRef(null);
+  const veu = useRef(null);
+
+  // Quanto mais a folha cobre a capa, mais a capa se afasta e escurece.
+  useCena(
+    useCallback((rolagem, altura) => {
+      const avanco = Math.min(1, rolagem / (altura * 0.9));
+      if (conteudo.current) {
+        conteudo.current.style.transform = `translate3d(0, ${(-avanco * 64).toFixed(1)}px, 0)`;
+        conteudo.current.style.opacity = String(Math.max(0, 1 - avanco * 1.25));
+      }
+      if (veu.current) veu.current.style.opacity = String(avanco * 0.8);
+    }, [])
+  );
+
   return (
     <section
       id="inicio"
@@ -20,7 +36,17 @@ export function Hero() {
       <div className="absolute inset-0 bg-gradient-to-b from-noite-900/85 via-noite-900/15 to-noite-900/92 sm:to-noite-900/80" />
       <div className="absolute inset-0 bg-gradient-to-r from-noite-900/80 via-noite-900/20 to-transparent" />
 
-      <div className="relative mx-auto w-full max-w-[1280px] px-5 pb-10 pt-28 sm:px-8 sm:pb-14 sm:pt-32">
+      {/* Véu que fecha a capa quando o livro é aberto. */}
+      <div
+        ref={veu}
+        aria-hidden="true"
+        className="absolute inset-0 bg-noite-900 opacity-0"
+      />
+
+      <div
+        ref={conteudo}
+        className="relative mx-auto w-full max-w-[1280px] px-5 pb-10 pt-28 sm:px-8 sm:pb-14 sm:pt-32"
+      >
         <div className="max-w-4xl">
           <Revelar className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
             <p className="sobretexto text-ouro-400">{hero.sobretexto}</p>

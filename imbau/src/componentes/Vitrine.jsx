@@ -1,7 +1,8 @@
 import { imoveis, mensagens, vitrine, zap } from '../conteudo';
 import { Selo, Seta, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
-import { ImagemProfunda, LuzDoPonteiro } from './Profundidade';
+import { Folio } from './Livro';
+import { ImagemProfunda } from './Profundidade';
 
 function Cartao({ imovel, indice }) {
   return (
@@ -74,8 +75,9 @@ export function Vitrine() {
         data-tom="escuro"
         className="relative isolate mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] bg-noite-900 px-5 py-20 sm:px-10 sm:py-28 lg:rounded-[2.25rem] lg:py-32"
       >
-        <LuzDoPonteiro />
         <div className="relative mx-auto max-w-[1180px]">
+          <Folio id="imoveis" claro />
+
         <header className="mx-auto max-w-2xl text-center">
           <Revelar>
             <Selo>{vitrine.selo}</Selo>

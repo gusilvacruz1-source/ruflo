@@ -113,6 +113,26 @@ marca — o único elemento do menu sem fundo próprio —, e no empate ganha o
 claro, porque texto escuro ainda se lê sobre a metade escura. Ao criar uma
 seção nova, marque o tom dela; senão o menu não a enxerga.
 
+## O site é um livro
+
+A metáfora não é decoração: ela organiza a página.
+
+- **A capa fica.** A primeira dobra é `sticky` no topo, com z-index abaixo das
+  seções. As folhas sobem por cima dela e a capa recua — o texto sobe e some,
+  um véu escurece a cena. Quem abre o site abre um livro.
+- **As folhas se empilham.** O bloco das seções carrega a sombra da costura no
+  alto: é ela que faz a folha parecer apoiada sobre a capa, e não colada nela.
+- **A lombada** (`src/componentes/Livro.jsx`) fica na margem esquerda, a partir
+  de 1400 px. Traz os algarismos dos capítulos, acende o que está aberto — só
+  nele o nome aparece — e desce uma fita dourada conforme a leitura avança.
+  Como ela é alta e cruza a costura entre a capa escura e a folha clara, cada
+  algarismo pergunta por si mesmo o que tem atrás dele.
+- **O fólio** repete, no alto de cada folha, o algarismo e o nome do capítulo —
+  a mesma repetição que um livro faz no topo de cada página.
+
+Os capítulos vivem em `capitulos`, em `src/conteudo.js`. O `id` de cada um tem
+de bater com o `id` da seção; é assim que a lombada e o fólio se encontram.
+
 ## Movimento
 
 - **Abertura** — ao abrir a página a cena da primeira dobra se assenta (um
@@ -123,8 +143,6 @@ seção nova, marque o tom dela; senão o menu não a enxerga.
   atende todas elas: cada foto se registra ali, e o scroll recalcula o conjunto
   de uma vez. A imagem entra maior que a moldura — a sobra é o que ela usa para
   se mover sem mostrar borda.
-- **Luz do ponteiro** — dentro do bloco escuro dos imóveis um facho macio segue
-  o cursor. Só onde existe ponteiro fino; no toque não acende.
 - **Revelação no scroll** — os blocos sobem e aparecem uma vez só, via
   `IntersectionObserver` (`src/componentes/Movimento.jsx`).
 - **Botão magnético** — no desktop o botão acompanha o cursor de leve e volta ao

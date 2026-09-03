@@ -1,6 +1,7 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { marca, mensagens, zap } from '../conteudo';
 import { Botao, Marca, Whatsapp } from './Interface';
+import { useTomDoFundo } from './Tom';
 
 const links = [
   { href: '#inicio', texto: 'Início' },
@@ -9,55 +10,6 @@ const links = [
   { href: '#sobre', texto: 'Sobre' },
   { href: '#contato', texto: 'Contato' },
 ];
-
-/** Lê o tom do bloco que está passando embaixo do menu, para ele se vestir. */
-function useTomDoFundo() {
-  const [tom, setTom] = useState('escuro');
-
-  useEffect(() => {
-    const blocos = [...document.querySelectorAll('[data-tom]')];
-    if (!blocos.length) return;
-
-    // Quem manda é a faixa da marca, o único elemento do menu sem fundo
-    // próprio. Medir a altura dela a cada rolagem cobre os dois estados do
-    // cabeçalho (encolhido e inteiro) sem número mágico.
-    const assinatura = document.querySelector('[data-marca]');
-
-    const aoRolar = () => {
-      const faixa = assinatura?.getBoundingClientRect();
-      const alturas = faixa
-        ? [faixa.top + faixa.height * 0.25, faixa.top + faixa.height * 0.75]
-        : [30, 46];
-
-      const votos = { claro: 0, escuro: 0 };
-      const areas = blocos.map((b) => [b.getBoundingClientRect(), b.dataset.tom]);
-
-      for (const y of alturas) {
-        // O último que cruza vence: o bloco escuro encaixado dentro de uma
-        // seção clara tem a última palavra sobre ela.
-        let tomAqui = 'escuro';
-        for (const [area, dele] of areas) {
-          if (area.top <= y && area.bottom > y) tomAqui = dele;
-        }
-        votos[tomAqui] += 1;
-      }
-
-      // Empate (a borda cortando a marca ao meio) fica com o claro: texto
-      // escuro ainda se lê sobre a metade escura, o contrário não.
-      setTom(votos.claro >= votos.escuro ? 'claro' : 'escuro');
-    };
-
-    aoRolar();
-    window.addEventListener('scroll', aoRolar, { passive: true });
-    window.addEventListener('resize', aoRolar);
-    return () => {
-      window.removeEventListener('scroll', aoRolar);
-      window.removeEventListener('resize', aoRolar);
-    };
-  }, []);
-
-  return tom;
-}
 
 /** Descobre em qual seção a pessoa está para acender o link certo. */
 function useSecaoAtiva() {
@@ -89,7 +41,8 @@ export function Menu() {
   const [rolou, setRolou] = useState(false);
   const [aberto, setAberto] = useState(false);
   const ativa = useSecaoAtiva();
-  const tom = useTomDoFundo();
+  const assinatura = useRef(null);
+  const tom = useTomDoFundo(assinatura);
   const claro = tom === 'escuro'; // texto claro sobre bloco escuro
 
   useEffect(() => {
@@ -122,7 +75,7 @@ export function Menu() {
       {/* Mesma margem da placa, para o menu nascer alinhado com o conteúdo. */}
       <div className="mx-auto max-w-[1520px] px-0 sm:px-4 lg:px-5">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-5 sm:px-8">
-          <a href="#inicio" data-marca aria-label={`${marca.nome} ${marca.sobrenome} — início`}>
+          <a href="#inicio" ref={assinatura} aria-label={`${marca.nome} ${marca.sobrenome} — início`}>
             <Marca tamanho="h-9 w-9" claro={claro} />
           </a>
 

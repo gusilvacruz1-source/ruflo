@@ -1,6 +1,7 @@
 import { useMemo, useState } from 'react';
 import { contato, marca, montarMensagem } from '../conteudo';
 import { Instagram, Local, Whatsapp } from './Interface';
+import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
 /** Pastilha de escolha única. Botão de verdade, para funcionar no teclado. */
@@ -37,8 +38,10 @@ export function Contato() {
   const link = `https://wa.me/${marca.whatsapp}?text=${encodeURIComponent(texto)}`;
 
   return (
-    <section id="contato" data-tom="claro" className="relative bg-osso-100 pb-24 pt-4 sm:pb-32">
+    <section id="contato" data-tom="claro" className="relative bg-osso-100 pb-24 pt-10 sm:pb-32">
       <div className="mx-auto max-w-[1280px] px-5 sm:px-8">
+        <Folio id="contato" />
+
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
             <Revelar>

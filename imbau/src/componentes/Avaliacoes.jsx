@@ -1,5 +1,6 @@
 import { avaliacoes, marca } from '../conteudo';
 import { EstrelaCheia, Seta } from './Interface';
+import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
 function Estrelas({ className = 'h-3.5 w-3.5' }) {
@@ -15,10 +16,13 @@ function Estrelas({ className = 'h-3.5 w-3.5' }) {
 export function Avaliacoes() {
   return (
     <section
+      id="avaliacoes"
       data-tom="claro"
       className="border-t border-noite-900/10 bg-osso-100 px-5 py-24 sm:px-8 sm:py-28"
     >
       <div className="mx-auto max-w-[1280px]">
+        <Folio id="avaliacoes" />
+
         <Revelar className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div>
             <h2 className="titulo text-[clamp(1.8rem,3.6vw,2.7rem)] leading-[1.05] text-noite-900">

@@ -24,6 +24,21 @@ export const marca = {
   simbolo: 'marca/imbau-simbolo.png',
 };
 
+/**
+ * Os capítulos do livro, na ordem em que a pessoa os folheia.
+ * A lombada à esquerda e o fólio no alto de cada folha leem esta lista —
+ * o `id` tem de bater com o da seção correspondente.
+ */
+export const capitulos = [
+  { id: 'servicos', numero: 'I', nome: 'Serviços' },
+  { id: 'imoveis', numero: 'II', nome: 'Imóveis' },
+  { id: 'sobre', numero: 'III', nome: 'A corretora' },
+  { id: 'avaliacoes', numero: 'IV', nome: 'Avaliações' },
+  { id: 'avaliacao-gratuita', numero: 'V', nome: 'Avaliação gratuita' },
+  { id: 'perguntas', numero: 'VI', nome: 'Dúvidas' },
+  { id: 'contato', numero: 'VII', nome: 'Contato' },
+];
+
 /** Monta o link do WhatsApp já com a mensagem escrita para a pessoa enviar. */
 export const zap = (mensagem) =>
   `https://wa.me/${marca.whatsapp}?text=${encodeURIComponent(mensagem)}`;
