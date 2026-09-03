@@ -1,0 +1,10 @@
+{
+  "version": 1,
+  "skills": {
+    "video-to-website": {
+      "source": "gusilvacruz1-source/ruflo",
+      "sourceType": "local",
+      "skillPath": ".agents/skills/video-to-website/SKILL.md"
+    }
+  }
+}
