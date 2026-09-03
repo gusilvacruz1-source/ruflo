@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 2400 1350" preserveAspectRatio="xMidYMid slice" role="img">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#05080e"/><stop offset=".38" stop-color="#0d1522"/><stop offset=".66" stop-color="#1e2c40"/><stop offset=".88" stop-color="#41556e"/><stop offset="1" stop-color="#5b7189"/>
+    </linearGradient>
+    <radialGradient id="sun" cx="50%" cy="66%" r="60%">
+      <stop offset="0" stop-color="#8aa2bb" stop-opacity=".5"/>
+      <stop offset=".6" stop-color="#8aa2bb" stop-opacity=".12"/>
+      <stop offset="1" stop-color="#8aa2bb" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="haze" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#8aa2bb" stop-opacity="0"/>
+      <stop offset="1" stop-color="#8aa2bb" stop-opacity=".9"/>
+    </linearGradient>
+    <linearGradient id="glass-a" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#ffe9c4"/>
+      <stop offset=".6" stop-color="#e9b877"/>
+      <stop offset="1" stop-color="#a86f34"/>
+    </linearGradient>
+    <linearGradient id="glass-b" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#fff3da"/>
+      <stop offset="1" stop-color="#e0a94f"/>
+    </linearGradient>
+    <radialGradient id="bloom" cx="50%" cy="50%" r="50%">
+      <stop offset="0" stop-color="#f6c67e" stop-opacity=".85"/>
+      <stop offset=".5" stop-color="#e0a45f" stop-opacity=".28"/>
+      <stop offset="1" stop-color="#e0a45f" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="water" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#101a28" stop-opacity=".15"/>
+      <stop offset=".45" stop-color="#080d16" stop-opacity=".6"/>
+      <stop offset="1" stop-color="#04060b" stop-opacity=".97"/>
+    </linearGradient>
+    <linearGradient id="grade" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#0e2233"/>
+      <stop offset="1" stop-color="#c98b4b"/>
+    </linearGradient>
+    <filter id="blurSm" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="3.6"/></filter>
+    <filter id="blurMd" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="9.6"/></filter>
+    <filter id="blurLg" x="-30%" y="-30%" width="160%" height="160%"><feGaussianBlur stdDeviation="28.8"/></filter>
+    <filter id="reflect" x="-10%" y="-10%" width="120%" height="120%">
+      <feGaussianBlur stdDeviation="4.8 14.4"/>
+    </filter>
+    <filter id="grain"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="4" stitchTiles="stitch"/><feColorMatrix type="saturate" values="0"/></filter>
+    <radialGradient id="vig" cx="50%" cy="42%" r="76%">
+      <stop offset=".4" stop-color="#000" stop-opacity="0"/>
+      <stop offset="1" stop-color="#000" stop-opacity="0.62"/>
+    </radialGradient>
+    <clipPath id="agua"><rect x="0" y="1026.0" width="2400" height="324.0"/></clipPath>
+  </defs>
+
+  <rect width="2400" height="1350" fill="url(#grade)" opacity=".16" style="mix-blend-mode:soft-light"/>
+  <rect width="2400" height="1350" filter="url(#grain)" opacity="0.07" style="mix-blend-mode:overlay"/>
+  <rect width="2400" height="1350" fill="url(#vig)"/>
+</svg>
