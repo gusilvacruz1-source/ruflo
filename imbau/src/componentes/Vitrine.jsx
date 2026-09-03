@@ -1,6 +1,7 @@
 import { imoveis, mensagens, vitrine, zap } from '../conteudo';
 import { Selo, Seta, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
+import { ImagemProfunda, LuzDoPonteiro } from './Profundidade';
 
 function Cartao({ imovel, indice }) {
   return (
@@ -12,13 +13,18 @@ function Cartao({ imovel, indice }) {
     >
       {/* A foto fica na frente do plano: moldura por fora, imagem encaixada dentro. */}
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[calc(2rem-0.375rem)] sm:aspect-[16/10] lg:aspect-[16/9]">
-        <img
-          src={imovel.imagem}
-          alt={imovel.alt ?? imovel.nome}
-          loading="lazy"
-          decoding="async"
-          className="h-full w-full object-cover transition-transform duration-[1400ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.06]"
-        />
+        {/* A foto anda mais devagar que o cartão; o hover aproxima a moldura
+            inteira, sem brigar com a transformação da parallaxe. */}
+        <div className="absolute inset-0 transition-transform duration-[1400ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.04]">
+          <ImagemProfunda
+            src={imovel.imagem}
+            alt={imovel.alt ?? imovel.nome}
+            loading="lazy"
+            decoding="async"
+            forca={30}
+            escala={1.12}
+          />
+        </div>
         {/* Escurece o pé da foto para o nome do imóvel ficar legível em qualquer imagem. */}
         <div className="absolute inset-0 bg-gradient-to-t from-noite-900 via-noite-900/62 to-noite-900/10" />
         <div className="absolute inset-0 bg-noite-900/15 transition-colors duration-700 group-hover:bg-noite-900/0" />
@@ -64,8 +70,12 @@ export function Vitrine() {
   return (
     <section id="imoveis" data-tom="claro" className="bg-osso-100 px-3 py-6 sm:px-6 sm:py-10">
       {/* A vitrine é o bloco escuro da página — o resto respira no claro. */}
-      <div data-tom="escuro" className="mx-auto max-w-[1440px] rounded-[1.75rem] bg-noite-900 px-5 py-20 sm:px-10 sm:py-28 lg:rounded-[2.25rem] lg:py-32">
-        <div className="mx-auto max-w-[1180px]">
+      <div
+        data-tom="escuro"
+        className="relative isolate mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] bg-noite-900 px-5 py-20 sm:px-10 sm:py-28 lg:rounded-[2.25rem] lg:py-32"
+      >
+        <LuzDoPonteiro />
+        <div className="relative mx-auto max-w-[1180px]">
         <header className="mx-auto max-w-2xl text-center">
           <Revelar>
             <Selo>{vitrine.selo}</Selo>

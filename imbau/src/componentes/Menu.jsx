@@ -18,14 +18,33 @@ function useTomDoFundo() {
     const blocos = [...document.querySelectorAll('[data-tom]')];
     if (!blocos.length) return;
 
+    // Quem manda é a faixa da marca, o único elemento do menu sem fundo
+    // próprio. Medir a altura dela a cada rolagem cobre os dois estados do
+    // cabeçalho (encolhido e inteiro) sem número mágico.
+    const assinatura = document.querySelector('[data-marca]');
+
     const aoRolar = () => {
-      // O último que cruza a faixa do menu vence — assim o bloco escuro
-      // encaixado dentro de uma seção clara tem a última palavra.
-      const debaixo = blocos.filter((b) => {
-        const area = b.getBoundingClientRect();
-        return area.top <= 44 && area.bottom > 44;
-      });
-      setTom(debaixo.at(-1)?.dataset.tom ?? 'escuro');
+      const faixa = assinatura?.getBoundingClientRect();
+      const alturas = faixa
+        ? [faixa.top + faixa.height * 0.25, faixa.top + faixa.height * 0.75]
+        : [30, 46];
+
+      const votos = { claro: 0, escuro: 0 };
+      const areas = blocos.map((b) => [b.getBoundingClientRect(), b.dataset.tom]);
+
+      for (const y of alturas) {
+        // O último que cruza vence: o bloco escuro encaixado dentro de uma
+        // seção clara tem a última palavra sobre ela.
+        let tomAqui = 'escuro';
+        for (const [area, dele] of areas) {
+          if (area.top <= y && area.bottom > y) tomAqui = dele;
+        }
+        votos[tomAqui] += 1;
+      }
+
+      // Empate (a borda cortando a marca ao meio) fica com o claro: texto
+      // escuro ainda se lê sobre a metade escura, o contrário não.
+      setTom(votos.claro >= votos.escuro ? 'claro' : 'escuro');
     };
 
     aoRolar();
@@ -103,7 +122,7 @@ export function Menu() {
       {/* Mesma margem da placa, para o menu nascer alinhado com o conteúdo. */}
       <div className="mx-auto max-w-[1520px] px-0 sm:px-4 lg:px-5">
         <div className="mx-auto flex max-w-[1280px] items-center justify-between gap-6 px-5 sm:px-8">
-          <a href="#inicio" aria-label={`${marca.nome} ${marca.sobrenome} — início`}>
+          <a href="#inicio" data-marca aria-label={`${marca.nome} ${marca.sobrenome} — início`}>
             <Marca tamanho="h-9 w-9" claro={claro} />
           </a>
 

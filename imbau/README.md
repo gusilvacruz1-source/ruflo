@@ -107,12 +107,24 @@ O fundo da hero e a imagem de reserva são gerados por `tools/make-art.mjs`
 ## Claro e escuro
 
 Cada bloco declara o próprio tom com `data-tom="claro"` ou `data-tom="escuro"`.
-O menu lê esse atributo do bloco que está passando debaixo dele e troca de
-roupa: sobre o creme a marca fica escura, a pílula vira vidro claro e o botão
-inverte. Ao criar uma seção nova, marque o tom dela — senão o menu não enxerga.
+O menu lê esse atributo e troca de roupa: sobre o creme a marca fica escura, a
+pílula vira vidro claro e o botão inverte. Quem decide é a faixa ocupada pela
+marca — o único elemento do menu sem fundo próprio —, e no empate ganha o
+claro, porque texto escuro ainda se lê sobre a metade escura. Ao criar uma
+seção nova, marque o tom dela; senão o menu não a enxerga.
 
 ## Movimento
 
+- **Abertura** — ao abrir a página a cena da primeira dobra se assenta (um
+  zoom lento que termina em 2,6 s) e o título sobe por trás de uma máscara.
+  É o único momento coreografado do site.
+- **Profundidade** — as fotos andam mais devagar que a página
+  (`src/componentes/Profundidade.jsx`). Um único laço de `requestAnimationFrame`
+  atende todas elas: cada foto se registra ali, e o scroll recalcula o conjunto
+  de uma vez. A imagem entra maior que a moldura — a sobra é o que ela usa para
+  se mover sem mostrar borda.
+- **Luz do ponteiro** — dentro do bloco escuro dos imóveis um facho macio segue
+  o cursor. Só onde existe ponteiro fino; no toque não acende.
 - **Revelação no scroll** — os blocos sobem e aparecem uma vez só, via
   `IntersectionObserver` (`src/componentes/Movimento.jsx`).
 - **Botão magnético** — no desktop o botão acompanha o cursor de leve e volta ao

@@ -1,6 +1,7 @@
 import { hero, marca, mensagens, zap } from '../conteudo';
 import { Botao } from './Interface';
 import { Revelar } from './Movimento';
+import { ImagemProfunda } from './Profundidade';
 
 export function Hero() {
   return (
@@ -9,12 +10,11 @@ export function Hero() {
       data-tom="escuro"
       className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-noite-900 sm:min-h-[calc(100svh-2rem)] lg:min-h-[calc(100svh-2.5rem)]"
     >
-      <img
-        src={hero.imagem}
-        alt=""
-        aria-hidden="true"
-        className="absolute inset-0 h-full w-full object-cover"
-      />
+      <div className="absolute inset-0 overflow-hidden">
+        <div className="assentar relative h-full w-full">
+          <ImagemProfunda src={hero.imagem} alt="" aria-hidden="true" forca={70} escala={1.16} />
+        </div>
+      </div>
 
       {/* Véus: legibilidade do menu em cima, do texto no meio e dos números embaixo. */}
       <div className="absolute inset-0 bg-gradient-to-b from-noite-900/85 via-noite-900/15 to-noite-900/92 sm:to-noite-900/80" />
@@ -29,11 +29,11 @@ export function Hero() {
             </p>
           </Revelar>
 
-          <Revelar atraso={110}>
+          <div className="mascara" style={{ animationDelay: '260ms' }}>
             <h1 className="titulo-hero mt-6 text-[clamp(2.6rem,6.2vw,5.6rem)] leading-[1.02] text-osso-100">
               {hero.titulo}
             </h1>
-          </Revelar>
+          </div>
 
           <Revelar atraso={210}>
             <p className="mt-6 max-w-xl text-[0.95rem] leading-relaxed text-osso-100/75">

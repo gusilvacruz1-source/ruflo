@@ -128,16 +128,23 @@ export function Marca({ className = '', tamanho = 'h-9 w-9', claro = true }) {
         width="360"
         height="367"
       />
-      <span className="flex flex-col leading-none">
+      <span
+        className="flex flex-col leading-none"
+        style={{
+          textShadow: claro
+            ? '0 1px 14px rgba(5, 8, 14, 0.55)'
+            : '0 1px 14px rgba(246, 243, 236, 0.75)',
+        }}
+      >
         <span
-          className={`text-[1.05rem] font-medium tracking-tight ${
+          className={`text-[1.05rem] font-medium tracking-tight transition-colors duration-500 ${
             claro ? 'text-osso-100' : 'text-noite-900'
           }`}
         >
           {marca.nome.toLowerCase()}
         </span>
         <span
-          className={`mt-1 text-[0.55rem] font-medium uppercase tracking-[0.3em] ${
+          className={`mt-1 text-[0.55rem] font-medium uppercase tracking-[0.3em] transition-colors duration-500 ${
             claro ? 'text-osso-100/50' : 'text-noite-900/45'
           }`}
         >

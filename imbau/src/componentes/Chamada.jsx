@@ -1,6 +1,7 @@
 import { chamada, mensagens, zap } from '../conteudo';
 import { Botao, IconeBeneficio, Selo } from './Interface';
 import { Revelar } from './Movimento';
+import { ImagemProfunda } from './Profundidade';
 
 export function Chamada() {
   return (
@@ -67,13 +68,14 @@ export function Chamada() {
               </Revelar>
             </div>
 
-            <div className="relative min-h-[340px] lg:min-h-[640px]">
-              <img
+            <div className="relative min-h-[340px] overflow-hidden lg:min-h-[640px]">
+              <ImagemProfunda
                 src={chamada.imagem}
                 alt={chamada.imagemAlt}
                 loading="lazy"
                 decoding="async"
-                className="absolute inset-0 h-full w-full object-cover"
+                forca={36}
+                escala={1.14}
               />
             </div>
           </div>
