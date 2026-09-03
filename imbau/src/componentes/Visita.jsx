@@ -31,12 +31,23 @@ export function Visita() {
   // decodificado custa largura × altura × 4 bytes, comprima-se o quanto for.
   useEffect(() => {
     const estreito = window.matchMedia('(max-width: 820px)').matches;
-    setConjunto(estreito ? visita.conjuntos.mobile : visita.conjuntos.desktop);
+    // A prévia empacotada num arquivo só carrega os quadros embutidos e diz
+    // qual conjunto usar; no site normal, quem decide é a largura da tela.
+    const embutido = globalThis.__CONJUNTO__;
+    setConjunto(
+      visita.conjuntos[embutido] ??
+        (estreito ? visita.conjuntos.mobile : visita.conjuntos.desktop)
+    );
     setParado(window.matchMedia('(prefers-reduced-motion: reduce)').matches);
   }, []);
 
   const endereco = useCallback(
-    (i) => `${conjunto.caminho}/${String(i + 1).padStart(4, '0')}.webp`,
+    (i) => {
+      const caminho = `${conjunto.caminho}/${String(i + 1).padStart(4, '0')}.webp`;
+      // Quando a página é empacotada num arquivo só, os quadros vêm embutidos
+      // aqui em vez de virem da pasta public/.
+      return globalThis.__QUADROS__?.[caminho] ?? caminho;
+    },
     [conjunto]
   );
 
