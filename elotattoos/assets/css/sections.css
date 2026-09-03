@@ -89,6 +89,10 @@
 
 /* =============== 03 · HERO =============== */
 .hero{
+  /* Dentro do hero o texto secundário fica sobre vídeo, não sobre o ink
+     sólido: o --muted padrão daria 2.4:1 ali. Este tom é medido para
+     passar 4.5:1 contra o frame mais claro do vídeo já com o véu. */
+  --muted: #C4C0BA;
   min-height: 100svh;
   display: flex;
   align-items: center;
@@ -96,7 +100,7 @@
   padding-bottom: clamp(48px, 7vh, 80px);
   overflow: hidden;
 }
-.hero__inner{ position: relative; width: 100%; }
+.hero__inner{ position: relative; width: 100%; z-index: 1; }
 .hero__micro{ margin-bottom: clamp(28px, 6vh, 64px); }
 
 .hero__titles{
@@ -151,21 +155,32 @@
   z-index: 2;                                /* entre o título e a cópia */
 }
 
-/* O vídeo cobre a foto quando existe; até lá a foto (ou o placeholder)
-   é o que aparece. A classe é ligada pelo JS só depois que o vídeo
-   confirma que consegue tocar. */
-.hero__video{
+/* Vídeo de fundo da seção. Sem opacidade controlada por JS de propósito:
+   o atributo poster já cobre o intervalo até o vídeo carregar, e se o
+   arquivo faltar o poster fica — nada depende do JS para aparecer. */
+.hero__fundo{
   position: absolute;
   inset: 0;
+  overflow: hidden;
+  z-index: 0;
+}
+.hero__video{
   width: 100%;
   height: 100%;
   object-fit: cover;
   filter: grayscale(1) contrast(1.04);       /* mesmo tratamento das fotos */
-  opacity: 0;
-  transition: opacity .8s var(--ease);
 }
-.media.tem-video .hero__video{ opacity: 1; }
-.media.tem-video img{ visibility: hidden; }  /* a foto vira só o fallback */
+/* Véu: sem ele o Bodoni claro não se sustenta em cima do vídeo. Mais
+   fechado embaixo, onde ficam o texto de apoio e os botões. */
+.hero__veu{
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to bottom,
+      color-mix(in srgb, var(--ink) 82%, transparent) 0%,
+      color-mix(in srgb, var(--ink) 78%, transparent) 42%,
+      color-mix(in srgb, var(--ink) 93%, transparent) 100%);
+}
 
 .hero__foot{
   position: relative;

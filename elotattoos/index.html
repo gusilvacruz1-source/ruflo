@@ -108,6 +108,18 @@
      03 · HERO
      ========================================================== -->
 <section class="section hero" id="top" data-theme="ink" aria-labelledby="hero-title">
+
+  <!-- Vídeo de fundo da seção inteira. O poster aparece antes de o vídeo
+       carregar e fica no lugar dele se não tocar; abaixo, o véu que segura
+       a legibilidade do título. -->
+  <div class="hero__fundo full-bleed" aria-hidden="true">
+    <video class="hero__video" muted loop playsinline preload="metadata"
+           poster="assets/img/hero-fundo.webp" tabindex="-1">
+      <source src="assets/img/hero-fundo.mp4" type="video/mp4">
+    </video>
+    <div class="hero__veu"></div>
+  </div>
+
   <div class="site-container hero__inner">
 
     <p class="micro hero__micro">
@@ -131,16 +143,11 @@
       </p>
     </div>
 
-    <!-- Arco do hero. O vídeo entra por cima da foto; se o arquivo não
-         existir, fica a foto, e se ela também não existir, o placeholder.
-         CONFIRMAR: hero-eloize.mp4 (ver assets/README.md). -->
+    <!-- Arco do hero: o retrato da Eloize.
+         CONFIRMAR: hero-eloize.webp (ver assets/README.md). -->
     <div class="hero__photo" data-parallax="-8">
       <figure class="media media--arch" data-file="hero-eloize.webp">
         <img src="assets/img/hero-eloize.webp" alt="Retrato de Eloize Betim, tatuadora, no estúdio" width="1200" height="1600" fetchpriority="high" decoding="async">
-        <video class="hero__video" muted loop playsinline preload="metadata"
-               poster="assets/img/hero-eloize.webp" aria-hidden="true" tabindex="-1">
-          <source src="assets/img/hero-eloize.mp4" type="video/mp4">
-        </video>
       </figure>
     </div>
 

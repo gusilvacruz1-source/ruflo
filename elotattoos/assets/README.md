@@ -26,7 +26,8 @@ Não precisa mexer no código.
 | `galeria-01.webp` … `galeria-12.webp` | portfólio (12 fotos) | mínimo 1000px no lado maior |
 | `arte-01.webp` … `arte-08.webp` | desenhos disponíveis, fundo claro | 900×900 |
 | `cta-estudio.webp` | fachada ou detalhe do espaço, vertical | 1000×1400 |
-| `hero-eloize.mp4` | ✅ **já feito** — vídeo de fundo do hero, 717 KB | 592×1206 |
+| `hero-fundo.mp4` | ✅ **já feito** — vídeo de fundo da seção do hero | 592×1206 |
+| `hero-fundo.webp` | ✅ **já feito** — poster do vídeo, tirado dele mesmo | 592×1206 |
 | `og-image.jpg` | imagem de compartilhamento (WhatsApp, Instagram) | 1200×630 |
 | `favicon.svg` | ✅ já feito (monograma EB) | — |
 
@@ -49,10 +50,17 @@ descrever a tatuagem de verdade (desenho + local do corpo).
 
 ---
 
-## Vídeo do hero — `hero-eloize.mp4` ✅ pronto
+## Vídeo de fundo do hero — `hero-fundo.mp4` ✅ pronto
 
-O vídeo do decalque está no ar. Veio de um `.mov` de 8,3 MB gravado no
-iPhone (HEVC, 6,1 s, 60 fps, com áudio) e foi convertido aqui para:
+O hero tem duas camadas de imagem, e elas são coisas diferentes:
+
+- **Fundo da seção inteira:** o vídeo do decalque (`hero-fundo.mp4`),
+  em preto e branco, sob um véu escuro que segura a leitura do título.
+- **Arco por cima:** o **retrato da Eloize** (`hero-eloize.webp`), que
+  ainda não chegou — hoje aparece o placeholder.
+
+O vídeo veio de um `.mov` de 8,3 MB gravado no iPhone (HEVC, 6,1 s, 60 fps,
+com áudio) e foi convertido aqui para:
 
 | | |
 |---|---|
@@ -62,12 +70,17 @@ iPhone (HEVC, 6,1 s, 60 fps, com áudio) e foi convertido aqui para:
 | **Taxa** | 30 fps, sem áudio |
 | **Extra** | `faststart` — começa a tocar antes de baixar o arquivo inteiro |
 
-O `hero-eloize.webp` é um frame desse mesmo vídeo, usado como poster (o que
+O `hero-fundo.webp` é um frame desse mesmo vídeo, usado como poster (o que
 aparece antes de o vídeo carregar) e como fallback se o vídeo não tocar.
 
-**Para trocar o vídeo depois:** é só substituir os dois arquivos. Se o novo
-vídeo não existir, fica a foto; se ela também não existir, fica o
-placeholder. Nada quebra.
+**Sobre o contraste:** o véu sobre o vídeo e o tom do texto de apoio no hero
+foram medidos, não chutados. O `--muted` normal dava 2,4:1 sobre o frame
+mais claro do vídeo — reprovado. Dentro do hero ele vira `#C4C0BA`, que dá
+6,3:1. Se você trocar o vídeo por um mais claro, vale remedir.
+
+**Para trocar o vídeo depois:** é só substituir `hero-fundo.mp4` e
+`hero-fundo.webp`. Se o vídeo não existir, fica o poster; se ele também não
+existir, fica o fundo escuro liso. Nada quebra.
 
 O vídeo toca mudo, em loop, só enquanto está visível na tela, e fica parado
 para quem usa "reduzir movimento" no sistema.

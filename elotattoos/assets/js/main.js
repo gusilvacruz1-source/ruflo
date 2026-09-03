@@ -395,11 +395,11 @@
   }
 
   /* ---------------------------------------------------------------
-     12. VÍDEO DO HERO
-     Um vídeo só. A cópia recortada do título é que devolve as letras
-     na frente do arco, abaixo da cúpula.
+     12. VÍDEO DE FUNDO DO HERO + RECORTE DO TÍTULO
+     O vídeo é o fundo da seção. O arco por cima é o retrato da Eloize, e
+     a cópia recortada do título devolve as letras na frente do arco,
+     abaixo da cúpula.
      --------------------------------------------------------------- */
-  var arcoHero = document.querySelector('.hero__photo .media');
   var videoHero = document.querySelector('.hero__video');
   var tituloHero = document.getElementById('hero-title');
   var copiaTitulo = document.querySelector('.hero__title--corte');
@@ -407,9 +407,10 @@
   /* Onde a cúpula do arco termina, medido do topo do título. 0.36 é a
      fração da altura do arco ocupada pela cúpula. */
   function medirCorte() {
-    if (!copiaTitulo || !arcoHero || !tituloHero) return;
+    var arco = document.querySelector('.hero__photo');
+    if (!copiaTitulo || !arco || !tituloHero) return;
 
-    var foto = document.querySelector('.hero__photo').getBoundingClientRect();
+    var foto = arco.getBoundingClientRect();
     var titulo = tituloHero.getBoundingClientRect();
     if (!foto.height || !titulo.height) return;
 
@@ -424,20 +425,7 @@
     }
   }
 
-  if (videoHero && arcoHero) {
-    /* Só assume o lugar da foto depois de confirmar que consegue tocar.
-       O canplay pode ter disparado antes deste código rodar, então o
-       readyState atual também conta — senão o vídeo toca invisível. */
-    function assumirVideo() { arcoHero.classList.add('tem-video'); }
-
-    if (videoHero.readyState >= 3) assumirVideo();       /* HAVE_FUTURE_DATA */
-    videoHero.addEventListener('canplay', assumirVideo);
-    videoHero.addEventListener('playing', assumirVideo);
-
-    videoHero.addEventListener('error', function () {
-      arcoHero.classList.remove('tem-video');
-    });
-
+  if (videoHero) {
     if (reduzido) {
       /* Movimento reduzido: fica no poster, sem tocar nada. */
       videoHero.removeAttribute('autoplay');

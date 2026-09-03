@@ -80,10 +80,12 @@ propósito, para não passar batido. Nada foi inventado.
     visual — **isso precisa ser corrigido com a informação real**.
 
 ### Fotos e vídeo
-15. Ver `assets/README.md` — faltam 24 imagens, com dimensões sugeridas.
-16. ~~Vídeo do hero~~ — ✅ **pronto.** `hero-eloize.mp4`, 717 KB, H.264,
-    convertido do `.mov` do iPhone. O poster `hero-eloize.webp` saiu de um
-    frame dele.
+15. **Faltam 27 arquivos de imagem** — ver `assets/README.md` com os nomes e
+    as dimensões. O mais importante é o **`hero-eloize.webp`: o retrato da
+    Eloize**, que é o que vai dentro do arco do hero.
+16. ~~Vídeo de fundo do hero~~ — ✅ **pronto.** `hero-fundo.mp4`, 717 KB,
+    H.264, convertido do `.mov` do iPhone. O poster `hero-fundo.webp` saiu
+    de um frame dele. É o fundo da seção; **não** é o que vai no arco.
 
 ---
 
