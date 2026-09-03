@@ -2,8 +2,7 @@ import { useCallback, useRef } from 'react';
 import { hero, marca, mensagens, zap } from '../conteudo';
 import { Botao } from './Interface';
 import { Revelar } from './Movimento';
-import { Multiplano } from './Multiplano';
-import { useCena } from './Profundidade';
+import { ImagemProfunda, useCena } from './Profundidade';
 
 export function Hero() {
   const conteudo = useRef(null);
@@ -27,8 +26,15 @@ export function Hero() {
       data-tom="escuro"
       className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-noite-900 sm:min-h-[calc(100svh-2rem)] lg:min-h-[calc(100svh-2.5rem)]"
     >
-      <div className="assentar absolute inset-0">
-        <Multiplano />
+      <div className="assentar absolute inset-0 overflow-hidden">
+        <ImagemProfunda
+          src={hero.imagem}
+          alt=""
+          aria-hidden="true"
+          forca={60}
+          escala={1.12}
+          className="foto"
+        />
       </div>
 
       {/* Véus: legibilidade do menu em cima, do texto no meio e dos números embaixo. */}
@@ -48,7 +54,7 @@ export function Hero() {
       >
         <div className="max-w-4xl">
           <Revelar className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
-            <p className="sobretexto text-ouro-400">{hero.sobretexto}</p>
+            <p className="sobretexto text-osso-100/60">{hero.sobretexto}</p>
             <p className="text-[0.7rem] uppercase tracking-[0.2em] text-osso-100/60">
               {marca.corretora} · {marca.creci}
             </p>
@@ -89,22 +95,6 @@ export function Hero() {
           <span className="fio-rolagem h-16 w-px bg-osso-100/15" />
         </div>
 
-        {/* Pilares soltos sobre a foto, sem moldura — como na referência. */}
-        <Revelar
-          atraso={430}
-          className="mt-14 grid grid-cols-1 gap-8 text-center sm:mt-20 sm:grid-cols-3 sm:gap-6"
-        >
-          {hero.pilares.map((p) => (
-            <div key={p.valor}>
-              <p className="titulo-hero text-[clamp(1.7rem,3vw,2.5rem)] leading-none text-osso-100">
-                {p.valor}
-              </p>
-              <p className="mt-2 text-[0.72rem] uppercase tracking-[0.18em] text-osso-100/55">
-                {p.rotulo}
-              </p>
-            </div>
-          ))}
-        </Revelar>
       </div>
     </section>
   );

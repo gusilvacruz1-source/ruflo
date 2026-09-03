@@ -111,7 +111,7 @@ export function ImagemProfunda({ forca = 34, escala = 1.14, className = '', ...r
   return (
     <img
       ref={alvo}
-      className={`absolute inset-0 h-full w-full object-cover ${className}`}
+      className={`foto absolute inset-0 h-full w-full object-cover ${className}`}
       style={{ transform: `translate3d(0,0,0) scale(${escala})`, willChange: 'transform' }}
       {...resto}
     />

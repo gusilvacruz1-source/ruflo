@@ -1,13 +1,11 @@
 import { marca, mensagens, sobre, zap } from '../conteudo';
 import { Botao } from './Interface';
-import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
 export function Sobre() {
   return (
     <section id="sobre" data-tom="claro" className="secao relative bg-osso-100">
       <div className="site-container relative">
-        <Folio id="sobre" />
 
         <Revelar className="max-w-4xl">
           <p className="titulo-hero text-[clamp(1.65rem,3.8vw,2.8rem)] leading-[1.14] text-noite-900">

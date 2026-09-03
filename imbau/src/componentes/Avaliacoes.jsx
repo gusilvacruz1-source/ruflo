@@ -2,7 +2,6 @@ import { avaliacoes, marca } from '../conteudo';
 import { Contagem } from './Contagem';
 import { EstrelaCheia, Seta } from './Interface';
 import { Caixa } from './Caixa';
-import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
 function Estrelas({ className = 'h-3.5 w-3.5' }) {
@@ -23,7 +22,6 @@ export function Avaliacoes() {
       className="secao border-t border-noite-900/10 bg-osso-100"
     >
       <div className="site-container">
-        <Folio id="avaliacoes" />
 
         <Revelar className="flex flex-col gap-6 sm:flex-row sm:items-end sm:justify-between">
           <div className="flex flex-wrap items-end gap-x-10 gap-y-6">

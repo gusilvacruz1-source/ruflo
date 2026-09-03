@@ -2,7 +2,6 @@ import { imoveis, mensagens, vitrine, zap } from '../conteudo';
 import { Selo, Seta, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
 import { Caixa } from './Caixa';
-import { Folio } from './Livro';
 import { ImagemProfunda } from './Profundidade';
 
 function Cartao({ imovel, indice }) {
@@ -84,7 +83,6 @@ export function Vitrine() {
         className="relative isolate mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] secao bg-noite-900 lg:rounded-[2.25rem]"
       >
         <div className="site-container relative">
-          <Folio id="imoveis" claro />
 
         <header className="mx-auto max-w-2xl text-center">
           <Revelar>

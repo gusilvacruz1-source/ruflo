@@ -203,7 +203,7 @@ export function Visita() {
             ref={tela}
             role="img"
             aria-label={visita.alt}
-            className="block h-full w-full"
+            className="foto block h-full w-full"
           />
 
           <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-noite-900 via-transparent to-noite-900/70" />

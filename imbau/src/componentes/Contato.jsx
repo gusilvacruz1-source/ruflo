@@ -1,7 +1,6 @@
 import { useMemo, useState } from 'react';
 import { contato, marca, montarMensagem } from '../conteudo';
 import { Instagram, Local, Whatsapp } from './Interface';
-import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
 /** Pastilha de escolha única. Botão de verdade, para funcionar no teclado. */
@@ -40,7 +39,6 @@ export function Contato() {
   return (
     <section id="contato" data-tom="claro" className="secao relative bg-osso-100">
       <div className="site-container">
-        <Folio id="contato" />
 
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
@@ -180,10 +178,10 @@ export function Contato() {
                 href={link}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="group mt-6 flex items-center justify-between gap-3 rounded-full bg-ouro-500 py-2 pl-6 pr-2 font-medium text-noite-900 transition-colors duration-300 hover:bg-ouro-400"
+                className="group mt-6 flex min-h-[48px] items-center justify-between gap-3 rounded-full bg-noite-900 py-2 pl-6 pr-2 font-medium text-osso-100 transition-colors duration-400 ease-[cubic-bezier(.16,1,.3,1)] hover:bg-noite-700 active:scale-[0.98]"
               >
                 <span className="text-sm">{contato.botao}</span>
-                <span className="grid h-10 w-10 place-items-center rounded-full bg-noite-900 text-ouro-500 transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-110">
+                <span className="grid h-10 w-10 place-items-center rounded-full border border-current/30 transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-110">
                   <Whatsapp className="h-4.5 w-4.5" />
                 </span>
               </a>

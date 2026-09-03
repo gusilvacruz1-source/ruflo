@@ -191,7 +191,7 @@ export function Menu() {
             href={zap(mensagens.menu)}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-9 flex items-center justify-center gap-3 rounded-full bg-ouro-500 px-6 py-4 font-medium text-noite-900"
+            className="mt-9 flex min-h-[48px] items-center justify-center gap-3 rounded-full border border-osso-100/30 px-6 py-4 font-medium text-osso-100"
           >
             <Whatsapp className="h-5 w-5" />
             {marca.telefoneExibicao}

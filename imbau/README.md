@@ -1,9 +1,9 @@
 # Imbaú Imobiliária — landing page
 
-Página única em React + Vite + Tailwind CSS, no estilo "alto luxo, moderno e
-minimalista": o site é uma placa arredondada apoiada sobre o creme da página.
-Dentro dela o escuro aparece só três vezes — a primeira dobra, a vitrine de
-imóveis e o rodapé; o resto respira no claro.
+Página única em React + Vite + Tailwind CSS, no sistema visual portado do
+estúdio Eloize: preto e branco, Bodoni em caixa alta, fotos tratadas.
+O escuro aparece quatro vezes — a capa, a vitrine de imóveis, a visita e o
+rodapé; o resto respira no claro.
 
 A ordem das seções é: primeira dobra → serviços → imóveis → sobre a corretora →
 chamada para avaliação → dúvidas frequentes → contato → rodapé.
@@ -105,9 +105,9 @@ O fundo da hero e a imagem de reserva são gerados por `tools/make-art.mjs`
 
 ## Documentação visual
 
-`docs/estrutura.excalidraw` traz o mapa do livro — a capa presa, as sete
-folhas por cima dela, a lombada. Abra em [excalidraw.com](https://excalidraw.com)
-para editar. É gerado por `node tools/faz-diagrama.mjs`, e não à mão: montar
+`docs/estrutura.excalidraw` traz o mapa da página — a capa presa, as seções
+que passam por cima dela e o que é claro e o que é escuro. Abra em
+[excalidraw.com](https://excalidraw.com) para editar. É gerado por `node tools/faz-diagrama.mjs`, e não à mão: montar
 esse JSON manualmente é como se esquece uma ligação e a seta descola da caixa
 no primeiro arrasto.
 
@@ -154,40 +154,40 @@ estilo embutido e o essencial: quem é, o WhatsApp, o Instagram e o endereço.
       se o endereço final não for `imobiliariaimbau.com.br`.
 - [ ] Substituir as fotos pelos arquivos originais, se existirem.
 
-## Tipografia
+## O sistema visual
 
-Duas vozes, e cada uma com um trabalho:
+Portado do site do estúdio Eloize (`elotattoos`), que é do mesmo autor e está
+neste repositório, na branch `loja-kerollay`. Mesmos valores, não parecidos.
 
-| | Fonte | Onde |
-| --- | --- | --- |
-| Display | **Fraunces** (serifa variável, com eixo óptico) | títulos, citação, os pilares da capa, a nota do Google |
-| Interface | **Plus Jakarta Sans** (variável) | texto, rótulo, botão, formulário |
+| | |
+| --- | --- |
+| Escuro | `#0d0d0e` fundo, `#17181a` bloco |
+| Claro | `#efedea` papel, `#e2dfdb` papel fundo |
+| Detalhe | taupe `#b9afa5` — e só |
+| Display | **Bodoni Moda**, caixa alta, entrelinha 0,84 na capa |
+| Interface | **Archivo** |
+| Fotos | `grayscale(1) contrast(1.04)` |
+| Botões | pílula de contorno que inverte no hover; **um** botão cheio na página |
 
-A serifa é o que dá o tom editorial — de casa que se visita, não de produto
-que se contrata. Ela dispensa o peso cheio que a sem-serifa precisava para ter
-presença: em 500 já ocupa a linha. O eixo óptico (`font-optical-sizing: auto`)
-ajusta o contraste das hastes conforme o tamanho, o que é justamente o que
-segura um título de 7 rem sem ele parecer inflado.
+Duas escolhas que valem entender antes de mexer:
 
-**As fontes são do projeto**, não do Google: `@fontsource-variable/*`,
-importadas em `src/main.jsx`. Some uma requisição a um terceiro do caminho
-crítico e a página tem a voz certa mesmo offline. São arquivos variáveis — um
-só cobre todos os pesos.
+**O preto e branco não é gosto, é coerência.** As fotos da carteira vieram de
+câmeras, dias e luzes diferentes. Em cor, elas brigam entre si; em preto e
+branco com o mesmo contraste, viram uma série. É o mesmo motivo pelo qual o
+estúdio Eloize faz isso com as tatuagens. Para voltar à cor, é uma linha: a
+classe `.foto` em `src/index.css`.
 
-O ritmo vertical também é um só: a classe `.secao`
-(`clamp(88px, 12vh, 168px)`), em vez das cinco combinações de `py-*` que
-existiam antes, uma por seção.
+**A Bodoni precisa de tamanho.** Ela tem contraste altíssimo entre a haste
+grossa e a fina — é o que dá o ar de revista, e é o que a faz sumir quando
+usada pequena. Por isso ela só aparece em título; texto, rótulo e botão são
+Archivo.
 
-## Claro e escuro
+**A capa é um quadro da própria filmagem** (`imagens/capa.webp`), em 1440 px,
+o tamanho em que aparece. Antes era uma cena ilustrada, gerada por script:
+bonita e falsa, e a coisa que mais entregava um site feito por máquina. Para
+trocar, pegue outro quadro de `public/visita/desktop/`.
 
-Cada bloco declara o próprio tom com `data-tom="claro"` ou `data-tom="escuro"`.
-O menu lê esse atributo e troca de roupa: sobre o creme a marca fica escura, a
-pílula vira vidro claro e o botão inverte. Quem decide é a faixa ocupada pela
-marca — o único elemento do menu sem fundo próprio —, e no empate ganha o
-claro, porque texto escuro ainda se lê sobre a metade escura. Ao criar uma
-seção nova, marque o tom dela; senão o menu não a enxerga.
-
-## Largura e alinhamento
+## Largura e alinhamento## Largura e alinhamento
 
 Existe **um** container de conteúdo, `.site-container`, com 1320 px de teto e
 o recuo lateral definido num lugar só (`src/index.css`). Toda seção usa ele —
@@ -205,26 +205,6 @@ Precisa de algo mais estreito (um texto corrido, um formulário)? Aninhe um
 limite de medida dentro do container, nunca um segundo container. Precisa
 sangrar até a borda (o bloco escuro dos imóveis)? Fica fora do container, com
 o container por dentro dele.
-
-## O site é um livro
-
-A metáfora não é decoração: ela organiza a página.
-
-- **A capa fica.** A primeira dobra é `sticky` no topo, com z-index abaixo das
-  seções. As folhas sobem por cima dela e a capa recua — o texto sobe e some,
-  um véu escurece a cena. Quem abre o site abre um livro.
-- **As folhas se empilham.** O bloco das seções carrega a sombra da costura no
-  alto: é ela que faz a folha parecer apoiada sobre a capa, e não colada nela.
-- **A lombada** (`src/componentes/Livro.jsx`) fica na margem esquerda, a partir
-  de 1400 px. Traz os algarismos dos capítulos, acende o que está aberto — só
-  nele o nome aparece — e desce uma fita dourada conforme a leitura avança.
-  Como ela é alta e cruza a costura entre a capa escura e a folha clara, cada
-  algarismo pergunta por si mesmo o que tem atrás dele.
-- **O fólio** repete, no alto de cada folha, o algarismo e o nome do capítulo —
-  a mesma repetição que um livro faz no topo de cada página.
-
-Os capítulos vivem em `capitulos`, em `src/conteudo.js`. O `id` de cada um tem
-de bater com o `id` da seção; é assim que a lombada e o fólio se encontram.
 
 ## A visita
 
@@ -286,14 +266,6 @@ Três decisões que valem saber, se for mexer nisso:
 - **Abertura** — ao abrir a página a cena da primeira dobra se assenta (um
   zoom lento que termina em 2,6 s) e o título sobe por trás de uma máscara.
   É o único momento coreografado do site.
-- **Multiplano na capa** — a cena da primeira dobra é gerada em cinco planos
-  separados (céu, serras, cena, árvores, grão) e cada um anda a uma velocidade
-  na rolagem. É a câmera multiplano do cinema de animação: o céu quase não sai
-  do lugar, as árvores da frente correm. Custa 28 KB de SVG.
-
-  Uma sequência de quadros extraída de vídeo daria o mesmo efeito com material
-  fotográfico e custaria uns 6 MB — só vale para cena filmada de verdade.
-  Material vetorial se refaz em código, que é o caso aqui.
 - **Profundidade** — as fotos andam mais devagar que a página
   (`src/componentes/Profundidade.jsx`). Um único laço de `requestAnimationFrame`
   atende todas elas: cada foto se registra ali, e o scroll recalcula o conjunto

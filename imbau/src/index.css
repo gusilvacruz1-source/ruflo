@@ -1,33 +1,37 @@
 @import 'tailwindcss';
 
 @theme {
-  /* Escuros: azul meia-noite, quase preto, com um toque de frio. */
-  --color-noite-900: #05080e;
-  --color-noite-800: #080c14;
-  --color-noite-700: #0d131e;
-  --color-noite-600: #141c2a;
-  --color-noite-500: #1e293a;
+  /* Paleta do estúdio Eloize, portada: 90% preto e branco, e o detalhe fica
+     por conta do taupe. Os nomes continuam os de antes para a troca caber
+     num arquivo só — o que mudou foram os valores. */
+  --color-noite-900: #0d0d0e;
+  --color-noite-800: #17181a;
+  --color-noite-700: #1f2022;
+  --color-noite-600: #2a2b2d;
+  --color-noite-500: #3a3b3d;
 
-  /* Claros: off-white quente, sem o branco clínico. */
-  --color-osso-100: #f6f3ec;
-  --color-osso-200: #ece7dc;
-  --color-osso-300: #ddd6c7;
+  --color-osso-100: #efedea;
+  --color-osso-200: #e2dfdb;
+  --color-osso-300: #d3cfc9;
 
-  /* Acento mostarda + laranja da marca Imbaú (usado com parcimônia). */
-  --color-ouro-400: #f0cf80;
-  --color-ouro-500: #e9b949;
-  --color-ouro-600: #cf9f34;
-  /* Ouro escuro: o único que se lê como texto sobre o creme. */
-  --color-ouro-700: #8a6414;
+  /* O que era ouro vira taupe: um detalhe só, e discreto. O laranja da marca
+     fica onde ele é a marca — no símbolo. */
+  --color-ouro-400: #c9c0b6;
+  --color-ouro-500: #b9afa5;
+  --color-ouro-600: #8b8781;
+  /* O único tom de apoio que se lê como texto pequeno sobre o claro. */
+  --color-ouro-700: #635f59;
   --color-marca: #ef7f1f;
 
   /* Duas vozes. A serifa carrega os títulos — é ela que dá o tom editorial,
      de casa que se visita, e não de produto que se contrata. A sem-serifa
      some, que é o trabalho dela: texto, rótulo, botão, formulário. */
-  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia,
-    'Times New Roman', serif;
-  --font-ui: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui,
-    -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* As duas vozes do elotattoos: a didone de display e a grotesca de
+     interface. A Bodoni tem contraste alto entre haste fina e grossa — é o
+     que dá o ar de revista, e o que exige tamanho grande para funcionar. */
+  --font-display: 'Bodoni Moda Variable', 'Didot', 'Times New Roman', serif;
+  --font-ui: 'Archivo Variable', ui-sans-serif, system-ui, -apple-system,
+    'Segoe UI', Roboto, sans-serif;
 
   /* Curva única para tudo que se move: saída longa, chegada macia. */
   --ease-suave: cubic-bezier(0.16, 1, 0.3, 1);
@@ -228,18 +232,31 @@
     font-weight: 500;
     font-optical-sizing: auto;
     letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 1.02;
   }
 
   /* Primeira dobra: um passo mais leve e ainda mais aberto, porque o
      tamanho ali já é a ênfase. O recuo negativo joga a primeira haste um
      tico para fora do container — transbordo óptico, para a linha parecer
      alinhada com o resto. */
+  /* A entrelinha de 0,84 é a do original: em caixa alta não há descendentes,
+     e as linhas podem encostar sem colidir. */
   .titulo-hero {
     font-family: var(--font-display);
-    font-weight: 400;
+    font-weight: 500;
     font-optical-sizing: auto;
-    letter-spacing: -0.018em;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    line-height: 0.84;
     margin-left: -0.03em;
+  }
+
+  /* Tratamento único das fotos: tira a diferença de luz, de câmera e de dia
+     entre imagens que vieram de origens diferentes, e faz as três da carteira
+     parecerem uma série. */
+  .foto {
+    filter: grayscale(1) contrast(1.04);
   }
 
   .sobretexto {

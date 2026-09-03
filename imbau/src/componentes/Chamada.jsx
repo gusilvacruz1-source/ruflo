@@ -1,6 +1,5 @@
 import { chamada, mensagens, zap } from '../conteudo';
 import { Botao, IconeBeneficio, Selo } from './Interface';
-import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 import { ImagemProfunda } from './Profundidade';
 
@@ -8,21 +7,11 @@ export function Chamada() {
   return (
     <section id="avaliacao-gratuita" data-tom="claro" className="secao relative bg-osso-200">
       <div className="site-container">
-        <Folio id="avaliacao-gratuita" />
 
         <Revelar
           distancia={34}
           className="relative overflow-hidden rounded-[2rem] border border-noite-900/8 bg-osso-100 shadow-[0_40px_90px_-60px_rgba(10,14,23,0.55)]"
         >
-          {/* Círculos creme, quase imperceptíveis — só quebram a chapada do fundo. */}
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -left-24 -top-24 h-80 w-80 rounded-full bg-ouro-500/10 blur-3xl"
-          />
-          <div
-            aria-hidden="true"
-            className="pointer-events-none absolute -bottom-32 left-1/4 h-96 w-96 rounded-full bg-ouro-500/8 blur-3xl"
-          />
 
           <div className="relative grid lg:grid-cols-[1.02fr_0.98fr]">
             <div className="flex flex-col justify-between p-8 sm:p-12 lg:p-16">

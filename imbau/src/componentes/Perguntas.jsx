@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { mensagens, perguntas, zap } from '../conteudo';
 import { Whatsapp } from './Interface';
-import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
 /** Uma pergunta. Abre e fecha com altura animada, sem pulo de layout. */
@@ -66,10 +65,9 @@ export function Perguntas() {
   return (
     <section id="perguntas" data-tom="claro" className="secao relative bg-osso-100">
       <div className="site-container">
-        <Folio id="perguntas" />
 
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
-          <div className="lg:sticky lg:top-32 lg:self-start">
+          <div className="lg:sticky lg:top-[22vh] lg:self-start">
             <Revelar>
               <h2 className="titulo text-[clamp(1.9rem,3.8vw,2.7rem)] leading-[1.03] text-noite-900">
                 {perguntas.titulo}

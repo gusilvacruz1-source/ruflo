@@ -24,21 +24,6 @@ export const marca = {
   simbolo: 'marca/imbau-simbolo.png',
 };
 
-/**
- * Os capítulos do livro, na ordem em que a pessoa os folheia.
- * A lombada à esquerda e o fólio no alto de cada folha leem esta lista —
- * o `id` tem de bater com o da seção correspondente.
- */
-export const capitulos = [
-  { id: 'servicos', numero: 'I', nome: 'Serviços' },
-  { id: 'imoveis', numero: 'II', nome: 'Imóveis' },
-  { id: 'visita', numero: 'III', nome: 'A visita' },
-  { id: 'sobre', numero: 'IV', nome: 'A corretora' },
-  { id: 'avaliacoes', numero: 'V', nome: 'Avaliações' },
-  { id: 'avaliacao-gratuita', numero: 'VI', nome: 'Avaliação gratuita' },
-  { id: 'perguntas', numero: 'VII', nome: 'Dúvidas' },
-  { id: 'contato', numero: 'VIII', nome: 'Contato' },
-];
 
 /** Monta o link do WhatsApp já com a mensagem escrita para a pessoa enviar. */
 export const zap = (mensagem) =>
@@ -64,34 +49,9 @@ export const hero = {
   texto:
     'Compra, venda e locação com avaliação honesta e documentação em ordem. A Imbaú acompanha cada etapa — do primeiro contato à entrega das chaves.',
   botao: 'Quero meu imóvel',
-  /**
-   * A faixa de baixo. São os três pilares do atendimento, tirados da própria
-   * comunicação da Imbaú — nada de número inventado.
-   *
-   * Se um dia quiser números reais ("+120 famílias atendidas"), é só trocar
-   * `valor` e `rotulo` aqui.
-   */
-  pilares: [
-    { valor: 'Vendas', rotulo: 'Compra, venda e locação' },
-    { valor: 'Avaliações', rotulo: 'Preço justo, sem achismo' },
-    { valor: 'Regularizações', rotulo: 'Documentação em dia' },
-  ],
-  imagem: 'imagens/hero-lago.svg',
-  /**
-   * A mesma cena em planos, do fundo para a frente. Cada um anda a uma
-   * velocidade na rolagem — é isso que dá profundidade de câmera em vez de
-   * uma foto deslizando. `taxa` é o quanto o plano sobe; `escala`, o quanto
-   * ele entra maior que a moldura para nunca mostrar borda.
-   *
-   * Quem pedir menos movimento recebe `imagem`, num arquivo só.
-   */
-  planos: [
-    { arquivo: 'imagens/hero-ceu.svg', taxa: 0.03, escala: 1.08 },
-    { arquivo: 'imagens/hero-serras.svg', taxa: 0.1, escala: 1.1 },
-    { arquivo: 'imagens/hero-cena.svg', taxa: 0.22, escala: 1.13 },
-    { arquivo: 'imagens/hero-arvores.svg', taxa: 0.44, escala: 1.2 },
-    { arquivo: 'imagens/hero-ar.svg', taxa: 0, escala: 1.02 },
-  ],
+  // Um quadro da própria filmagem da visita: foto real, do imóvel real, e
+  // já em 1440 px — o tamanho em que aparece, sem ampliação.
+  imagem: 'imagens/capa.webp',
 };
 
 /**
@@ -127,7 +87,9 @@ export const vitrine = {
 /**
  * Imóveis da carteira, tirados dos anúncios do próprio perfil.
  * Para publicar um novo: copie um bloco, troque os textos e aponte `imagem`
- * para a foto em public/imagens/. Sem foto ainda? Use 'imagens/imovel-sem-foto.svg'.
+ * para a foto em public/imagens/. Sem foto ainda, não publique o imóvel: uma
+ * ilustração de reserva no lugar de uma casa real é o que faz um site de
+ * imobiliária parecer catálogo genérico.
  *
  * ⚠️ Confirme com a Raquel se os três seguem disponíveis antes de publicar.
  */

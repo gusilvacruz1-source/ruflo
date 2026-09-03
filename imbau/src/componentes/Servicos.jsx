@@ -1,7 +1,6 @@
 import { mensagens, servicos, zap } from '../conteudo';
 import { Whatsapp } from './Interface';
 import { Caixa } from './Caixa';
-import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
 /**
@@ -37,11 +36,10 @@ export function Servicos() {
   return (
     <section id="servicos" data-tom="claro" className="secao relative bg-osso-100">
       <div className="site-container">
-        <Folio id="servicos" />
 
         <div className="grid gap-14 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           {/* Cabeçalho fica parado enquanto a lista passa. */}
-          <div className="lg:sticky lg:top-32 lg:self-start">
+          <div className="lg:sticky lg:top-[22vh] lg:self-start">
             <Revelar>
               <h2 className="titulo text-[clamp(2.1rem,4.6vw,3.5rem)] leading-[1.02] text-noite-900">
                 {servicos.titulo}

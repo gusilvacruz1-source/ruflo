@@ -2,7 +2,6 @@ import { Avaliacoes } from './componentes/Avaliacoes';
 import { Chamada } from './componentes/Chamada';
 import { Contato } from './componentes/Contato';
 import { Hero } from './componentes/Hero';
-import { Lombada } from './componentes/Livro';
 import { Menu } from './componentes/Menu';
 import { Perguntas } from './componentes/Perguntas';
 import { Rolagem } from './componentes/Rolagem';
@@ -17,7 +16,6 @@ export default function App() {
     <>
       <Rolagem />
       <Menu />
-      <Lombada />
 
       {/* O site inteiro é uma placa apoiada no fundo claro da página. */}
       <div className="placa p-0 sm:p-4 lg:p-5">

@@ -6,8 +6,8 @@ import App from './App';
 // um terceiro e a página passa a ter a voz certa mesmo offline. Os arquivos
 // são variáveis — um só cobre todos os pesos, e a serifa traz o eixo óptico,
 // que ajusta o contraste das hastes conforme o tamanho.
-import '@fontsource-variable/fraunces/opsz.css';
-import '@fontsource-variable/plus-jakarta-sans/wght.css';
+import '@fontsource-variable/bodoni-moda/opsz.css';
+import '@fontsource-variable/archivo/wght.css';
 
 import './index.css';
 

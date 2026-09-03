@@ -13,7 +13,7 @@ export function Rodape() {
               {rodape.frase}
             </p>
           </div>
-          <Botao href={zap(mensagens.menu)} variante="ouro" icone="whatsapp">
+          <Botao href={zap(mensagens.menu)} variante="claro" icone="whatsapp">
             {marca.telefoneExibicao}
           </Botao>
         </Revelar>
@@ -34,7 +34,7 @@ export function Rodape() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 transition-colors duration-300 hover:text-osso-100"
                 >
-                  <Whatsapp className="h-4 w-4 text-ouro-500" />
+                  <Whatsapp className="h-4 w-4 text-osso-100/60" />
                   {marca.telefoneExibicao}
                 </a>
               </li>
@@ -45,7 +45,7 @@ export function Rodape() {
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-2.5 transition-colors duration-300 hover:text-osso-100"
                 >
-                  <Instagram className="h-4 w-4 text-ouro-500" />
+                  <Instagram className="h-4 w-4 text-osso-100/60" />
                   {marca.instagramExibicao}
                 </a>
               </li>
@@ -56,7 +56,7 @@ export function Rodape() {
                   rel="noopener noreferrer"
                   className="inline-flex items-start gap-2.5 transition-colors duration-300 hover:text-osso-100"
                 >
-                  <Local className="mt-0.5 h-4 w-4 shrink-0 text-ouro-500" />
+                  <Local className="mt-0.5 h-4 w-4 shrink-0 text-osso-100/60" />
                   <span>
                     {marca.endereco}
                     <span className="block text-osso-100/60">

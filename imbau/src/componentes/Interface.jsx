@@ -157,19 +157,25 @@ export function Marca({ className = '', tamanho = 'h-9 w-9', claro = true }) {
 
 /* ---------- botões ---------- */
 
+/**
+ * Pílula de contorno que inverte no hover — o botão do estúdio Eloize.
+ * Um só botão cheio na página inteira (`cheio`), para a ênfase significar
+ * alguma coisa; o resto é contorno.
+ */
 const estilos = {
-  claro: 'bg-osso-100 text-noite-900 hover:bg-white',
-  ouro: 'bg-ouro-500 text-noite-900 hover:bg-ouro-400',
-  escuro: 'bg-noite-900 text-osso-100 hover:bg-noite-700',
-  contorno:
-    'border border-osso-100/25 text-osso-100 hover:border-osso-100/60 hover:bg-osso-100/5',
+  claro: 'border border-osso-100/25 text-osso-100 hover:bg-osso-100 hover:text-noite-900',
+  escuro: 'border border-noite-900/20 text-noite-900 hover:bg-noite-900 hover:text-osso-100',
+  cheio: 'bg-noite-900 text-osso-100 hover:bg-noite-700',
+  ouro: 'bg-noite-900 text-osso-100 hover:bg-noite-700',
+  contorno: 'border border-osso-100/25 text-osso-100 hover:bg-osso-100 hover:text-noite-900',
 };
 
 const badge = {
-  claro: 'bg-noite-900 text-osso-100',
-  ouro: 'bg-noite-900 text-ouro-500',
-  escuro: 'bg-osso-100 text-noite-900',
-  contorno: 'bg-osso-100/10 text-osso-100',
+  claro: 'border border-current/30',
+  escuro: 'border border-current/30',
+  cheio: 'border border-current/30',
+  ouro: 'border border-current/30',
+  contorno: 'border border-current/30',
 };
 
 /**
@@ -191,7 +197,7 @@ export function Botao({
         href={href}
         target={externo ? '_blank' : undefined}
         rel={externo ? 'noopener noreferrer' : undefined}
-        className={`group inline-flex items-center gap-3 rounded-full py-2 pl-6 pr-2 text-sm font-medium transition-colors duration-300 ${estilos[variante]}`}
+        className={`group inline-flex min-h-[48px] items-center gap-3 rounded-full py-2 pl-6 pr-2 text-sm font-medium transition-colors duration-400 ease-[cubic-bezier(.16,1,.3,1)] active:scale-[0.98] ${estilos[variante]}`}
         {...resto}
       >
         <span>{children}</span>
@@ -213,11 +219,11 @@ export function Selo({ children, claro = true }) {
     <span
       className={`inline-flex items-center gap-2 rounded-full border px-4 py-1.5 text-[0.72rem] font-medium tracking-wide ${
         claro
-          ? 'border-ouro-500/55 bg-ouro-500/8 text-ouro-400'
-          : 'border-ouro-500 bg-white text-noite-900'
+          ? 'border-osso-100/30 text-osso-100/75'
+          : 'border-noite-900/25 text-noite-900/75'
       }`}
     >
-      <Estrela className={claro ? 'h-3 w-3 text-ouro-500' : 'h-3 w-3 text-noite-900'} />
+      <Estrela className="h-3 w-3 opacity-60" />
       {children}
     </span>
   );
