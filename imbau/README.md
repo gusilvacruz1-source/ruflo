@@ -166,16 +166,22 @@ neste repositório, na branch `loja-kerollay`. Mesmos valores, não parecidos.
 | Detalhe | taupe `#b9afa5` — e só |
 | Display | **Bodoni Moda**, caixa alta, entrelinha 0,84 na capa |
 | Interface | **Archivo** |
-| Fotos | `grayscale(1) contrast(1.04)` |
+| Foto de imóvel | `contrast(1.05) saturate(1.04)` — em cor |
+| Vídeo de fundo da capa | `grayscale(1) contrast(1.04)` |
 | Botões | pílula de contorno que inverte no hover; **um** botão cheio na página |
 
 Duas escolhas que valem entender antes de mexer:
 
-**O preto e branco não é gosto, é coerência.** As fotos da carteira vieram de
-câmeras, dias e luzes diferentes. Em cor, elas brigam entre si; em preto e
-branco com o mesmo contraste, viram uma série. É o mesmo motivo pelo qual o
-estúdio Eloize faz isso com as tatuagens. Para voltar à cor, é uma linha: a
-classe `.foto` em `src/index.css`.
+**Foto de imóvel vai em cor.** No estúdio Eloize o preto e branco unifica
+tatuagens de origens diferentes, e cheguei a aplicar o mesmo aqui — mas numa
+imobiliária a cor é conteúdo: telhado, revestimento, jardim, o carro na
+garagem. O que se ganha em coesão não paga o que se perde em informação.
+Ficou um reforço leve de contraste e saturação (`.foto`), que ainda dá alguma
+unidade a imagens de câmeras e dias diferentes sem tirar cor delas.
+
+O único tratamento pesado que sobrou é o vídeo atrás do título da capa
+(`.foto-cenario`): ali a imagem não é conteúdo, é fundo, e dessaturar é o que
+segura a legibilidade da Bodoni clara por cima.
 
 **A Bodoni precisa de tamanho.** Ela tem contraste altíssimo entre a haste
 grossa e a fina — é o que dá o ar de revista, e é o que a faz sumir quando

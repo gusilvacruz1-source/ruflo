@@ -72,7 +72,7 @@ export function Hero() {
       {/* Fundo da seção inteira: o vídeo da visita, em laço e sem som. */}
       <div className="capa__fundo" aria-hidden="true">
         <video
-          className="foto capa__video"
+          className="foto-cenario capa__video"
           poster={hero.poster}
           autoPlay
           muted

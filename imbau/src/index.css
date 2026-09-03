@@ -447,10 +447,19 @@
     margin-left: -0.03em;
   }
 
-  /* Tratamento único das fotos: tira a diferença de luz, de câmera e de dia
-     entre imagens que vieram de origens diferentes, e faz as três da carteira
-     parecerem uma série. */
+  /* Foto de imóvel vai em cor: quem procura casa quer ver a casa, e a cor
+     é informação — telhado, revestimento, jardim. O que se ganharia em
+     coesão não paga o que se perde em conteúdo.
+     Um leve reforço de contraste ainda dá alguma unidade a imagens que
+     vieram de câmeras e dias diferentes, sem tirar cor delas. */
   .foto {
+    filter: contrast(1.05) saturate(1.04);
+  }
+
+  /* O único tratamento pesado que fica: o vídeo atrás do título da capa.
+     Ali a foto não é conteúdo, é fundo — e dessaturar é o que segura a
+     legibilidade da Bodoni clara por cima dela. */
+  .foto-cenario {
     filter: grayscale(1) contrast(1.04);
   }
 
