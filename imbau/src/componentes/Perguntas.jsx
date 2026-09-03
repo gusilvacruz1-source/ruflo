@@ -48,7 +48,7 @@ function Item({ item, aberto, aoAbrir, indice }) {
       >
         <div className="overflow-hidden">
           <p
-            className={`max-w-2xl pb-7 pr-12 text-[0.92rem] leading-relaxed text-noite-900/65 transition-opacity duration-500 ${
+            className={`medida pb-7 pr-12 text-[0.92rem] leading-relaxed text-noite-900/65 transition-opacity duration-500 ${
               aberto ? 'opacity-100' : 'opacity-0'
             }`}
           >
@@ -76,7 +76,7 @@ export function Perguntas() {
               </h2>
             </Revelar>
             <Revelar atraso={110}>
-              <p className="mt-5 max-w-sm text-[0.95rem] leading-relaxed text-noite-900/65">
+              <p className="medida-curta mt-5 text-[0.95rem] leading-relaxed text-noite-900/65">
                 {perguntas.texto}
               </p>
             </Revelar>

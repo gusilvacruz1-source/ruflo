@@ -20,7 +20,7 @@ function Linha({ servico, indice }) {
         <h3 className="titulo shrink-0 text-[1.45rem] leading-none text-noite-900 sm:w-56 sm:text-[1.7rem]">
           {servico.nome}
         </h3>
-        <p className="max-w-xl text-[0.92rem] leading-relaxed text-noite-900/65">
+        <p className="medida text-[0.92rem] leading-relaxed text-noite-900/65">
           {servico.texto}
         </p>
       </div>
@@ -48,7 +48,7 @@ export function Servicos() {
               </h2>
             </Revelar>
             <Revelar atraso={190}>
-              <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-noite-900/65">
+              <p className="medida-curta mt-5 text-[0.95rem] leading-relaxed text-noite-900/65">
                 {servicos.texto}
               </p>
             </Revelar>

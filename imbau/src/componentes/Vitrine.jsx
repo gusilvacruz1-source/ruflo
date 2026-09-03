@@ -6,66 +6,70 @@ import { Folio } from './Livro';
 import { ImagemProfunda } from './Profundidade';
 
 function Cartao({ imovel, indice }) {
+  // Alterna o lado da foto. Três cartões idênticos empilhados leem como
+  // repetição; alternando, cada um parece uma página do catálogo.
+  const invertido = indice % 2 === 1;
+
   return (
     <Revelar as="article" atraso={indice * 90} distancia={34}>
-      {/* Inclinação menor que a das caixinhas: o cartão é largo, e o mesmo
-          ângulo aqui distorceria o nome do imóvel na base. */}
       <Caixa
         inclinacao={3}
         eleva={4}
-        className="group relative block rounded-[2rem] border border-ouro-500/30 bg-noite-800/70 p-1.5 hover:border-ouro-500/60"
+        className="group grid overflow-hidden rounded-[2rem] border border-ouro-500/30 bg-noite-800/70 p-1.5 hover:border-ouro-500/60 lg:grid-cols-[1.05fr_0.95fr]"
       >
-      {/* A foto fica na frente do plano: moldura por fora, imagem encaixada dentro. */}
-      <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[calc(2rem-0.375rem)] sm:aspect-[16/10] lg:aspect-[16/9]">
-        {/* A foto anda mais devagar que o cartão; o hover aproxima a moldura
-            inteira, sem brigar com a transformação da parallaxe. */}
-        <div className="absolute inset-0 transition-transform duration-[1400ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.04]">
-          <ImagemProfunda
-            src={imovel.imagem}
-            alt={imovel.alt ?? imovel.nome}
-            loading="lazy"
-            decoding="async"
-            forca={30}
-            escala={1.12}
-          />
+        {/* A foto ocupa metade do cartão, não o cartão inteiro. As imagens
+            têm 828 px de largura: esticadas para os 1.190 px do cartão elas
+            perdiam nitidez, e nenhum efeito devolve o que a ampliação come. */}
+        <div
+          className={`relative aspect-[4/3] overflow-hidden rounded-[calc(2rem-0.375rem)] ${
+            invertido ? 'lg:order-2' : ''
+          }`}
+        >
+          <div className="absolute inset-0 transition-transform duration-[1400ms] ease-[cubic-bezier(.16,1,.3,1)] group-hover:scale-[1.03]">
+            <ImagemProfunda
+              src={imovel.imagem}
+              alt={imovel.alt ?? imovel.nome}
+              loading="lazy"
+              decoding="async"
+              forca={20}
+              escala={1.1}
+            />
+          </div>
+          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-noite-900/45 to-transparent" />
         </div>
-        {/* Escurece o pé da foto para o nome do imóvel ficar legível em qualquer imagem. */}
-        <div className="absolute inset-0 bg-gradient-to-t from-noite-900 via-noite-900/62 to-noite-900/10" />
-        <div className="absolute inset-0 bg-noite-900/15 transition-colors duration-700 group-hover:bg-noite-900/0" />
 
-        {/* Ficha técnica no topo, discreta */}
-        <ul className="absolute left-5 top-5 flex flex-wrap gap-2 sm:left-7 sm:top-7">
-          {imovel.ficha.map((item) => (
-            <li
-              key={item}
-              className="rounded-full border border-white/15 bg-noite-900/45 px-3 py-1 text-[0.68rem] tracking-wide text-osso-100/85 backdrop-blur-sm"
-            >
-              {item}
-            </li>
-          ))}
-        </ul>
-
-        {/* Nome e local centralizados na base, como na referência */}
-        <div className="absolute inset-x-0 bottom-0 flex flex-col items-center px-5 pb-7 text-center sm:pb-9">
+        {/* O painel de dados. A ficha sai de cima da foto e vira informação
+            de verdade, alinhada e legível. */}
+        <div className="flex flex-col justify-center p-7 sm:p-10">
           <p className="sobretexto text-ouro-400">{imovel.local}</p>
-          <h3 className="titulo mt-3 text-[clamp(1.5rem,3.4vw,2.6rem)] text-osso-100">
+          <h3 className="titulo mt-4 text-[clamp(1.7rem,2.8vw,2.5rem)] leading-[1.05] text-osso-100">
             {imovel.nome}
           </h3>
-          <p className="mt-2 max-w-md text-[0.85rem] leading-relaxed text-osso-100/70">
+          <p className="medida-curta mt-4 text-[0.92rem] leading-relaxed text-osso-100/70">
             {imovel.resumo}
           </p>
+
+          <ul className="mt-8 grid grid-cols-3 border-t border-white/10 pt-6">
+            {imovel.ficha.map((item) => (
+              <li
+                key={item}
+                className="border-l border-white/10 px-4 text-[0.78rem] leading-snug text-osso-100/75 first:border-l-0 first:pl-0"
+              >
+                {item}
+              </li>
+            ))}
+          </ul>
 
           <a
             href={zap(mensagens.imovel(imovel.nome))}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-5 inline-flex items-center gap-2 rounded-full border border-white/25 bg-noite-900/40 px-5 py-2 text-sm text-osso-100 backdrop-blur-sm transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:border-transparent hover:bg-osso-100 hover:text-noite-900"
+            className="mt-9 inline-flex w-fit items-center gap-2.5 rounded-full border border-white/25 px-5 py-2.5 text-sm text-osso-100 transition-all duration-500 ease-[cubic-bezier(.16,1,.3,1)] hover:border-transparent hover:bg-osso-100 hover:text-noite-900 active:scale-[0.98]"
           >
             <Whatsapp className="h-4 w-4" />
             Tenho interesse
           </a>
         </div>
-      </div>
       </Caixa>
     </Revelar>
   );
@@ -92,7 +96,7 @@ export function Vitrine() {
             </h2>
           </Revelar>
           <Revelar atraso={190}>
-            <p className="mx-auto mt-5 max-w-lg text-[0.95rem] leading-relaxed text-osso-100/60">
+            <p className="medida mx-auto mt-5 text-[0.95rem] leading-relaxed text-osso-100/60">
               {vitrine.texto}
             </p>
           </Revelar>

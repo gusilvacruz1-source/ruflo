@@ -38,7 +38,7 @@ export function Chamada() {
                 </Revelar>
 
                 <Revelar atraso={170}>
-                  <p className="mt-5 max-w-md text-[0.95rem] leading-relaxed text-noite-900/65">
+                  <p className="medida-curta mt-5 text-[0.95rem] leading-relaxed text-noite-900/65">
                     {chamada.texto}
                   </p>
                 </Revelar>

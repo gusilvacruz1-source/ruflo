@@ -34,7 +34,7 @@ export function Sobre() {
               </h2>
             </Revelar>
             <Revelar atraso={110}>
-              <p className="mt-5 max-w-lg text-[0.95rem] leading-relaxed text-noite-900/65">
+              <p className="medida mt-5 text-[0.95rem] leading-relaxed text-noite-900/65">
                 {sobre.texto}
               </p>
             </Revelar>

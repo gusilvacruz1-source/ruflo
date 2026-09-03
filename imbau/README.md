@@ -59,6 +59,20 @@ Para incluir uma opção nova, acrescente a palavra em `contato.objetivos` ou
 `contato.tipos` **e** a conjugação dela nos dois dicionários dentro de
 `montarMensagem` (`acoes` e `bens`). Sem isso a frase sai genérica.
 
+### O cartão do imóvel
+
+A foto ocupa metade do cartão, não o cartão inteiro — e isso é sobre
+nitidez, não sobre gosto. As fotos da carteira têm 828 px de largura;
+esticadas para os 1.190 px do cartão elas apareciam ampliadas **1,44×**, e
+nenhum efeito devolve o que a ampliação come. No arranjo atual elas aparecem
+a 0,68–0,76× do tamanho original, que é onde foto digital fica mais nítida.
+
+Se um dia entrarem fotos maiores (1600 px ou mais), dá para dar mais espaço
+à imagem sem perder nada. Até lá, o limite é ela.
+
+O lado da foto alterna a cada cartão: três cartões idênticos empilhados leem
+como repetição.
+
 ### Publicar um imóvel novo
 
 1. Coloque a foto em `public/imagens/` (JPG ou WebP, de preferência com pelo
@@ -78,7 +92,7 @@ imóvel a pessoa quer falar.
 | `imagens/casa-210m2-*.webp`, `imagens/casa-122m2.webp`, `imagens/imovel-rural-1723m2.webp` | Fotos reais dos anúncios do perfil `@imobiliaria.imbau` |
 | `imagens/hero-lago.svg` | Fundo da primeira dobra — cena ilustrativa, **não é um imóvel da carteira** |
 | `imagens/imovel-sem-foto.svg` | Reserva para imóvel anunciado antes da sessão de fotos |
-| `imagens/og.jpg` | Prévia que aparece ao compartilhar o link no WhatsApp |
+| `imagens/og.jpg` | Prévia que aparece ao compartilhar o link no WhatsApp — **gerada da própria página**, em 2400×1260 (a proporção 1,91:1 do cartão). Para refazer depois de mudar a primeira dobra, fotografe a janela em 1200×630 com o menu e o indicador de rolagem escondidos. |
 | `marca/imbau-simbolo.png` | Símbolo da marca, recortado do logotipo original |
 
 As fotos vieram de prints do Instagram, então estão em 828 px de largura. Se a
