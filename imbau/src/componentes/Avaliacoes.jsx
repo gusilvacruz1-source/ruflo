@@ -34,7 +34,7 @@ export function Avaliacoes() {
                 casas={1}
                 className="titulo text-[clamp(4rem,8vw,6.5rem)] leading-[0.85] text-noite-900"
               />
-              <span className="flex items-center gap-3 text-sm text-noite-900/60">
+              <span className="flex items-center gap-3 text-sm text-noite-900/65">
                 <Estrelas />
                 <span>
                   <Contagem ate={avaliacoes.quantidade} /> {avaliacoes.fonte}

@@ -25,7 +25,7 @@ export function Rodape() {
           className="mt-10 grid gap-10 sm:grid-cols-2 lg:grid-cols-3"
         >
           <div>
-            <h2 className="sobretexto text-osso-100/40">Atendimento</h2>
+            <h2 className="sobretexto text-osso-100/55">Atendimento</h2>
             <ul className="mt-5 space-y-3 text-sm text-osso-100/70">
               <li>
                 <a
@@ -59,18 +59,18 @@ export function Rodape() {
                   <Local className="mt-0.5 h-4 w-4 shrink-0 text-ouro-500" />
                   <span>
                     {marca.endereco}
-                    <span className="block text-osso-100/45">
+                    <span className="block text-osso-100/60">
                       {marca.bairro} · {marca.cidade}
                     </span>
                   </span>
                 </a>
               </li>
-              <li className="text-osso-100/45">{marca.site}</li>
+              <li className="text-osso-100/60">{marca.site}</li>
             </ul>
           </div>
 
           <div>
-            <h2 className="sobretexto text-osso-100/40">Serviços</h2>
+            <h2 className="sobretexto text-osso-100/55">Serviços</h2>
             <ul className="mt-5 grid grid-cols-2 gap-x-4 gap-y-2.5 text-sm text-osso-100/70">
               {rodape.servicos.map((s) => (
                 <li key={s}>{s}</li>
@@ -79,19 +79,19 @@ export function Rodape() {
           </div>
 
           <div>
-            <h2 className="sobretexto text-osso-100/40">Responsável</h2>
+            <h2 className="sobretexto text-osso-100/55">Responsável</h2>
             <p className="mt-5 text-sm text-osso-100/70">
               {marca.corretora}
-              <span className="block text-osso-100/45">{marca.cargo}</span>
-              <span className="mt-2 block text-osso-100/45">{marca.creci}</span>
-              <span className="mt-2 block text-osso-100/45">{marca.regiao}</span>
+              <span className="block text-osso-100/60">{marca.cargo}</span>
+              <span className="mt-2 block text-osso-100/60">{marca.creci}</span>
+              <span className="mt-2 block text-osso-100/60">{marca.regiao}</span>
             </p>
           </div>
         </Revelar>
 
         <div className="fio mt-14 h-px w-full text-osso-100" />
 
-        <p className="mt-6 flex flex-col gap-1 text-[0.72rem] text-osso-100/30 sm:flex-row sm:justify-between">
+        <p className="mt-6 flex flex-col gap-1 text-[0.72rem] text-osso-100/55 sm:flex-row sm:justify-between">
           <span>
             © {new Date().getFullYear()} {marca.nome} {marca.sobrenome}. Todos os direitos
             reservados.

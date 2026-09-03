@@ -69,7 +69,7 @@ export function Contato() {
                   <span className="block text-[1.05rem] leading-tight">
                     {marca.telefoneExibicao}
                   </span>
-                  <span className="block text-[0.78rem] text-noite-900/50">{contato.horario}</span>
+                  <span className="block text-[0.78rem] text-noite-900/60">{contato.horario}</span>
                 </span>
               </a>
 
@@ -86,7 +86,7 @@ export function Contato() {
                   <span className="block text-[1.05rem] leading-tight">
                     {marca.instagramExibicao}
                   </span>
-                  <span className="block text-[0.78rem] text-noite-900/50">
+                  <span className="block text-[0.78rem] text-noite-900/60">
                     Imóveis novos toda semana
                   </span>
                 </span>
@@ -102,13 +102,13 @@ export function Contato() {
                 </span>
                 <span>
                   <span className="block text-[1.05rem] leading-tight">{marca.endereco}</span>
-                  <span className="block text-[0.78rem] text-noite-900/50">
+                  <span className="block text-[0.78rem] text-noite-900/60">
                     {marca.bairro} · {marca.cidade} · {marca.cep}
                   </span>
                 </span>
               </a>
 
-              <p className="mt-4 max-w-sm border-t border-noite-900/10 pt-6 text-[0.85rem] leading-relaxed text-noite-900/55">
+              <p className="mt-4 max-w-sm border-t border-noite-900/10 pt-6 text-[0.85rem] leading-relaxed text-noite-900/60">
                 {contato.regiao}
               </p>
             </Revelar>
@@ -122,7 +122,7 @@ export function Contato() {
           >
             <div className="rounded-[calc(2rem-0.375rem)] border border-noite-900/8 bg-osso-100 p-6 sm:p-8">
               <fieldset>
-                <legend className="sobretexto text-noite-900/45">{contato.rotulos.objetivo}</legend>
+                <legend className="sobretexto text-noite-900/60">{contato.rotulos.objetivo}</legend>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {contato.objetivos.map((o) => (
                     <Pastilha key={o} ativo={objetivo === o} onClick={() => setObjetivo(o)}>
@@ -133,7 +133,7 @@ export function Contato() {
               </fieldset>
 
               <fieldset className="mt-8">
-                <legend className="sobretexto text-noite-900/45">{contato.rotulos.tipo}</legend>
+                <legend className="sobretexto text-noite-900/60">{contato.rotulos.tipo}</legend>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {contato.tipos.map((t) => (
                     <Pastilha key={t} ativo={tipo === t} onClick={() => setTipo(t)}>
@@ -145,7 +145,7 @@ export function Contato() {
 
               <div className="mt-8 grid gap-4 sm:grid-cols-2">
                 <label className="block">
-                  <span className="sobretexto block text-noite-900/45">
+                  <span className="sobretexto block text-noite-900/60">
                     {contato.rotulos.nome}
                   </span>
                   <input
@@ -157,7 +157,7 @@ export function Contato() {
                   />
                 </label>
                 <label className="block">
-                  <span className="sobretexto block text-noite-900/45">
+                  <span className="sobretexto block text-noite-900/60">
                     {contato.rotulos.detalhe}
                   </span>
                   <input
@@ -172,7 +172,7 @@ export function Contato() {
 
               {/* Prévia: a pessoa vê exatamente o que vai enviar. */}
               <div className="mt-8 rounded-2xl border border-noite-900/10 bg-osso-200 p-5">
-                <p className="sobretexto text-noite-900/45">{contato.rotulos.previa}</p>
+                <p className="sobretexto text-noite-900/60">{contato.rotulos.previa}</p>
                 <p className="mt-3 text-[0.92rem] leading-relaxed text-noite-900/80">{texto}</p>
               </div>
 

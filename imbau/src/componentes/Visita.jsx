@@ -26,6 +26,10 @@ export function Visita() {
 
   const [conjunto, setConjunto] = useState(null);
   const [parado, setParado] = useState(false);
+  // A visita fica três telas abaixo da capa. Baixar os 80 quadros dela na
+  // abertura da página era 92% do peso total competindo com a primeira dobra
+  // — numa rede lenta, a pessoa esperava a visita para ver a capa.
+  const [perto, setPerto] = useState(false);
 
   // Qual conjunto: no celular o limite não é a banda, é a memória — um frame
   // decodificado custa largura × altura × 4 bytes, comprima-se o quanto for.
@@ -94,10 +98,28 @@ export function Visita() {
     desenha(Math.max(0, desenhado.current), true);
   }, [conjunto, desenha]);
 
-  // Pré-carga: o primeiro frame na tela antes de tudo, o resto em fila com
+  // Duas telas de antecedência: tempo de sobra para o primeiro quadro estar
+  // pronto quando a seção aparecer, e nenhum byte gasto por quem nunca
+  // chegar até aqui.
+  useEffect(() => {
+    const el = trilho.current;
+    if (!el) return;
+    const observador = new IntersectionObserver(
+      ([entrada]) => {
+        if (!entrada.isIntersecting) return;
+        setPerto(true);
+        observador.disconnect();
+      },
+      { rootMargin: '200% 0px' }
+    );
+    observador.observe(el);
+    return () => observador.disconnect();
+  }, []);
+
+  // Pré-carga: o primeiro quadro na tela antes de tudo, o resto em fila com
   // limite de simultâneas — em ordem, que é a ordem em que serão usados.
   useEffect(() => {
-    if (!conjunto) return;
+    if (!conjunto || !perto) return;
     const canvas = tela.current;
     if (!canvas) return;
 
@@ -118,7 +140,10 @@ export function Visita() {
               quadros.current[i] = img;
               pronto();
             });
-        img.onerror = () => pronto(); // um frame faltando não derruba a cena
+        img.onerror = () => pronto(); // um quadro faltando não derruba a cena
+        // Prioridade baixa: se ainda houver algo da primeira dobra na fila,
+        // a visita espera. Ela tem duas telas de antecedência para isso.
+        img.fetchPriority = 'low';
         img.src = endereco(i);
       });
 
@@ -140,7 +165,7 @@ export function Visita() {
       vivo = false;
       window.removeEventListener('resize', dimensiona);
     };
-  }, [conjunto, parado, endereco, desenha, dimensiona]);
+  }, [conjunto, perto, parado, endereco, desenha, dimensiona]);
 
   const percorre = useCallback(
     (_, altura) => {

@@ -49,7 +49,7 @@ export function Hero() {
         <div className="max-w-4xl">
           <Revelar className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
             <p className="sobretexto text-ouro-400">{hero.sobretexto}</p>
-            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-osso-100/45">
+            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-osso-100/60">
               {marca.corretora} · {marca.creci}
             </p>
           </Revelar>
@@ -83,7 +83,7 @@ export function Hero() {
             visita do capítulo III se percorre assim. */}
         <div
           aria-hidden="true"
-          className="absolute bottom-10 right-6 hidden flex-col items-center gap-4 text-osso-100/45 lg:flex"
+          className="absolute bottom-10 right-6 hidden flex-col items-center gap-4 text-osso-100/60 lg:flex"
         >
           <span className="sobretexto [writing-mode:vertical-rl]">role</span>
           <span className="fio-rolagem h-16 w-px bg-osso-100/15" />

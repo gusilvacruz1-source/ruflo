@@ -19,7 +19,7 @@ export function Sobre() {
               ”
             </span>
           </p>
-          <p className="mt-6 text-sm text-noite-900/50">
+          <p className="mt-6 text-sm text-noite-900/60">
             {marca.corretora} · {marca.cargo}
           </p>
         </Revelar>
@@ -49,7 +49,7 @@ export function Sobre() {
           <Revelar atraso={140} as="dl" className="grid gap-px self-start bg-noite-900/10 sm:grid-cols-2">
             {sobre.credenciais.map((c) => (
               <div key={c.rotulo} className="bg-osso-100 px-1 py-5 sm:px-6">
-                <dt className="sobretexto text-noite-900/40">{c.rotulo}</dt>
+                <dt className="sobretexto text-noite-900/60">{c.rotulo}</dt>
                 <dd className="mt-3 text-[1.05rem] leading-snug text-noite-900">{c.valor}</dd>
               </div>
             ))}

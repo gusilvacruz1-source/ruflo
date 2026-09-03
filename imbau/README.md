@@ -111,6 +111,32 @@ para editar. É gerado por `node tools/faz-diagrama.mjs`, e não à mão: montar
 esse JSON manualmente é como se esquece uma ligação e a seta descola da caixa
 no primeiro arrasto.
 
+## Peso e leitura
+
+**A visita só baixa quando chega perto.** São 1,25 MB de quadros no celular;
+carregados na abertura, eram 92% do peso da página competindo com a primeira
+dobra — numa rede lenta a pessoa esperava a visita para ver a capa. Agora um
+`IntersectionObserver` com duas telas de antecedência dispara a fila, e os
+quadros vão com `fetchPriority: 'low'`. Medido: **1.362 KB → 112 KB** antes
+da primeira rolagem, e 97 dos 160 quadros já prontos quando a seção aparece.
+
+**O contraste é medido, não estimado.** As cores do Tailwind v4 saem em
+`oklab()`, então a conferência resolve cada uma pintando num canvas — é a
+única conversão em que dá para confiar sem reimplementar o espaço de cor. A
+primeira medição achou 28 trechos abaixo do mínimo, quase todos rótulos de
+11px em maiúsculas: o texto mais difícil da página tinha o menor contraste.
+
+Os pisos que saíram da medição, para quem for mexer nas opacidades:
+
+| Texto pequeno | Piso |
+| --- | --- |
+| escuro sobre o creme | opacidade **60%** |
+| claro sobre o escuro | opacidade **55%** |
+
+**Sem JavaScript a página não fica em branco.** O site é um aplicativo, e o
+CSS também chega pelo pacote — então o `<noscript>` no `index.html` leva
+estilo embutido e o essencial: quem é, o WhatsApp, o Instagram e o endereço.
+
 ## Antes de publicar
 
 - [ ] Confirmar com a Raquel se os três imóveis seguem disponíveis.

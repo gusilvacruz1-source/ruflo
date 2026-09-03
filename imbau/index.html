@@ -30,13 +30,63 @@
       href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='7' fill='%2305080e'/%3E%3Cpath d='M6 15.4 16 6.6l10 8.8v9.1a1.4 1.4 0 0 1-1.4 1.4h-6.2v-6.6h-4.8v6.6H7.4A1.4 1.4 0 0 1 6 24.5z' fill='%23ef7f1f'/%3E%3C/svg%3E"
     />
 
-    <!-- O primeiro quadro da visita chega com a página; o media evita baixar
-         os dois conjuntos. -->
-    <link rel="preload" as="image" href="visita/desktop/0001.webp" media="(min-width: 821px)" />
-    <link rel="preload" as="image" href="visita/mobile/0001.webp" media="(max-width: 820px)" />
 
   </head>
   <body>
+    <!--
+      O site é um aplicativo: sem JavaScript, a página fica em branco. Para um
+      negócio, isso é perder o cliente — então o essencial fica aqui, com
+      estilo embutido, porque o CSS também só chega pelo JavaScript.
+    -->
+    <noscript>
+      <div style="
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        gap: 28px;
+        padding: 48px 24px;
+        background: #05080e;
+        color: #f6f3ec;
+        font-family: Georgia, 'Times New Roman', serif;
+      ">
+        <p style="
+          margin: 0;
+          font-size: 11px;
+          letter-spacing: 0.34em;
+          text-transform: uppercase;
+          color: #e9b949;
+          font-family: system-ui, sans-serif;
+        ">
+          Imbaú · Paraná
+        </p>
+        <h1 style="margin: 0; font-size: clamp(2rem, 7vw, 3.5rem); font-weight: 400; line-height: 1.05;">
+          Imbaú Imobiliária
+        </h1>
+        <p style="margin: 0; max-width: 34em; line-height: 1.7; font-family: system-ui, sans-serif;">
+          Compra, venda e locação em Imbaú e região, com avaliação honesta e
+          documentação em ordem. Raquel Domingues, corretora de imóveis,
+          CRECI 27892.
+        </p>
+        <p style="margin: 0; line-height: 2; font-family: system-ui, sans-serif;">
+          <a href="https://wa.me/5542988369168" style="color: #f0cf80;">
+            WhatsApp (42) 98836-9168
+          </a>
+          <br />
+          <a href="https://www.instagram.com/imobiliaria.imbau/" style="color: #f0cf80;">
+            @imobiliaria.imbau
+          </a>
+          <br />
+          <span style="color: #b9b5ad;">
+            Tv. Pio XII, nº 93 — Bairro Bela Vista, Imbaú/PR, 84250-000
+          </span>
+        </p>
+        <p style="margin: 0; font-size: 13px; color: #b9b5ad; font-family: system-ui, sans-serif;">
+          Para ver os imóveis e a visita, ative o JavaScript no navegador.
+        </p>
+      </div>
+    </noscript>
+
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>

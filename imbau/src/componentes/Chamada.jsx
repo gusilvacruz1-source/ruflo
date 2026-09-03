@@ -62,7 +62,7 @@ export function Chamada() {
                         <IconeBeneficio nome={b.icone} />
                         <span className="text-sm font-medium">{b.titulo}</span>
                       </span>
-                      <p className="mt-1.5 text-[0.78rem] leading-relaxed text-noite-900/50">
+                      <p className="mt-1.5 text-[0.78rem] leading-relaxed text-noite-900/60">
                         {b.texto}
                       </p>
                     </li>

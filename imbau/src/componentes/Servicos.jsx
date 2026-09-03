@@ -75,7 +75,7 @@ export function Servicos() {
         {/* Etapas: aqui o número conta, porque a ordem é a informação. */}
         <div className="mt-24 sm:mt-32">
           <Revelar className="flex items-center gap-6">
-            <h3 className="sobretexto shrink-0 text-noite-900/45">{servicos.etapasTitulo}</h3>
+            <h3 className="sobretexto shrink-0 text-noite-900/60">{servicos.etapasTitulo}</h3>
             <span className="fio h-px flex-1 text-noite-900" />
           </Revelar>
 
