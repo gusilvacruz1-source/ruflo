@@ -6,7 +6,7 @@ import { ImagemProfunda } from './Profundidade';
 
 export function Chamada() {
   return (
-    <section id="avaliacao-gratuita" data-tom="claro" className="relative bg-osso-200 py-20 sm:py-28">
+    <section id="avaliacao-gratuita" data-tom="claro" className="secao relative bg-osso-200">
       <div className="site-container">
         <Folio id="avaliacao-gratuita" />
 

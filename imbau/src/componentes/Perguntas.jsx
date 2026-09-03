@@ -64,7 +64,7 @@ export function Perguntas() {
   const [abertoEm, setAbertoEm] = useState(0);
 
   return (
-    <section id="perguntas" data-tom="claro" className="relative bg-osso-100 py-24 sm:py-32 lg:py-40">
+    <section id="perguntas" data-tom="claro" className="secao relative bg-osso-100">
       <div className="site-container">
         <Folio id="perguntas" />
 

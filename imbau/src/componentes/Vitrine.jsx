@@ -73,7 +73,7 @@ export function Vitrine() {
       {/* A vitrine é o bloco escuro da página — o resto respira no claro. */}
       <div
         data-tom="escuro"
-        className="relative isolate mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] bg-noite-900 py-20 sm:py-28 lg:rounded-[2.25rem] lg:py-32"
+        className="relative isolate mx-auto max-w-[1440px] overflow-hidden rounded-[1.75rem] secao bg-noite-900 lg:rounded-[2.25rem]"
       >
         <div className="site-container relative">
           <Folio id="imoveis" claro />

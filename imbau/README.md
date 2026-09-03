@@ -114,6 +114,30 @@ no primeiro arrasto.
       se o endereço final não for `imobiliariaimbau.com.br`.
 - [ ] Substituir as fotos pelos arquivos originais, se existirem.
 
+## Tipografia
+
+Duas vozes, e cada uma com um trabalho:
+
+| | Fonte | Onde |
+| --- | --- | --- |
+| Display | **Fraunces** (serifa variável, com eixo óptico) | títulos, citação, os pilares da capa, a nota do Google |
+| Interface | **Plus Jakarta Sans** (variável) | texto, rótulo, botão, formulário |
+
+A serifa é o que dá o tom editorial — de casa que se visita, não de produto
+que se contrata. Ela dispensa o peso cheio que a sem-serifa precisava para ter
+presença: em 500 já ocupa a linha. O eixo óptico (`font-optical-sizing: auto`)
+ajusta o contraste das hastes conforme o tamanho, o que é justamente o que
+segura um título de 7 rem sem ele parecer inflado.
+
+**As fontes são do projeto**, não do Google: `@fontsource-variable/*`,
+importadas em `src/main.jsx`. Some uma requisição a um terceiro do caminho
+crítico e a página tem a voz certa mesmo offline. São arquivos variáveis — um
+só cobre todos os pesos.
+
+O ritmo vertical também é um só: a classe `.secao`
+(`clamp(88px, 12vh, 168px)`), em vez das cinco combinações de `py-*` que
+existiam antes, uma por seção.
+
 ## Claro e escuro
 
 Cada bloco declara o próprio tom com `data-tom="claro"` ou `data-tom="escuro"`.

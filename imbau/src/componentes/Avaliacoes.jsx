@@ -19,7 +19,7 @@ export function Avaliacoes() {
     <section
       id="avaliacoes"
       data-tom="claro"
-      className="border-t border-noite-900/10 bg-osso-100 py-24 sm:py-28"
+      className="secao border-t border-noite-900/10 bg-osso-100"
     >
       <div className="site-container">
         <Folio id="avaliacoes" />

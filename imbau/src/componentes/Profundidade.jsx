@@ -72,17 +72,21 @@ function registrar(alvo) {
 /**
  * Roda uma função a cada quadro de rolagem, no mesmo laço das fotos.
  * Recebe a posição da rolagem e a altura da janela.
+ *
+ * `sempre` distingue as duas coisas que passam por aqui: mexer a cena é
+ * movimento, e desliga com prefers-reduced-motion; saber onde a pessoa está
+ * na leitura não é movimento — se desligar, a lombada perde a cor e some.
  */
-export function useCena(desenho, ativo = true) {
+export function useCena(desenho, ativo = true, sempre = false) {
   useEffect(() => {
-    if (!ativo || semMovimento()) return;
+    if (!ativo || (!sempre && semMovimento())) return;
     cenas.add(desenho);
     ligar();
     return () => {
       cenas.delete(desenho);
       desligarSeVazio();
     };
-  }, [desenho, ativo]);
+  }, [desenho, ativo, sempre]);
 }
 
 /**

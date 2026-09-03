@@ -38,7 +38,7 @@ export function Contato() {
   const link = `https://wa.me/${marca.whatsapp}?text=${encodeURIComponent(texto)}`;
 
   return (
-    <section id="contato" data-tom="claro" className="relative bg-osso-100 pb-24 pt-10 sm:pb-32">
+    <section id="contato" data-tom="claro" className="secao relative bg-osso-100">
       <div className="site-container">
         <Folio id="contato" />
 

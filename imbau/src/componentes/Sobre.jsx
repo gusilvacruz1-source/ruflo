@@ -5,7 +5,7 @@ import { Revelar } from './Movimento';
 
 export function Sobre() {
   return (
-    <section id="sobre" data-tom="claro" className="relative bg-osso-100 py-24 sm:py-32">
+    <section id="sobre" data-tom="claro" className="secao relative bg-osso-100">
       <div className="site-container relative">
         <Folio id="sobre" />
 

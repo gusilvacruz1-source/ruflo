@@ -52,7 +52,9 @@ export function Lombada() {
     }
   }, []);
 
-  useCena(desenhar);
+  // `sempre`: a lombada precisa se pintar mesmo para quem pediu menos
+  // movimento — sem isso os algarismos ficam escuros sobre a capa escura.
+  useCena(desenhar, true, true);
 
   return (
     <nav
@@ -83,6 +85,7 @@ export function Lombada() {
                 href={`#${c.id}`}
                 data-capitulo={c.id}
                 data-aberto="false"
+                data-fundo="escuro"
                 className="group flex items-center gap-3 py-0.5 opacity-45 transition-[opacity,color] duration-500 hover:opacity-100 data-[aberto=true]:opacity-100 data-[fundo=claro]:text-noite-900 data-[fundo=escuro]:text-osso-100"
               >
                 <span className="w-7 text-[0.62rem] font-medium tracking-[0.18em]">

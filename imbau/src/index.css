@@ -21,8 +21,13 @@
   --color-ouro-700: #8a6414;
   --color-marca: #ef7f1f;
 
-  --font-display: 'Plus Jakarta Sans', ui-sans-serif, system-ui, -apple-system,
-    'Segoe UI', Roboto, sans-serif;
+  /* Duas vozes. A serifa carrega os títulos — é ela que dá o tom editorial,
+     de casa que se visita, e não de produto que se contrata. A sem-serifa
+     some, que é o trabalho dela: texto, rótulo, botão, formulário. */
+  --font-display: 'Fraunces Variable', 'Iowan Old Style', Georgia,
+    'Times New Roman', serif;
+  --font-ui: 'Plus Jakarta Sans Variable', ui-sans-serif, system-ui,
+    -apple-system, 'Segoe UI', Roboto, sans-serif;
 
   /* Curva única para tudo que se move: saída longa, chegada macia. */
   --ease-suave: cubic-bezier(0.16, 1, 0.3, 1);
@@ -39,7 +44,7 @@
   body {
     background-color: var(--color-osso-200);
     color: var(--color-noite-900);
-    font-family: var(--font-display);
+    font-family: var(--font-ui);
     font-synthesis-weight: none;
     -webkit-font-smoothing: antialiased;
     text-rendering: optimizeLegibility;
@@ -75,6 +80,23 @@
      inventa a própria largura, nada mais alinha entre blocos. */
   .site-container {
     @apply mx-auto w-full max-w-[1320px] px-6 md:px-10 xl:px-14;
+  }
+
+  /* Ritmo vertical, definido uma vez. Antes eram cinco combinações de
+     py-* espalhadas pelas seções, e o olho percebia a diferença de uma
+     para a outra sem saber dizer o quê. */
+  .secao {
+    padding-block: clamp(88px, 12vh, 168px);
+  }
+
+  /* Medida de leitura. Linha mais longa que isto e o olho perde o retorno
+     na volta — nenhuma escolha de fonte conserta. */
+  .medida {
+    max-width: 62ch;
+  }
+
+  .medida-curta {
+    max-width: 40ch;
   }
 
   /* A placa do livro: a folha em que o site inteiro se apoia. É moldura, não
@@ -149,6 +171,31 @@
     animation: subir-mascara 1.3s var(--ease-suave) both;
   }
 
+  /* Indicador de rolagem: um traço que desce sem parar, na borda da capa.
+     Diz o que fazer sem escrever "role para baixo" em caixa alta. */
+  @keyframes desce {
+    0% {
+      transform: translateY(-100%);
+    }
+    55%,
+    100% {
+      transform: translateY(100%);
+    }
+  }
+
+  .fio-rolagem {
+    overflow: hidden;
+  }
+
+  .fio-rolagem::after {
+    content: '';
+    display: block;
+    width: 100%;
+    height: 100%;
+    background: currentColor;
+    animation: desce 2.6s var(--ease-suave) infinite;
+  }
+
   /* Linha de respiro entre blocos — some quase por completo, mas alinha. */
   .fio {
     background: linear-gradient(
@@ -162,16 +209,27 @@
 }
 
 @layer utilities {
-  /* Voz dos títulos: peso cheio e tracking fechado, como na referência. */
+  /* Voz dos títulos. A serifa dispensa o peso cheio que a sem-serifa
+     precisava para ter presença: em 500 ela já ocupa a linha, e em 700
+     ficaria pesada. O tracking também afrouxa — serifa fechada demais
+     empasta as hastes. */
   .titulo {
-    font-weight: 700;
-    letter-spacing: -0.035em;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-optical-sizing: auto;
+    letter-spacing: -0.02em;
   }
 
-  /* Títulos da primeira dobra: um passo mais leve que os das seções. */
+  /* Primeira dobra: um passo mais leve e ainda mais aberto, porque o
+     tamanho ali já é a ênfase. O recuo negativo joga a primeira haste um
+     tico para fora do container — transbordo óptico, para a linha parecer
+     alinhada com o resto. */
   .titulo-hero {
-    font-weight: 600;
-    letter-spacing: -0.032em;
+    font-family: var(--font-display);
+    font-weight: 400;
+    font-optical-sizing: auto;
+    letter-spacing: -0.018em;
+    margin-left: -0.03em;
   }
 
   .sobretexto {

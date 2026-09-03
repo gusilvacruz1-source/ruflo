@@ -15,12 +15,27 @@ const raiz = process.argv[2];
 const destino = process.argv[3];
 const dist = resolve(raiz, 'dist');
 
-const tipos = { '.webp': 'image/webp', '.svg': 'image/svg+xml', '.png': 'image/png', '.jpg': 'image/jpeg' };
+const tipos = {
+  '.webp': 'image/webp',
+  '.svg': 'image/svg+xml',
+  '.png': 'image/png',
+  '.jpg': 'image/jpeg',
+  '.woff2': 'font/woff2',
+};
 const dataUri = (caminho) =>
   `data:${tipos[extname(caminho)]};base64,${readFileSync(caminho).toString('base64')}`;
 
 const assets = readdirSync(resolve(dist, 'assets'));
-const css = readFileSync(resolve(dist, 'assets', assets.find((f) => f.endsWith('.css'))), 'utf8');
+let css = readFileSync(resolve(dist, 'assets', assets.find((f) => f.endsWith('.css'))), 'utf8');
+
+// As fontes são arquivos do projeto e o CSS as pede por url(): sem embutir,
+// a prévia cai na serifa do sistema e perde justamente a voz do site.
+let fontes = 0;
+for (const arquivo of assets.filter((f) => f.endsWith('.woff2'))) {
+  if (!css.includes(arquivo)) continue;
+  css = css.replaceAll(`./${arquivo}`, dataUri(resolve(dist, 'assets', arquivo)));
+  fontes++;
+}
 let js = readFileSync(resolve(dist, 'assets', assets.find((f) => f.endsWith('.js'))), 'utf8');
 
 // As imagens de public/ aparecem no bundle como texto: troca por data: URI.
@@ -50,9 +65,6 @@ const html = `<title>Imbaú Imobiliária</title>
 window.__CONJUNTO__ = 'mobile';
 window.__QUADROS__ = ${JSON.stringify(quadros)};
 </script>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@200..800&display=swap" rel="stylesheet">
 <style>
 ${css}
 </style>
@@ -63,4 +75,8 @@ ${js}
 `;
 
 writeFileSync(destino, html);
-console.log('imagens embutidas:', trocadas, '· tamanho:', (Buffer.byteLength(html) / 1024 / 1024).toFixed(2), 'MB');
+console.log(
+  `fontes embutidas: ${fontes} · imagens embutidas: ${trocadas} · tamanho: ${(
+    Buffer.byteLength(html) / 1024 / 1024
+  ).toFixed(2)} MB`
+);

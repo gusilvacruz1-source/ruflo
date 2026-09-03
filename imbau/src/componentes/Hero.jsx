@@ -55,13 +55,13 @@ export function Hero() {
           </Revelar>
 
           <div className="mascara" style={{ animationDelay: '260ms' }}>
-            <h1 className="titulo-hero mt-6 text-[clamp(2.6rem,6.2vw,5.6rem)] leading-[1.02] text-osso-100">
+            <h1 className="titulo-hero mt-6 text-[clamp(3rem,8.4vw,7.4rem)] leading-[0.92] text-osso-100">
               {hero.titulo}
             </h1>
           </div>
 
           <Revelar atraso={210}>
-            <p className="mt-6 max-w-xl text-[0.95rem] leading-relaxed text-osso-100/75">
+            <p className="medida-curta mt-7 text-[0.98rem] leading-relaxed text-osso-100/75">
               {hero.texto}
             </p>
           </Revelar>
@@ -79,6 +79,16 @@ export function Hero() {
           </Revelar>
         </div>
 
+        {/* Indicador de rolagem na borda: o site inteiro se lê rolando, e a
+            visita do capítulo III se percorre assim. */}
+        <div
+          aria-hidden="true"
+          className="absolute bottom-10 right-6 hidden flex-col items-center gap-4 text-osso-100/45 lg:flex"
+        >
+          <span className="sobretexto [writing-mode:vertical-rl]">role</span>
+          <span className="fio-rolagem h-16 w-px bg-osso-100/15" />
+        </div>
+
         {/* Pilares soltos sobre a foto, sem moldura — como na referência. */}
         <Revelar
           atraso={430}
@@ -86,7 +96,7 @@ export function Hero() {
         >
           {hero.pilares.map((p) => (
             <div key={p.valor}>
-              <p className="text-[clamp(1.6rem,2.8vw,2.3rem)] font-medium leading-none tracking-[-0.02em] text-osso-100">
+              <p className="titulo-hero text-[clamp(1.7rem,3vw,2.5rem)] leading-none text-osso-100">
                 {p.valor}
               </p>
               <p className="mt-2 text-[0.72rem] uppercase tracking-[0.18em] text-osso-100/55">
