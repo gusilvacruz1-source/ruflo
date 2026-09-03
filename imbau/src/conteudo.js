@@ -44,15 +44,21 @@ export const mensagens = {
 };
 
 export const hero = {
-  sobretexto: 'Imbaú · Paraná',
-  titulo: 'Seu imóvel no caminho certo',
+  sobretexto: 'Corretora de imóveis · Imbaú, PR',
+  /** O nome, em duas palavras: elas ficam lado a lado e quebram sozinhas. */
+  titulo: ['Imbaú', 'Imobiliária'],
   texto:
     'Compra, venda e locação com avaliação honesta e documentação em ordem. A Imbaú acompanha cada etapa — do primeiro contato à entrega das chaves.',
-  botao: 'Quero meu imóvel',
-  // Um quadro da própria filmagem da visita: foto real, do imóvel real, e
-  // já em 1440 px — o tamanho em que aparece, sem ampliação.
-  imagem: 'imagens/capa.webp',
+  botao: 'Falar no WhatsApp',
+  ver: 'Ver os imóveis',
+  // O vídeo é a própria visita, em laço e sem som. O poster cobre o intervalo
+  // até ele carregar e fica no lugar dele se não tocar.
+  video: 'imagens/capa-fundo.mp4',
+  poster: 'imagens/capa-fundo.webp',
+  arco: 'imagens/capa-arco.webp',
+  arcoAlt: 'Varanda com arcos de um imóvel da carteira da Imbaú',
 };
+
 
 /**
  * A visita: a filmagem que a pessoa percorre rolando a página.

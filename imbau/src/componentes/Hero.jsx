@@ -1,100 +1,135 @@
-import { useCallback, useRef } from 'react';
-import { hero, marca, mensagens, zap } from '../conteudo';
+import { useCallback, useEffect, useRef } from 'react';
+import { hero, mensagens, zap } from '../conteudo';
 import { Botao } from './Interface';
-import { Revelar } from './Movimento';
-import { ImagemProfunda, useCena } from './Profundidade';
+import { useCena } from './Profundidade';
 
 export function Hero() {
-  const conteudo = useRef(null);
+  const interior = useRef(null);
+  const titulos = useRef(null);
+  const foto = useRef(null);
+  const corte = useRef(null);
   const veu = useRef(null);
+  const pe = useRef(null);
 
-  // Quanto mais a folha cobre a capa, mais a capa se afasta e escurece.
+  /**
+   * O recorte da cópia do título.
+   *
+   * O arco passa por cima das letras. A cópia recortada é desenhada acima do
+   * arco, mostrando só o que fica abaixo da cúpula — assim as letras
+   * reaparecem por cima da foto sem precisar de duas imagens sincronizadas.
+   * `--corte` é a distância do topo do título até a base da cúpula, e ela
+   * depende da largura da tela: por isso é medida, não fixada.
+   */
+  const medirCorte = useCallback(() => {
+    const alvo = corte.current;
+    const titulo = titulos.current;
+    const arco = foto.current;
+    if (!alvo || !titulo || !arco) return;
+
+    const areaTitulo = titulo.getBoundingClientRect();
+    const areaArco = arco.getBoundingClientRect();
+    if (!areaTitulo.height) return;
+
+    // A cúpula é meia circunferência: a base dela fica a um raio do topo.
+    const baseDaCupula = areaArco.top + areaArco.width / 2;
+    const distancia = ((baseDaCupula - areaTitulo.top) / areaTitulo.height) * 100;
+    alvo.style.setProperty('--corte', `${Math.min(100, Math.max(0, distancia)).toFixed(2)}%`);
+  }, []);
+
+  useEffect(() => {
+    medirCorte();
+    const observador = new ResizeObserver(medirCorte);
+    if (titulos.current) observador.observe(titulos.current);
+    window.addEventListener('resize', medirCorte);
+    // As fontes mudam a altura do título quando chegam.
+    document.fonts?.ready.then(medirCorte);
+    return () => {
+      observador.disconnect();
+      window.removeEventListener('resize', medirCorte);
+    };
+  }, [medirCorte]);
+
+  // A capa recua enquanto a primeira seção sobe por cima dela.
   useCena(
     useCallback((rolagem, altura) => {
       const avanco = Math.min(1, rolagem / (altura * 0.9));
-      if (conteudo.current) {
-        conteudo.current.style.transform = `translate3d(0, ${(-avanco * 64).toFixed(1)}px, 0)`;
-        conteudo.current.style.opacity = String(Math.max(0, 1 - avanco * 1.25));
+      if (interior.current) {
+        interior.current.style.transform = `translate3d(0, ${(-avanco * 56).toFixed(1)}px, 0)`;
+        interior.current.style.opacity = String(Math.max(0, 1 - avanco * 1.25));
       }
-      if (veu.current) veu.current.style.opacity = String(avanco * 0.8);
+      if (veu.current) veu.current.style.opacity = String(0.55 + avanco * 0.4);
     }, [])
   );
 
+  const linhas = hero.titulo.map((palavra) => (
+    <span className="linha" key={palavra}>
+      <span>{palavra}</span>
+    </span>
+  ));
+
   return (
-    <section
-      id="inicio"
-      data-tom="escuro"
-      className="relative flex min-h-[100svh] flex-col justify-end overflow-hidden bg-noite-900 sm:min-h-[calc(100svh-2rem)] lg:min-h-[calc(100svh-2.5rem)]"
-    >
-      <div className="assentar absolute inset-0 overflow-hidden">
-        <ImagemProfunda
-          src={hero.imagem}
-          alt=""
-          aria-hidden="true"
-          forca={60}
-          escala={1.12}
-          className="foto"
-        />
+    <section id="inicio" data-tom="escuro" className="capa">
+      {/* Fundo da seção inteira: o vídeo da visita, em laço e sem som. */}
+      <div className="capa__fundo" aria-hidden="true">
+        <video
+          className="foto capa__video"
+          poster={hero.poster}
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          tabIndex={-1}
+        >
+          <source src={hero.video} type="video/mp4" />
+        </video>
+        <div ref={veu} className="capa__veu" />
       </div>
 
-      {/* Véus: legibilidade do menu em cima, do texto no meio e dos números embaixo. */}
-      <div className="absolute inset-0 bg-gradient-to-b from-noite-900/85 via-noite-900/15 to-noite-900/92 sm:to-noite-900/80" />
-      <div className="absolute inset-0 bg-gradient-to-r from-noite-900/80 via-noite-900/20 to-transparent" />
+      <div ref={interior} className="site-container capa__interior">
+        <p className="sobretexto capa__micro">{hero.sobretexto}</p>
 
-      {/* Véu que fecha a capa quando o livro é aberto. */}
-      <div
-        ref={veu}
-        aria-hidden="true"
-        className="absolute inset-0 bg-noite-900 opacity-0"
-      />
+        <div ref={titulos} className="capa__titulos">
+          <h1 className="capa__titulo">{linhas}</h1>
 
-      <div
-        ref={conteudo}
-        className="site-container relative pb-10 pt-28 sm:pb-14 sm:pt-32"
-      >
-        <div className="max-w-4xl">
-          <Revelar className="flex flex-wrap items-baseline gap-x-5 gap-y-1">
-            <p className="sobretexto text-osso-100/60">{hero.sobretexto}</p>
-            <p className="text-[0.7rem] uppercase tracking-[0.2em] text-osso-100/60">
-              {marca.corretora} · {marca.creci}
-            </p>
-          </Revelar>
+          {/* Cópia recortada, desenhada por cima do arco. Sem JavaScript ela
+              fica escondida (--corte começa em 100%) e o arco simplesmente
+              cobre as letras — nada quebra. */}
+          <p ref={corte} className="capa__titulo capa__titulo--corte" aria-hidden="true">
+            {linhas}
+          </p>
+        </div>
 
-          <div className="mascara" style={{ animationDelay: '260ms' }}>
-            <h1 className="titulo-hero mt-6 text-[clamp(3rem,8.4vw,7.4rem)] leading-[0.92] text-osso-100">
-              {hero.titulo}
-            </h1>
-          </div>
+        <div ref={foto} className="capa__foto">
+          <figure className="media media--arco">
+            <img
+              src={hero.arco}
+              alt={hero.arcoAlt}
+              width="620"
+              height="828"
+              fetchPriority="high"
+              decoding="async"
+              className="foto"
+            />
+          </figure>
+        </div>
 
-          <Revelar atraso={210}>
-            <p className="medida-curta mt-7 text-[0.98rem] leading-relaxed text-osso-100/75">
-              {hero.texto}
-            </p>
-          </Revelar>
-
-          <Revelar atraso={310} className="mt-8 flex flex-wrap items-center gap-4">
+        <div ref={pe} className="capa__pe">
+          <p className="capa__lead">{hero.texto}</p>
+          <div className="capa__acoes">
             <Botao href={zap(mensagens.hero)} variante="claro" icone="whatsapp">
               {hero.botao}
             </Botao>
-            <a
-              href="#imoveis"
-              className="text-sm text-osso-100/70 underline-offset-8 transition-colors duration-300 hover:text-osso-100 hover:underline"
-            >
-              Ver imóveis disponíveis
+            <a className="link-sublinhado" href="#imoveis">
+              {hero.ver}
             </a>
-          </Revelar>
+          </div>
         </div>
 
-        {/* Indicador de rolagem na borda: o site inteiro se lê rolando, e a
-            visita do capítulo III se percorre assim. */}
-        <div
-          aria-hidden="true"
-          className="absolute bottom-10 right-6 hidden flex-col items-center gap-4 text-osso-100/60 lg:flex"
-        >
-          <span className="sobretexto [writing-mode:vertical-rl]">role</span>
-          <span className="fio-rolagem h-16 w-px bg-osso-100/15" />
+        <div className="rolagem" aria-hidden="true">
+          <span className="sobretexto">role</span>
+          <span className="fio-rolagem rolagem__fio" />
         </div>
-
       </div>
     </section>
   );

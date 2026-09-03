@@ -185,6 +185,201 @@
     will-change: transform;
   }
 
+  /* ---------- capa ---------- */
+
+  .capa {
+    position: relative;
+    display: flex;
+    min-height: 100svh;
+    align-items: center;
+    overflow: hidden;
+    padding-top: clamp(110px, 15vh, 170px);
+    padding-bottom: clamp(48px, 7vh, 80px);
+    background: var(--color-noite-900);
+  }
+
+  .capa__fundo {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .capa__video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  /* Véu: sem ele a Bodoni clara não se sustenta sobre o vídeo. Mais fechado
+     embaixo, onde ficam o texto de apoio e os botões. */
+  .capa__veu {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(
+      to bottom,
+      color-mix(in srgb, var(--color-noite-900) 78%, transparent) 0%,
+      color-mix(in srgb, var(--color-noite-900) 72%, transparent) 42%,
+      color-mix(in srgb, var(--color-noite-900) 94%, transparent) 100%
+    );
+  }
+
+  .capa__interior {
+    position: relative;
+    z-index: 1;
+  }
+
+  .capa__micro {
+    margin-bottom: clamp(28px, 6vh, 64px);
+    color: color-mix(in srgb, var(--color-osso-100) 60%, transparent);
+  }
+
+  /* SEM z-index aqui: um z-index criaria contexto de empilhamento e prenderia
+     a cópia recortada abaixo do arco. */
+  .capa__titulos {
+    position: relative;
+  }
+
+  /* Escala própria, maior que a dos outros títulos: o nome precisa ocupar a
+     largura inteira do container. O recuo negativo é transbordo óptico. */
+  .capa__titulo {
+    position: relative;
+    z-index: 1;
+    margin: 0;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-optical-sizing: auto;
+    /* O piso do original é 4,75rem, medido para "ELOIZE" e "BETIM". Aqui a
+       palavra mais longa tem onze letras: no celular ela estourava a largura
+       e era cortada pelo overflow da seção. O piso desce para caber. */
+    font-size: clamp(2.45rem, 13.2vw, 11rem);
+    line-height: 0.84;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+    margin-left: -0.04em;
+    color: var(--color-osso-100);
+  }
+
+  /* As palavras ficam lado a lado e ocupam a largura inteira no desktop. Se
+     não couberem, quebram sozinhas — sem media query para isso. */
+  .capa__titulo .linha {
+    display: inline-block;
+    vertical-align: top;
+  }
+
+  /* O espaço vai no fim da primeira palavra, não no início da segunda: assim
+     a segunda linha não fica indentada quando o título quebra. */
+  .capa__titulo .linha:first-child {
+    margin-right: 0.14em;
+  }
+
+  .capa__titulo--corte {
+    position: absolute;
+    inset: 0;
+    z-index: 3;
+    pointer-events: none;
+    --corte: 100%;
+    clip-path: inset(var(--corte) 0 0 0);
+  }
+
+  /* O arco fica à direita, por cima das letras. SEM z-index de propósito:
+     arco e título precisam disputar empilhamento no mesmo nível. */
+  .capa__foto {
+    position: absolute;
+    right: 11%;
+    top: clamp(40px, 5vh, 74px);
+    width: clamp(150px, 21vw, 290px);
+    aspect-ratio: 3 / 4;
+  }
+
+  .capa__foto .media {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border-radius: 50vw 50vw 20px 20px;
+    z-index: 2;
+    background: var(--color-noite-800);
+  }
+
+  .capa__foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .capa__pe {
+    position: relative;
+    z-index: 4;
+    margin-top: clamp(36px, 7vh, 72px);
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+    align-items: flex-start;
+  }
+
+  .capa__lead {
+    max-width: 38ch;
+    color: color-mix(in srgb, var(--color-osso-100) 75%, transparent);
+  }
+
+  .capa__acoes {
+    display: flex;
+    align-items: center;
+    gap: 22px;
+    flex-wrap: wrap;
+  }
+
+  /* Sublinhado que recolhe no hover, em vez de crescer. */
+  .link-sublinhado {
+    position: relative;
+    padding-block: 6px;
+    font-size: 0.875rem;
+    letter-spacing: 0.02em;
+    color: color-mix(in srgb, var(--color-osso-100) 75%, transparent);
+  }
+
+  .link-sublinhado::after {
+    content: '';
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 1px;
+    background: currentColor;
+    transform-origin: right;
+    transition: transform 0.5s var(--ease-suave);
+  }
+
+  .link-sublinhado:hover::after {
+    transform: scaleX(0);
+  }
+
+  .rolagem {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    display: none;
+    flex-direction: column;
+    align-items: center;
+    gap: 16px;
+    color: color-mix(in srgb, var(--color-osso-100) 55%, transparent);
+  }
+
+  .rolagem .sobretexto {
+    writing-mode: vertical-rl;
+  }
+
+  .rolagem__fio {
+    display: block;
+    width: 1px;
+    height: 64px;
+    background: color-mix(in srgb, var(--color-osso-100) 20%, transparent);
+  }
+
+  @media (min-width: 1024px) {
+    .rolagem {
+      display: flex;
+    }
+  }
+
   /* Indicador de rolagem: um traço que desce sem parar, na borda da capa.
      Diz o que fazer sem escrever "role para baixo" em caixa alta. */
   @keyframes desce {

@@ -182,10 +182,27 @@ grossa e a fina — é o que dá o ar de revista, e é o que a faz sumir quando
 usada pequena. Por isso ela só aparece em título; texto, rótulo e botão são
 Archivo.
 
-**A capa é um quadro da própria filmagem** (`imagens/capa.webp`), em 1440 px,
-o tamanho em que aparece. Antes era uma cena ilustrada, gerada por script:
-bonita e falsa, e a coisa que mais entregava um site feito por máquina. Para
-trocar, pegue outro quadro de `public/visita/desktop/`.
+### A capa
+
+Montada como a do estúdio Eloize, peça por peça:
+
+- **Fundo**: a própria filmagem em laço, sem som (`capa-fundo.mp4`, 7 s,
+  797 KB), com `capa-fundo.webp` de poster — se o vídeo não tocar, o poster
+  fica no lugar dele e nada quebra.
+- **Nome em duas palavras**, lado a lado, ocupando a largura do container.
+  Elas quebram sozinhas quando não cabem, sem media query.
+- **Arco à direita**, por cima das letras — `border-radius: 50vw 50vw 20px 20px`
+  sobre a foto da varanda, que por acaso tem arcos de verdade.
+- **A cópia recortada do título**, desenhada acima do arco: é o que faz as
+  letras reaparecerem abaixo da cúpula, com uma imagem só. O recorte
+  (`--corte`) é a distância do topo do título até a base da cúpula, medida
+  em JavaScript porque depende da largura da tela. Sem JavaScript ela fica
+  escondida e o arco simplesmente cobre as letras.
+
+Um valor precisou mudar em relação ao original: o piso da escala do título.
+Lá é 4,75 rem, medido para "ELOIZE" e "BETIM"; aqui a palavra mais longa tem
+onze letras e estourava a largura no celular. Desceu para 2,45 rem — conferido
+de 390 a 1920 px.
 
 ## Largura e alinhamento## Largura e alinhamento
 
