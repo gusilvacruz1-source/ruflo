@@ -1,17 +1,20 @@
 import { imoveis, mensagens, vitrine, zap } from '../conteudo';
 import { Selo, Seta, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
+import { Caixa } from './Caixa';
 import { Folio } from './Livro';
 import { ImagemProfunda } from './Profundidade';
 
 function Cartao({ imovel, indice }) {
   return (
-    <Revelar
-      as="article"
-      atraso={indice * 90}
-      distancia={34}
-      className="group relative rounded-[2rem] border border-ouro-500/30 bg-noite-800/70 p-1.5 transition-colors duration-700 hover:border-ouro-500/60"
-    >
+    <Revelar as="article" atraso={indice * 90} distancia={34}>
+      {/* Inclinação menor que a das caixinhas: o cartão é largo, e o mesmo
+          ângulo aqui distorceria o nome do imóvel na base. */}
+      <Caixa
+        inclinacao={3}
+        eleva={4}
+        className="group relative block rounded-[2rem] border border-ouro-500/30 bg-noite-800/70 p-1.5 hover:border-ouro-500/60"
+      >
       {/* A foto fica na frente do plano: moldura por fora, imagem encaixada dentro. */}
       <div className="relative aspect-[4/5] w-full overflow-hidden rounded-[calc(2rem-0.375rem)] sm:aspect-[16/10] lg:aspect-[16/9]">
         {/* A foto anda mais devagar que o cartão; o hover aproxima a moldura
@@ -63,6 +66,7 @@ function Cartao({ imovel, indice }) {
           </a>
         </div>
       </div>
+      </Caixa>
     </Revelar>
   );
 }

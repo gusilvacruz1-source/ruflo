@@ -171,6 +171,16 @@
     animation: subir-mascara 1.3s var(--ease-suave) both;
   }
 
+  /* Caixa que reage ao cursor. A volta ao lugar é lenta porque é a saída
+     que dá a sensação de peso; a ida é imediata, escrita quadro a quadro
+     pelo ponteiro. `transform-style` mantém o conteúdo no plano da caixa —
+     sem ele, o texto sobe junto e desalinha. */
+  .caixa {
+    transition: transform 0.9s var(--ease-suave), border-color 0.5s ease;
+    transform-style: preserve-3d;
+    will-change: transform;
+  }
+
   /* Indicador de rolagem: um traço que desce sem parar, na borda da capa.
      Diz o que fazer sem escrever "role para baixo" em caixa alta. */
   @keyframes desce {

@@ -212,6 +212,35 @@ banda: um quadro decodificado ocupa `largura × altura × 4` bytes, comprima-se
 o quanto for, e é isso que derruba a aba no iPhone. Por isso o conjunto de lá
 é menor de verdade, e não o mesmo com qualidade pior.
 
+## Fluidez e as caixas
+
+**A rolagem tem inércia.** O navegador rola em degraus — cada giro da roda
+salta um bloco de pixels. Com o Lenis (`src/componentes/Rolagem.jsx`) a
+posição persegue o destino a cada quadro, com desaceleração. É o que faz a
+capa, os planos da cena e a visita parecerem uma coisa só em movimento, em
+vez de três coisas reagindo a saltos. Os links de âncora do menu e da lombada
+passam pelo mesmo caminho, senão o salto instantâneo romperia justamente a
+continuidade que a inércia cria.
+
+Como a rolagem já chega suavizada, a perseguição interna da visita ficou mais
+direta (0,32 em vez de 0,2): dois amortecimentos em série viram atraso.
+
+**As caixas respondem ao cursor.** `src/componentes/Caixa.jsx` inclina o
+elemento na direção do ponteiro e o eleva um pouco. Está nas etapas do
+atendimento, nos cartões de imóvel e nos depoimentos — dez caixas ao todo.
+
+Três decisões que valem saber, se for mexer nisso:
+
+- **6 graus, e 3 nos cartões de imóvel.** O suficiente para a caixa parecer
+  um objeto com espessura; mais que isso o texto dentro distorce. O cartão de
+  imóvel é largo, e o mesmo ângulo ali entortaria o nome na base.
+- **A ida é imediata, a volta é lenta.** O ponteiro escreve a transformação
+  quadro a quadro; ao sair, a transição de 0,9 s devolve a caixa ao lugar. É
+  a saída que dá a sensação de peso.
+- **Só em ponteiro fino.** No toque não existe cursor a seguir e o dedo já
+  cobre a caixa. Com `prefers-reduced-motion`, nada disso acontece — nem a
+  inércia.
+
 ## Movimento
 
 - **Abertura** — ao abrir a página a cena da primeira dobra se assenta (um

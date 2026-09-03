@@ -5,6 +5,7 @@ import { Hero } from './componentes/Hero';
 import { Lombada } from './componentes/Livro';
 import { Menu } from './componentes/Menu';
 import { Perguntas } from './componentes/Perguntas';
+import { Rolagem } from './componentes/Rolagem';
 import { Rodape } from './componentes/Rodape';
 import { Servicos } from './componentes/Servicos';
 import { Sobre } from './componentes/Sobre';
@@ -14,6 +15,7 @@ import { Vitrine } from './componentes/Vitrine';
 export default function App() {
   return (
     <>
+      <Rolagem />
       <Menu />
       <Lombada />
 

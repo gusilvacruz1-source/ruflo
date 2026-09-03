@@ -1,5 +1,6 @@
 import { mensagens, servicos, zap } from '../conteudo';
 import { Whatsapp } from './Interface';
+import { Caixa } from './Caixa';
 import { Folio } from './Livro';
 import { Revelar } from './Movimento';
 
@@ -78,22 +79,18 @@ export function Servicos() {
             <span className="fio h-px flex-1 text-noite-900" />
           </Revelar>
 
-          <ol className="mt-10 grid gap-px overflow-hidden rounded-[1.75rem] border border-noite-900/10 bg-noite-900/10 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             {servicos.etapas.map((etapa, i) => (
-              <Revelar
-                as="li"
-                key={etapa.numero}
-                atraso={i * 110}
-                distancia={22}
-                className="bg-osso-100 px-7 py-8 transition-colors duration-700 hover:bg-osso-200"
-              >
-                <span className="sobretexto block text-ouro-700">{etapa.numero}</span>
-                <h4 className="titulo mt-5 text-[1.35rem] leading-none text-noite-900">
-                  {etapa.titulo}
-                </h4>
-                <p className="mt-3 text-[0.85rem] leading-relaxed text-noite-900/60">
-                  {etapa.texto}
-                </p>
+              <Revelar as="li" key={etapa.numero} atraso={i * 110} distancia={22}>
+                <Caixa className="h-full rounded-[1.25rem] border border-noite-900/12 bg-osso-100 px-7 py-8 hover:border-noite-900/30">
+                  <span className="sobretexto block text-ouro-700">{etapa.numero}</span>
+                  <h4 className="titulo mt-5 text-[1.35rem] leading-none text-noite-900">
+                    {etapa.titulo}
+                  </h4>
+                  <p className="mt-3 text-[0.85rem] leading-relaxed text-noite-900/60">
+                    {etapa.texto}
+                  </p>
+                </Caixa>
               </Revelar>
             ))}
           </ol>

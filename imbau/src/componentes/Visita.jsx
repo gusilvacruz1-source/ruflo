@@ -153,9 +153,10 @@ export function Visita() {
       const avanco = Math.min(1, Math.max(0, -area.top / util));
       alvo.current = avanco * (conjunto.total - 1);
 
-      // Persegue o alvo em vez de saltar até ele: tira o serrilhado do
-      // trackpad sem criar atraso perceptível.
-      atual.current += (alvo.current - atual.current) * 0.2;
+      // Persegue o alvo em vez de saltar até ele. A perseguição é mais
+      // direta do que parece necessário porque a rolagem com inércia já
+      // suavizou a entrada: dois amortecimentos em série viram atraso.
+      atual.current += (alvo.current - atual.current) * 0.32;
       const i = Math.round(atual.current);
       if (i !== desenhado.current) {
         desenhado.current = i;
