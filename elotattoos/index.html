@@ -4,8 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 
-<!-- CONFIRMAR: cidade/UF da Eloize para completar title, description e JSON-LD -->
-<title>Eloize Betim — Tatuagens autorais, florais e fine line | [CONFIRMAR cidade]</title>
+<!-- CONFIRMAR: bairro e endereço completo (a cidade é Imbaú/PR) -->
+<title>Eloize Betim — Tatuagens autorais, florais e fine line | Imbaú, PR</title>
 <meta name="description" content="Estúdio privado de tatuagem dedicado a mulheres. Artes autorais, florais e fine line, com atendimento reservado e hora marcada.">
 <meta name="theme-color" content="#0D0D0E">
 <link rel="canonical" href="https://elotattoos.com.br/"><!-- CONFIRMAR: domínio final -->
@@ -111,23 +111,36 @@
   <div class="site-container hero__inner">
 
     <p class="micro hero__micro">
-      <!-- CONFIRMAR: cidade/UF -->
-      estúdio privado · [CONFIRMAR cidade/UF]
+      estúdio privado · Imbaú, PR
     </p>
 
-    <h1 class="hero__title" id="hero-title">
-      <span class="line"><span>ELOIZE</span></span>
-      <span class="line"><span>BETIM</span></span>
-    </h1>
+    <div class="hero__titles">
+      <h1 class="hero__title" id="hero-title">
+        <span class="line"><span>ELOIZE</span></span>
+        <span class="line"><span>BETIM</span></span>
+      </h1>
 
-    <!-- A foto em arco: a camada "front" mostra só o topo do arco e passa
-         na frente das letras; a camada "back" fica atrás do título. -->
-    <div class="hero__photo">
-      <figure class="media media--arch is-back" data-file="hero-eloize.webp" data-parallax="-8">
+      <!-- Cópia do título recortada, desenhada POR CIMA do vídeo. É o que
+           faz as letras reaparecerem abaixo da cúpula do arco: assim o
+           efeito acontece com um vídeo só, sem duas cópias para sincronizar.
+           O recorte (--corte) é calculado no JS a partir da geometria real.
+           Sem JS ela fica escondida e o arco simplesmente cobre as letras. -->
+      <p class="hero__title hero__title--corte" aria-hidden="true">
+        <span class="line"><span>ELOIZE</span></span>
+        <span class="line"><span>BETIM</span></span>
+      </p>
+    </div>
+
+    <!-- Arco do hero. O vídeo entra por cima da foto; se o arquivo não
+         existir, fica a foto, e se ela também não existir, o placeholder.
+         CONFIRMAR: hero-eloize.mp4 (ver assets/README.md). -->
+    <div class="hero__photo" data-parallax="-8">
+      <figure class="media media--arch" data-file="hero-eloize.webp">
         <img src="assets/img/hero-eloize.webp" alt="Retrato de Eloize Betim, tatuadora, no estúdio" width="1200" height="1600" fetchpriority="high" decoding="async">
-      </figure>
-      <figure class="media media--arch is-front" data-file="hero-eloize.webp" aria-hidden="true">
-        <img src="assets/img/hero-eloize.webp" alt="" width="1200" height="1600" aria-hidden="true" decoding="async">
+        <video class="hero__video" muted loop playsinline preload="metadata"
+               poster="assets/img/hero-eloize.webp" aria-hidden="true" tabindex="-1">
+          <source src="assets/img/hero-eloize.mp4" type="video/mp4">
+        </video>
       </figure>
     </div>
 
@@ -519,8 +532,7 @@
 
       <ul class="cta__infos">
         <li class="micro">Atendimento com hora marcada</li>
-        <!-- CONFIRMAR: bairro/cidade -->
-        <li class="micro">[CONFIRMAR bairro/cidade]</li>
+        <li class="micro">Imbaú, PR</li>
         <!-- CONFIRMAR: dias e horários -->
         <li class="micro">[CONFIRMAR dias e horários]</li>
       </ul>
@@ -554,8 +566,8 @@
       </div>
       <div class="footer__col">
         <p class="micro">estúdio</p>
-        <!-- CONFIRMAR: endereço/região e horários -->
-        <ul><li>Estúdio Eloize Betim</li><li>[CONFIRMAR bairro/cidade]</li><li>[CONFIRMAR dias e horários]</li></ul>
+        <!-- CONFIRMAR: bairro e horários -->
+        <ul><li>Estúdio Eloize Betim</li><li>Imbaú, PR</li><li>[CONFIRMAR dias e horários]</li></ul>
       </div>
     </div>
 
@@ -592,8 +604,8 @@
   "address": {
     "@type": "PostalAddress",
     "streetAddress": "[CONFIRMAR endereço]",
-    "addressLocality": "[CONFIRMAR cidade]",
-    "addressRegion": "[CONFIRMAR UF]",
+    "addressLocality": "Imbaú",
+    "addressRegion": "PR",
     "postalCode": "[CONFIRMAR CEP]",
     "addressCountry": "BR"
   },

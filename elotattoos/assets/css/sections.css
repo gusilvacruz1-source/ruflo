@@ -99,9 +99,14 @@
 .hero__inner{ position: relative; width: 100%; }
 .hero__micro{ margin-bottom: clamp(28px, 6vh, 64px); }
 
+.hero__titles{
+  position: relative;                        /* SEM z-index: um z-index aqui
+     criaria contexto de empilhamento e prenderia a cópia abaixo do vídeo */
+}
+
 .hero__title{
   position: relative;
-  z-index: 2;
+  z-index: 1;
   /* Escala própria (maior que --fs-display) para o nome ocupar de fato a
      largura inteira do container, como pede o briefing. O --fs-display
      original continua valendo para o logotipo do rodapé. */
@@ -112,6 +117,19 @@
    container no desktop. Se não couberem, quebram sozinhas em 2 linhas
    (é o que acontece no mobile) — sem media query para isso. */
 .hero__title .line{ display: inline-block; vertical-align: top; }
+
+/* Cópia por cima do arco. --corte é a distância do topo do título até a
+   base da cúpula; o JS mede e escreve. O padrão 100% deixa a cópia
+   totalmente recortada — se o JS não rodar, ela simplesmente não aparece. */
+.hero__title--corte{
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  margin: 0;
+  pointer-events: none;
+  --corte: 100%;
+  clip-path: inset(var(--corte) 0 0 0);
+}
 .hero__title .line:first-child{ margin-right: 0.14em; }  /* espaço no fim da
    1ª palavra, não no início da 2ª — assim a 2ª linha não fica indentada
    quando o título quebra no mobile */
@@ -124,18 +142,30 @@
   width: clamp(170px, 21vw, 290px);
   aspect-ratio: 3 / 4;
   /* SEM z-index aqui de propósito: um z-index neste elemento criaria um
-     contexto de empilhamento e prenderia a camada .is-front abaixo do
-     título. As duas camadas precisam disputar z-index com o <h1>. */
+     contexto de empilhamento e prenderia o arco abaixo da cópia do
+     título. Arco e títulos precisam disputar z-index no mesmo nível. */
 }
 .hero__photo .media{
   position: absolute; inset: 0;
   border-radius: 50vw 50vw 20px 20px;        /* máscara em arco */
+  z-index: 2;                                /* entre o título e a cópia */
 }
-.hero__photo .is-back{ z-index: 1; }         /* corpo do arco atrás das letras */
-.hero__photo .is-front{
-  z-index: 3;                                 /* topo do arco na frente das letras */
-  clip-path: inset(0 0 64% 0);
+
+/* O vídeo cobre a foto quando existe; até lá a foto (ou o placeholder)
+   é o que aparece. A classe é ligada pelo JS só depois que o vídeo
+   confirma que consegue tocar. */
+.hero__video{
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.04);       /* mesmo tratamento das fotos */
+  opacity: 0;
+  transition: opacity .8s var(--ease);
 }
+.media.tem-video .hero__video{ opacity: 1; }
+.media.tem-video img{ visibility: hidden; }  /* a foto vira só o fallback */
 
 .hero__foot{
   position: relative;
@@ -596,7 +626,7 @@
     aspect-ratio: 4 / 5;
     margin-top: 28px;
   }
-  .hero__photo .is-front{ display: none; }   /* sem sobreposição no mobile */
+  .hero__title--corte{ display: none; }      /* sem sobreposição no mobile */
   .hero__title{ margin-left: 0; }
   .scroll-cue{ display: none; }
 

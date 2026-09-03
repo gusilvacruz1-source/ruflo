@@ -143,21 +143,23 @@
   function entradaDoHero() {
     if (!temGsap || reduzido) return;
 
-    var linhas = document.querySelectorAll('.hero__title .line > span');
-    var fotoTras = document.querySelector('.hero__photo .is-back');
-    var fotoFrente = document.querySelector('.hero__photo .is-front');
+    var linhas = document.querySelectorAll('#hero-title .line > span');
+    var linhasCopia = document.querySelectorAll('.hero__title--corte .line > span');
+    var arco = document.querySelector('.hero__photo .media');
     var header = document.getElementById('header');
     var resto = ['.hero__micro', '.hero__foot', '.scroll-cue'];
 
     var tl = gsap.timeline({ defaults: { duration: 0.9, ease: 'power3.out' } });
 
+    /* Título e cópia entram em dois tweens iguais começando no mesmo
+       instante — num stagger único a cópia atrasaria e ficaria fantasma. */
     tl.from(linhas, { yPercent: 115, stagger: 0.08 }, 0);
+    if (linhasCopia.length) tl.from(linhasCopia, { yPercent: 115, stagger: 0.08 }, 0);
 
-    if (fotoTras) {
-      tl.from(fotoTras, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.1 }, 0.15)
-        .from(fotoTras.querySelector('img'), { scale: 1.06, duration: 1.2 }, 0.15);
+    if (arco) {
+      tl.from(arco, { clipPath: 'inset(100% 0% 0% 0%)', duration: 1.1 }, 0.15)
+        .from(arco.querySelector('img'), { scale: 1.06, duration: 1.2 }, 0.15);
     }
-    if (fotoFrente) tl.from(fotoFrente, { opacity: 0, duration: 0.6 }, 0.6);
 
     tl.from(resto.map(function (s) { return document.querySelector(s); }).filter(Boolean),
       { y: 24, opacity: 0, stagger: 0.08, duration: 0.7 }, 0.35);
@@ -391,6 +393,76 @@
   } else if (cursor) {
     cursor.remove();
   }
+
+  /* ---------------------------------------------------------------
+     12. VÍDEO DO HERO
+     Um vídeo só. A cópia recortada do título é que devolve as letras
+     na frente do arco, abaixo da cúpula.
+     --------------------------------------------------------------- */
+  var arcoHero = document.querySelector('.hero__photo .media');
+  var videoHero = document.querySelector('.hero__video');
+  var tituloHero = document.getElementById('hero-title');
+  var copiaTitulo = document.querySelector('.hero__title--corte');
+
+  /* Onde a cúpula do arco termina, medido do topo do título. 0.36 é a
+     fração da altura do arco ocupada pela cúpula. */
+  function medirCorte() {
+    if (!copiaTitulo || !arcoHero || !tituloHero) return;
+
+    var foto = document.querySelector('.hero__photo').getBoundingClientRect();
+    var titulo = tituloHero.getBoundingClientRect();
+    if (!foto.height || !titulo.height) return;
+
+    var baseDaCupula = foto.top + foto.height * 0.36;
+    var corte = baseDaCupula - titulo.top;
+
+    /* Fora do intervalo do título não há sobreposição: esconde a cópia. */
+    if (corte <= 0 || corte >= titulo.height) {
+      copiaTitulo.style.setProperty('--corte', '100%');
+    } else {
+      copiaTitulo.style.setProperty('--corte', corte + 'px');
+    }
+  }
+
+  if (videoHero && arcoHero) {
+    /* Só assume o lugar da foto depois de confirmar que consegue tocar.
+       O canplay pode ter disparado antes deste código rodar, então o
+       readyState atual também conta — senão o vídeo toca invisível. */
+    function assumirVideo() { arcoHero.classList.add('tem-video'); }
+
+    if (videoHero.readyState >= 3) assumirVideo();       /* HAVE_FUTURE_DATA */
+    videoHero.addEventListener('canplay', assumirVideo);
+    videoHero.addEventListener('playing', assumirVideo);
+
+    videoHero.addEventListener('error', function () {
+      arcoHero.classList.remove('tem-video');
+    });
+
+    if (reduzido) {
+      /* Movimento reduzido: fica no poster, sem tocar nada. */
+      videoHero.removeAttribute('autoplay');
+    } else if ('IntersectionObserver' in window) {
+      /* Só toca enquanto está na tela — poupa bateria e dados no celular. */
+      new IntersectionObserver(function (entradas) {
+        entradas.forEach(function (e) {
+          if (e.isIntersecting) {
+            var p = videoHero.play();
+            if (p && p.catch) p.catch(function () {});
+          } else {
+            videoHero.pause();
+          }
+        });
+      }, { threshold: 0.15 }).observe(videoHero);
+    } else {
+      var p = videoHero.play();
+      if (p && p.catch) p.catch(function () {});
+    }
+  }
+
+  medirCorte();
+  window.addEventListener('resize', medirCorte);
+  window.addEventListener('load', medirCorte);
+  if (document.fonts) document.fonts.ready.then(medirCorte);
 
   /* Recalcula os gatilhos quando as fontes chegam (evita salto de layout) */
   if (document.fonts && temGsap && window.ScrollTrigger) {

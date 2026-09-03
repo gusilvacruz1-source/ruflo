@@ -200,6 +200,10 @@ svg{ display: block; }
   filter: grayscale(1) contrast(1.04);       /* tratamento único e consistente */
 }
 .media.is-missing img{ display: none; }
+/* Se o vídeo assumiu, o placeholder sai do caminho — senão o retângulo
+   com o nome do arquivo fica pintado por cima do vídeo. */
+.media.tem-video.is-missing::after{ content: none; }
+.media.tem-video{ background: var(--ink); }
 .media.is-missing::after{
   content: attr(data-file);
   position: absolute; inset: 0;

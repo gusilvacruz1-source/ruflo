@@ -45,8 +45,9 @@ Tudo que está marcado `[CONFIRMAR]` aparece **visível na página**, de
 propósito, para não passar batido. Nada foi inventado.
 
 ### Dados do estúdio
-1. **Cidade/UF** — aparece no hero, no `<title>`, na description e no JSON-LD.
-2. **Bairro/cidade** do atendimento — CTA final e rodapé.
+1. ~~Cidade/UF~~ — ✅ **Imbaú, PR**, já aplicado no hero, no `<title>`,
+   no CTA, no rodapé e no JSON-LD.
+2. **Bairro** do atendimento — CTA final e rodapé mostram só a cidade.
 3. **Dias e horários** de atendimento — CTA final, rodapé e JSON-LD.
 4. **Endereço completo, CEP e telefone** — só para o JSON-LD (SEO local).
 5. **Domínio final** — hoje está `elotattoos.com.br` como exemplo na
@@ -78,8 +79,12 @@ propósito, para não passar batido. Nada foi inventado.
     as duas últimas aparecem como reservadas só para mostrar o estado
     visual — **isso precisa ser corrigido com a informação real**.
 
-### Fotos
-15. Ver `assets/README.md` — 25 arquivos, com dimensões sugeridas.
+### Fotos e vídeo
+15. Ver `assets/README.md` — 25 imagens, com dimensões sugeridas.
+16. **`hero-eloize.mp4`** — o vídeo de fundo do hero. O código está pronto e
+    testado; falta o arquivo em H.264/MP4, 4–8s, até 3–5 MB, sem áudio.
+    O `.mov` do iPhone (HEVC) **não serve** — só toca no Safari. O
+    `assets/README.md` explica como exportar.
 
 ---
 
