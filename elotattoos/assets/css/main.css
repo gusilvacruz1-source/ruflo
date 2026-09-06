@@ -1,0 +1,329 @@
+/* =====================================================================
+   MAIN.CSS · tokens, reset, container, tipografia e componentes base
+   Site: Estúdio Eloize Betim (@elotattoos_)
+   ===================================================================== */
+
+/* ---------- 1. TOKENS ---------- */
+:root{
+  /* Paleta — 90% preto e branco. Taupe só em detalhe. */
+  --ink:        #0D0D0E;
+  --ink-soft:   #17181A;
+  --paper:      #EFEDEA;
+  --paper-deep: #E2DFDB;
+  --taupe:      #B9AFA5;
+  --muted:      #8B8781;
+  --muted-dark: #635F59;                     /* --muted escurecido: 5.43:1 sobre --paper, 4.77:1 sobre --paper-deep */
+  --hairline:   rgba(239,237,234,0.14);     /* 1px sobre escuro */
+  --hairline-d: rgba(13,13,14,0.14);        /* 1px sobre claro */
+
+  /* Tipografia */
+  --font-display: "Bodoni Moda", "Times New Roman", serif;
+  --font-ui: "Archivo", system-ui, -apple-system, "Segoe UI", sans-serif;
+
+  --fs-display: clamp(3.25rem, 11vw, 10.5rem);
+  --fs-h2:      clamp(2.1rem, 5.5vw, 4.25rem);
+  --fs-h3:      clamp(1.35rem, 2.4vw, 1.9rem);
+  --fs-body:    clamp(0.95rem, 1.05vw, 1.0625rem);
+  --fs-micro:   0.6875rem;
+
+  /* Layout */
+  --container: 1320px;
+  --pad-x: clamp(20px, 5vw, 48px);
+  --gap: clamp(16px, 2vw, 32px);
+  --radius: 20px;
+  --radius-lg: 24px;
+
+  /* Movimento */
+  --ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --dur: 0.8s;
+}
+
+/* ---------- 2. RESET ---------- */
+*, *::before, *::after{ box-sizing: border-box; }
+html{ -webkit-text-size-adjust: 100%; }
+body{
+  margin: 0;
+  overflow-x: hidden;                        /* nunca usar 100vw em lugar nenhum */
+  background: var(--ink);
+  color: var(--paper);
+  font-family: var(--font-ui);
+  font-size: var(--fs-body);
+  font-weight: 400;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+h1,h2,h3,h4,p,figure,blockquote,ul,ol{ margin: 0; padding: 0; }
+ul,ol{ list-style: none; }
+img{ display: block; max-width: 100%; height: auto; }
+/* O atributo hidden precisa vencer qualquer display de classe
+   (o .drawer é display:grid, o .shot é display:block). */
+[hidden]{ display: none !important; }
+button{ font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+a{ color: inherit; text-decoration: none; }
+svg{ display: block; }
+
+/* ---------- 3. CONTAINER (regra inegociável) ---------- */
+.site-container{
+  width: 100%;
+  max-width: var(--container);
+  margin-inline: auto;
+  padding-inline: var(--pad-x);
+}
+/* Único full-bleed permitido: fundo de seção, foto do hero e marquee. */
+.full-bleed{ width: 100%; }
+
+/* Ritmo vertical — definido UMA vez, sem sobrescrita por seção. */
+.section{ padding-block: clamp(88px, 12vh, 168px); position: relative; }
+
+/* ---------- 4. TEMAS DE SEÇÃO ---------- */
+[data-theme="ink"]{ background: var(--ink); color: var(--paper); }
+[data-theme="paper"]{ background: var(--paper); color: var(--ink); }
+[data-theme="paper-deep"]{ background: var(--paper-deep); color: var(--ink); }
+
+/* ---------- 5. TIPOGRAFIA ---------- */
+.hero__title, .h2, .h3, .stat__num, .depo p, .footer__logo span, .drawer__nav a{
+  font-family: var(--font-display);
+  font-weight: 400;
+  font-optical-sizing: auto;
+}
+
+.hero__title{
+  font-size: var(--fs-display);
+  line-height: 0.84;
+  letter-spacing: -0.02em;
+  text-transform: uppercase;
+  font-weight: 500;
+}
+
+.h2{
+  font-size: var(--fs-h2);
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+}
+.h2--big{ font-size: clamp(2.6rem, 7vw, 5.5rem); }
+
+.h3{
+  font-size: var(--fs-h3);
+  line-height: 1.15;
+  letter-spacing: -0.01em;
+}
+
+.body{ max-width: 52ch; }
+.body--tight{ max-width: 34ch; }
+
+/* Micro-label — assinatura da referência clara. Máx. 5 pontos do site. */
+.micro{
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: var(--fs-micro);
+  line-height: 1.4;
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--muted);
+}
+[data-theme="paper"] .micro,
+[data-theme="paper-deep"] .micro{ color: var(--muted-dark); }
+
+/* Linha mascarada — base das revelações. Estado visível por padrão:
+   o JS é quem esconde antes de animar (nada some se o JS falhar). */
+.line{ display: block; overflow: hidden; }
+.line > span{ display: block; }
+
+/* ---------- 6. BOTÕES ---------- */
+.btn{
+  --btn-bg: transparent;
+  --btn-fg: currentColor;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px;                          /* alvo de toque ≥ 44px */
+  padding: 14px 26px;
+  border-radius: 999px;
+  background: var(--btn-bg);
+  color: var(--btn-fg);
+  font-size: 0.875rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  line-height: 1;
+  transition: background-color .4s var(--ease), color .4s var(--ease),
+              border-color .4s var(--ease), transform .4s var(--ease);
+  will-change: transform;
+}
+.btn--primary{ --btn-bg: var(--paper); --btn-fg: var(--ink); }
+.btn--primary:hover{ --btn-bg: var(--taupe); }
+
+.btn--outline{ border: 1px solid var(--hairline); }
+.btn--outline:hover{ border-color: var(--taupe); color: var(--taupe); }
+
+.btn--pill{ border: 1px solid var(--hairline); padding: 12px 20px; min-height: 44px; }
+.btn--pill:hover{ background: var(--paper); color: var(--ink); border-color: var(--paper); }
+
+.btn--ghost{ border: 1px solid var(--hairline-d); }
+.btn--ghost:hover{ background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+.btn--sm{ min-height: 44px; padding: 12px 20px; font-size: 0.8125rem; }
+.btn.is-disabled{ opacity: .45; pointer-events: none; }
+
+.ico{ width: 17px; height: 17px; flex: none; }
+
+/* Link com sublinhado que cresce */
+.link-underline{
+  position: relative;
+  font-size: 0.875rem;
+  letter-spacing: 0.02em;
+  padding-block: 6px;
+}
+.link-underline::after{
+  content: "";
+  position: absolute; left: 0; bottom: 0;
+  width: 100%; height: 1px;
+  background: currentColor;
+  transform: scaleX(1); transform-origin: right;
+  transition: transform .5s var(--ease);
+}
+.link-underline:hover::after{ transform: scaleX(0); }
+
+/* ---------- 7. MÍDIA + PLACEHOLDER ---------- */
+/* Enquanto a foto real não chega, o retângulo em --paper-deep aparece
+   com o nome do arquivo no centro (o JS marca .is-missing no erro). */
+.media{
+  position: relative;
+  overflow: hidden;
+  border-radius: var(--radius);
+  background: var(--paper-deep);
+  isolation: isolate;
+}
+.media img{
+  width: 100%; height: 100%;
+  object-fit: cover;
+  filter: grayscale(1) contrast(1.04);       /* tratamento único e consistente */
+}
+.media.is-missing img{ display: none; }
+.media.is-missing::after{
+  content: attr(data-file);
+  position: absolute; inset: 0;
+  display: grid; place-items: center;
+  padding: 12px;
+  text-align: center;
+  font-family: var(--font-ui);
+  font-weight: 500;
+  font-size: var(--fs-micro);
+  text-transform: uppercase;
+  letter-spacing: 0.22em;
+  color: var(--muted-dark);
+  background: var(--paper-deep);
+}
+
+/* ---------- 8. CAMADA DE GRÃO (uma só, sobre o escuro) ---------- */
+.grain{
+  position: fixed; inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity .6s var(--ease);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+html[data-nav="dark"] .grain{ opacity: .035; }
+
+/* ---------- 9. CURSOR CUSTOMIZADO ---------- */
+.cursor{
+  position: fixed; top: 0; left: 0;
+  z-index: 90;
+  width: 8px; height: 8px;
+  margin: -4px 0 0 -4px;
+  border-radius: 50%;
+  background: var(--paper);
+  mix-blend-mode: difference;
+  pointer-events: none;
+  opacity: 0;
+  display: grid; place-items: center;
+  transition: width .4s var(--ease), height .4s var(--ease), opacity .3s var(--ease);
+}
+.cursor__label{
+  font-size: 0.625rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--ink);
+  opacity: 0;
+  transition: opacity .3s var(--ease);
+}
+.cursor.is-on{ opacity: 1; }
+.cursor.is-big{ width: 48px; height: 48px; margin: -24px 0 0 -24px; }
+.cursor.is-big .cursor__label{ opacity: 1; }
+@media (hover: none){ .cursor{ display: none; } }
+
+/* ---------- 10. PRELOADER ---------- */
+.preloader{
+  position: fixed; inset: 0;
+  z-index: 100;
+  display: grid; place-items: center;
+  background: var(--ink);
+}
+.preloader__word{
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 6vw, 3.5rem);
+  letter-spacing: -0.02em;
+  color: var(--paper);
+}
+/* A máscara de largura desenha o nome da esquerda para a direita. */
+.preloader__mask{
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  width: 0;
+  animation: draw 1s var(--ease) forwards;
+}
+@keyframes draw{ to{ width: 100%; } }
+.preloader.is-done{ opacity: 0; pointer-events: none; transition: opacity .5s var(--ease); }
+
+/* ---------- 11. RABISCOS (SVG traçado) ---------- */
+.scribble{
+  position: absolute;
+  pointer-events: none;
+  color: var(--taupe);
+  overflow: visible;
+}
+.scribble path{ fill: none; stroke-linecap: round; }
+
+/* ---------- 12. UTILITÁRIOS ---------- */
+.sr-only{
+  position: absolute; width: 1px; height: 1px;
+  padding: 0; margin: -1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap; border: 0;
+}
+.skip-link{
+  position: absolute; left: 16px; top: -100px;
+  z-index: 120;
+  padding: 12px 18px;
+  background: var(--paper); color: var(--ink);
+  border-radius: 999px;
+  font-size: 0.8125rem;
+  transition: top .3s var(--ease);
+}
+.skip-link:focus{ top: 16px; }
+
+.nota-confirmar{
+  color: var(--muted-dark);
+  font-size: 0.8125rem;
+  margin-bottom: 28px;
+}
+
+/* Foco sempre visível */
+:focus-visible{
+  outline: 2px solid var(--taupe);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+/* ---------- 13. MOVIMENTO REDUZIDO ---------- */
+@media (prefers-reduced-motion: reduce){
+  *, *::before, *::after{
+    animation-duration: .001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important;
+    scroll-behavior: auto !important;
+  }
+  .cursor{ display: none; }
+  .marquee__track{ animation: none; transform: none; }
+}
