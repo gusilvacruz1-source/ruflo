@@ -104,6 +104,24 @@ pulsa ao receber item. Tudo em 220–300ms com a mesma curva.
 
 `prefers-reduced-motion: reduce` zera animação e transição e fixa a capa.
 
+## Cursor
+
+Dois elementos: um ponto de 7px que acompanha o mouse na hora e um anel de
+34px que vem atrás por interpolação (fator .16 por quadro), movidos por
+`requestAnimationFrame` em `transform` — nunca `top`/`left`.
+
+- Sobre algo clicável o anel vai a 54px e ganha um véu de 8%
+- Ao pressionar, encolhe para 26px
+- A cor sai da **luminância real do fundo sob o cursor**, subindo no DOM até
+  achar uma cor opaca: vinho sobre claro, creme sobre escuro. Lista de
+  seletores não serve — um botão creme dentro de um ladrilho vinho herdaria
+  "escuro" e o anel sumiria em cima dele.
+
+Só existe com `(hover: hover) and (pointer: fine)`. Em toque não é criado, e
+sob `prefers-reduced-motion: reduce` também não: o cursor do sistema fica.
+Em `input` e `textarea` a bolinha some e a barrinha volta — ela diz onde o
+texto entra, a bolinha não.
+
 ## Superfícies do navegador
 
 Seleção em vinho sobre creme · `caret-color` e `accent-color` vinho ·

@@ -495,3 +495,92 @@ $('#year').textContent = new Date().getFullYear();
 montarFiltros();
 montarGrid();
 renderCarrinho();
+montarCursor();
+
+/* ---------------------------------------------------------------
+   CURSOR
+   ---------------------------------------------------------------
+   Um ponto que acompanha o mouse na hora e um anel que vem atrás com
+   atraso. Só entra em quem tem mouse de verdade: em toque não existe
+   cursor, e quem pediu menos movimento fica com o cursor do sistema.
+   --------------------------------------------------------------- */
+
+function montarCursor() {
+  const temMouse = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const menosMovimento = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (!temMouse || menosMovimento) return;
+
+  const ponto = document.createElement('div');
+  ponto.className = 'cursor-ponto';
+  const anel = document.createElement('div');
+  anel.className = 'cursor-anel';
+  ponto.setAttribute('aria-hidden', 'true');
+  anel.setAttribute('aria-hidden', 'true');
+  document.body.append(anel, ponto);
+  document.documentElement.classList.add('tem-cursor');
+
+  let alvoX = window.innerWidth / 2, alvoY = window.innerHeight / 2;
+  let anelX = alvoX, anelY = alvoY;
+  let visivel = false;
+
+  document.addEventListener('mousemove', (e) => {
+    alvoX = e.clientX;
+    alvoY = e.clientY;
+    ponto.style.transform = `translate3d(${alvoX}px, ${alvoY}px, 0) translate(-50%, -50%)`;
+
+    if (!visivel) {
+      visivel = true;
+      anelX = alvoX; anelY = alvoY;   // não desliza da tela inteira na primeira vez
+      document.documentElement.classList.add('cursor-visivel');
+    }
+  }, { passive: true });
+
+  document.addEventListener('mouseleave', () => {
+    visivel = false;
+    document.documentElement.classList.remove('cursor-visivel');
+  });
+  document.addEventListener('mouseenter', () => {
+    visivel = true;
+    document.documentElement.classList.add('cursor-visivel');
+  });
+
+  document.addEventListener('mousedown', () => anel.classList.add('apertado'));
+  document.addEventListener('mouseup', () => anel.classList.remove('apertado'));
+
+  // Cresce sobre o que dá para clicar; some sobre campo de texto, onde o
+  // cursor do sistema diz mais do que uma bolinha.
+  const clicavel = 'a, button, .produto, video, select, [role="button"]';
+  const texto = 'input, textarea';
+
+  // Lê o fundo que está de fato embaixo do cursor, subindo até achar uma cor
+  // opaca. Lista de seletores não serve: um botão creme dentro de um ladrilho
+  // vinho herdaria "escuro" e o anel sumiria em cima dele.
+  function fundoEscuro(el) {
+    for (let n = el; n && n !== document.documentElement; n = n.parentElement) {
+      const cor = getComputedStyle(n).backgroundColor;
+      const m = cor.match(/rgba?\(([^)]+)\)/);
+      if (!m) continue;
+      const [r, g, b, a = 1] = m[1].split(',').map(Number);
+      if (a < 0.5) continue;                       // transparente: continua subindo
+      return (0.2126 * r + 0.7152 * g + 0.0722 * b) < 140;
+    }
+    return false;                                   // chegou no fundo areia
+  }
+
+  document.addEventListener('mouseover', (e) => {
+    const alvo = e.target;
+    anel.classList.toggle('grande', !!alvo.closest(clicavel));
+
+    const noEscuro = fundoEscuro(alvo);
+    anel.classList.toggle('claro', noEscuro);
+    ponto.classList.toggle('claro', noEscuro);
+    document.documentElement.classList.toggle('cursor-texto', !!alvo.closest(texto));
+  }, { passive: true });
+
+  (function seguir() {
+    anelX += (alvoX - anelX) * 0.16;
+    anelY += (alvoY - anelY) * 0.16;
+    anel.style.transform = `translate3d(${anelX}px, ${anelY}px, 0) translate(-50%, -50%)`;
+    requestAnimationFrame(seguir);
+  })();
+}

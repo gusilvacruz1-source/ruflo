@@ -397,6 +397,47 @@ p{margin:0}
 }
 .aviso-flutuante.aparece{opacity:1;transform:translate(-50%,0)}
 
+/* ---------- CURSOR ---------- */
+/* Só existe quando o script confirma mouse de verdade e movimento liberado.
+   O ponto acompanha na hora; o anel vem atrás, movido por requestAnimationFrame
+   em transform — nada de top/left, que forçaria layout a cada quadro. */
+
+.cursor-ponto,
+.cursor-anel{
+  position:fixed;top:0;left:0;z-index:200;
+  border-radius:var(--pill);pointer-events:none;
+  opacity:0;transition:opacity .25s var(--saida);
+  will-change:transform;
+}
+.cursor-visivel .cursor-ponto,
+.cursor-visivel .cursor-anel{opacity:1}
+
+.cursor-ponto{
+  width:7px;height:7px;background:var(--vinho);
+  transition:opacity .25s var(--saida),background .2s var(--saida);
+}
+.cursor-ponto.claro{background:var(--creme)}
+
+.cursor-anel{
+  width:34px;height:34px;border:1.6px solid var(--vinho);
+  transition:opacity .25s var(--saida),width .3s var(--saida),
+             height .3s var(--saida),border-color .2s var(--saida),
+             background .3s var(--saida);
+}
+.cursor-anel.claro{border-color:var(--creme)}
+.cursor-anel.grande{width:54px;height:54px;background:rgba(84,23,27,.08)}
+.cursor-anel.grande.claro{background:rgba(246,239,230,.14)}
+.cursor-anel.apertado{width:26px;height:26px}
+
+/* Esconde o cursor do sistema só onde a bolinha o substitui. Em campo de
+   texto ele volta: a barrinha diz onde o texto entra, a bolinha não. */
+.tem-cursor,
+.tem-cursor *{cursor:none}
+.tem-cursor input,
+.tem-cursor textarea{cursor:auto}
+.cursor-texto .cursor-ponto,
+.cursor-texto .cursor-anel{opacity:0}
+
 /* ---------- RESPONSIVO ---------- */
 @media (max-width:1040px){
   .ladrilho--capa{grid-column:span 12;grid-row:auto}
