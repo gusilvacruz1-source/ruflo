@@ -1,0 +1,450 @@
+/* =====================================================================
+   PORTFÓLIO, Gu Silva
+   Identidade própria, sem parentesco com os outros dois sites do repo:
+   aqui é papel claro, tinta fria e um verde só. Cantos de 4px em tudo
+   (a BETIM usa 16px e pílulas, a Kerollay usa 32px e pílulas).
+
+   Regra de forma, uma só: raio 4px em botões, blocos e imagens.
+   Regra de cor, uma só: um verde de destaque, do topo ao rodapé.
+
+   Geist e Geist Mono são servidas pelo próprio site (pasta fonts/,
+   subconjunto latino, ~52 KB no total). Sem Google Fonts: uma conexão
+   a menos para abrir a página no 4G.
+   ===================================================================== */
+
+@font-face{
+  font-family:'Geist';
+  src:url('../fonts/geist.woff2') format('woff2');
+  font-weight:100 900;font-style:normal;font-display:swap;
+}
+@font-face{
+  font-family:'Geist Mono';
+  src:url('../fonts/geist-mono.woff2') format('woff2');
+  font-weight:400;font-style:normal;font-display:swap;
+}
+
+:root{
+  color-scheme:light dark;
+
+  --papel:#F1F0EC;
+  --papel-2:#E5E3DC;
+  --papel-3:#DBD8D0;
+  --tinta:#14171A;
+  --tinta-2:#565D63;
+  --linha:#CFCCC3;
+
+  --verde:#0F6B45;
+  --verde-forte:#0B5136;
+  --sobre-verde:#F4F7F4;
+
+  --ui:'Geist',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
+  --mono:'Geist Mono',ui-monospace,'SF Mono',Menlo,monospace;
+
+  --raio:4px;
+  --larg:1180px;
+  --saida:cubic-bezier(.16,1,.3,1);
+
+  --sombra:0 1px 2px rgba(20,23,26,.06), 0 12px 32px rgba(20,23,26,.10);
+}
+
+@media (prefers-color-scheme:dark){
+  :root{
+    --papel:#101315;
+    --papel-2:#171B1E;
+    --papel-3:#1E2327;
+    --tinta:#ECEEEB;
+    --tinta-2:#98A0A6;
+    --linha:#2A3034;
+
+    --verde:#41BA85;
+    --verde-forte:#5BD09B;
+    --sobre-verde:#08251A;
+
+    --sombra:0 1px 2px rgba(0,0,0,.4), 0 14px 40px rgba(0,0,0,.45);
+  }
+}
+
+*{box-sizing:border-box}
+
+html{scroll-behavior:smooth}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+
+body{
+  margin:0;
+  background:var(--papel);
+  color:var(--tinta);
+  font-family:var(--ui);
+  font-size:17px;
+  line-height:1.6;
+  -webkit-font-smoothing:antialiased;
+  text-rendering:optimizeLegibility;
+}
+
+img{display:block;max-width:100%;height:auto}
+a{color:inherit;text-decoration:none}
+h1,h2,h3{margin:0;line-height:1.14;letter-spacing:-.022em;font-weight:600}
+p{margin:0}
+ul,ol{margin:0;padding:0;list-style:none}
+
+:focus-visible{
+  outline:2px solid var(--verde);
+  outline-offset:3px;
+  border-radius:2px;
+}
+
+.pular{
+  position:absolute;left:-9999px;top:0;
+  background:var(--tinta);color:var(--papel);
+  padding:12px 18px;border-radius:var(--raio);z-index:99;
+}
+.pular:focus{left:12px;top:12px}
+
+.faixa{
+  width:100%;
+  max-width:var(--larg);
+  margin-inline:auto;
+  padding-inline:22px;
+}
+
+/* ---------------------------------------------------------------- topo */
+
+.topo{
+  position:sticky;top:0;z-index:20;
+  background:color-mix(in srgb, var(--papel) 88%, transparent);
+  backdrop-filter:blur(12px);
+  -webkit-backdrop-filter:blur(12px);
+  border-bottom:1px solid var(--linha);
+}
+@supports not (backdrop-filter:blur(2px)){
+  .topo{background:var(--papel)}
+}
+
+.topo__linha{
+  height:68px;
+  display:flex;align-items:center;gap:28px;
+}
+
+.marca{display:flex;align-items:center;gap:10px;flex:none}
+.marca__sigla{
+  display:grid;place-items:center;
+  width:28px;height:28px;
+  background:var(--verde);color:var(--sobre-verde);
+  border-radius:var(--raio);
+  font-family:var(--mono);font-size:12px;letter-spacing:.02em;
+}
+.marca__nome{font-weight:600;letter-spacing:-.015em}
+
+.menu{
+  display:flex;gap:26px;margin-left:auto;
+  font-size:15px;color:var(--tinta-2);
+  white-space:nowrap;
+}
+.menu a{transition:color .2s var(--saida)}
+.menu a:hover{color:var(--tinta)}
+
+.topo__cta{margin-left:6px;flex:none}
+
+@media (max-width:860px){
+  .menu{display:none}
+  .topo__cta{margin-left:auto}
+}
+
+/* ------------------------------------------------------------- botões */
+
+.botao{
+  display:inline-flex;align-items:center;justify-content:center;
+  padding:11px 20px;
+  border-radius:var(--raio);
+  border:1px solid transparent;
+  font-size:15px;font-weight:600;letter-spacing:-.01em;
+  white-space:nowrap;
+  cursor:pointer;
+  transition:background-color .2s var(--saida),
+             border-color .2s var(--saida),
+             color .2s var(--saida),
+             transform .12s var(--saida);
+}
+.botao--cheio{background:var(--verde);color:var(--sobre-verde)}
+.botao--cheio:hover{background:var(--verde-forte)}
+.botao--linha{border-color:var(--linha);color:var(--tinta);background:transparent}
+.botao--linha:hover{border-color:var(--tinta);background:var(--papel-2)}
+.botao:active{transform:translateY(1px)}
+.botao--grande{padding:15px 30px;font-size:17px}
+
+@media (prefers-reduced-motion:reduce){
+  .botao,.botao:active{transition:none;transform:none}
+}
+
+/* --------------------------------------------------------------- hero */
+
+.hero{
+  display:grid;
+  grid-template-columns:minmax(0,1.05fr) minmax(0,1fr);
+  gap:56px;
+  align-items:center;
+  padding-top:76px;
+  padding-bottom:88px;
+}
+
+.hero__titulo{
+  font-size:clamp(2.2rem,5.4vw,3.9rem);
+  line-height:1.06;
+  letter-spacing:-.035em;
+}
+/* A frase verde ocupa a segunda linha sozinha. Assim o título tem
+   sempre duas linhas no desktop, sem depender de onde o texto quebra. */
+.hero__titulo em{
+  display:block;
+  font-style:normal;
+  color:var(--verde);
+}
+
+.hero__sub{
+  margin-top:22px;
+  max-width:34ch;
+  font-size:clamp(1.02rem,1.5vw,1.2rem);
+  color:var(--tinta-2);
+}
+
+.hero__acoes{display:flex;flex-wrap:wrap;gap:12px;margin-top:32px}
+
+.hero__imagem{
+  margin:0;
+  border:1px solid var(--linha);
+  border-radius:var(--raio);
+  overflow:hidden;
+  box-shadow:var(--sombra);
+}
+
+@media (max-width:900px){
+  .hero{
+    grid-template-columns:1fr;
+    gap:40px;
+    padding-top:52px;
+    padding-bottom:64px;
+  }
+  .hero__sub{max-width:none}
+}
+
+/* ----------------------------------------------------- títulos de seção */
+
+.sobrancelha{
+  font-family:var(--mono);
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.14em;
+  color:var(--tinta-2);
+  margin-bottom:14px;
+}
+
+.secao__titulo{
+  font-size:clamp(1.75rem,3.4vw,2.6rem);
+  letter-spacing:-.03em;
+  max-width:20ch;
+}
+
+/* ----------------------------------------------------------- trabalhos */
+
+.trabalhos{padding-block:76px;border-top:1px solid var(--linha)}
+
+.obra{
+  display:grid;
+  grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);
+  gap:48px;
+  align-items:center;
+  margin-top:64px;
+}
+.obra--invertida .obra__imagem{order:2}
+
+.obra__imagem{
+  border:1px solid var(--linha);
+  border-radius:var(--raio);
+  overflow:hidden;
+  box-shadow:var(--sombra);
+}
+
+.obra__nome{font-size:clamp(1.35rem,2.4vw,1.8rem)}
+.obra__linha{
+  margin-top:8px;
+  font-family:var(--mono);
+  font-size:13px;
+  color:var(--verde);
+}
+.obra__desc{margin-top:18px;color:var(--tinta-2);max-width:46ch}
+
+.obra__marcas{
+  margin-top:24px;
+  display:flex;flex-wrap:wrap;gap:8px;
+}
+.obra__marcas li{
+  border:1px solid var(--linha);
+  border-radius:var(--raio);
+  padding:6px 11px;
+  font-size:13px;
+  color:var(--tinta-2);
+  background:var(--papel-2);
+}
+
+@media (max-width:900px){
+  .obra{grid-template-columns:1fr;gap:26px;margin-top:48px}
+  .obra--invertida .obra__imagem{order:0}
+  .obra__desc{max-width:none}
+}
+
+/* ------------------------------------------------------------ processo */
+
+.processo{padding-block:76px;border-top:1px solid var(--linha)}
+
+.degraus{margin-top:48px;display:grid;gap:2px}
+
+.degrau{
+  display:grid;
+  grid-template-columns:88px minmax(0,1fr);
+  gap:24px;
+  padding:30px 0;
+  border-top:1px solid var(--linha);
+}
+.degrau:last-child{border-bottom:1px solid var(--linha)}
+
+.degrau__num{
+  font-family:var(--mono);
+  font-size:14px;
+  color:var(--verde);
+  padding-top:5px;
+}
+.degrau h3{font-size:1.3rem}
+.degrau p{margin-top:10px;color:var(--tinta-2);max-width:58ch}
+
+@media (max-width:720px){
+  .degrau{grid-template-columns:1fr;gap:10px;padding:24px 0}
+  .degrau__num{padding-top:0}
+}
+
+/* ------------------------------------------------------------- incluso */
+
+.incluso{padding-block:76px;border-top:1px solid var(--linha)}
+
+.grade{
+  margin-top:48px;
+  display:grid;
+  grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:14px;
+}
+
+.bloco{
+  border:1px solid var(--linha);
+  border-radius:var(--raio);
+  padding:28px;
+  background:var(--papel-2);
+}
+.bloco h3{font-size:1.18rem}
+.bloco p{margin-top:10px;color:var(--tinta-2);font-size:15.5px}
+
+/* célula 1: foto real, ocupa duas linhas da coluna da esquerda.
+   O celular entra pelo topo do painel e é cortado embaixo, mostrando a
+   primeira tela, que é o que interessa. Posição absoluta para a altura da
+   célula vir da grade, e não dos 1440px de altura da imagem. */
+.bloco--foto{
+  grid-row:span 2;
+  padding:0;
+  display:flex;flex-direction:column;
+  overflow:hidden;
+  background:var(--papel-3);
+}
+.bloco--foto .bloco__texto{padding:28px 28px 20px}
+
+.bloco__tela{
+  position:relative;
+  flex:1 1 auto;
+  min-height:210px;
+  overflow:hidden;
+}
+.bloco__tela img{
+  position:absolute;
+  top:0;left:50%;
+  transform:translateX(-50%);
+  width:172px;
+  border:1px solid var(--linha);
+  border-bottom:0;
+  border-radius:var(--raio) var(--raio) 0 0;
+  box-shadow:var(--sombra);
+}
+
+/* célula 2: o único bloco em verde, para a grade não virar caixa sobre caixa */
+.bloco--destaque{
+  grid-column:span 2;
+  background:var(--verde);
+  border-color:var(--verde);
+  color:var(--sobre-verde);
+}
+.bloco--destaque p{color:color-mix(in srgb, var(--sobre-verde) 88%, transparent)}
+
+/* célula 5: fecha a grade ocupando as duas colunas restantes */
+.bloco--largo{grid-column:span 3}
+
+@media (max-width:900px){
+  .grade{grid-template-columns:1fr}
+  .bloco--foto{grid-row:auto}
+  .bloco--destaque,.bloco--largo{grid-column:auto}
+  .bloco__tela{min-height:190px}
+}
+
+/* ------------------------------------------------------------- contato */
+
+.contato{
+  padding-block:96px;
+  border-top:1px solid var(--linha);
+}
+.contato__miolo{max-width:30ch;margin-left:auto;margin-right:0}
+
+.contato__titulo{font-size:clamp(1.9rem,4.4vw,3rem);letter-spacing:-.035em}
+.contato__texto{margin-top:20px;color:var(--tinta-2)}
+.contato .botao{margin-top:30px}
+
+.contato__email{margin-top:20px;font-family:var(--mono);font-size:14px}
+.contato__email a{
+  color:var(--tinta-2);
+  border-bottom:1px solid var(--linha);
+  padding-bottom:2px;
+  transition:color .2s var(--saida),border-color .2s var(--saida);
+}
+.contato__email a:hover{color:var(--verde);border-color:var(--verde)}
+
+@media (max-width:900px){
+  .contato{padding-block:72px}
+  .contato__miolo{max-width:none;margin-left:0}
+}
+
+/* -------------------------------------------------------------- rodapé */
+
+.rodape{
+  padding-block:34px;
+  border-top:1px solid var(--linha);
+  display:flex;flex-wrap:wrap;gap:8px 28px;
+  align-items:baseline;
+  font-size:14px;
+  color:var(--tinta-2);
+}
+.rodape__quem strong{color:var(--tinta);font-weight:600}
+.rodape__nota{margin-left:auto}
+
+@media (max-width:640px){
+  .rodape__nota{margin-left:0}
+}
+
+/* -------------------------------------------------- entrada por rolagem
+   Motivo da animação: hierarquia. Cada bloco entra quando é a vez dele
+   de ser lido, e só uma vez. Nada fica em laço infinito. */
+
+.js .revelar{
+  opacity:0;
+  transform:translateY(18px);
+  transition:opacity .6s var(--saida), transform .6s var(--saida);
+}
+.js .revelar.dentro{opacity:1;transform:none}
+
+/* Sem JavaScript a classe .js nunca entra e nada fica escondido.
+   Com movimento reduzido, some a animação e fica o conteúdo. */
+@media (prefers-reduced-motion:reduce){
+  .js .revelar{opacity:1;transform:none;transition:none}
+}
