@@ -110,3 +110,17 @@ Ao mexer nisso:
 - Vaga vazia gera 404 no console. É o próprio teste de existência, não
   é defeito. Não "consertar" removendo a vaga.
 - A vaga vazia tem que ocupar zero, para o layout não abrir buraco.
+
+## Rasgo entre faixas
+
+As faixas não terminam em linha reta: terminam rasgadas, como cartaz
+arrancado do poste. A tira `.rasgo` é mascarada no formato do rasgo e
+pintada com a cor da **seção vizinha**, então a de cima parece rasgar
+por cima da de baixo.
+
+A cor vem de `--cor-rasgo`, definida por seção. Ao inserir uma faixa
+nova entre duas existentes, acertar essa variável nos dois lados, senão
+o rasgo aparece com a cor errada e a emenda fica visível.
+
+Máscara em vez de imagem colorida justamente para a cor vir de variável
+e o mesmo desenho servir para qualquer par de seções.

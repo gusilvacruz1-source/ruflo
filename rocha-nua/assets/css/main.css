@@ -69,7 +69,7 @@ body::after{
   inset:0;
   z-index:60;
   pointer-events:none;
-  opacity:.055;
+  opacity:.085;
   background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
@@ -104,10 +104,10 @@ h1,h2,h3{margin:0;font-weight:400}
 
 .secao__titulo{
   font-family:var(--marcador);
-  font-size:clamp(2.5rem,8vw,5rem);
-  line-height:1.05;
+  font-size:clamp(2.9rem,10vw,6.5rem);
+  line-height:.98;
   letter-spacing:.01em;
-  transform:rotate(-.8deg);
+  transform:rotate(-1.6deg);
   transform-origin:left center;
 }
 
@@ -280,3 +280,30 @@ h1,h2,h3{margin:0;font-weight:400}
 .vaga__real{display:none}
 .vaga--cheia .vaga__real{display:block}
 .vaga--cheia .vaga__reserva{display:none}
+
+
+/* ------------------------------------------------------------- rasgo
+   A faixa não termina numa linha reta: termina rasgada, como cartaz
+   arrancado do poste. A tira é mascarada no formato do rasgo e pintada
+   com a cor da seção vizinha, então a de cima parece rasgar por cima
+   da de baixo.
+
+   Máscara em vez de imagem colorida porque assim a cor vem de uma
+   variável e o mesmo desenho serve para qualquer par de seções. */
+
+.rasgo{
+  position:absolute;
+  left:0;right:0;
+  height:18px;
+  z-index:3;
+  pointer-events:none;
+  background:var(--cor-rasgo, var(--asfalto));
+  -webkit-mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='18' preserveAspectRatio='none'%3E%3Cpath d='M0 0h140v7l-9 5-11-6-10 8-12-5-9 6-13-7-10 5-11-8-10 6-12-4-9 7-11-5-3 2z' fill='%23000'/%3E%3C/svg%3E");
+  mask-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='18' preserveAspectRatio='none'%3E%3Cpath d='M0 0h140v7l-9 5-11-6-10 8-12-5-9 6-13-7-10 5-11-8-10 6-12-4-9 7-11-5-3 2z' fill='%23000'/%3E%3C/svg%3E");
+  -webkit-mask-size:140px 18px;
+  mask-size:140px 18px;
+  -webkit-mask-repeat:repeat-x;
+  mask-repeat:repeat-x;
+}
+.rasgo--cima{top:0}
+.rasgo--baixo{bottom:0;transform:rotate(180deg)}

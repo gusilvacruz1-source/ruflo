@@ -105,7 +105,7 @@
 
 .hero__titulo{
   font-family:var(--marcador);
-  font-size:clamp(3.2rem,13vw,8.5rem);
+  font-size:clamp(3.4rem,14vw,9.6rem);
   line-height:.94;
   letter-spacing:-.005em;
   display:flex;
@@ -114,8 +114,8 @@
   padding:.12em .1em .18em;
   margin-left:-.06em;
 }
-.hero__l1{transform:rotate(-2.5deg);transform-origin:left center}
-.hero__l2{transform:rotate(1.5deg) translateX(.08em);transform-origin:left center}
+.hero__l1{transform:rotate(-3.5deg);transform-origin:left center}
+.hero__l2{transform:rotate(2.4deg) translateX(.1em);transform-origin:left center}
 
 .hero__sub{
   margin-top:20px;
@@ -176,16 +176,16 @@
   color:var(--asfalto);
   border-block:2px solid var(--asfalto);
   overflow:hidden;
-  padding-block:10px;
+  padding-block:14px;
 }
 .esteira__trilho{
   display:flex;
   width:max-content;
-  animation:correr 26s linear infinite;
+  animation:correr 18s linear infinite;
 }
 .esteira__trilho span{
   font-family:var(--marcador);
-  font-size:clamp(1.05rem,2.6vw,1.6rem);
+  font-size:clamp(1.2rem,3.2vw,2rem);
   white-space:nowrap;
   padding-right:.6em;
 }
@@ -208,10 +208,19 @@
 }
 .ad--canto-disco{width:clamp(78px,10vw,132px);top:-34px;right:5%;transform:rotate(-12deg)}
 .ad--canto-estrela{width:clamp(64px,8vw,104px);top:-28px;right:9%;transform:rotate(14deg)}
+.ad--canto-palheta{width:clamp(58px,7vw,92px);top:-26px;left:8%;transform:rotate(-18deg)}
+.ad--canto-raio{width:clamp(60px,7.5vw,98px);top:-30px;right:14%;transform:rotate(-11deg)}
 
 @media (max-width:560px){
   .ad--canto{display:none}
 }
+
+/* Rasgo das faixas claras. A cor é a da seção vizinha: em cima da
+   "A banda" vem a esteira laranja, embaixo vem o asfalto. */
+.banda .rasgo--cima{--cor-rasgo:var(--laranja)}
+.banda .rasgo--baixo{--cor-rasgo:var(--asfalto)}
+.agenda .rasgo--cima,
+.agenda .rasgo--baixo{--cor-rasgo:var(--asfalto)}
 
 /* ------------------------------------------------------------- banda */
 
