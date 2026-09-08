@@ -99,13 +99,24 @@ Direção: rua, skate, noite e adesivo.
 - Uma faixa de texto rolando na página inteira, e ela para sozinha para
   quem configurou o sistema com menos movimento.
 
-## Referência de estilo
+## Imagens de terceiros
 
-O moodboard fica em `_referencias/`, **fora do que vai ao ar**. São
-imagens de terceiros (capa do Charlie Brown Jr., foto do Chorão, cartela
-com marcas do Linkin Park e do Skillet, foto de banco de imagens),
-usadas só como direção visual. Nada delas entra no site. Veja
-`_referencias/LEIA-ME.md`.
+Os originais ficam em `_referencias/`, e as versões otimizadas que a
+página usa ficam em `assets/img/`.
+
+| Arquivo | Onde aparece |
+|---------|--------------|
+| `guitarra.webp` | textura do topo, apagada e sem rosto |
+| `cbj.webp` | seção "Na parede" |
+| `chorao.webp` | seção "Na parede" |
+| `adesivos.webp` | seção "Na parede" |
+
+As três da parede entram **identificadas**: cada uma tem legenda dizendo
+o que é, e a seção fecha com a nota de que os direitos são de quem as
+fez. É referência declarada, não material da banda.
+
+Quando chegarem fotos de verdade da Rocha Nua, elas assumem o topo e a
+seção "A banda", e a parede continua sendo parede de referência.
 
 ## Verificado
 

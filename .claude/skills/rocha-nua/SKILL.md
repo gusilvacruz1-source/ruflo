@@ -75,15 +75,23 @@ ou marcada, e a página tem estado vazio de verdade para cada uma. Não
 preencher com exemplo inventado apresentado como real, e não afirmar
 cidade nenhuma.
 
-## Referência visual, e o limite dela
+## Imagens de terceiros na página
 
-O moodboard está em `rocha-nua/_referencias/`, fora do que vai ao ar:
-capa do *100% Charlie Brown Jr.*, foto de imprensa do Chorão, cartela de
-adesivos com marcas do Linkin Park e do Skillet, e uma foto de banco de
-imagens.
+Os originais ficam em `rocha-nua/_referencias/`. As versões otimizadas
+que a página usa ficam em `assets/img/`.
 
-**São referência de estilo, nada mais.** Não reproduzir aquela arte, o
-logo, o monograma, a caligrafia nem os rostos. A Rocha Nua usa o mesmo
-vocabulário (adesivo, tag, skate, rua, paleta quente) com desenho
-próprio. Se algum arquivo de `_referencias/` aparecer no HTML publicado,
-é erro.
+- `guitarra.webp` é a textura do topo: preto e branco, apagada, com as
+  bordas dissolvidas. Entra como atmosfera, não como retrato da banda.
+- `cbj.webp`, `chorao.webp` e `adesivos.webp` aparecem **só** na seção
+  "Na parede", como recortes colados, cada um com legenda dizendo o que
+  é, e com a nota de que os direitos são de quem as fez.
+
+**A regra que sustenta isso:** essas imagens podem aparecer identificadas
+como referência, nunca passando por material da Rocha Nua. Não usar
+nenhuma delas no hero como se fosse a banda, na seção "A banda", em
+`og:image`, no favicon ou como capa de autoral. Não recortar o logo do
+Charlie Brown Jr., do Linkin Park ou do Skillet para reaproveitar como
+marca da Rocha Nua.
+
+Quando chegarem fotos de verdade da banda, elas assumem o topo e a seção
+"A banda", e a parede continua sendo o que é: parede de referência.

@@ -1,9 +1,14 @@
-# Moodboard, não material do site
+# Originais das imagens de referência
 
-As imagens desta pasta são **referência de estilo**. Nenhuma delas entra
-no site publicado, e a pasta inteira fica de fora do que vai para o ar.
+Esta pasta guarda os arquivos como chegaram. As versões otimizadas que
+a página usa ficam em `../assets/img/`.
 
-Motivo, arquivo por arquivo:
+Todas são **de terceiros** e a página as trata como referência
+declarada: a do guitarrista entra apagada como textura do topo, e as
+outras três aparecem na seção "Na parede", cada uma com legenda dizendo
+o que é. Nenhuma é apresentada como material da Rocha Nua.
+
+O que é cada uma:
 
 - `100% Charlie Brown Jr_.jpg` — capa de disco do Charlie Brown Jr.
   Arte, logo e rostos são de outra banda.
@@ -14,7 +19,8 @@ Motivo, arquivo por arquivo:
 - `Music, guitar, concert.jpg` — foto de banco de imagens, de um
   guitarrista que não é da Rocha Nua, sem licença conhecida.
 
-O que foi aproveitado delas: a **direção visual**. Paleta quente de rua
-tirada da capa, linguagem de adesivo recortado da cartela, energia de
-skate e noite da foto do Chorão, e o preto e branco estourado da foto
-de show. Tudo redesenhado do zero para a Rocha Nua.
+Além de aparecerem na parede, elas deram a **direção visual** do site:
+paleta quente de rua tirada da capa, linguagem de adesivo recortado da
+cartela, energia de skate e noite da foto do Chorão, e o preto e branco
+estourado da foto de show. Os adesivos da página foram desenhados do
+zero para a Rocha Nua, não recortados daqui.
