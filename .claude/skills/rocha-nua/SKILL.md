@@ -80,10 +80,16 @@ cidade nenhuma.
 Os originais enviados como referência ficam em `rocha-nua/_referencias/`
 e **não vão ao ar**. Veja o LEIA-ME de lá.
 
-A única que a página usa é `assets/img/guitarra.webp`: um guitarrista em
-preto e branco estourado, sem rosto reconhecível e sem marca de banda
-nenhuma. Ela aparece duas vezes, sempre como fundo: textura do topo e
-fundo do fecho de contratação. Nunca como retrato da Rocha Nua.
+As fotos que a banda enviou (estúdio, caveira adesivo, vinis,
+toca-discos, mão na guitarra, caveira riscada, skates) vivem em
+`assets/img/` e são o material visual da página. Todas em preto e branco
+de alto contraste; as de fundo levam véu de asfalto por cima.
+
+Ao escolher onde cada uma entra, mandar a **leitura**, não o acaso: foto
+em pé vai para lugar em pé (foto pregada), foto com padrão repetido vai
+para a faixa larga, foto estourada de branco não funciona em faixa fina.
+Já errei isso uma vez colocando a mão na guitarra numa faixa larga: virou
+borrão.
 
 **As outras três não entram na página.** A capa do Charlie Brown Jr., a
 foto do Chorão e a cartela com as marcas do Linkin Park e do Skillet são
@@ -124,3 +130,13 @@ o rasgo aparece com a cor errada e a emenda fica visível.
 
 Máscara em vez de imagem colorida justamente para a cor vir de variável
 e o mesmo desenho servir para qualquer par de seções.
+
+## Peso
+
+Fundo entra comprimido com força, porque aparece escurecido e com
+opacidade baixa. Foto nítida fica no tamanho em que é exibida, não
+maior. Hoje: 306 KB na primeira tela, 346 KB na página inteira.
+
+Para medir, usar `performance.getEntriesByType('resource')` e somar
+`encodedBodySize`. Somar `response.body()` pelo Playwright perde
+respostas e dá número errado.

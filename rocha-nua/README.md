@@ -101,38 +101,57 @@ Direção: rua, skate, noite e adesivo.
 
 ## Fotos
 
-Mesmo esquema do site da Eloize: **cada foto tem nome de arquivo fixo e
-lugar reservado**. Salve o arquivo em `assets/img/` com exatamente o nome
-da tabela e ele assume sozinho. Não precisa mexer no código.
+### As que já estão na página
+
+| Arquivo | Onde |
+|---------|------|
+| `estudio.webp` | topo, foto pregada com fita, com a caveira colada na quina |
+| `caveira.webp` | adesivo recortado (tem transparência de verdade) |
+| `vinis.webp` | faixa larga entre "A banda" e "Autorais" |
+| `toca-discos.webp` | fundo de "Autorais" |
+| `guitarra-mao.webp` | fundo de "Vídeos" |
+| `caveira-glitch.webp` | fundo do fecho de contratação |
+| `skates.webp` | foto pregada na "Agenda" |
+| `guitarra.webp` | textura do topo, atrás de tudo |
+
+Todas entram em preto e branco de alto contraste. As de fundo levam véu
+de asfalto por cima, para o texto sentar no asfalto e não na foto.
+
+A caveira chegou em `.jpg` com o xadrez de transparência **gravado nos
+pixels**. O xadrez foi removido por preenchimento a partir da borda (o
+contorno branco do adesivo fecha o caminho e o preto de dentro não é
+alcançado) e ela foi salva em WebP com alfa. Se for trocar por outra,
+mesmo cuidado: `.jpg` não guarda transparência.
+
+### Vagas ainda abertas
+
+Mesmo esquema do site da Eloize: **nome de arquivo fixo e lugar
+reservado**. Salve em `assets/img/` com exatamente este nome e aparece
+sozinho, sem tocar no código.
 
 | Arquivo | Onde entra | Dimensão sugerida |
 |---------|------------|-------------------|
-| `logo.webp` | topo, no lugar da pilha de adesivos | 560×560, fundo transparente |
-| `hero-banda.webp` | fundo do topo, no lugar da textura | 1600×1200, foto de show |
+| `logo.webp` | acima do nome, no topo | 560×560, fundo transparente |
+| `hero-banda.webp` | textura do topo, no lugar da guitarra | 1600×1200, foto de show |
 | `emerson.webp` | retrato no card do Emerson | 800×1000 (vertical) |
 | `jose.webp` | retrato no card do José | 800×1000 (vertical) |
-
-Enquanto o arquivo não existe, fica o que já está na página: a pilha de
-adesivos no topo, a textura de guitarra no fundo, e o card do integrante
-sem retrato (a vaga ocupa zero, não abre buraco).
-
-**Tratamento das fotos:** os retratos entram em preto e branco com
-contraste alto (`grayscale(1) contrast(1.35)`), para casar com o resto.
-Não precisa tratar antes de subir.
 
 **Duas regras do mecanismo**, para quem for mexer no código:
 
 - Nenhuma `.vaga__real` pode ter `loading="lazy"`. Ela nasce escondida,
   e imagem escondida com lazy nunca entra em viewport, nunca carrega, e
   a vaga nunca enche.
-- Enquanto uma vaga estiver vazia, o navegador registra um **404 no
-  console** para aquele arquivo. É esperado: é assim que a página
-  descobre se a foto existe. Some quando o arquivo entra.
+- Vaga vazia registra um **404 no console**. É esperado: é assim que a
+  página descobre se a foto existe. Some quando o arquivo entra.
 
-Além dessas, a página usa `assets/img/guitarra.webp`, um guitarrista em
-preto e branco sem rosto reconhecível, como textura do topo e fundo do
-fecho. As outras imagens enviadas como referência ficam em
-`_referencias/` e não vão ao ar.
+### Peso
+
+Primeira tela 306 KB, página inteira 346 KB. Medido pela API de
+performance do navegador (`encodedBodySize`), que é a contagem confiável.
+
+Fundo entra comprimido com força porque aparece escurecido e com
+opacidade baixa. Foto que aparece nítida (estúdio, caveira) fica no
+tamanho em que é exibida, não maior.
 
 ## Verificado
 

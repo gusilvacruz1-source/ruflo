@@ -1,8 +1,8 @@
 /* =====================================================================
-   MAIN.CSS · tokens, reset, tipografia, adesivos e componentes base
+   MAIN.CSS · tokens, reset, tipografia e componentes base
    Site: ROCHA NUA (@rocha.nua)
 
-   Direção: rua, skate, noite e adesivo. Fundo de asfalto, papel sujo,
+   Direção: rua, noite e cartaz. Fundo de asfalto, papel sujo,
    laranja queimado de acento e um amarelo só em detalhe.
 
    Regra de cor, uma só e vale na página inteira:
@@ -10,8 +10,7 @@
    laranja ou amarelo é o asfalto. Creme é para o fundo escuro.
    Isso mantém tudo acima de 4.5:1 sem precisar conferir caso a caso.
 
-   Regra de forma: canto reto, raio 0. O que é redondo é desenho
-   (adesivo, selo, disco), nunca caixa.
+   Regra de forma: canto reto, raio 0.
    ===================================================================== */
 
 @font-face{
@@ -157,26 +156,6 @@ h1,h2,h3{margin:0;font-weight:400}
   pointer-events:none;
 }
 
-/* --------------------------------------------------------- adesivos
-   Marcas desenhadas para a Rocha Nua. O contorno grosso em creme e a
-   sombra dura são o que dá o recorte de adesivo. */
-
-.adesivo{
-  display:block;
-  filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45));
-  pointer-events:none;
-}
-/* O contorno vai no <svg>, não nas formas: o conteúdo de <use> mora em
-   shadow tree e não é alcançado por seletor de fora. Stroke, stroke-width
-   e paint-order são herdáveis, então descem sozinhos até o desenho. */
-.adesivo svg{
-  display:block;width:100%;height:100%;
-  stroke:var(--creme);
-  stroke-width:7;
-  stroke-linejoin:round;
-  paint-order:stroke fill;
-}
-
 /* ----------------------------------------------------------- botões */
 
 .btn{
@@ -237,7 +216,6 @@ h1,h2,h3{margin:0;font-weight:400}
   --fg:var(--asfalto);
   --bg:var(--creme);
 }
-.secao--clara .adesivo svg{stroke:var(--asfalto)}
 .secao--clara .colada{
   -webkit-text-stroke-color:var(--asfalto);
   text-shadow:6px 6px 0 var(--creme-2);

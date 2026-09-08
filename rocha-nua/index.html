@@ -22,13 +22,8 @@
 
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
-<!-- =====================================================================
-     Filtros e adesivos.
-
-     Os adesivos são desenhados aqui, para a Rocha Nua. Nenhum deles
-     copia marca de banda nenhuma: são formas de rua genéricas, o
-     vocabulário que a referência usa, não os sinais dela.
-     ===================================================================== -->
+<!-- Filtro que dá o tremido de traço à mão nas molduras. É funcional,
+     não é desenho: entra via filter na borda, em vez de border lisa. -->
 <svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
   <filter id="rabisco">
     <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="3" seed="7" result="ruido"/>
@@ -39,34 +34,11 @@
     <feDisplacementMap in="SourceGraphic" in2="ruido" scale="7" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
 
-  <symbol id="ad-raio" viewBox="0 0 100 100">
-    <path d="M58 4 L20 58 H40 L34 96 78 40 H54 Z" fill="#F2B01E"/>
-  </symbol>
 
-  <symbol id="ad-estrela" viewBox="0 0 100 100">
-    <path d="M50 4 L61.2 34.6 93.7 35.8 68.1 55.9 77 87.2 50 69 23 87.2 31.9 55.9 6.3 35.8 38.8 34.6 Z" fill="#E2541F"/>
-  </symbol>
 
-  <symbol id="ad-palheta" viewBox="0 0 100 100">
-    <path d="M50 9 C74 9 91 22 91 38 C91 52 70 74 56 87 C52 90.5 48 90.5 44 87 C30 74 9 52 9 38 C9 22 26 9 50 9 Z" fill="#F2B01E"/>
-  </symbol>
 
-  <symbol id="ad-shape" viewBox="0 0 100 100">
-    <circle cx="30" cy="72" r="10" fill="#141110"/>
-    <circle cx="70" cy="72" r="10" fill="#141110"/>
-    <path d="M7 46 C7 36 14 31 24 31 L76 31 C86 31 93 36 93 46 C93 53 87 57 80 56 L20 56 C13 57 7 53 7 46 Z" fill="#E2541F"/>
-  </symbol>
 
-  <symbol id="ad-disco" viewBox="0 0 100 100">
-    <circle cx="50" cy="50" r="45" fill="#1E1917"/>
-    <circle cx="50" cy="50" r="17" fill="#E2541F" stroke="none"/>
-    <circle cx="50" cy="50" r="4" fill="#F0E7D6" stroke="none"/>
-  </symbol>
 
-  <symbol id="ad-selo" viewBox="0 0 100 100">
-    <circle cx="50" cy="50" r="45" fill="#E2541F"/>
-    <circle cx="50" cy="50" r="34" fill="none" stroke="#141110" stroke-width="3"/>
-  </symbol>
 </svg>
 
 <header class="topo" id="topo">
@@ -91,6 +63,11 @@
     </div>
     <div class="tira hero__grade">
       <div class="hero__texto">
+        <!-- Vaga do logo. Com assets/img/logo.webp na pasta ele aparece
+             aqui em cima do nome. Sem o arquivo, não ocupa nada. -->
+        <div class="hero__logo vaga" data-vaga>
+          <img class="vaga__real" src="assets/img/logo.webp" alt="Logo da Rocha Nua" width="560" height="560" decoding="async">
+        </div>
         <h1 class="hero__titulo">
           <span class="hero__l1 colada">ROCHA</span>
           <span class="hero__l2 colada colada--amarela">NUA</span>
@@ -102,17 +79,11 @@
         </div>
       </div>
 
-      <!-- Vaga do logo. Solte assets/img/logo.webp na pasta e ele assume
-           o lugar da pilha de adesivos sozinho, sem mexer no código. -->
-      <div class="hero__marca vaga" data-vaga>
-        <img class="vaga__real" src="assets/img/logo.webp" alt="Logo da Rocha Nua" width="560" height="560" decoding="async">
-      <div class="hero__pilha vaga__reserva" aria-hidden="true">
-        <span class="adesivo ad--shape"><svg><use href="#ad-shape"/></svg></span>
-        <span class="adesivo ad--raio"><svg><use href="#ad-raio"/></svg></span>
-        <span class="adesivo ad--estrela"><svg><use href="#ad-estrela"/></svg></span>
-        <span class="adesivo ad--palheta"><svg><use href="#ad-palheta"/></svg></span>
-      </div>
-      </div>
+      <!-- Estúdio, pregado torto na página, com a caveira colada na quina. -->
+      <figure class="hero__estudio">
+        <img class="hero__estudio-foto" src="assets/img/estudio.webp" width="736" height="736" alt="Estúdio de ensaio, visto em grande angular: teclado, amplificador e as paredes cobertas de alto-falantes." fetchpriority="high" decoding="async">
+        <img class="caveira caveira--estudio" src="assets/img/caveira.webp" width="486" height="520" alt="" decoding="async">
+      </figure>
     </div>
   </section>
 
@@ -132,7 +103,6 @@
       <h2 class="secao__titulo">A banda</h2>
       <ul class="integrantes">
         <li class="integrante fitado">
-          <span class="integrante__ad adesivo"><svg><use href="#ad-palheta"/></svg></span>
           <div class="integrante__retrato vaga" data-vaga>
             <img class="vaga__real" src="assets/img/emerson.webp" alt="Emerson, da Rocha Nua" width="800" height="1000" decoding="async">
           </div>
@@ -141,7 +111,6 @@
           <a class="integrante__arroba" href="https://instagram.com/emerson7r" target="_blank" rel="noopener">@emerson7r</a>
         </li>
         <li class="integrante fitado">
-          <span class="integrante__ad adesivo"><svg><use href="#ad-raio"/></svg></span>
           <div class="integrante__retrato vaga" data-vaga>
             <img class="vaga__real" src="assets/img/jose.webp" alt="José, da Rocha Nua" width="800" height="1000" decoding="async">
           </div>
@@ -153,9 +122,19 @@
     </div>
   </section>
 
+  <!-- FAIXA DE RUA: só imagem, sem título e sem legenda. Serve de
+       respiro entre duas seções e de peso visual. -->
+  <div class="faixa-rua" aria-hidden="true">
+    <img src="assets/img/vinis.webp" width="499" height="499" alt="" loading="lazy" decoding="async">
+    <span class="rasgo rasgo--cima"></span>
+    <span class="rasgo rasgo--baixo"></span>
+  </div>
+
   <!-- AUTORAIS -------------------------------------------------------- -->
   <section class="secao autorais" id="autorais">
-    <span class="adesivo ad--canto ad--canto-disco" aria-hidden="true"><svg><use href="#ad-disco"/></svg></span>
+    <div class="secao__fundo" aria-hidden="true">
+      <img src="assets/img/toca-discos.webp" width="736" height="736" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="tira">
       <h2 class="secao__titulo">Autorais</h2>
       <div id="lista-autorais" class="lista"></div>
@@ -164,18 +143,22 @@
 
   <!-- AGENDA (faixa de papel) ----------------------------------------- -->
   <section class="secao secao--clara agenda" id="agenda">
-    <span class="adesivo ad--canto ad--canto-palheta" aria-hidden="true"><svg><use href="#ad-palheta"/></svg></span>
     <span class="rasgo rasgo--cima" aria-hidden="true"></span>
     <span class="rasgo rasgo--baixo" aria-hidden="true"></span>
     <div class="tira">
       <h2 class="secao__titulo">Agenda</h2>
+      <figure class="pregada">
+        <img src="assets/img/skates.webp" width="736" height="920" alt="Dois shapes de skate pendurados numa parede de madeira." loading="lazy" decoding="async">
+      </figure>
       <div id="lista-agenda" class="lista"></div>
     </div>
   </section>
 
   <!-- VÍDEOS ---------------------------------------------------------- -->
   <section class="secao videos" id="videos">
-    <span class="adesivo ad--canto ad--canto-estrela" aria-hidden="true"><svg><use href="#ad-estrela"/></svg></span>
+    <div class="secao__fundo" aria-hidden="true">
+      <img src="assets/img/guitarra-mao.webp" width="736" height="606" alt="" loading="lazy" decoding="async">
+    </div>
     <div class="tira">
       <h2 class="secao__titulo">Vídeos</h2>
       <div id="lista-videos" class="lista"></div>
@@ -185,9 +168,8 @@
 
   <!-- CONTRATAÇÃO ------------------------------------------------------ -->
   <section class="secao contratacao" id="contratacao">
-    <span class="adesivo ad--canto ad--canto-raio" aria-hidden="true"><svg><use href="#ad-raio"/></svg></span>
     <div class="contratacao__fundo" aria-hidden="true">
-      <img src="assets/img/guitarra.webp" width="600" height="598" alt="" loading="lazy" decoding="async">
+      <img src="assets/img/caveira-glitch.webp" width="563" height="617" alt="" loading="lazy" decoding="async">
     </div>
     <div class="tira">
       <h2 class="contratacao__titulo">
