@@ -99,17 +99,40 @@ Direção: rua, skate, noite e adesivo.
 - Uma faixa de texto rolando na página inteira, e ela para sozinha para
   quem configurou o sistema com menos movimento.
 
-## Imagens
+## Fotos
 
-A página usa uma foto só: `assets/img/guitarra.webp`, um guitarrista em
-preto e branco estourado, sem rosto reconhecível. Ela abre e fecha o
-site, sempre como fundo tratado, nunca como retrato da banda.
+Mesmo esquema do site da Eloize: **cada foto tem nome de arquivo fixo e
+lugar reservado**. Salve o arquivo em `assets/img/` com exatamente o nome
+da tabela e ele assume sozinho. Não precisa mexer no código.
 
-Os outros arquivos enviados como referência ficam em `_referencias/` e
-não vão ao ar. O porquê de cada um está no LEIA-ME de lá.
+| Arquivo | Onde entra | Dimensão sugerida |
+|---------|------------|-------------------|
+| `logo.webp` | topo, no lugar da pilha de adesivos | 560×560, fundo transparente |
+| `hero-banda.webp` | fundo do topo, no lugar da textura | 1600×1200, foto de show |
+| `emerson.webp` | retrato no card do Emerson | 800×1000 (vertical) |
+| `jose.webp` | retrato no card do José | 800×1000 (vertical) |
 
-Quando chegarem fotos de verdade da Rocha Nua, elas assumem o topo, o
-fecho de contratação e a seção "A banda".
+Enquanto o arquivo não existe, fica o que já está na página: a pilha de
+adesivos no topo, a textura de guitarra no fundo, e o card do integrante
+sem retrato (a vaga ocupa zero, não abre buraco).
+
+**Tratamento das fotos:** os retratos entram em preto e branco com
+contraste alto (`grayscale(1) contrast(1.35)`), para casar com o resto.
+Não precisa tratar antes de subir.
+
+**Duas regras do mecanismo**, para quem for mexer no código:
+
+- Nenhuma `.vaga__real` pode ter `loading="lazy"`. Ela nasce escondida,
+  e imagem escondida com lazy nunca entra em viewport, nunca carrega, e
+  a vaga nunca enche.
+- Enquanto uma vaga estiver vazia, o navegador registra um **404 no
+  console** para aquele arquivo. É esperado: é assim que a página
+  descobre se a foto existe. Some quando o arquivo entra.
+
+Além dessas, a página usa `assets/img/guitarra.webp`, um guitarrista em
+preto e branco sem rosto reconhecível, como textura do topo e fundo do
+fecho. As outras imagens enviadas como referência ficam em
+`_referencias/` e não vão ao ar.
 
 ## Verificado
 

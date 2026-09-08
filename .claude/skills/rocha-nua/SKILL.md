@@ -93,3 +93,20 @@ esses logos para virar marca da Rocha Nua.
 
 Quando chegarem fotos de verdade da banda, elas assumem o topo, o fecho
 e a seção "A banda".
+
+## Vagas de foto
+
+Copiado do site da Eloize: cada foto tem nome fixo e lugar reservado, e
+o JS marca `.vaga--cheia` quando o arquivo carrega de verdade. Enquanto
+falta, vale a reserva, que é o desenho que já está na página.
+
+Arquivos previstos em `assets/img/`: `logo.webp` (topo), `hero-banda.webp`
+(fundo do topo), `emerson.webp` e `jose.webp` (retratos).
+
+Ao mexer nisso:
+
+- Nunca colocar `loading="lazy"` numa `.vaga__real`. Escondida, ela não
+  entraria em viewport, não carregaria, e a vaga nunca encheria.
+- Vaga vazia gera 404 no console. É o próprio teste de existência, não
+  é defeito. Não "consertar" removendo a vaga.
+- A vaga vazia tem que ocupar zero, para o layout não abrir buraco.

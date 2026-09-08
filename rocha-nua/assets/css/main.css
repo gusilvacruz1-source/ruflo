@@ -265,3 +265,18 @@ h1,h2,h3{margin:0;font-weight:400}
   max-width:38ch;
   margin-inline:auto;
 }
+
+
+/* ------------------------------------------------------------- vagas
+   A foto real só aparece quando o arquivo existe: o JS confirma que ela
+   carregou e marca .vaga--cheia. Até lá vale a reserva, que é o desenho
+   que já vive na página. Sem JavaScript, a reserva também fica.
+
+   A imagem escondida continua sendo baixada pelo navegador, que é
+   justamente como a vaga descobre se o arquivo existe. Por isso nenhuma
+   .vaga__real pode ter loading="lazy": escondida, ela nunca entraria em
+   viewport, nunca carregaria, e a vaga nunca encheria. */
+
+.vaga__real{display:none}
+.vaga--cheia .vaga__real{display:block}
+.vaga--cheia .vaga__reserva{display:none}
