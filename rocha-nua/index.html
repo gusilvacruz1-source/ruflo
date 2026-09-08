@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>ROCHA NUA | Rock'n'Roll</title>
 <meta name="description" content="Rocha Nua, banda de rock'n'roll. Autorais, agenda de shows, vídeos e contato para contratação.">
-<meta name="theme-color" content="#000000">
+<meta name="theme-color" content="#141110">
 
 <meta property="og:type" content="website">
 <meta property="og:locale" content="pt_BR">
@@ -22,8 +22,13 @@
 
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
-<!-- Filtro que dá o tremido de traço à mão nas molduras. É funcional,
-     não é desenho: entra via filter nas bordas, em vez de border lisa. -->
+<!-- =====================================================================
+     Filtros e adesivos.
+
+     Os adesivos são desenhados aqui, para a Rocha Nua. Nenhum deles
+     copia marca de banda nenhuma: são formas de rua genéricas, o
+     vocabulário que a referência usa, não os sinais dela.
+     ===================================================================== -->
 <svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
   <filter id="rabisco">
     <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="3" seed="7" result="ruido"/>
@@ -33,6 +38,35 @@
     <feTurbulence type="fractalNoise" baseFrequency="0.015 0.035" numOctaves="4" seed="19" result="ruido"/>
     <feDisplacementMap in="SourceGraphic" in2="ruido" scale="7" xChannelSelector="R" yChannelSelector="G"/>
   </filter>
+
+  <symbol id="ad-raio" viewBox="0 0 100 100">
+    <path d="M58 4 L20 58 H40 L34 96 78 40 H54 Z" fill="#F2B01E"/>
+  </symbol>
+
+  <symbol id="ad-estrela" viewBox="0 0 100 100">
+    <path d="M50 4 L61.2 34.6 93.7 35.8 68.1 55.9 77 87.2 50 69 23 87.2 31.9 55.9 6.3 35.8 38.8 34.6 Z" fill="#E2541F"/>
+  </symbol>
+
+  <symbol id="ad-palheta" viewBox="0 0 100 100">
+    <path d="M50 9 C74 9 91 22 91 38 C91 52 70 74 56 87 C52 90.5 48 90.5 44 87 C30 74 9 52 9 38 C9 22 26 9 50 9 Z" fill="#F2B01E"/>
+  </symbol>
+
+  <symbol id="ad-shape" viewBox="0 0 100 100">
+    <circle cx="30" cy="72" r="10" fill="#141110"/>
+    <circle cx="70" cy="72" r="10" fill="#141110"/>
+    <path d="M7 46 C7 36 14 31 24 31 L76 31 C86 31 93 36 93 46 C93 53 87 57 80 56 L20 56 C13 57 7 53 7 46 Z" fill="#E2541F"/>
+  </symbol>
+
+  <symbol id="ad-disco" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="45" fill="#1E1917"/>
+    <circle cx="50" cy="50" r="17" fill="#E2541F" stroke="none"/>
+    <circle cx="50" cy="50" r="4" fill="#F0E7D6" stroke="none"/>
+  </symbol>
+
+  <symbol id="ad-selo" viewBox="0 0 100 100">
+    <circle cx="50" cy="50" r="45" fill="#E2541F"/>
+    <circle cx="50" cy="50" r="34" fill="none" stroke="#141110" stroke-width="3"/>
+  </symbol>
 </svg>
 
 <header class="topo" id="topo">
@@ -43,7 +77,7 @@
       <a href="#agenda">Agenda</a>
       <a href="#videos">Vídeos</a>
     </nav>
-    <a class="btn btn--branco topo__cta" href="#contratacao">Chamar pra tocar</a>
+    <a class="btn btn--cheio topo__cta" href="#contratacao">Chamar pra tocar</a>
   </div>
 </header>
 
@@ -54,24 +88,23 @@
     <div class="tira hero__grade">
       <div class="hero__texto">
         <h1 class="hero__titulo">
-          <span class="hero__l1">ROCHA</span>
-          <span class="hero__l2">NUA</span>
+          <span class="hero__l1 colada">ROCHA</span>
+          <span class="hero__l2 colada colada--amarela">NUA</span>
         </h1>
         <p class="hero__sub">Rock'n'Roll. Autoral e ao vivo.</p>
         <div class="hero__acoes">
-          <a class="btn btn--branco" href="#videos">Ouvir a banda</a>
+          <a class="btn btn--cheio" href="#videos">Ouvir a banda</a>
           <a class="btn btn--linha" href="#contratacao">Chamar pra tocar</a>
         </div>
       </div>
 
-      <!-- TROQUE AQUI: coloque o logo do punho em assets/img/logo.png
-           (ou .webp) e o site passa a usar a imagem no lugar do
-           carimbo de texto. Some este bloco quando trocar. -->
-      <div class="hero__selo" aria-hidden="true">
-        <div class="selo">
-          <span class="selo__cima">ROCHA</span>
-          <span class="selo__baixo">NUA</span>
-        </div>
+      <!-- TROQUE AQUI: com o logo do punho em assets/img/, troque este
+           bloco inteiro por <img src="assets/img/logo.png" alt="..."> -->
+      <div class="hero__pilha" aria-hidden="true">
+        <span class="adesivo ad--shape"><svg><use href="#ad-shape"/></svg></span>
+        <span class="adesivo ad--raio"><svg><use href="#ad-raio"/></svg></span>
+        <span class="adesivo ad--estrela"><svg><use href="#ad-estrela"/></svg></span>
+        <span class="adesivo ad--palheta"><svg><use href="#ad-palheta"/></svg></span>
       </div>
     </div>
   </section>
@@ -84,17 +117,19 @@
     </div>
   </div>
 
-  <!-- A BANDA (faixa branca) ----------------------------------------- -->
+  <!-- A BANDA (faixa de papel) --------------------------------------- -->
   <section class="secao secao--clara banda" id="banda">
     <div class="tira">
       <h2 class="secao__titulo">A banda</h2>
       <ul class="integrantes">
-        <li class="integrante">
+        <li class="integrante fitado">
+          <span class="integrante__ad adesivo"><svg><use href="#ad-palheta"/></svg></span>
           <h3>Emerson</h3>
           <p class="integrante__papel">Voz, violão e guitarra</p>
           <a class="integrante__arroba" href="https://instagram.com/emerson7r" target="_blank" rel="noopener">@emerson7r</a>
         </li>
-        <li class="integrante">
+        <li class="integrante fitado">
+          <span class="integrante__ad adesivo"><svg><use href="#ad-raio"/></svg></span>
           <h3>José</h3>
           <p class="integrante__papel">Baixo</p>
           <a class="integrante__arroba" href="https://instagram.com/josehique" target="_blank" rel="noopener">@josehique</a>
@@ -105,13 +140,14 @@
 
   <!-- AUTORAIS -------------------------------------------------------- -->
   <section class="secao autorais" id="autorais">
+    <span class="adesivo ad--canto ad--canto-disco" aria-hidden="true"><svg><use href="#ad-disco"/></svg></span>
     <div class="tira">
       <h2 class="secao__titulo">Autorais</h2>
       <div id="lista-autorais" class="lista"></div>
     </div>
   </section>
 
-  <!-- AGENDA (faixa branca) ------------------------------------------- -->
+  <!-- AGENDA (faixa de papel) ----------------------------------------- -->
   <section class="secao secao--clara agenda" id="agenda">
     <div class="tira">
       <h2 class="secao__titulo">Agenda</h2>
@@ -121,6 +157,7 @@
 
   <!-- VÍDEOS ---------------------------------------------------------- -->
   <section class="secao videos" id="videos">
+    <span class="adesivo ad--canto ad--canto-estrela" aria-hidden="true"><svg><use href="#ad-estrela"/></svg></span>
     <div class="tira">
       <h2 class="secao__titulo">Vídeos</h2>
       <div id="lista-videos" class="lista"></div>
@@ -131,7 +168,10 @@
   <!-- CONTRATAÇÃO ------------------------------------------------------ -->
   <section class="secao contratacao" id="contratacao">
     <div class="tira">
-      <h2 class="contratacao__titulo">Chama a<br>gente pra<br>tocar.</h2>
+      <h2 class="contratacao__titulo">
+        <span class="colada">Chama a gente</span>
+        <span class="colada colada--amarela">pra tocar.</span>
+      </h2>
       <p class="contratacao__texto">
         Bar, festa, aniversário, evento da cidade. Diz o dia, o lugar e
         quanto tempo de som você precisa, que a gente fecha.

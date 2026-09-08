@@ -1,13 +1,17 @@
 /* =====================================================================
-   MAIN.CSS · tokens, reset, tipografia e componentes base
+   MAIN.CSS · tokens, reset, tipografia, adesivos e componentes base
    Site: ROCHA NUA (@rocha.nua)
 
-   Preto absoluto e branco puro, só isso. O "acento" da página é a
-   inversão: faixas de largura total que trocam fundo e texto de lugar.
-   Por isso cada seção declara --fg e --bg, e todo componente dentro
-   dela se pinta sozinho a partir desses dois.
+   Direção: rua, skate, noite e adesivo. Fundo de asfalto, papel sujo,
+   laranja queimado de acento e um amarelo só em detalhe.
 
-   Cantos retos em tudo. Raio 0, sem exceção.
+   Regra de cor, uma só e vale na página inteira:
+   laranja e amarelo NUNCA levam texto claro em cima. Quem senta em
+   laranja ou amarelo é o asfalto. Creme é para o fundo escuro.
+   Isso mantém tudo acima de 4.5:1 sem precisar conferir caso a caso.
+
+   Regra de forma: canto reto, raio 0. O que é redondo é desenho
+   (adesivo, selo, disco), nunca caixa.
    ===================================================================== */
 
 @font-face{
@@ -22,8 +26,13 @@
 }
 
 :root{
-  --breu:#000;
-  --cal:#fff;
+  --asfalto:#141110;
+  --asfalto-2:#1E1917;
+  --creme:#F0E7D6;
+  --creme-2:#DBCFB8;
+  --laranja:#E2541F;
+  --laranja-forte:#F26B2E;
+  --amarelo:#F2B01E;
 
   --marcador:'Permanent Marker','Comic Sans MS',cursive;
   --ui:'Archivo',ui-sans-serif,system-ui,-apple-system,'Segoe UI',sans-serif;
@@ -31,9 +40,9 @@
   --tira:1240px;
   --saida:cubic-bezier(.16,1,.3,1);
 
-  /* Padrão da página: fundo breu, texto cal. Seções claras invertem. */
-  --fg:var(--cal);
-  --bg:var(--breu);
+  /* Padrão: asfalto no fundo, creme no texto. Faixas claras invertem. */
+  --fg:var(--creme);
+  --bg:var(--asfalto);
 }
 
 *{box-sizing:border-box}
@@ -43,13 +52,25 @@ html{scroll-behavior:smooth}
 
 body{
   margin:0;
-  background:var(--breu);
-  color:var(--cal);
+  background:var(--asfalto);
+  color:var(--creme);
   font-family:var(--ui);
   font-size:16px;
   line-height:1.55;
   -webkit-font-smoothing:antialiased;
   overflow-x:hidden;
+}
+
+/* Grão de asfalto por cima de tudo. Fixo e sem eventos de ponteiro:
+   assim não repinta a cada quadro de rolagem. */
+body::after{
+  content:'';
+  position:fixed;
+  inset:0;
+  z-index:60;
+  pointer-events:none;
+  opacity:.055;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.8' numOctaves='3'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
 }
 
 img{display:block;max-width:100%;height:auto}
@@ -58,18 +79,17 @@ p{margin:0}
 ul,ol{margin:0;padding:0;list-style:none}
 h1,h2,h3{margin:0;font-weight:400}
 
-/* O bloco de filtros não pode ocupar espaço nenhum no layout. */
 .defs{position:absolute;width:0;height:0;overflow:hidden}
 
 :focus-visible{
-  outline:3px solid var(--fg);
+  outline:3px solid var(--amarelo);
   outline-offset:3px;
 }
 
 .pular{
   position:absolute;left:-9999px;top:0;z-index:99;
-  background:var(--cal);color:var(--breu);
-  padding:12px 18px;font-weight:700;
+  background:var(--amarelo);color:var(--asfalto);
+  padding:12px 18px;font-weight:800;
 }
 .pular:focus{left:12px;top:12px}
 
@@ -87,15 +107,27 @@ h1,h2,h3{margin:0;font-weight:400}
   font-size:clamp(2.5rem,8vw,5rem);
   line-height:1.05;
   letter-spacing:.01em;
-  /* A fonte de marcador já vem torta. Uma inclinação de meio grau
-     tira o resto do ar de título centralizado de gerador de site. */
-  transform:rotate(-.6deg);
+  transform:rotate(-.8deg);
   transform-origin:left center;
+}
+
+/* Letra de adesivo: preenchida, com contorno grosso e sombra dura.
+   É o que faz a palavra parecer colada na página em vez de escrita. */
+.colada{
+  color:var(--laranja);
+  -webkit-text-stroke:6px var(--creme);
+  paint-order:stroke fill;
+  text-shadow:6px 6px 0 var(--asfalto-2);
+}
+.colada--amarela{color:var(--amarelo)}
+
+@supports not ((-webkit-text-stroke:1px #000) or (text-stroke:1px #000)){
+  .colada{-webkit-text-stroke:0;text-shadow:4px 4px 0 var(--asfalto-2)}
 }
 
 /* ---------------------------------------------------------- moldura
    Traço à mão: a borda vive num pseudo-elemento e só ela recebe o
-   filtro de turbulência. Assim a linha treme e o texto continua nítido. */
+   filtro de turbulência, então a linha treme e o texto fica nítido. */
 
 .moldura{position:relative}
 .moldura::before{
@@ -108,9 +140,41 @@ h1,h2,h3{margin:0;font-weight:400}
 }
 .moldura--forte::before{filter:url(#rabisco-forte)}
 
-/* Sem suporte a filtro SVG, fica a borda reta mesmo. Nada quebra. */
 @supports not (filter:url(#rabisco)){
   .moldura::before{filter:none}
+}
+
+/* Pedaço de fita crepe segurando o bloco pelo canto. */
+.fitado{position:relative}
+.fitado::after{
+  content:'';
+  position:absolute;
+  top:-11px;left:22px;
+  width:78px;height:22px;
+  background:var(--amarelo);
+  opacity:.82;
+  transform:rotate(-4deg);
+  pointer-events:none;
+}
+
+/* --------------------------------------------------------- adesivos
+   Marcas desenhadas para a Rocha Nua. O contorno grosso em creme e a
+   sombra dura são o que dá o recorte de adesivo. */
+
+.adesivo{
+  display:block;
+  filter:drop-shadow(3px 4px 0 rgba(0,0,0,.45));
+  pointer-events:none;
+}
+/* O contorno vai no <svg>, não nas formas: o conteúdo de <use> mora em
+   shadow tree e não é alcançado por seletor de fora. Stroke, stroke-width
+   e paint-order são herdáveis, então descem sozinhos até o desenho. */
+.adesivo svg{
+  display:block;width:100%;height:100%;
+  stroke:var(--creme);
+  stroke-width:7;
+  stroke-linejoin:round;
+  paint-order:stroke fill;
 }
 
 /* ----------------------------------------------------------- botões */
@@ -131,13 +195,24 @@ h1,h2,h3{margin:0;font-weight:400}
   cursor:pointer;
   transition:background-color .18s var(--saida),
              color .18s var(--saida),
-             transform .1s var(--saida);
+             transform .1s var(--saida),
+             box-shadow .18s var(--saida);
 }
-.btn--branco{background:var(--fg);color:var(--bg)}
-.btn--branco:hover{background:transparent;color:var(--fg)}
+
+/* Laranja e amarelo sempre com texto de asfalto. Ver regra de cor. */
+.btn--cheio{
+  background:var(--laranja);
+  border-color:var(--laranja);
+  color:var(--asfalto);
+  box-shadow:4px 4px 0 var(--asfalto-2);
+}
+.btn--cheio:hover{background:var(--laranja-forte);border-color:var(--laranja-forte)}
+
 .btn--linha{background:transparent;color:var(--fg)}
 .btn--linha:hover{background:var(--fg);color:var(--bg)}
-.btn:active{transform:translate(1px,1px)}
+
+.btn:active{transform:translate(2px,2px)}
+.btn--cheio:active{box-shadow:2px 2px 0 var(--asfalto-2)}
 
 @media (prefers-reduced-motion:reduce){
   .btn{transition:none}
@@ -147,18 +222,25 @@ h1,h2,h3{margin:0;font-weight:400}
 /* ----------------------------------------------------------- seções */
 
 .secao{
-  --fg:var(--cal);
-  --bg:var(--breu);
+  --fg:var(--creme);
+  --bg:var(--asfalto);
   background:var(--bg);
   color:var(--fg);
   padding-block:clamp(56px,9vw,104px);
+  position:relative;
 }
 
-/* Faixa invertida de largura total. É o ritmo da página, decidido de
-   propósito, não um deslize de tema no meio da rolagem. */
+/* Faixa de papel. É o ritmo da página, decidido de propósito.
+   Em fundo claro o laranja fica só em título grande: em corpo de
+   texto ele não alcança 4.5:1 sobre o creme. */
 .secao--clara{
-  --fg:var(--breu);
-  --bg:var(--cal);
+  --fg:var(--asfalto);
+  --bg:var(--creme);
+}
+.secao--clara .adesivo svg{stroke:var(--asfalto)}
+.secao--clara .colada{
+  -webkit-text-stroke-color:var(--asfalto);
+  text-shadow:6px 6px 0 var(--creme-2);
 }
 
 /* ------------------------------------------------- listas e vazios */
@@ -166,18 +248,20 @@ h1,h2,h3{margin:0;font-weight:400}
 .lista{margin-top:clamp(28px,4vw,44px)}
 
 .vazio{
-  padding:34px 26px;
+  padding:38px 26px;
   text-align:center;
 }
 .vazio__frase{
   font-family:var(--marcador);
   font-size:clamp(1.3rem,3.4vw,1.9rem);
   line-height:1.2;
+  color:var(--laranja);
 }
+.secao--clara .vazio__frase{color:var(--asfalto)}
 .vazio__nota{
   margin-top:12px;
   font-size:14px;
-  opacity:.72;
+  opacity:.75;
   max-width:38ch;
   margin-inline:auto;
 }

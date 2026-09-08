@@ -10,16 +10,43 @@ sem biblioteca de componentes. Mesma convenção do resto do repositório.
 
 ## Estética
 
-- Preto absoluto de fundo (`#000`), branco puro no texto (`#FFF`).
-  Sem gradiente, sem roxo, sem card cinza arredondado.
-- Títulos em fonte de marcador (Permanent Marker), com peso e distorção.
-  Corpo em Archivo, limpa e pequena.
-- Molduras e ícones com traço desenhado à mão (filtro SVG de
-  turbulência sobre a borda), não borda de CSS lisa.
-- Contraste alto e blocos cheios. O ritmo da página é a alternância de
-  faixas pretas e brancas de largura total, invertendo o texto junto.
-  Espaço negativo é parte do design.
-- Cantos retos em tudo. Raio 0, sem exceção.
+Rua, skate, noite e adesivo. A direção veio do rock nacional dos anos
+2000: paleta quente de capa de disco, adesivo recortado, letra de
+marcador, foto crua.
+
+**Paleta, e é só ela:**
+
+```
+--asfalto  #141110   fundo escuro (preto quente)
+--creme    #F0E7D6   papel sujo, texto sobre o escuro
+--laranja  #E2541F   acento principal
+--amarelo  #F2B01E   acento secundário, em detalhe
+```
+
+**Regra de cor, uma só, vale na página inteira:** laranja e amarelo
+nunca levam texto claro em cima. Quem senta em laranja ou amarelo é o
+asfalto. Creme é para fundo escuro. Isso mantém tudo acima de 4.5:1 sem
+conferir caso a caso. Em faixa clara, laranja só em título grande: em
+corpo de texto ele não alcança 4.5:1 sobre o creme.
+
+**Formas e recursos:**
+
+- Canto reto em tudo, raio 0. O que é redondo é desenho (adesivo, selo,
+  disco), nunca caixa.
+- Títulos em Permanent Marker. Corpo em Archivo. As duas servidas pelo
+  próprio site, sem Google Fonts.
+- Letra colada (`.colada`): preenchida, contorno grosso em creme e
+  sombra dura. É o que faz a palavra parecer adesivo, não texto.
+- Molduras tremidas: filtro SVG de turbulência aplicado **só na borda**,
+  num pseudo-elemento, para o texto continuar nítido.
+- Fita crepe amarela (`.fitado`) segurando bloco pelo canto.
+- Grão de asfalto: overlay fixo, `pointer-events:none`, opacidade baixa.
+- Adesivos: `<symbol>` no sprite do `index.html`, usados com `<use>`.
+  O contorno vai no `.adesivo svg`, **não** nas formas: o conteúdo de
+  `<use>` mora em shadow tree e não é alcançado por seletor de fora.
+  `stroke`, `stroke-width` e `paint-order` são herdáveis e descem.
+- O ritmo da página é a alternância de faixas de asfalto e de papel, de
+  largura total, invertendo o texto junto.
 
 ## Estrutura da página
 
@@ -42,13 +69,21 @@ Contato para contratação.
 - Destaques do perfil: Autorais, "Rolês", Rocha Nua!, Estamos no YT
 
 Não há, publicamente confirmados: nomes de músicas, datas de show,
-telefone ou e-mail de contratação, nem o arquivo do logo do punho.
-Tudo isso vive em `assets/js/dados.js` como lista vazia ou marcada,
-e a página tem estado vazio de verdade para cada uma. Não preencher
-com exemplo inventado apresentado como real.
+telefone ou e-mail de contratação, cidade da banda, nem o arquivo do
+logo do punho. Tudo isso vive em `assets/js/dados.js` como lista vazia
+ou marcada, e a página tem estado vazio de verdade para cada uma. Não
+preencher com exemplo inventado apresentado como real, e não afirmar
+cidade nenhuma.
 
-## Referência visual
+## Referência visual, e o limite dela
 
-A direção veio de um portfólio de graffiti preto e branco de outra
-designer. É referência de **estilo apenas**: nada de reproduzir aquele
-layout nem, em hipótese alguma, os dados de contato que aparecem nele.
+O moodboard está em `rocha-nua/_referencias/`, fora do que vai ao ar:
+capa do *100% Charlie Brown Jr.*, foto de imprensa do Chorão, cartela de
+adesivos com marcas do Linkin Park e do Skillet, e uma foto de banco de
+imagens.
+
+**São referência de estilo, nada mais.** Não reproduzir aquela arte, o
+logo, o monograma, a caligrafia nem os rostos. A Rocha Nua usa o mesmo
+vocabulário (adesivo, tag, skate, rua, paleta quente) com desenho
+próprio. Se algum arquivo de `_referencias/` aparecer no HTML publicado,
+é erro.

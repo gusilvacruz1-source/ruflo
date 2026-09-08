@@ -72,20 +72,40 @@ rocha-nua/
     js/main.js          monta as listas e os estados vazios
     fonts/              Permanent Marker e Archivo (~64 KB)
     img/favicon.svg
+  _referencias/         moodboard, não vai ao ar
 ```
 
 ## Decisões de desenho
 
-- Preto absoluto e branco puro, só. O "acento" da página é a inversão:
-  faixas de largura total que trocam fundo e texto de lugar.
-- Cantos retos em tudo, raio 0.
+Direção: rua, skate, noite e adesivo.
+
+- Paleta: asfalto `#141110`, papel sujo `#F0E7D6`, laranja `#E2541F` de
+  acento e amarelo `#F2B01E` em detalhe.
+- **Regra de cor, uma só:** laranja e amarelo nunca levam texto claro em
+  cima. Quem senta em laranja ou amarelo é o asfalto. Creme é para fundo
+  escuro. Isso mantém tudo acima de 4.5:1 sem conferir caso a caso.
+- O ritmo da página é a alternância de faixas de asfalto e de papel, de
+  largura total, invertendo o texto junto.
+- Cantos retos em tudo, raio 0. O que é redondo é desenho, nunca caixa.
 - Títulos em Permanent Marker, corpo em Archivo. As duas são servidas
   pelo próprio site, sem Google Fonts, então não há conexão a terceiros
   para a página abrir.
+- Letra colada: preenchida, com contorno grosso e sombra dura, para a
+  palavra parecer adesivo em vez de texto.
 - As molduras tremem porque passam por um filtro SVG de turbulência
   aplicado só na borda, num pseudo-elemento. O texto continua nítido.
+- Os adesivos (palheta, shape de skate, estrela, raio, disco) são
+  desenhados neste repositório, para a Rocha Nua.
 - Uma faixa de texto rolando na página inteira, e ela para sozinha para
   quem configurou o sistema com menos movimento.
+
+## Referência de estilo
+
+O moodboard fica em `_referencias/`, **fora do que vai ao ar**. São
+imagens de terceiros (capa do Charlie Brown Jr., foto do Chorão, cartela
+com marcas do Linkin Park e do Skillet, foto de banco de imagens),
+usadas só como direção visual. Nada delas entra no site. Veja
+`_referencias/LEIA-ME.md`.
 
 ## Verificado
 
