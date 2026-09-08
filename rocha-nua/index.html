@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>ROCHA NUA | Rock'n'Roll</title>
+<meta name="description" content="Rocha Nua, banda de rock'n'roll. Autorais, agenda de shows, vídeos e contato para contratação.">
+<meta name="theme-color" content="#000000">
+
+<meta property="og:type" content="website">
+<meta property="og:locale" content="pt_BR">
+<meta property="og:title" content="ROCHA NUA | Rock'n'Roll">
+<meta property="og:description" content="Autorais, agenda de shows e vídeos. Chama a banda pra tocar.">
+
+<link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
+<link rel="preload" href="assets/fonts/marker.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="preload" href="assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="assets/css/main.css">
+<link rel="stylesheet" href="assets/css/sections.css">
+</head>
+<body>
+
+<a class="pular" href="#conteudo">Pular para o conteúdo</a>
+
+<!-- Filtro que dá o tremido de traço à mão nas molduras. É funcional,
+     não é desenho: entra via filter nas bordas, em vez de border lisa. -->
+<svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
+  <filter id="rabisco">
+    <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="3" seed="7" result="ruido"/>
+    <feDisplacementMap in="SourceGraphic" in2="ruido" scale="4" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+  <filter id="rabisco-forte">
+    <feTurbulence type="fractalNoise" baseFrequency="0.015 0.035" numOctaves="4" seed="19" result="ruido"/>
+    <feDisplacementMap in="SourceGraphic" in2="ruido" scale="7" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</svg>
+
+<header class="topo" id="topo">
+  <div class="tira topo__linha">
+    <a class="marca" href="#topo">ROCHA NUA</a>
+    <nav class="menu" aria-label="Seções do site">
+      <a href="#autorais">Autorais</a>
+      <a href="#agenda">Agenda</a>
+      <a href="#videos">Vídeos</a>
+    </nav>
+    <a class="btn btn--branco topo__cta" href="#contratacao">Chamar pra tocar</a>
+  </div>
+</header>
+
+<main id="conteudo">
+
+  <!-- HERO ---------------------------------------------------------- -->
+  <section class="hero">
+    <div class="tira hero__grade">
+      <div class="hero__texto">
+        <h1 class="hero__titulo">
+          <span class="hero__l1">ROCHA</span>
+          <span class="hero__l2">NUA</span>
+        </h1>
+        <p class="hero__sub">Rock'n'Roll. Autoral e ao vivo.</p>
+        <div class="hero__acoes">
+          <a class="btn btn--branco" href="#videos">Ouvir a banda</a>
+          <a class="btn btn--linha" href="#contratacao">Chamar pra tocar</a>
+        </div>
+      </div>
+
+      <!-- TROQUE AQUI: coloque o logo do punho em assets/img/logo.png
+           (ou .webp) e o site passa a usar a imagem no lugar do
+           carimbo de texto. Some este bloco quando trocar. -->
+      <div class="hero__selo" aria-hidden="true">
+        <div class="selo">
+          <span class="selo__cima">ROCHA</span>
+          <span class="selo__baixo">NUA</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAIXA ROLANDO (a única da página) ------------------------------ -->
+  <div class="esteira" aria-hidden="true">
+    <div class="esteira__trilho">
+      <span>ROCHA NUA <i>&bull;</i> ROCK'N'ROLL <i>&bull;</i> AO VIVO <i>&bull;</i> AUTORAL <i>&bull;</i> </span>
+      <span>ROCHA NUA <i>&bull;</i> ROCK'N'ROLL <i>&bull;</i> AO VIVO <i>&bull;</i> AUTORAL <i>&bull;</i> </span>
+    </div>
+  </div>
+
+  <!-- A BANDA (faixa branca) ----------------------------------------- -->
+  <section class="secao secao--clara banda" id="banda">
+    <div class="tira">
+      <h2 class="secao__titulo">A banda</h2>
+      <ul class="integrantes">
+        <li class="integrante">
+          <h3>Emerson</h3>
+          <p class="integrante__papel">Voz, violão e guitarra</p>
+          <a class="integrante__arroba" href="https://instagram.com/emerson7r" target="_blank" rel="noopener">@emerson7r</a>
+        </li>
+        <li class="integrante">
+          <h3>José</h3>
+          <p class="integrante__papel">Baixo</p>
+          <a class="integrante__arroba" href="https://instagram.com/josehique" target="_blank" rel="noopener">@josehique</a>
+        </li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- AUTORAIS -------------------------------------------------------- -->
+  <section class="secao autorais" id="autorais">
+    <div class="tira">
+      <h2 class="secao__titulo">Autorais</h2>
+      <div id="lista-autorais" class="lista"></div>
+    </div>
+  </section>
+
+  <!-- AGENDA (faixa branca) ------------------------------------------- -->
+  <section class="secao secao--clara agenda" id="agenda">
+    <div class="tira">
+      <h2 class="secao__titulo">Agenda</h2>
+      <div id="lista-agenda" class="lista"></div>
+    </div>
+  </section>
+
+  <!-- VÍDEOS ---------------------------------------------------------- -->
+  <section class="secao videos" id="videos">
+    <div class="tira">
+      <h2 class="secao__titulo">Vídeos</h2>
+      <div id="lista-videos" class="lista"></div>
+      <a class="btn btn--linha videos__canal" href="https://youtube.com/@rochanuarockband" target="_blank" rel="noopener">Ver o canal no YouTube</a>
+    </div>
+  </section>
+
+  <!-- CONTRATAÇÃO ------------------------------------------------------ -->
+  <section class="secao contratacao" id="contratacao">
+    <div class="tira">
+      <h2 class="contratacao__titulo">Chama a<br>gente pra<br>tocar.</h2>
+      <p class="contratacao__texto">
+        Bar, festa, aniversário, evento da cidade. Diz o dia, o lugar e
+        quanto tempo de som você precisa, que a gente fecha.
+      </p>
+      <div id="contato-acoes" class="contratacao__acoes"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer class="rodape">
+  <div class="tira rodape__linha">
+    <p class="rodape__nome">ROCHA NUA</p>
+    <ul class="rodape__links">
+      <li><a href="https://instagram.com/rocha.nua" target="_blank" rel="noopener">Instagram</a></li>
+      <li><a href="https://youtube.com/@rochanuarockband" target="_blank" rel="noopener">YouTube</a></li>
+    </ul>
+  </div>
+</footer>
+
+<script src="assets/js/dados.js"></script>
+<script src="assets/js/main.js" defer></script>
+</body>
+</html>
