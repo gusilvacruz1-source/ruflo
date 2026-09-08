@@ -121,9 +121,16 @@ telefone, cidade ou data.
 
 ## Imagens
 
-As sete fotos que a banda enviou vivem em `_fotos-originais/` (não vão
-ao ar) e viram chapa por `ferramentas/meiatona.py`. As reticuladas
-publicadas terminam em `-mt.webp`.
+As fotos que a banda enviou vivem em `_fotos-originais/` (não vão ao ar)
+e viram chapa por `ferramentas/meiatona.py`. As reticuladas publicadas
+terminam em `-mt.webp`.
+
+**O logo é a exceção: não é reticulado.** Ele não é bilevel, e
+multiplicar sobre o creme escureceria o desenho e comeria o vermelho.
+Fica no meio de "A banda", como é, na própria placa de asfalto — objeto
+escuro sobre papel, que é o que a referência faz. Guardá-lo com
+transparência custaria 148 KB contra 60 KB opaco, porque o WebP grava o
+alfa sem perda.
 
 Ao escolher onde cada uma entra, mandar a **leitura**, não o acaso: foto
 com padrão repetido estica bem na faixa larga; foto estourada de branco
@@ -140,7 +147,13 @@ Rocha Nua.
 
 ## Peso e como medir
 
-Hoje: **165 KB na primeira tela, 318 KB na página inteira.**
+Hoje: **174 KB para pintar a dobra, 360 KB a página inteira.** O maior
+item da dobra é a fonte, 88 KB, que carrega o alfabeto inteiro.
+
+Cuidado ao medir "primeira tela": o Chromium antecipa imagem `lazy` com
+folga larga e busca perto de 285 KB antes de qualquer rolagem. Somar o
+que carregou antes de rolar mede a antecipação do navegador, não o que a
+dobra exige.
 
 - Meia-tona é bilevel por natureza. Guardar como tom contínuo é o erro:
   a mesma chapa dá **73 KB em WebP sem perda bilevel** e **524 KB em
@@ -154,8 +167,8 @@ Hoje: **165 KB na primeira tela, 318 KB na página inteira.**
 Cada foto que ainda não chegou tem nome fixo e lugar reservado, e o JS
 marca `.vaga--cheia` quando o arquivo carrega de verdade.
 
-Previstas em `assets/img/`: `logo.webp` (capa), `hero-banda.webp` (fundo
-da capa), `emerson.webp` e `jose.webp` (retratos).
+Previstas em `assets/img/`: `hero-banda.webp` (fundo da capa),
+`emerson.webp` e `jose.webp` (retratos).
 
 - Nunca colocar `loading="lazy"` numa `.vaga__real`. Escondida, ela não
   entraria em viewport, não carregaria, e a vaga nunca encheria.

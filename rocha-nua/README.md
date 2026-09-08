@@ -109,7 +109,7 @@ Os sete originais ficam em `_fotos-originais/` e não vão ao ar.
 |---------|------|
 | `estudio-mt.webp` | capa, e fundo de "A banda" |
 | `vinis-mt.webp` | chapa rubra "rock'n'roll", e fundo de "Autorais" |
-| `caveira-mt.webp` | selo no meio de "A banda" |
+| `logo.webp` | o logo da banda, no meio de "A banda" |
 | `toca-discos-mt.webp` | peça vermelha da repetida, e fundo da "Agenda" |
 | `skates-mt.webp` | chapa "agenda", e fundo de "Vídeos" |
 | `guitarra-mao-mt.webp` | chapa rubra "vídeos" |
@@ -118,10 +118,20 @@ Os sete originais ficam em `_fotos-originais/` e não vão ao ar.
 A seção de conteúdo **nunca** repete a foto da chapa vizinha: a mesma
 imagem duas vezes seguidas lê como engano.
 
-A caveira do selo chegou em `.jpg` com o xadrez de transparência gravado
-nos pixels. Preencher a partir da borda não venceu o xadrez (em JPEG cada
-quadrinho varia demais); o que funcionou foi usar a máscara alfa já
-guardada no histórico, ampliada para a resolução do original.
+**O logo é a única imagem da página que não é reticulada.** Ele não é
+bilevel: multiplicar sobre o creme escureceria o desenho inteiro e comeria
+o vermelho. Entra como é, na própria placa de asfalto — que é o que a
+referência faz com objeto escuro sobre papel.
+
+O fundo preto do arquivo original (6,8,7) não é o asfalto do site
+(20,17,16). Em vez de colar um quadrado de tom errado, o fundo foi
+removido por preenchimento a partir da borda e a placa foi assentada em
+asfalto. Preenchimento, e não limiar global, senão os contornos escuros
+do próprio desenho virariam buraco.
+
+O logo pesa 60 KB, contra 12 a 50 KB das chapas. O peso está no
+desenho, não no descuido: guardá-lo com transparência custaria 148 KB,
+porque o WebP grava o canal alfa sem perda.
 
 ### Vagas ainda abertas
 
@@ -130,7 +140,6 @@ exatamente este nome e aparece sozinho, sem tocar no código.
 
 | Arquivo | Onde entra | Dimensão sugerida |
 |---------|------------|-------------------|
-| `logo.webp` | acima do nome, na capa | 560×560, fundo transparente |
 | `hero-banda.webp` | fundo da capa, no lugar do estúdio | 1600×1100, foto de show |
 | `emerson.webp` | retrato no card do Emerson | 800×1000 (vertical) |
 | `jose.webp` | retrato no card do José | 800×1000 (vertical) |
@@ -156,10 +165,23 @@ Nada disso foi inventado no site:
 
 ## Peso
 
-**165 KB na primeira tela, 318 KB na página inteira.** Medido pela API de
-performance do navegador (`encodedBodySize`), que é a contagem confiável;
-somar corpos de resposta pelo Playwright perde respostas e dá número
-errado.
+| | |
+|---|---|
+| Precisa para pintar a dobra | **174 KB** |
+| Página inteira | **360 KB** |
+
+O maior item da dobra é a **fonte, com 88 KB** — mais da metade. Ela
+carrega o alfabeto inteiro; recortada só para os caracteres usados, cairia
+para perto de 30 KB.
+
+Medido pela API de performance do navegador (`encodedBodySize`), que é a
+contagem confiável; somar corpos de resposta pelo Playwright perde
+respostas e dá número errado.
+
+Dois números diferentes, e a diferença importa: o Chromium antecipa
+imagem `lazy` com folga larga, então antes de qualquer rolagem ele já
+buscou perto de 285 KB. "Precisa para a dobra" é o que a primeira tela
+exige de fato; não é o que o navegador escolhe adiantar.
 
 ## Verificado
 
