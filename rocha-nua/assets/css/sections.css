@@ -133,11 +133,20 @@
   margin-top:30px;
 }
 
-/* Pilha de adesivos no lugar onde o logo do punho vai entrar. */
-.hero__pilha{
+/* Vaga do logo: a pilha de adesivos é a reserva até logo.webp chegar. */
+.hero__marca{
   position:relative;
   flex:none;
   width:clamp(190px,26vw,290px);
+}
+.hero__marca .vaga__real{
+  width:100%;height:auto;
+  filter:drop-shadow(4px 5px 0 rgba(0,0,0,.45));
+}
+
+.hero__pilha{
+  position:relative;
+  width:100%;
   aspect-ratio:1;
 }
 .hero__pilha .adesivo{position:absolute}
@@ -151,7 +160,8 @@
 
 @media (max-width:760px){
   .hero__grade{grid-template-columns:1fr;gap:22px}
-  .hero__pilha{width:min(230px,64vw);justify-self:start}
+  .hero__marca{width:min(230px,64vw);justify-self:start}
+  .hero__pilha{width:100%}
 }
 @media (max-width:380px){
   .colada{-webkit-text-stroke-width:4px;text-shadow:4px 4px 0 var(--asfalto-2)}
@@ -231,8 +241,34 @@
   position:absolute;
   top:-16px;right:16px;
   width:52px;
+  z-index:2;                 /* fica por cima do retrato quando ele existir */
   transform:rotate(12deg);
 }
+/* Retrato do integrante. A vaga só ocupa espaço quando a foto chega,
+   então o card continua exatamente como está enquanto não houver foto. */
+.integrante__retrato{
+  position:relative;
+  /* Sem foto, a vaga não ocupa nada: o card fica igual ao que já era. */
+  margin-bottom:0;
+}
+.integrante__retrato.vaga--cheia{margin-bottom:20px}
+.integrante__retrato .vaga__real{
+  width:100%;
+  aspect-ratio:4/5;
+  object-fit:cover;
+  filter:grayscale(1) contrast(1.35);
+}
+.integrante__retrato::before{
+  content:'';
+  position:absolute;
+  inset:0;
+  border:2px solid var(--fg);
+  filter:url(#rabisco);
+  pointer-events:none;
+  opacity:0;
+}
+.integrante__retrato.vaga--cheia::before{opacity:1}
+
 .integrante h3{
   font-family:var(--marcador);
   font-size:clamp(1.6rem,4vw,2.4rem);

@@ -208,6 +208,36 @@
     }
   }
 
+
+  /* ------------------------------------------------------------- vagas
+     Mesma ideia do site da Eloize: cada foto tem nome de arquivo fixo e
+     dimensão reservada. Enquanto o arquivo não existe, o desenho que já
+     está na página fica no lugar. Solte o arquivo em assets/img/ com o
+     nome certo e ele assume sozinho, sem tocar em código.
+
+     A vaga nasce marcada como vazia, então quem estiver sem JavaScript
+     continua vendo o desenho, e não um buraco. */
+
+  function checarVagas(raiz) {
+    (raiz || document).querySelectorAll('[data-vaga]').forEach(function (vaga) {
+      var real = vaga.querySelector('.vaga__real');
+      if (!real) return;
+
+      function chegou() {
+        if (real.naturalWidth) vaga.classList.add('vaga--cheia');
+      }
+      if (real.complete) {
+        chegou();
+      } else {
+        real.addEventListener('load', chegou, { once: true });
+        real.addEventListener('error', function () {}, { once: true });
+      }
+    });
+  }
+
+  checarVagas();
+  window.ROCHA_UI = { checarVagas: checarVagas };
+
   montarAutorais();
   montarAgenda();
   montarVideos();

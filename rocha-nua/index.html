@@ -85,8 +85,9 @@
 
   <!-- HERO ---------------------------------------------------------- -->
   <section class="hero">
-    <div class="hero__foto" aria-hidden="true">
-      <img src="assets/img/guitarra.webp" width="600" height="598" alt="" fetchpriority="high" decoding="async">
+    <div class="hero__foto vaga" data-vaga aria-hidden="true">
+      <img class="vaga__real" src="assets/img/hero-banda.webp" alt="" fetchpriority="high" decoding="async">
+      <img class="vaga__reserva" src="assets/img/guitarra.webp" width="600" height="598" alt="" decoding="async">
     </div>
     <div class="tira hero__grade">
       <div class="hero__texto">
@@ -101,13 +102,16 @@
         </div>
       </div>
 
-      <!-- TROQUE AQUI: com o logo do punho em assets/img/, troque este
-           bloco inteiro por <img src="assets/img/logo.png" alt="..."> -->
-      <div class="hero__pilha" aria-hidden="true">
+      <!-- Vaga do logo. Solte assets/img/logo.webp na pasta e ele assume
+           o lugar da pilha de adesivos sozinho, sem mexer no código. -->
+      <div class="hero__marca vaga" data-vaga>
+        <img class="vaga__real" src="assets/img/logo.webp" alt="Logo da Rocha Nua" width="560" height="560" decoding="async">
+      <div class="hero__pilha vaga__reserva" aria-hidden="true">
         <span class="adesivo ad--shape"><svg><use href="#ad-shape"/></svg></span>
         <span class="adesivo ad--raio"><svg><use href="#ad-raio"/></svg></span>
         <span class="adesivo ad--estrela"><svg><use href="#ad-estrela"/></svg></span>
         <span class="adesivo ad--palheta"><svg><use href="#ad-palheta"/></svg></span>
+      </div>
       </div>
     </div>
   </section>
@@ -127,12 +131,18 @@
       <ul class="integrantes">
         <li class="integrante fitado">
           <span class="integrante__ad adesivo"><svg><use href="#ad-palheta"/></svg></span>
+          <div class="integrante__retrato vaga" data-vaga>
+            <img class="vaga__real" src="assets/img/emerson.webp" alt="Emerson, da Rocha Nua" width="800" height="1000" decoding="async">
+          </div>
           <h3>Emerson</h3>
           <p class="integrante__papel">Voz, violão e guitarra</p>
           <a class="integrante__arroba" href="https://instagram.com/emerson7r" target="_blank" rel="noopener">@emerson7r</a>
         </li>
         <li class="integrante fitado">
           <span class="integrante__ad adesivo"><svg><use href="#ad-raio"/></svg></span>
+          <div class="integrante__retrato vaga" data-vaga>
+            <img class="vaga__real" src="assets/img/jose.webp" alt="José, da Rocha Nua" width="800" height="1000" decoding="async">
+          </div>
           <h3>José</h3>
           <p class="integrante__papel">Baixo</p>
           <a class="integrante__arroba" href="https://instagram.com/josehique" target="_blank" rel="noopener">@josehique</a>
