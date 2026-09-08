@@ -13,7 +13,6 @@
 <meta property="og:description" content="Autorais, agenda de shows e vídeos. Chama a banda pra tocar.">
 
 <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml">
-<link rel="preload" href="assets/fonts/marker.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="assets/fonts/archivo.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="assets/css/main.css">
 <link rel="stylesheet" href="assets/css/sections.css">
@@ -22,29 +21,10 @@
 
 <a class="pular" href="#conteudo">Pular para o conteúdo</a>
 
-<!-- Filtro que dá o tremido de traço à mão nas molduras. É funcional,
-     não é desenho: entra via filter na borda, em vez de border lisa. -->
-<svg class="defs" aria-hidden="true" focusable="false" width="0" height="0">
-  <filter id="rabisco">
-    <feTurbulence type="fractalNoise" baseFrequency="0.02 0.04" numOctaves="3" seed="7" result="ruido"/>
-    <feDisplacementMap in="SourceGraphic" in2="ruido" scale="4" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-  <filter id="rabisco-forte">
-    <feTurbulence type="fractalNoise" baseFrequency="0.015 0.035" numOctaves="4" seed="19" result="ruido"/>
-    <feDisplacementMap in="SourceGraphic" in2="ruido" scale="7" xChannelSelector="R" yChannelSelector="G"/>
-  </filter>
-
-
-
-
-
-
-</svg>
-
 <header class="topo" id="topo">
   <div class="tira topo__linha">
-    <a class="marca" href="#topo">ROCHA NUA</a>
-    <nav class="menu" aria-label="Seções do site">
+    <a class="marca micro" href="#topo">ROCHA NUA<i>.</i></a>
+    <nav class="menu micro" aria-label="Seções do site">
       <a href="#autorais">Autorais</a>
       <a href="#agenda">Agenda</a>
       <a href="#videos">Vídeos</a>
@@ -55,54 +35,88 @@
 
 <main id="conteudo">
 
-  <!-- HERO ---------------------------------------------------------- -->
-  <section class="hero">
-    <div class="hero__foto vaga" data-vaga aria-hidden="true">
+  <!-- CAPA · chapa do estúdio ---------------------------------------- -->
+  <section class="chapa capa">
+    <div class="chapa__tela vaga" data-vaga>
       <img class="vaga__real" src="assets/img/hero-banda.webp" alt="" fetchpriority="high" decoding="async">
-      <img class="vaga__reserva" src="assets/img/guitarra.webp" width="600" height="598" alt="" decoding="async">
+      <img class="vaga__reserva" src="assets/img/estudio-mt.webp" width="1600" height="1122"
+           alt="O estúdio de ensaio da banda em grande angular: amplificadores, bateria ao fundo e o chão de madeira coberto de papel."
+           fetchpriority="high" decoding="async">
     </div>
-    <div class="tira hero__grade">
-      <div class="hero__texto">
-        <!-- Vaga do logo. Com assets/img/logo.webp na pasta ele aparece
-             aqui em cima do nome. Sem o arquivo, não ocupa nada. -->
-        <div class="hero__logo vaga" data-vaga>
-          <img class="vaga__real" src="assets/img/logo.webp" alt="Logo da Rocha Nua" width="560" height="560" decoding="async">
-        </div>
-        <h1 class="hero__titulo">
-          <span class="hero__l1 colada">ROCHA</span>
-          <span class="hero__l2 colada colada--amarela">NUA</span>
-        </h1>
-        <p class="hero__sub">Rock'n'Roll. Autoral e ao vivo.</p>
-        <div class="hero__acoes">
-          <a class="btn btn--cheio" href="#videos">Ouvir a banda</a>
-          <a class="btn btn--linha" href="#contratacao">Chamar pra tocar</a>
-        </div>
-      </div>
+    <div class="chapa__veu" aria-hidden="true"></div>
 
-      <!-- Estúdio, pregado torto na página, com a caveira colada na quina. -->
-      <figure class="hero__estudio">
-        <img class="hero__estudio-foto" src="assets/img/estudio.webp" width="736" height="736" alt="Estúdio de ensaio, visto em grande angular: teclado, amplificador e as paredes cobertas de alto-falantes." fetchpriority="high" decoding="async">
-        <img class="caveira caveira--estudio" src="assets/img/caveira.webp" width="486" height="520" alt="" decoding="async">
-      </figure>
+    <div class="capa__ficha micro" aria-hidden="true">
+      <strong>RN.</strong>
+      <span><em>&mdash;</em> ROCK'N'ROLL</span>
+      <span>BANDA AUTORAL</span>
+      <span>@ROCHA.NUA</span>
+    </div>
+
+    <div class="tira chapa__conteudo capa__conteudo">
+      <!-- Vaga do logo. Com assets/img/logo.webp na pasta ele aparece
+           aqui em cima do nome. Sem o arquivo, não ocupa nada. -->
+      <div class="capa__logo vaga" data-vaga>
+        <img class="vaga__real" src="assets/img/logo.webp" alt="Logo da Rocha Nua" width="560" height="560" decoding="async">
+      </div>
+      <h1 class="capa__nome">ROCHA NUA</h1>
+      <p class="capa__sub">Rock'n'Roll. Autoral e ao vivo.</p>
+      <div class="acoes capa__acoes">
+        <a class="btn btn--branco" href="#videos">Ouvir a banda</a>
+        <a class="btn btn--linha" href="#contratacao">Chamar pra tocar</a>
+      </div>
+    </div>
+
+    <div class="marcas micro" aria-hidden="true">
+      <span>#SOMOS <b>ROCHANUA</b></span>
+      <span class="marcas__meio">FEITO <b>PRA</b> TOCAR</span>
+      <span class="marcas__dir"><b>RN</b></span>
     </div>
   </section>
 
-  <!-- FAIXA ROLANDO (a única da página) ------------------------------ -->
-  <div class="esteira" aria-hidden="true">
-    <div class="esteira__trilho">
-      <span>ROCHA NUA <i>&bull;</i> ROCK'N'ROLL <i>&bull;</i> AO VIVO <i>&bull;</i> AUTORAL <i>&bull;</i> </span>
-      <span>ROCHA NUA <i>&bull;</i> ROCK'N'ROLL <i>&bull;</i> AO VIVO <i>&bull;</i> AUTORAL <i>&bull;</i> </span>
+  <!-- RÉGUA · a única faixa rolando da página ------------------------- -->
+  <div class="regua micro" aria-hidden="true">
+    <div class="regua__trilho">
+      <span>ROCHA NUA <i>&bull;</i> ROCK'N'ROLL <i>&bull;</i> AO VIVO <i>&bull;</i> AUTORAL <i>&bull;</i> @ROCHA.NUA <i>&bull;</i> </span>
+      <span>ROCHA NUA <i>&bull;</i> ROCK'N'ROLL <i>&bull;</i> AO VIVO <i>&bull;</i> AUTORAL <i>&bull;</i> @ROCHA.NUA <i>&bull;</i> </span>
     </div>
   </div>
 
-  <!-- A BANDA (faixa de papel) --------------------------------------- -->
-  <section class="secao secao--clara banda" id="banda">
-    <span class="rasgo rasgo--cima" aria-hidden="true"></span>
-    <span class="rasgo rasgo--baixo" aria-hidden="true"></span>
+  <!-- CHAPA RUBRA · vinis -------------------------------------------- -->
+  <section class="chapa chapa--rubra">
+    <div class="chapa__tela">
+      <img src="assets/img/vinis-mt.webp" width="1300" height="1163"
+           alt="Caixotes de disco de vinil enfileirados numa loja." loading="lazy" decoding="async">
+    </div>
+    <div class="chapa__veu" aria-hidden="true"></div>
+    <div class="tira chapa__conteudo">
+      <p class="chapa__palavra">rock&rsquo;n&rsquo;roll</p>
+    </div>
+    <div class="marcas micro" aria-hidden="true">
+      <span>#SOMOS <b>ROCHANUA</b></span>
+      <span class="marcas__meio">FEITO <b>PRA</b> TOCAR</span>
+      <span class="marcas__dir"><b>RN</b></span>
+    </div>
+  </section>
+
+  <!-- A BANDA · faixa de papel --------------------------------------- -->
+  <section class="secao secao--papel banda" id="banda">
+    <div class="secao__fundo" aria-hidden="true">
+      <img src="assets/img/estudio-mt.webp" width="1600" height="1122" alt="" loading="lazy" decoding="async">
+    </div>
+
     <div class="tira">
-      <h2 class="secao__titulo">A banda</h2>
+      <div class="banda__topo">
+        <h2 class="secao__etiqueta micro" style="margin:0">Quem toca</h2>
+        <p class="banda__palavra">a banda</p>
+      </div>
+
+      <div class="banda__selo">
+        <img src="assets/img/caveira-mt.webp" width="700" height="741"
+             alt="Adesivo de caveira de fone de ouvido, o desenho que a banda usa." loading="lazy" decoding="async">
+      </div>
+
       <ul class="integrantes">
-        <li class="integrante fitado">
+        <li class="integrante">
           <div class="integrante__retrato vaga" data-vaga>
             <img class="vaga__real" src="assets/img/emerson.webp" alt="Emerson, da Rocha Nua" width="800" height="1000" decoding="async">
           </div>
@@ -110,7 +124,7 @@
           <p class="integrante__papel">Voz, violão e guitarra</p>
           <a class="integrante__arroba" href="https://instagram.com/emerson7r" target="_blank" rel="noopener">@emerson7r</a>
         </li>
-        <li class="integrante fitado">
+        <li class="integrante">
           <div class="integrante__retrato vaga" data-vaga>
             <img class="vaga__real" src="assets/img/jose.webp" alt="José, da Rocha Nua" width="800" height="1000" decoding="async">
           </div>
@@ -122,72 +136,115 @@
     </div>
   </section>
 
-  <!-- FAIXA DE RUA: só imagem, sem título e sem legenda. Serve de
-       respiro entre duas seções e de peso visual. -->
-  <div class="faixa-rua" aria-hidden="true">
-    <img src="assets/img/vinis.webp" width="499" height="499" alt="" loading="lazy" decoding="async">
-    <span class="rasgo rasgo--cima"></span>
-    <span class="rasgo rasgo--baixo"></span>
+  <!-- REPETIDA · o gesto forte, uma vez só na página ------------------ -->
+  <div class="repetida" aria-hidden="true">
+    <div class="repetida__linhas">
+      <span class="repetida__linha">AUTORAIS</span>
+      <span class="repetida__linha">AUTORAIS</span>
+      <span class="repetida__linha">AUTORAIS</span>
+    </div>
+    <div class="repetida__peca">
+      <img src="assets/img/toca-discos-mt.webp" width="1100" height="1100" alt="" loading="lazy" decoding="async">
+    </div>
   </div>
 
   <!-- AUTORAIS -------------------------------------------------------- -->
   <section class="secao autorais" id="autorais">
     <div class="secao__fundo" aria-hidden="true">
-      <img src="assets/img/toca-discos.webp" width="736" height="736" alt="" loading="lazy" decoding="async">
+      <img src="assets/img/vinis-mt.webp" width="1300" height="1163" alt="" loading="lazy" decoding="async">
     </div>
+
     <div class="tira">
-      <h2 class="secao__titulo">Autorais</h2>
+      <h2 class="secao__etiqueta micro">Autorais</h2>
       <div id="lista-autorais" class="lista"></div>
     </div>
   </section>
 
-  <!-- AGENDA (faixa de papel) ----------------------------------------- -->
-  <section class="secao secao--clara agenda" id="agenda">
-    <span class="rasgo rasgo--cima" aria-hidden="true"></span>
-    <span class="rasgo rasgo--baixo" aria-hidden="true"></span>
+  <!-- CHAPA · skates -------------------------------------------------- -->
+  <section class="chapa">
+    <div class="chapa__tela">
+      <img src="assets/img/skates-mt.webp" width="1200" height="1500"
+           alt="Dois shapes de skate pendurados numa parede de madeira." loading="lazy" decoding="async">
+    </div>
+    <div class="chapa__veu" aria-hidden="true"></div>
+    <div class="tira chapa__conteudo">
+      <p class="chapa__palavra">agenda</p>
+    </div>
+    <div class="marcas micro" aria-hidden="true">
+      <span>#SOMOS <b>ROCHANUA</b></span>
+      <span class="marcas__meio">FEITO <b>PRA</b> TOCAR</span>
+      <span class="marcas__dir"><b>RN</b></span>
+    </div>
+  </section>
+
+  <!-- AGENDA · faixa de papel ----------------------------------------- -->
+  <section class="secao secao--papel agenda" id="agenda">
+    <div class="secao__fundo" aria-hidden="true">
+      <img src="assets/img/toca-discos-mt.webp" width="1100" height="1100" alt="" loading="lazy" decoding="async">
+    </div>
+
     <div class="tira">
-      <h2 class="secao__titulo">Agenda</h2>
-      <figure class="pregada">
-        <img src="assets/img/skates.webp" width="736" height="920" alt="Dois shapes de skate pendurados numa parede de madeira." loading="lazy" decoding="async">
-      </figure>
+      <h2 class="secao__etiqueta micro">Próximos shows</h2>
       <div id="lista-agenda" class="lista"></div>
+    </div>
+  </section>
+
+  <!-- CHAPA RUBRA · mão na guitarra ----------------------------------- -->
+  <section class="chapa chapa--rubra">
+    <div class="chapa__tela">
+      <img src="assets/img/guitarra-mao-mt.webp" width="1300" height="1071"
+           alt="Mão dedilhando o braço de uma guitarra." loading="lazy" decoding="async">
+    </div>
+    <div class="chapa__veu" aria-hidden="true"></div>
+    <div class="tira chapa__conteudo">
+      <p class="chapa__palavra">v&iacute;deos</p>
+    </div>
+    <div class="marcas micro" aria-hidden="true">
+      <span>#SOMOS <b>ROCHANUA</b></span>
+      <span class="marcas__meio">FEITO <b>PRA</b> TOCAR</span>
+      <span class="marcas__dir"><b>RN</b></span>
     </div>
   </section>
 
   <!-- VÍDEOS ---------------------------------------------------------- -->
   <section class="secao videos" id="videos">
     <div class="secao__fundo" aria-hidden="true">
-      <img src="assets/img/guitarra-mao.webp" width="736" height="606" alt="" loading="lazy" decoding="async">
+      <img src="assets/img/skates-mt.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async">
     </div>
+
     <div class="tira">
-      <h2 class="secao__titulo">Vídeos</h2>
+      <h2 class="secao__etiqueta micro">No canal</h2>
       <div id="lista-videos" class="lista"></div>
       <a class="btn btn--linha videos__canal" href="https://youtube.com/@rochanuarockband" target="_blank" rel="noopener">Ver o canal no YouTube</a>
     </div>
   </section>
 
-  <!-- CONTRATAÇÃO ------------------------------------------------------ -->
-  <section class="secao contratacao" id="contratacao">
-    <div class="contratacao__fundo" aria-hidden="true">
-      <img src="assets/img/caveira-glitch.webp" width="563" height="617" alt="" loading="lazy" decoding="async">
+  <!-- FECHO · chapa da caveira ---------------------------------------- -->
+  <section class="chapa fecho" id="contratacao">
+    <div class="chapa__tela">
+      <img src="assets/img/caveira-glitch-mt.webp" width="1100" height="1205"
+           alt="Caveira riscada, com a imagem arrastada." loading="lazy" decoding="async">
     </div>
-    <div class="tira">
-      <h2 class="contratacao__titulo">
-        <span class="colada">Chama a gente</span>
-        <span class="colada colada--amarela">pra tocar.</span>
-      </h2>
-      <p class="contratacao__texto">
+    <div class="chapa__veu" aria-hidden="true"></div>
+    <div class="tira chapa__conteudo">
+      <h2 class="fecho__titulo">chama a gente <b>pra tocar</b></h2>
+      <p class="fecho__texto">
         Bar, festa, aniversário, evento da cidade. Diz o dia, o lugar e
         quanto tempo de som você precisa, que a gente fecha.
       </p>
       <div id="contato-acoes" class="contratacao__acoes"></div>
+    </div>
+    <div class="marcas micro" aria-hidden="true">
+      <span>#SOMOS <b>ROCHANUA</b></span>
+      <span class="marcas__meio">FEITO <b>PRA</b> TOCAR</span>
+      <span class="marcas__dir"><b>RN</b></span>
     </div>
   </section>
 
 </main>
 
 <footer class="rodape">
-  <div class="tira rodape__linha">
+  <div class="tira rodape__linha micro">
     <p class="rodape__nome">ROCHA NUA</p>
     <ul class="rodape__links">
       <li><a href="https://instagram.com/rocha.nua" target="_blank" rel="noopener">Instagram</a></li>

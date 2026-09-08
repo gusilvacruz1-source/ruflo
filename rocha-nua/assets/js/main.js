@@ -26,7 +26,7 @@
   }
 
   function vazio(frase, nota) {
-    var caixa = el('div', 'vazio moldura moldura--forte');
+    var caixa = el('div', 'vazio');
     caixa.appendChild(el('p', 'vazio__frase', frase));
     if (nota) caixa.appendChild(el('p', 'vazio__nota', nota));
     return caixa;
