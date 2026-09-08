@@ -75,23 +75,21 @@ ou marcada, e a página tem estado vazio de verdade para cada uma. Não
 preencher com exemplo inventado apresentado como real, e não afirmar
 cidade nenhuma.
 
-## Imagens de terceiros na página
+## Imagens de terceiros
 
-Os originais ficam em `rocha-nua/_referencias/`. As versões otimizadas
-que a página usa ficam em `assets/img/`.
+Os originais enviados como referência ficam em `rocha-nua/_referencias/`
+e **não vão ao ar**. Veja o LEIA-ME de lá.
 
-- `guitarra.webp` é a textura do topo: preto e branco, apagada, com as
-  bordas dissolvidas. Entra como atmosfera, não como retrato da banda.
-- `cbj.webp`, `chorao.webp` e `adesivos.webp` aparecem **só** na seção
-  "Na parede", como recortes colados, cada um com legenda dizendo o que
-  é, e com a nota de que os direitos são de quem as fez.
+A única que a página usa é `assets/img/guitarra.webp`: um guitarrista em
+preto e branco estourado, sem rosto reconhecível e sem marca de banda
+nenhuma. Ela aparece duas vezes, sempre como fundo: textura do topo e
+fundo do fecho de contratação. Nunca como retrato da Rocha Nua.
 
-**A regra que sustenta isso:** essas imagens podem aparecer identificadas
-como referência, nunca passando por material da Rocha Nua. Não usar
-nenhuma delas no hero como se fosse a banda, na seção "A banda", em
-`og:image`, no favicon ou como capa de autoral. Não recortar o logo do
-Charlie Brown Jr., do Linkin Park ou do Skillet para reaproveitar como
-marca da Rocha Nua.
+**As outras três não entram na página.** A capa do Charlie Brown Jr., a
+foto do Chorão e a cartela com as marcas do Linkin Park e do Skillet são
+material identificável de terceiros; num site que vende show, usá-las
+como visual próprio faz parecer que são da banda. Também não recortar
+esses logos para virar marca da Rocha Nua.
 
-Quando chegarem fotos de verdade da banda, elas assumem o topo e a seção
-"A banda", e a parede continua sendo o que é: parede de referência.
+Quando chegarem fotos de verdade da banda, elas assumem o topo, o fecho
+e a seção "A banda".

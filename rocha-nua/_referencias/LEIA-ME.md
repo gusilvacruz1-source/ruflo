@@ -3,10 +3,9 @@
 Esta pasta guarda os arquivos como chegaram. As versões otimizadas que
 a página usa ficam em `../assets/img/`.
 
-Todas são **de terceiros** e a página as trata como referência
-declarada: a do guitarrista entra apagada como textura do topo, e as
-outras três aparecem na seção "Na parede", cada uma com legenda dizendo
-o que é. Nenhuma é apresentada como material da Rocha Nua.
+Todas são **de terceiros**. Só a do guitarrista entra na página, como
+fundo tratado do topo e do fecho: é a única sem rosto reconhecível e sem
+marca de banda. As outras três ficam fora do que vai ao ar.
 
 O que é cada uma:
 
@@ -19,7 +18,7 @@ O que é cada uma:
 - `Music, guitar, concert.jpg` — foto de banco de imagens, de um
   guitarrista que não é da Rocha Nua, sem licença conhecida.
 
-Além de aparecerem na parede, elas deram a **direção visual** do site:
+O que ficou delas foi a **direção visual** do site:
 paleta quente de rua tirada da capa, linguagem de adesivo recortado da
 cartela, energia de skate e noite da foto do Chorão, e o preto e branco
 estourado da foto de show. Os adesivos da página foram desenhados do

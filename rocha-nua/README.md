@@ -99,24 +99,17 @@ Direção: rua, skate, noite e adesivo.
 - Uma faixa de texto rolando na página inteira, e ela para sozinha para
   quem configurou o sistema com menos movimento.
 
-## Imagens de terceiros
+## Imagens
 
-Os originais ficam em `_referencias/`, e as versões otimizadas que a
-página usa ficam em `assets/img/`.
+A página usa uma foto só: `assets/img/guitarra.webp`, um guitarrista em
+preto e branco estourado, sem rosto reconhecível. Ela abre e fecha o
+site, sempre como fundo tratado, nunca como retrato da banda.
 
-| Arquivo | Onde aparece |
-|---------|--------------|
-| `guitarra.webp` | textura do topo, apagada e sem rosto |
-| `cbj.webp` | seção "Na parede" |
-| `chorao.webp` | seção "Na parede" |
-| `adesivos.webp` | seção "Na parede" |
+Os outros arquivos enviados como referência ficam em `_referencias/` e
+não vão ao ar. O porquê de cada um está no LEIA-ME de lá.
 
-As três da parede entram **identificadas**: cada uma tem legenda dizendo
-o que é, e a seção fecha com a nota de que os direitos são de quem as
-fez. É referência declarada, não material da banda.
-
-Quando chegarem fotos de verdade da Rocha Nua, elas assumem o topo e a
-seção "A banda", e a parede continua sendo parede de referência.
+Quando chegarem fotos de verdade da Rocha Nua, elas assumem o topo, o
+fecho de contratação e a seção "A banda".
 
 ## Verificado
 
