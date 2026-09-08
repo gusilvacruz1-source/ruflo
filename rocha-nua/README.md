@@ -1,0 +1,94 @@
+# Site — ROCHA NUA (@rocha.nua)
+
+Site de uma página para a banda Rocha Nua. HTML, CSS e JS puros, sem
+framework e sem build.
+
+## Isolamento
+
+Esta pasta é **totalmente separada** do resto do repositório. Nada aqui
+importa, sobrescreve ou depende de `/index.html`, `/css`, `/js`,
+`/lojinha-kerollay`, `/elotattoos` ou `/portfolio`. O `netlify.toml` da
+raiz **não foi alterado**: ele continua publicando só a lojinha da
+Kerollay.
+
+**Nada deste site foi publicado em lugar nenhum.** Não há deploy e não
+foi criado site novo no Netlify. Para ver, abra local:
+
+```
+cd rocha-nua && python3 -m http.server 8080
+# depois: http://localhost:8080
+```
+
+Servidor local é o jeito recomendado. Abrindo o `index.html` por clique
+duplo, o navegador bloqueia as fontes próprias e o texto sai na fonte
+de sistema.
+
+## Como atualizar o conteúdo
+
+Abra **`assets/js/dados.js`**. É o único arquivo que precisa ser tocado
+para o dia a dia. Lá dentro tem quatro listas, cada uma com um exemplo
+comentado explicando o formato:
+
+| Lista      | Para quê                                        |
+|------------|-------------------------------------------------|
+| `autorais` | músicas próprias, com ano e link opcional       |
+| `agenda`   | shows marcados (data no formato `AAAA-MM-DD`)   |
+| `videos`   | vídeos do YouTube, **só o ID**, não a URL       |
+| `contato`  | WhatsApp, e-mail, Instagram e canal             |
+
+Detalhes que o site já resolve sozinho:
+
+- Show com data passada **some da agenda automaticamente**, sem precisar
+  apagar da lista.
+- ID de vídeo escrito errado é **ignorado**, em vez de virar um quadro
+  preto quebrado na página.
+- Enquanto `whatsapp` e `email` estiverem vazios, o botão principal de
+  contratação manda a pessoa para o **direct do Instagram**, que já
+  existe e funciona.
+- Lista vazia não deixa buraco: cada seção tem um texto próprio dizendo
+  que aquilo ainda está por vir.
+
+## O que ainda falta de verdade
+
+Nada disso foi inventado no site, e é o que falta para ele ficar completo:
+
+- **O logo do punho.** Hoje o hero mostra um carimbo de texto no lugar.
+  Coloque o arquivo em `assets/img/` e troque o bloco marcado com
+  `TROQUE AQUI` no `index.html`.
+- **Nomes das autorais**, com link se houver gravação.
+- **Datas de show.**
+- **WhatsApp ou e-mail de contratação.**
+- **Fotos da banda**, se quiserem entrar na seção "A banda".
+
+## Estrutura
+
+```
+rocha-nua/
+  index.html
+  assets/
+    css/main.css        tokens, reset, tipografia, botões, molduras
+    css/sections.css    cada seção da página
+    js/dados.js         >>> o conteúdo que muda vive aqui <<<
+    js/main.js          monta as listas e os estados vazios
+    fonts/              Permanent Marker e Archivo (~64 KB)
+    img/favicon.svg
+```
+
+## Decisões de desenho
+
+- Preto absoluto e branco puro, só. O "acento" da página é a inversão:
+  faixas de largura total que trocam fundo e texto de lugar.
+- Cantos retos em tudo, raio 0.
+- Títulos em Permanent Marker, corpo em Archivo. As duas são servidas
+  pelo próprio site, sem Google Fonts, então não há conexão a terceiros
+  para a página abrir.
+- As molduras tremem porque passam por um filtro SVG de turbulência
+  aplicado só na borda, num pseudo-elemento. O texto continua nítido.
+- Uma faixa de texto rolando na página inteira, e ela para sozinha para
+  quem configurou o sistema com menos movimento.
+
+## Verificado
+
+- 380, 760 e 1440 px: nenhuma rolagem horizontal.
+- Sem erro de console, com as listas vazias e com as listas cheias.
+- Vídeo entra por `youtube-nocookie.com` e com carregamento adiado.
