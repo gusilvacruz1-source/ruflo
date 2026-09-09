@@ -235,11 +235,53 @@
     });
   }
 
+  /* ------------------------------------------- entrada por rolagem
+     Cada faixa entra quando chega na tela, escalonada dentro do grupo
+     que entra junto — e nao pela posicao na lista, senao uma faixa la
+     embaixo herdaria um atraso enorme e pareceria travada.
+
+     Entra uma vez so: depois de entrar, para de observar.
+
+     Tudo dentro de try: se qualquer coisa aqui falhar, a marca sai da
+     raiz e a lista volta a ser visivel. O pior defeito possivel neste
+     trecho seria esconder as musicas e nao conseguir mostrar de volta. */
+
+  function animarEntrada() {
+    if (!('IntersectionObserver' in window)) return;
+
+    var alvos = document.querySelectorAll('.faixa-musica, .show');
+    if (!alvos.length) return;
+
+    var raiz = document.documentElement;
+    try {
+      raiz.classList.add('js-anima');
+      Array.prototype.forEach.call(alvos, function (el) { el.classList.add('entra'); });
+
+      var obs = new IntersectionObserver(function (entradas) {
+        var ordem = 0;
+        entradas.forEach(function (e) {
+          if (!e.isIntersecting) return;
+          e.target.style.setProperty('--atraso', Math.min(ordem, 6) * 70 + 'ms');
+          e.target.classList.add('entrou');
+          obs.unobserve(e.target);
+          ordem++;
+        });
+      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.2 });
+
+      Array.prototype.forEach.call(alvos, function (el) { obs.observe(el); });
+    } catch (erro) {
+      raiz.classList.remove('js-anima');
+    }
+  }
+
   checarVagas();
-  window.ROCHA_UI = { checarVagas: checarVagas };
+  window.ROCHA_UI = { checarVagas: checarVagas, animarEntrada: animarEntrada };
 
   montarAutorais();
   montarAgenda();
   montarVideos();
   montarContato();
+
+  // depois de montar as listas, senao nao haveria o que observar
+  animarEntrada();
 })();

@@ -88,9 +88,11 @@ terceiros.
 O arquivo com eixo de largura pesa 90 KB contra 35 KB do que só tinha
 peso. Os 55 KB a mais são o desenho.
 
-## O vídeo
+## Os vídeos
 
-Um trecho de **30 s** da banda tocando ao vivo, em `assets/video/`.
+Dois trechos de **30 s** da banda ao vivo, lado a lado, em
+`assets/video/`. São gravações diferentes do mesmo palco: o primeiro em
+luz chapada, o segundo em fim de tarde, com o sol entrando de lado.
 
 **Ele não pesa no carregamento.** Com `preload="none"`, o navegador busca
 só o cartaz (18 KB) e os 2,4 MB do vídeo só saem se alguém apertar play.
@@ -128,19 +130,21 @@ exatamente o que aconteceu aqui na primeira tentativa.
 O original de 2min28 não está no repositório: são 13 MB para um arquivo
 que a banda já tem.
 
-## O vídeo
+## Os vídeos
 
-Um trecho de **30 s** da banda tocando ao vivo, em `assets/video/`.
+Dois trechos de **30 s** da banda ao vivo, lado a lado, em
+`assets/video/`. São gravações diferentes do mesmo palco: o primeiro em
+luz chapada, o segundo em fim de tarde, com o sol entrando de lado.
 
 **O vídeo toca como é.** A retícula fica só no cartaz, a imagem parada
 que aparece antes do play; o filme em si mantém cor e som do original.
 O cartaz é o **primeiro quadro do próprio corte**, então apertar play não
 dá salto de imagem: o cartaz impresso ganha cor.
 
-**Ele não pesa no carregamento.** Com `preload="none"`, o navegador busca
-só o cartaz (18 KB) e os 2,4 MB do vídeo só saem se alguém apertar play.
-Verificado: carregando a página e rolando até o fim, o arquivo
-`ao-vivo.mp4` não chega a ser pedido.
+**Eles não pesam no carregamento.** Com `preload="none"`, o navegador
+busca só os cartazes (19 KB cada) e os 5 MB de vídeo só saem se alguém
+apertar play. Verificado: carregando a página e rolando até o fim,
+nenhum `.mp4` chega a ser pedido.
 
 Decisões, e o porquê de cada uma:
 
@@ -150,10 +154,17 @@ Decisões, e o porquê de cada uma:
   que resolveu. Os 30 s guardados ocupam 2,4 MB, e esses mesmos 30 s
   dentro do original ocupariam cerca de 2,6 MB — ou seja, a qualidade é
   a mesma; o que mudou foi a duração.
-- **O trecho é 1:00 → 1:30**, escolhido a dedo. Por volta de 1:38 uma
-  criança cruza a frente do palco e aos 2:02 alguém passa empurrando uma
-  bicicleta. Entre 0:58 e 1:30 ninguém atravessa e os dois músicos ficam
-  enquadrados.
+- **Os trechos são escolhidos a dedo**, quadro a quadro. No primeiro
+  vídeo fica 1:00 → 1:30: por volta de 1:38 uma criança cruza a frente
+  do palco e aos 2:02 alguém passa empurrando uma bicicleta. No segundo
+  fica 0:40 → 1:10, onde ninguém atravessa e a luz está no melhor
+  momento.
+- **Antes de somar um vídeo, conferir se é mesmo outro.** Chegou aqui um
+  arquivo com nome diferente, tamanho igual e soma de verificação
+  diferente que era o **mesmo vídeo**: comparação quadro a quadro deu
+  diferença 0/255 em quatro pontos e o áudio decodificado bateu byte a
+  byte. Dois trechos iguais lado a lado, com câmera fixa, pareceriam
+  defeito.
 - **Só MP4 (H.264).** Gerei um WebM/VP9 para comparar e ele saiu *maior*
   nas duas tentativas: é filmagem de mão, com muito movimento e
   granulação, que o VP9 não comprime melhor. Dois arquivos custariam o
@@ -170,8 +181,32 @@ apaga a imagem aos 29 s da linha do tempo *original* — se o trecho
 guardado começa em 1:00, sai um vídeo inteiramente preto e mudo. Foi
 exatamente o que aconteceu aqui na primeira tentativa.
 
-O original de 2min28 não está no repositório: são 13 MB de um arquivo que
-a banda já tem. Para trocar o trecho, é um comando sobre ele.
+Os originais (2min28 e 2min38, 13 e 19 MB) não estão no repositório: são
+arquivos que a banda já tem. Para trocar um trecho, é um comando sobre
+eles.
+
+## A entrada das músicas
+
+Quando a lista de autorais chega na tela, cada faixa sobe e o **nome da
+música é revelado por varredura**, da esquerda para a direita, como
+carimbo passando no papel. Vale também para a agenda.
+
+O escalonamento é **dentro do grupo que entra junto**, não pela posição
+na lista: se fosse pelo índice, uma faixa lá embaixo herdaria um atraso
+enorme e pareceria travada.
+
+**A regra que sustenta isso:** o estado escondido só existe quando o JS
+assume, marcando `js-anima` na raiz. Sem JS, com JS quebrado, ou sem
+`IntersectionObserver`, a lista nasce visível. Nunca esconder conteúdo
+que dependa de script para reaparecer — e por isso a função inteira está
+dentro de um `try`: se algo falhar, a marca sai da raiz e tudo volta a
+aparecer.
+
+Quem configurou o sistema com menos movimento vê a lista inteira de uma
+vez, sem transição.
+
+**Hoje não há o que animar:** a lista de autorais está vazia. A animação
+entra em ação assim que os nomes das músicas forem para `dados.js`.
 
 ## Fotos
 
@@ -253,7 +288,10 @@ Nada disso foi inventado no site:
 | | |
 |---|---|
 | Precisa para pintar a dobra | **174 KB** |
-| Página inteira | **360 KB** |
+| Página inteira | **403 KB** |
+
+Os 5 MB de vídeo não entram nessa conta: só baixam se alguém apertar
+play.
 
 O maior item da dobra é a **fonte, com 88 KB** — mais da metade. Ela
 carrega o alfabeto inteiro; recortada só para os caracteres usados, cairia
