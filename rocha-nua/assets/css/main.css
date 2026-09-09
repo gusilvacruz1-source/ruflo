@@ -701,15 +701,7 @@ h1,h2,h3{margin:0;font-weight:400}
 }
 
 /* A faixa repetida inclina com a velocidade da rolagem. */
-.repetida{perspective:1100px;perspective-origin:50% 45%}
-.repetida__linhas{
-  transform-style:preserve-3d;
-  transform:skewY(var(--torcao,0deg))
-            rotateX(var(--giro-x,0deg)) rotateY(var(--giro-y,0deg));
-  transition:transform .5s var(--saida);
-}
-.mao .repetida:hover .repetida__linhas{transition:transform .12s linear}
-.repetida__linha{transform-style:preserve-3d}
+.repetida__linhas{transform:skewY(var(--torcao,0deg))}
 
 @media (prefers-reduced-motion:reduce){
   .chapa__palavra,.banda__palavra,.fecho__titulo,.btn{transform:none!important;transition:none}
