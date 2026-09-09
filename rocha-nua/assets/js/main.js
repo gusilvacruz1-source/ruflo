@@ -1,5 +1,5 @@
 /* =====================================================================
-   MAIN.JS · monta autorais, agenda, vídeos e os botões de contato a
+   MAIN.JS · monta repertório, agenda, vídeos e os botões de contato a
    partir de dados.js
 
    Enquanto uma lista estiver vazia, a seção mostra um estado vazio de
@@ -11,7 +11,8 @@
   'use strict';
 
   var D = (window.ROCHA || {});
-  var autorais = D.autorais || [];
+  // aceita a chave antiga tambem, para nao quebrar se alguem editar o nome errado
+  var repertorio = D.repertorio || D.autorais || [];
   var agenda = D.agenda || [];
   var videos = D.videos || [];
   var contato = D.contato || {};
@@ -61,27 +62,39 @@
     return isNaN(d.getTime()) ? null : d;
   }
 
-  /* ------------------------------------------------------------ autorais */
+  /* --------------------------------------------------------- repertório */
 
-  function montarAutorais() {
-    var alvo = document.getElementById('lista-autorais');
+  function montarRepertorio() {
+    var alvo = document.getElementById('lista-repertorio');
     if (!alvo) return;
 
-    if (!autorais.length) {
+    if (!repertorio.length) {
       alvo.appendChild(vazio(
-        'As autorais entram aqui.',
-        'Assim que tiver gravação ou link, é só preencher a lista de autorais em assets/js/dados.js.'
+        'O repertório entra aqui.',
+        'É só preencher a lista de repertório em assets/js/dados.js.'
       ));
       return;
     }
 
-    autorais.forEach(function (musica, i) {
+    repertorio.forEach(function (musica, i) {
       var linha = el('div', 'faixa-musica');
       linha.appendChild(el('span', 'faixa-musica__num', String(i + 1).padStart(2, '0')));
 
       var meio = el('div');
       meio.appendChild(el('h3', 'faixa-musica__nome', musica.titulo || 'Sem título'));
-      if (musica.ano) meio.appendChild(el('p', 'faixa-musica__ano', musica.ano));
+
+      /* Cover leva o nome de quem fez; autoral leva a marca. Nunca os
+         dois, e nunca nenhum silenciosamente: sem um ou outro, a musica
+         apareceria como se fosse da banda. */
+      if (musica.autoral) {
+        meio.appendChild(el('p', 'faixa-musica__autoral', 'Autoral'
+          + (musica.ano ? ' \u00b7 ' + musica.ano : '')));
+      } else if (musica.artista) {
+        meio.appendChild(el('p', 'faixa-musica__artista', musica.artista
+          + (musica.ano ? ' \u00b7 ' + musica.ano : '')));
+      } else if (musica.ano) {
+        meio.appendChild(el('p', 'faixa-musica__artista', musica.ano));
+      }
       linha.appendChild(meio);
 
       if (musica.link) {
@@ -277,7 +290,7 @@
   checarVagas();
   window.ROCHA_UI = { checarVagas: checarVagas, animarEntrada: animarEntrada };
 
-  montarAutorais();
+  montarRepertorio();
   montarAgenda();
   montarVideos();
   montarContato();

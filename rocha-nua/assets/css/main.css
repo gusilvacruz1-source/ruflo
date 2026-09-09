@@ -413,7 +413,15 @@ h1,h2,h3{margin:0;font-weight:400}
   font-stretch:105%;
   letter-spacing:-.015em;
 }
-.faixa-musica__ano{font-size:13px;opacity:.6;letter-spacing:.08em}
+/* Quem fez a musica, quando e cover. Fica logo abaixo do nome porque e
+   informacao que muda o sentido da linha, nao rodape dela. */
+.faixa-musica__artista{font-size:13px;opacity:.62;letter-spacing:.06em}
+/* Autoral e o que se quer destacar: leva a cor de acento. */
+.faixa-musica__autoral{
+  font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
+  color:var(--laranja-forte);
+}
+.secao--papel .faixa-musica__autoral{color:var(--asfalto)}
 .faixa-musica__ouvir{
   font-size:11px;font-weight:700;letter-spacing:.2em;text-transform:uppercase;
   border-bottom:1px solid currentColor;

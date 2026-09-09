@@ -11,15 +11,23 @@
 window.ROCHA = {
 
   /* -------------------------------------------------------------------
-     AUTORAIS
-     Uma entrada por música. "link" é opcional: pode ser YouTube,
-     Spotify, o que existir. Sem link, a música aparece só como faixa.
+     REPERTÓRIO
+     Uma entrada por música. Se for cover, ponha o artista original em
+     "artista" — o site credita embaixo do nome. Se for música de vocês,
+     troque por "autoral: true" e ela aparece marcada como autoral.
 
-     Exemplo de como preencher (apague este comentário depois):
-       { titulo: 'Nome da música', ano: '2024',
+     "ano" e "link" são opcionais. O link pode ser YouTube, Spotify, o
+     que existir.
+
+     Exemplos:
+       { titulo: 'Nome do cover', artista: 'Quem fez' },
+       { titulo: 'Música nossa', autoral: true, ano: '2025',
          link: 'https://youtu.be/XXXXXXXXXXX' },
      ------------------------------------------------------------------- */
-  autorais: [],
+  repertorio: [
+    { titulo: 'Vou Deixar', artista: 'Skank' },
+    { titulo: 'Wicked Game', artista: 'Chris Isaak' },
+  ],
 
   /* -------------------------------------------------------------------
      AGENDA
