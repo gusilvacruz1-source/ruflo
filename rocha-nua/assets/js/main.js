@@ -409,6 +409,89 @@
      passo sozinha. Isso nao da para fazer com animation-duration, que
      salta quando muda no meio. */
 
+  /* ----------------------------------------------------------- interacao
+
+     A pagina responde ao ponteiro, e nao so a rolagem: a palavra da
+     chapa e empurrada, o botao vira ima, o bloco de video e o card
+     inclinam, o clique deixa carimbo, a regua para e volta quando o
+     ponteiro passa por ela.
+
+     Os ouvintes so GUARDAM valores. Quem escreve no estilo e o mesmo
+     requestAnimationFrame do resto: mexer em transform dentro do
+     mousemove faria o navegador recalcular varias vezes por quadro.
+
+     Nada disto entra em tela de toque nem em movimento reduzido. */
+
+  var mao = {
+    ativa: false,
+    empurroes: [],   // palavras empurradas pelo ponteiro
+    puxados: [],     // botoes e blocos inclinados
+    reguaParada: false
+  };
+
+  function prepararInteracao() {
+    if (menosMovimento()) return;
+    if (!window.matchMedia
+        || !window.matchMedia('(hover:hover) and (pointer:fine)').matches) return;
+    mao.ativa = true;
+    document.documentElement.classList.add('mao');
+
+    // a palavra da chapa e empurrada pelo ponteiro dentro da faixa
+    Array.prototype.forEach.call(
+      document.querySelectorAll('.chapa, .banda'), function (faixa) {
+        var palavra = faixa.querySelector('.chapa__palavra, .banda__palavra, .fecho__titulo');
+        if (!palavra) return;
+        var item = { el: palavra, x: 0, y: 0, ax: 0, ay: 0 };
+        mao.empurroes.push(item);
+        faixa.addEventListener('mousemove', function (e) {
+          var r = faixa.getBoundingClientRect();
+          item.ax = ((e.clientX - r.left) / r.width - 0.5) * 26;
+          item.ay = ((e.clientY - r.top) / r.height - 0.5) * 14;
+        }, { passive: true });
+        faixa.addEventListener('mouseleave', function () { item.ax = 0; item.ay = 0; });
+      });
+
+    // ima nos botoes, inclinacao nos blocos
+    function guiar(sel, forca, inclina) {
+      Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) {
+        var item = { el: el, x: 0, y: 0, ax: 0, ay: 0, inclina: inclina };
+        mao.puxados.push(item);
+        el.addEventListener('mousemove', function (e) {
+          var r = el.getBoundingClientRect();
+          item.ax = ((e.clientX - r.left) / r.width - 0.5) * 2 * forca;
+          item.ay = ((e.clientY - r.top) / r.height - 0.5) * 2 * forca;
+          el.classList.add('puxado');
+        }, { passive: true });
+        el.addEventListener('mouseleave', function () {
+          item.ax = 0; item.ay = 0; el.classList.remove('puxado');
+        });
+      });
+    }
+    guiar('.btn', 9, false);
+    guiar('.cancao__quadro', 7, true);
+    guiar('.integrante', 5, true);
+
+    // a regua para quando o ponteiro passa por cima
+    var regua = document.querySelector('.regua');
+    if (regua) {
+      regua.addEventListener('mouseenter', function () { mao.reguaParada = true; });
+      regua.addEventListener('mouseleave', function () { mao.reguaParada = false; });
+    }
+
+    // carimbo do clique
+    document.addEventListener('click', function (e) {
+      if (!e.clientX && !e.clientY) return;    // clique por teclado nao carimba
+      var c = document.createElement('span');
+      c.className = 'carimbo';
+      c.setAttribute('aria-hidden', 'true');
+      c.style.transform = 'translate3d(' + e.clientX + 'px,' + e.clientY + 'px,0)';
+      c.style.left = '0'; c.style.top = '0';
+      c.style.marginLeft = '-13px'; c.style.marginTop = '-13px';
+      document.body.appendChild(c);
+      setTimeout(function () { if (c.parentNode) c.parentNode.removeChild(c); }, 600);
+    }, { passive: true });
+  }
+
   function moverNaRolagem() {
     if (menosMovimento()) return;
 
@@ -427,6 +510,32 @@
     var registros = [].slice.call(document.querySelectorAll(
       '.capa__nome, .chapa__palavra, .banda__palavra, .repetida__linha, .fecho__titulo'));
 
+    /* O anel que segue a bolinha com atraso. So entra onde ha ponteiro
+       de verdade: em tela de toque nao ha cursor e o anel ficaria parado
+       num canto. O cursor em si e CSS e nao depende disto. */
+    var anel = null, anelX = 0, anelY = 0, alvoX = 0, alvoY = 0, anelEsc = 1, alvoEsc = 1;
+    var CLICAVEL = 'a, button, .btn, summary, [role="button"], video, .integrante__arroba';
+    if (window.matchMedia && window.matchMedia('(hover:hover) and (pointer:fine)').matches) {
+      anel = document.createElement('div');
+      anel.className = 'anel';
+      anel.setAttribute('aria-hidden', 'true');
+      document.body.appendChild(anel);
+      window.addEventListener('mousemove', function (e) {
+        alvoX = e.clientX; alvoY = e.clientY;
+        if (!anel.classList.contains('anel--vendo')) {
+          anelX = alvoX; anelY = alvoY;          // nasce no lugar, sem voar da origem
+          anel.classList.add('anel--vendo');
+        }
+        var sobre = e.target && e.target.closest && e.target.closest(CLICAVEL);
+        alvoEsc = sobre ? 1.7 : 1;
+        anel.classList.toggle('anel--sobre', !!sobre);
+      }, { passive: true });
+      window.addEventListener('mouseleave', function () {
+        anel.classList.remove('anel--vendo');
+      });
+    }
+
+    var linhasRepetida = document.querySelector('.repetida__linhas');
     var fio = document.querySelector('.fio__tinta');
     var trilho = document.querySelector('.regua__trilho');
     var larguraTrilho = 0, posRegua = 0, velRegua = 0;
@@ -454,6 +563,12 @@
       impulso += (Math.abs(delta) * 14 - impulso) * 0.18;
       if (impulso < 0.01) impulso = 0;
 
+      // a faixa repetida torce com a velocidade da rolagem
+      if (linhasRepetida) {
+        var t = Math.max(-2.6, Math.min(2.6, delta * 0.05));
+        linhasRepetida.style.setProperty('--torcao', t.toFixed(2) + 'deg');
+      }
+
       // fio de progresso
       if (fio) {
         var rolavel = document.documentElement.scrollHeight - alturaJanela;
@@ -462,7 +577,7 @@
 
       // regua: passo base mais o impulso da rolagem
       if (trilho && larguraTrilho) {
-        velRegua = 58 + Math.min(impulso, 900);
+        velRegua = (mao.reguaParada ? 0 : 58) + (mao.reguaParada ? 0 : Math.min(impulso, 900));
         posRegua = (posRegua + velRegua * dt) % larguraTrilho;
         trilho.style.transform = 'translate3d(' + (-posRegua).toFixed(1) + 'px,0,0)';
       }
@@ -483,6 +598,37 @@
         // longe do meio, desencontrado; no meio, em registro
         el.style.setProperty('--registro', (Math.abs(pos) * 7).toFixed(2) + 'px');
       });
+
+      if (mao.ativa) {
+        mao.empurroes.forEach(function (it) {
+          if (Math.abs(it.ax - it.x) < 0.05 && Math.abs(it.ay - it.y) < 0.05) return;
+          it.x += (it.ax - it.x) * 0.14;
+          it.y += (it.ay - it.y) * 0.14;
+          it.el.style.transform = 'translate3d(' + it.x.toFixed(2) + 'px,'
+            + it.y.toFixed(2) + 'px,0)';
+        });
+        mao.puxados.forEach(function (it) {
+          if (Math.abs(it.ax - it.x) < 0.05 && Math.abs(it.ay - it.y) < 0.05) return;
+          it.x += (it.ax - it.x) * 0.2;
+          it.y += (it.ay - it.y) * 0.2;
+          if (it.inclina) {
+            it.el.style.transform = 'perspective(700px) rotateY(' + (it.x * 0.42).toFixed(2)
+              + 'deg) rotateX(' + (-it.y * 0.42).toFixed(2) + 'deg)';
+          } else {
+            it.el.style.transform = 'translate3d(' + it.x.toFixed(2) + 'px,'
+              + it.y.toFixed(2) + 'px,0)';
+          }
+        });
+      }
+
+      if (anel) {
+        // segue com atraso: quanto menor o fator, mais o anel arrasta
+        anelX += (alvoX - anelX) * 0.18;
+        anelY += (alvoY - anelY) * 0.18;
+        anelEsc += (alvoEsc - anelEsc) * 0.16;
+        anel.style.transform = 'translate3d(' + anelX.toFixed(1) + 'px,'
+          + anelY.toFixed(1) + 'px,0) scale(' + anelEsc.toFixed(3) + ')';
+      }
 
       // so continua enquanto houver o que mover: a regua nunca para, mas
       // se ela nao existir o laco dorme ate a proxima rolagem
@@ -515,5 +661,6 @@
 
   // depois de montar as listas, senao nao haveria o que observar
   animarEntrada();
+  prepararInteracao();
   moverNaRolagem();
 })();

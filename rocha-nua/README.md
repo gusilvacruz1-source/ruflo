@@ -300,19 +300,42 @@ fim da página, o que sobrou aparece.
 - O nome partido em letras mantém o texto inteiro no `aria-label`, e as
   letras somem para o leitor de tela — senão ele soletraria a palavra.
 
+## A interação
+
+A página responde ao ponteiro, e não só à rolagem:
+
+| O quê | Como |
+|-------|------|
+| A palavra da chapa | é empurrada pelo ponteiro dentro da faixa |
+| Botões | viram ímã: inclinam na direção do cursor e voltam sozinhos |
+| Vídeos e cards | inclinam em perspectiva conforme o ponteiro passa |
+| Clique | deixa um carimbo de tinta que abre e some |
+| Régua | para quando o ponteiro passa por cima, e volta ao sair |
+| Faixa AO VIVO | torce com a velocidade da rolagem |
+
+**Os ouvintes só guardam valores.** Quem escreve no estilo é o mesmo
+`requestAnimationFrame` de tudo o mais: mexer em `transform` dentro do
+`mousemove` faria o navegador recalcular várias vezes por quadro.
+
+Medido depois de tudo isso: **60 quadros por segundo em 390, 768, 1440 e
+1920 px**, com o ponteiro na tela e a interação rodando — zero a um
+quadro lento em cem.
+
 ## O cursor
 
-O ponteiro é o chifre 🤘🏼, desenhado a partir do emoji e embutido no CSS.
+O ponteiro é uma **bolinha** laranja com anel creme, para ler tanto no
+asfalto quanto no papel. Em **dois tamanhos**: se fosse um só, o link
+perderia o aviso de que é clicável, que hoje é a mão do sistema. A maior
+faz esse papel.
 
-Em **dois tamanhos**, e não um: se tudo virasse o mesmo chifre, o link
-perderia o aviso de que é clicável, que hoje é a mão do sistema. O maior
-faz esse papel — o ponteiro cresce ao passar por cima de link, botão e
-vídeo.
+Atrás dela vem um **anel que segue com atraso** e abre quando passa por
+cima de algo clicável.
 
-Só entra em `@media (hover:hover) and (pointer:fine)`: em tela de toque
-não há cursor, e sem isso o navegador baixaria duas imagens para nada.
-Cada linha termina com `auto` ou `pointer` — se o navegador recusar a
-imagem, sobra o cursor do sistema, nunca cursor nenhum.
+A separação importa: **a bolinha é CSS puro e não depende de script** —
+mesmo sem JS o cursor é a bolinha. O anel é enfeite por cima, e some se o
+JS não rodar. Nada disso entra em tela de toque, onde não há cursor, nem
+em movimento reduzido, onde só o anel sai e a bolinha fica, porque
+bolinha não é movimento.
 
 ## Fotos
 

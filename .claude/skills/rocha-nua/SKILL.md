@@ -265,18 +265,35 @@ Conflito de `transform`: `sections.css` carrega depois de `main.css`.
 Regra de deslocamento para elemento que já tem `transform` lá — a peça da
 repetida — precisa ficar em `sections.css`.
 
+## Interacao
+
+A pagina responde ao ponteiro: a palavra da chapa e empurrada, o botao
+vira ima, video e card inclinam em perspectiva, o clique deixa carimbo de
+tinta, a regua para no hover, a faixa AO VIVO torce com a velocidade da
+rolagem.
+
+**Os ouvintes so guardam valores.** Quem escreve no estilo e o mesmo
+`requestAnimationFrame` do resto — mexer em `transform` dentro do
+`mousemove` faz o navegador recalcular varias vezes por quadro. Medido
+com tudo ligado: 60 fps em 390, 768, 1440 e 1920.
+
+Tudo desligado em `prefers-reduced-motion` e em tela de toque, onde nem
+os ouvintes sao registrados.
+
 ## Cursor
 
-O ponteiro é o chifre 🤘🏼, tirado do emoji e embutido em base64.
+Uma **bolinha** laranja com anel creme, que le no asfalto e no papel. Em
+dois tamanhos: se fosse um so, o link perderia o aviso de clicavel que
+hoje e a mao do sistema. Atras vem um anel que segue com atraso e abre
+sobre o que e clicavel.
 
-Em **dois tamanhos**: se fosse um só, o link perderia o aviso de que é
-clicável, que hoje é a mão do sistema — o maior faz esse papel. Vive
-dentro de `@media (hover:hover) and (pointer:fine)`, senão tela de toque
-baixaria duas imagens para nada, e cada linha termina em `auto` ou
-`pointer` como saída de emergência.
+**A bolinha e CSS puro e nao depende de script**; o anel e enfeite e some
+sem JS. Em movimento reduzido sai o anel e fica a bolinha — bolinha nao e
+movimento. Em tela de toque nao entra nada, senao o navegador baixaria
+duas imagens para nada.
 
 O bloco fica no **fim** do `main.css`: `.btn` declara `cursor:pointer`
-mais acima e venceria por ordem de declaração.
+mais acima e venceria por ordem de declaracao.
 
 ## Vagas de foto
 

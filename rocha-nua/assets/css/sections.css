@@ -370,15 +370,7 @@
   .repetida__peca{transform:translate(-50%,-50%)}
 }
 
-/* Toque de mao: o bloco levanta de leve ao passar o ponteiro. */
-.cancao__quadro,
-.integrante{transition:transform .3s var(--saida)}
-.cancao__quadro:hover{transform:translateY(-4px)}
-.integrante:hover{transform:translateY(-3px)}
-@media (prefers-reduced-motion:reduce){
-  .cancao__quadro,.integrante{transition:none}
-  .cancao__quadro:hover,.integrante:hover{transform:none}
-}
+/* A inclinacao destes blocos vem do ponteiro, e vive no main.css. */
 
 
 /* ---------------------------------------------------------------- fio
