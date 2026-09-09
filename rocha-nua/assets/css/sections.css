@@ -318,10 +318,10 @@
 
 .aovivo-grade{
   display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(248px,1fr));
-  gap:clamp(20px,3vw,42px);
-  /* cabe tres em tela larga; em tela media o auto-fit quebra sozinho */
-  max-width:1060px;
+  grid-template-columns:repeat(auto-fit,minmax(228px,1fr));
+  gap:clamp(18px,2.4vw,34px);
+  /* cabe quatro em tela larga; o auto-fit quebra sozinho nas menores */
+  max-width:1196px;
   margin-inline:auto;
 }
 
@@ -355,6 +355,10 @@
 .cancao.tocando .cancao__selo{opacity:0}
 
 .cancao__nome{
+  /* Reserva duas linhas mesmo quando o nome cabe em uma: sem isto a
+     tarja de cada musica tem altura diferente e a fileira fica irregular
+     — medido, 96px contra 133px na mesma linha. */
+  min-height:2.08em;
   font-size:clamp(1.45rem,3vw,2.2rem);
   font-weight:300;
   font-stretch:112%;
