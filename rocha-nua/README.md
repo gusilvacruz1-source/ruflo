@@ -230,8 +230,9 @@ Tudo sai da linguagem da página, que é impressão.
 | Deslocamento na rolagem | fundos de seção, as três linhas de AO VIVO, o disco |
 | Régua que responde | acelera com a rolagem e volta ao passo sozinha |
 | Fio de tinta | progresso da página, no topo |
-| Sobe e assenta | blocos, listas, cards, botões |
-| Carimbo | o logo no meio de "A banda" |
+| Sobe e assenta | blocos, listas, cards, botões — deitados, levantam em 3D |
+| Carimbo | o logo desce girado e assenta no papel |
+| Cena 3D | as três linhas de AO VIVO em profundidades diferentes, giradas pelo ponteiro |
 
 O escalonamento é **dentro do grupo que entra junto**, nunca pelo índice
 no documento: pelo índice, uma peça lá embaixo herdaria um atraso enorme
@@ -313,6 +314,17 @@ A página responde ao ponteiro, e não só à rolagem:
 | Régua | para quando o ponteiro passa por cima, e volta ao sair |
 | Faixa AO VIVO | torce com a velocidade da rolagem |
 
+### O 3D é cena, não truque
+
+A faixa AO VIVO tem `perspective` no pai e `transform-style:preserve-3d`
+nos filhos, e cada linha vive numa profundidade própria. **Sem
+`preserve-3d`, cada linha teria a própria perspectiva e não existiria
+cena nenhuma** — seria só texto girado. Com a cena montada, o ponteiro
+gira o conjunto e as linhas do fundo andam menos, como num objeto de
+verdade.
+
+Os ângulos são pequenos de propósito: texto muito girado perde nitidez.
+
 **Os ouvintes só guardam valores.** Quem escreve no estilo é o mesmo
 `requestAnimationFrame` de tudo o mais: mexer em `transform` dentro do
 `mousemove` faria o navegador recalcular várias vezes por quadro.
@@ -392,6 +404,7 @@ exatamente este nome e aparece sozinho, sem tocar no código.
 | `hero-banda.webp` | fundo da capa, no lugar do estúdio | 1600×1100, foto de show |
 | `emerson.webp` | retrato no card do Emerson | 800×1000 (vertical) |
 | `jose.webp` | retrato no card do José | 800×1000 (vertical) |
+| `nathan.webp` | retrato no card do Nathan | 800×1000 (vertical) |
 
 **Três regras do mecanismo**, para quem for mexer no código:
 

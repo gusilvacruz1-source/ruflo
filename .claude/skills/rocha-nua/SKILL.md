@@ -107,6 +107,7 @@ da página e por isso aparece **uma vez só**.
 - Instagram: @rocha.nua · YouTube: youtube.com/@rochanuarockband
 - Emerson (@emerson7r): voz, violão e guitarra
 - José (@josehique): baixo
+- Nathan (@nathangustavo_o): bateria
 - Descrição do perfil: "ROCHA NUA BR | Rock'n'Roll"
 
 A banda toca "Vou Deixar" (Skank) e "Wicked Game" (Chris Isaak). São
@@ -228,6 +229,18 @@ Tudo sai da linguagem de impressão: varredura de tinta nas palavras
 grandes, letra por letra no nome da capa, fora de registro, deslocamento
 na rolagem, régua que acelera com a rolagem, fio de progresso, carimbo no
 logo. Tudo num `requestAnimationFrame` só.
+
+**3D de verdade, com cena compartilhada.** A faixa repetida tem
+`perspective` no pai e `transform-style:preserve-3d` nos filhos, e as
+três linhas vivem em profundidades diferentes (-190, 40, 170) — sem
+`preserve-3d` cada linha teria a própria perspectiva e não haveria cena
+nenhuma. O ponteiro gira a cena inteira. As entradas também são 3D: o
+bloco vem deitado para trás e levanta; o logo desce girado e assenta.
+Ângulos pequenos de propósito — texto muito girado perde nitidez.
+
+Medi três profundidades diferentes atrás de quadros lentos e as três dão
+o mesmo: a variação é entre execuções, não entre valores. Não perseguir
+esse número.
 
 **As regras de custo, medidas e não achadas:**
 
