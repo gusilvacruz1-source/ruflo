@@ -224,35 +224,46 @@ Duas coisas aprendidas, que custam tempo se esquecidas:
 
 ## Movimento
 
-O movimento sai da linguagem de impressão. Quatro variantes de entrada:
-`varre` (a tinta passa da esquerda para a direita — palavra grande,
-título da capa, nome de música), `sobe` (bloco), `surge` (letra miúda de
-canto), `carimbo` (o logo assenta). Mais deslocamento por rolagem: a foto
-da chapa anda menos que a página, e as três linhas de AO VIVO andam em
-sentidos e velocidades diferentes, como chapa fora de registro.
+Tudo sai da linguagem de impressão: varredura de tinta nas palavras
+grandes, letra por letra no nome da capa, fora de registro, deslocamento
+na rolagem, régua que acelera com a rolagem, fio de progresso, carimbo no
+logo. Tudo num `requestAnimationFrame` só.
 
-**A armadilha, e é séria: peça varrida não pode ser observada nela
-mesma.** O `clip-path` que a esconde zera a área de interseção — o
-navegador devolve `intersectionRatio: 0` para um elemento inteiramente na
-tela, o observador nunca dispara, e a peça fica escondida para sempre.
-Medido aqui: o título da capa, 1196×115 e plenamente visível, com área
-vista igual a zero; ele nunca apareceria. Quem é observado é o **pai**,
-que não está recortado, e ele carrega a lista de peças que entram junto.
+**As regras de custo, medidas e não achadas:**
 
-Escalonar **pelo grupo que entra junto**, nunca pelo índice: um item lá
-embaixo herdaria um atraso enorme e pareceria travado.
+- **Não mover camada misturada do tamanho da tela.** As fotos das chapas
+  usam `mix-blend-mode`; deslocando-as a página cai para 30 fps em 1920 e
+  20 em 2560. Ficam paradas. A mistura fica, porque é o desenho.
+- **Duas camadas misturadas em tela cheia não passam de 30 fps em 1920**,
+  paradas ou não. Por isso o fora de registro da foto é **assado no
+  arquivo** por `meiatona.py`, e não uma camada por cima.
+- **Mistura em fundo de seção não vale.** Trocada por opacidade, a
+  diferença é de no máximo 8/255 e devolve 60 fps.
+- **Nunca pôr variável CSS e `background-image: var()` no mesmo
+  elemento.** Cada troca reavalia a imagem: a página repetia o pedido de
+  cada foto de 8 a 10 vezes.
 
-Só `opacity`, `transform` e `clip-path` — as três que o navegador anima
-sem refazer layout. **O estado escondido só existe quando o JS assume**
-(`js-anima` na raiz), e a função vive dentro de um `try` que remove a
-marca em caso de erro. Sem JS, sem `IntersectionObserver` ou com script
-quebrado, a página nasce visível. Nunca esconder conteúdo que dependa de
-script para voltar. Movimento reduzido desliga entrada e deslocamento.
+Hoje: 60 fps em 390, 768, 1440 e 1920. Em 2560 cai para 30, e é o preço
+da mistura das chapas.
+
+**Peça varrida não pode ser observada nela mesma.** O `clip-path` zera a
+área de interseção — `intersectionRatio: 0` para elemento visível, o
+observador nunca dispara, a peça some para sempre. Medido no título da
+capa, 1196×115 com área vista zero. Observar o **pai**.
+
+**Rede de segurança:** a margem negativa do observador exclui a última
+faixa da tela, e peça no rodapé do documento pode nunca ser vista —
+medido em 2560×1440, a letra miúda do fecho. Chegou ao fim da página, o
+que sobrou aparece.
+
+Escalonar pelo grupo que entra junto, nunca pelo índice. Só `opacity`,
+`transform` e `clip-path`. O estado escondido só existe com `js-anima` na
+raiz, dentro de um `try` que desfaz tudo em caso de erro. Movimento
+reduzido desliga entrada, deslocamento, fio e régua.
 
 Conflito de `transform`: `sections.css` carrega depois de `main.css`.
 Regra de deslocamento para elemento que já tem `transform` lá — a peça da
-repetida — precisa ficar em `sections.css`, senão é sobrescrita e a peça
-fica parada.
+repetida — precisa ficar em `sections.css`.
 
 ## Cursor
 

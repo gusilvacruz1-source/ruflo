@@ -219,25 +219,54 @@ em código.
 
 ## O movimento
 
-O movimento sai da linguagem da página, que é impressão. Nada de bloco
-genérico subindo e sumindo.
+Tudo sai da linguagem da página, que é impressão.
 
-**Entrada.** Cada peça tem a variante que combina com o que ela é:
-
-| Variante | Onde | O que faz |
-|----------|------|-----------|
-| `varre`   | palavras grandes, título da capa, nome da música | a tinta passa da esquerda para a direita |
-| `sobe`    | blocos, listas, botões | sobe e aparece |
-| `surge`   | letra miúda de canto | só aparece |
-| `carimbo` | o logo no meio de "A banda" | desce de leve e assenta |
+| O quê | Onde |
+|-------|------|
+| A tinta passa da esquerda para a direita | palavras grandes, nome da música |
+| Letra por letra | o nome na capa, como tipo sendo montado |
+| Fora de registro | palavras grandes e as fotos das chapas |
+| Chapa fora de registro | as quatro chapas, assado no arquivo |
+| Deslocamento na rolagem | fundos de seção, as três linhas de AO VIVO, o disco |
+| Régua que responde | acelera com a rolagem e volta ao passo sozinha |
+| Fio de tinta | progresso da página, no topo |
+| Sobe e assenta | blocos, listas, cards, botões |
+| Carimbo | o logo no meio de "A banda" |
 
 O escalonamento é **dentro do grupo que entra junto**, nunca pelo índice
 no documento: pelo índice, uma peça lá embaixo herdaria um atraso enorme
 e pareceria travada.
 
-**Deslocamento por rolagem.** A foto da chapa anda menos que a página, e
-as três linhas de "AO VIVO" andam em sentidos e velocidades diferentes,
-como chapa de impressão fora de registro.
+Tudo num `requestAnimationFrame` só. Separados, cada efeito leria a
+rolagem por conta e o navegador recalcularia o layout várias vezes por
+quadro.
+
+### O que a medição de quadros ensinou
+
+Aqui está o que custou caro, medido e não achado:
+
+- **Mover uma camada misturada do tamanho da tela é o gargalo.** As fotos
+  das chapas usam `mix-blend-mode`, que obriga o navegador a refazer a
+  rasterização contra o fundo. Com elas se deslocando: **30 quadros por
+  segundo em 1920 px e 20 em 2560**. Paradas: 60. Então elas ficaram
+  paradas, e a mistura ficou, porque a mistura é o desenho.
+- **Duas camadas misturadas em tela cheia não passam de 30 fps em 1920**,
+  paradas ou não. Era assim que o fora de registro da foto funcionava no
+  começo. A solução foi tirá-lo do compositor e **assá-lo no arquivo**:
+  `meiatona.py` desloca uma cópia dos pontos e combina pelo mais escuro.
+  Custa zero, e os arquivos até encolheram.
+- **Mistura em fundo de seção não comprava nada.** Trocada por opacidade,
+  a diferença de aparência é de no máximo **8 de 255** — invisível,
+  porque esses fundos já entram apagados. E foi o que devolveu 60 fps em
+  1440.
+- **Variável CSS e `background-image: var()` no mesmo elemento é
+  armadilha.** Cada troca da variável fazia o navegador reavaliar a
+  imagem: a página repetia o pedido de cada foto de **8 a 10 vezes**.
+  Camada de verdade com `transform` escrito direto resolveu.
+
+Hoje: **60 quadros por segundo em 390, 768, 1440 e 1920 px.** Em 2560 px
+cai para 30, e é o preço de manter a mistura das chapas, que é o desenho
+da página.
 
 ### A armadilha da varredura
 
@@ -245,24 +274,31 @@ como chapa de impressão fora de registro.
 esconde zera a área de interseção: o navegador devolve
 `intersectionRatio: 0` para um elemento inteiramente na tela, o
 `IntersectionObserver` nunca dispara, e a peça fica escondida para
-sempre. Medido aqui: o título da capa, 1196×115 px e plenamente visível,
-com área vista igual a zero. **O título nunca apareceria.**
+sempre. Medido: o título da capa, 1196×115 px e plenamente visível, com
+área vista igual a zero. **O título nunca apareceria.** Quem é observado
+é o **pai**, que não está recortado.
 
-Por isso quem é observado é o **elemento pai**, que não está recortado, e
-ele carrega a lista de peças que devem entrar junto.
+### A rede de segurança
+
+A margem negativa do observador exclui a última faixa da tela, e peça que
+vive no rodapé do documento pode nunca cair na área observada: medido em
+2560×1440, a letra miúda do fecho ficava escondida para sempre. Chegou ao
+fim da página, o que sobrou aparece.
 
 ### As garantias
 
-- Só opacity, transform e clip-path — as três propriedades que o
+- Só `opacity`, `transform` e `clip-path` — as três propriedades que o
   navegador anima sem refazer layout.
 - O estado escondido só existe quando o JS assume (`js-anima` na raiz), e
   a função inteira vive dentro de um `try` que desfaz a marca em caso de
   erro. Sem JS, sem `IntersectionObserver` ou com script quebrado, a
   página nasce inteira e visível.
+- **24 de 24 peças entram**, conferido em 380, 390, 768, 1440, 1920 e
+  2560 px.
 - Quem configurou o sistema com menos movimento vê tudo de uma vez, sem
-  transição e sem deslocamento.
-- O laço de rolagem ignora o que está fora de vista e só recalcula dentro
-  de `requestAnimationFrame`.
+  transição, sem deslocamento, sem fio e com a régua parada.
+- O nome partido em letras mantém o texto inteiro no `aria-label`, e as
+  letras somem para o leitor de tela — senão ele soletraria a palavra.
 
 ## O cursor
 
