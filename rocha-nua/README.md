@@ -228,11 +228,11 @@ Tudo sai da linguagem da página, que é impressão.
 | Fora de registro | palavras grandes e as fotos das chapas |
 | Chapa fora de registro | as quatro chapas, assado no arquivo |
 | Deslocamento na rolagem | fundos de seção, as três linhas de AO VIVO, o disco |
+| Vira em 3D | a palavra da chapa, com o ponteiro |
 | Régua que responde | acelera com a rolagem e volta ao passo sozinha |
 | Fio de tinta | progresso da página, no topo |
 | Sobe e assenta | blocos, listas, cards, botões |
 | Carimbo | o logo no meio de "A banda" |
-| Cena 3D | as três linhas de AO VIVO em profundidades diferentes, giradas pelo ponteiro |
 
 O escalonamento é **dentro do grupo que entra junto**, nunca pelo índice
 no documento: pelo índice, uma peça lá embaixo herdaria um atraso enorme
@@ -313,23 +313,18 @@ A página responde ao ponteiro, e não só à rolagem:
 | Régua | para quando o ponteiro passa por cima, e volta ao sair |
 | Faixa AO VIVO | torce com a velocidade da rolagem |
 
-### O 3D fica só na tipografia
+### O 3D fica num lugar só
 
-Vídeo, card e logo ficam **planos de propósito**. Chegaram a inclinar com
-o ponteiro e a página ficava bamba: coisa demais mexendo ao mesmo tempo.
-O 3D vive onde é gesto de tipografia — a palavra da chapa, que vira, e a
-faixa AO VIVO, que é cena.
+**A palavra da chapa** — ela é empurrada e vira quando o ponteiro passa
+pela faixa. É o único 3D da página.
 
-### O 3D é cena, não truque
+Vídeo, card, logo e a faixa AO VIVO ficam **planos de propósito**. Todos
+já tiveram inclinação e saiu: com coisa demais mexendo ao mesmo tempo, a
+página fica bamba. A faixa AO VIVO mantém o deslocamento horizontal das
+três linhas e a torção com a velocidade da rolagem, que são de duas
+dimensões.
 
-A faixa AO VIVO tem `perspective` no pai e `transform-style:preserve-3d`
-nos filhos, e cada linha vive numa profundidade própria. **Sem
-`preserve-3d`, cada linha teria a própria perspectiva e não existiria
-cena nenhuma** — seria só texto girado. Com a cena montada, o ponteiro
-gira o conjunto e as linhas do fundo andam menos, como num objeto de
-verdade.
-
-Os ângulos são pequenos de propósito: texto muito girado perde nitidez.
+Os ângulos são pequenos: texto muito girado perde nitidez.
 
 **Os ouvintes só guardam valores.** Quem escreve no estilo é o mesmo
 `requestAnimationFrame` de tudo o mais: mexer em `transform` dentro do

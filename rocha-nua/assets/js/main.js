@@ -301,7 +301,6 @@
     ['.repetida__peca',   36]
   ];
   var LINHAS_REPETIDA = [-82, 108, -54];
-  var FUNDO_REPETIDA = [-190, 40, 170];   // profundidade de cada linha na cena
 
   function menosMovimento() {
     return window.matchMedia
@@ -416,8 +415,8 @@
      chapa e empurrada e vira em 3D, o botao vira ima, o clique deixa
      carimbo, a regua para e volta quando o ponteiro passa por ela.
 
-     O 3D fica so na tipografia. Video, card e logo ficam planos: com
-     tudo inclinando, a pagina ficava bamba.
+     O 3D fica so na palavra da chapa. Video, card, logo e a faixa AO
+     VIVO ficam planos: com tudo inclinando, a pagina ficava bamba.
 
      Os ouvintes so GUARDAM valores. Quem escreve no estilo e o mesmo
      requestAnimationFrame do resto: mexer em transform dentro do
@@ -473,23 +472,6 @@
     // so o botao: video, card e logo ficam parados de proposito
     guiar('.btn', 9);
 
-    // o ponteiro gira a cena 3D da faixa repetida
-    var repetida = document.querySelector('.repetida');
-    var linhas = document.querySelector('.repetida__linhas');
-    if (repetida && linhas) {
-      repetida.addEventListener('mousemove', function (e) {
-        var r = repetida.getBoundingClientRect();
-        var gx = ((e.clientY - r.top) / r.height - 0.5) * -13;
-        var gy = ((e.clientX - r.left) / r.width - 0.5) * 17;
-        linhas.style.setProperty('--giro-x', gx.toFixed(2) + 'deg');
-        linhas.style.setProperty('--giro-y', gy.toFixed(2) + 'deg');
-      }, { passive: true });
-      repetida.addEventListener('mouseleave', function () {
-        linhas.style.setProperty('--giro-x', '0deg');
-        linhas.style.setProperty('--giro-y', '0deg');
-      });
-    }
-
     // a regua para quando o ponteiro passa por cima
     var regua = document.querySelector('.regua');
     if (regua) {
@@ -522,12 +504,7 @@
     });
     Array.prototype.forEach.call(document.querySelectorAll('.repetida__linha'),
       function (el, n) {
-        itens.push({
-          el: el,
-          forca: LINHAS_REPETIDA[n % LINHAS_REPETIDA.length],
-          fundo: FUNDO_REPETIDA[n % FUNDO_REPETIDA.length],
-          eixo: 'x'
-        });
+        itens.push({ el: el, forca: LINHAS_REPETIDA[n % LINHAS_REPETIDA.length], eixo: 'x' });
       });
 
     // texto que entra em registro conforme sobe na tela
@@ -611,16 +588,7 @@
         if (r.bottom < -300 || r.top > alturaJanela + 300) return;
         var pos = (r.top + r.height / 2 - meio) / (meio + r.height / 2);
         if (pos < -1) pos = -1; else if (pos > 1) pos = 1;
-        if (it.fundo !== undefined) {
-          /* Linha da faixa repetida: anda no eixo X e vive numa
-             profundidade propria dentro da cena. Como a cena tem
-             perspectiva no pai e preserve-3d, o translateZ e de verdade:
-             a linha do fundo anda menos e some para tras. */
-          it.el.style.transform = 'translate3d(' + (pos * it.forca).toFixed(1)
-            + 'px,0,' + it.fundo + 'px)';
-        } else {
-          it.el.style.setProperty('--paralaxe', (pos * it.forca).toFixed(1) + 'px');
-        }
+        it.el.style.setProperty('--paralaxe', (pos * it.forca).toFixed(1) + 'px');
       });
 
       registros.forEach(function (el) {

@@ -230,16 +230,17 @@ grandes, letra por letra no nome da capa, fora de registro, deslocamento
 na rolagem, régua que acelera com a rolagem, fio de progresso, carimbo no
 logo. Tudo num `requestAnimationFrame` só.
 
-**3D de verdade, com cena compartilhada.** A faixa repetida tem
-`perspective` no pai e `transform-style:preserve-3d` nos filhos, e as
-três linhas vivem em profundidades diferentes (-190, 40, 170) — sem
-`preserve-3d` cada linha teria a própria perspectiva e não haveria cena
-nenhuma. O ponteiro gira a cena inteira, e a palavra da chapa vira.
-Ângulos pequenos de propósito — texto muito girado perde nitidez.
+**O 3D fica num lugar só: a palavra da chapa**, que é empurrada e vira
+com o ponteiro. Ângulos pequenos — texto muito girado perde nitidez.
 
-**O 3D fica só na tipografia.** Vídeo, card e logo ficam planos: chegaram
-a inclinar com o ponteiro e a página ficava bamba, com coisa demais
-mexendo ao mesmo tempo. As entradas de bloco também são planas.
+Vídeo, card, logo, as entradas de bloco e a faixa AO VIVO ficam planos.
+Todos já tiveram 3D e saiu, um a um, a pedido: com coisa demais mexendo
+ao mesmo tempo a página fica bamba. A faixa AO VIVO chegou a ser cena
+com `perspective` e `preserve-3d`; hoje mantém só o deslocamento
+horizontal das linhas e a torção pela velocidade da rolagem.
+
+**A tendência aqui é somar movimento até cansar.** Antes de acrescentar,
+lembrar que a última decisão foi tirar.
 
 Medi três profundidades diferentes atrás de quadros lentos e as três dão
 o mesmo: a variação é entre execuções, não entre valores. Não perseguir
