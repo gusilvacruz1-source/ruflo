@@ -473,53 +473,101 @@ h1,h2,h3{margin:0;font-weight:400}
   font-size:14px;font-weight:700;letter-spacing:.04em;
 }
 
-/* --------------------------------------------- entrada por rolagem
-   A faixa entra subindo quando chega na tela, e o NOME da musica e
-   revelado por varredura, da esquerda para a direita, como carimbo
-   passando no papel. E o unico movimento da pagina fora da regua.
+/* ------------------------------------------------------ movimento
+   O movimento sai da linguagem da pagina, que e impressao: coisa que
+   entra e VARRIDA, como tinta passando no papel; chapa que rola tem
+   deslocamento diferente do texto, como plano de fundo mal registrado.
+   Nada de bloco generico subindo e sumindo.
 
    O estado escondido so existe quando o JS assume (.js-anima na raiz).
-   Sem JS, com JS quebrado, ou sem IntersectionObserver, a lista nasce
-   visivel: nunca esconder conteudo que dependa de script para voltar. */
+   Sem JS, com JS quebrado ou sem IntersectionObserver, a pagina nasce
+   inteira e visivel. Nunca esconder conteudo que dependa de script.
 
-.js-anima .entra{
+   Tudo aqui e opacity, transform e clip-path: sao as tres propriedades
+   que o navegador anima sem refazer layout. */
+
+/* --- entra subindo --- */
+.js-anima [data-entra="sobe"]{
   opacity:0;
-  transform:translateY(18px);
+  transform:translate3d(0,24px,0);
 }
-.js-anima .entra.entrou{
+.js-anima [data-entra="sobe"].entrou{
   opacity:1;
   transform:none;
-  transition:opacity .5s var(--saida) var(--atraso,0ms),
-             transform .6s var(--saida) var(--atraso,0ms);
+  transition:opacity .55s var(--saida) var(--atraso,0ms),
+             transform .7s var(--saida) var(--atraso,0ms);
 }
 
-/* A varredura vai no nome, que e o que se quer ler primeiro. */
+/* --- so aparece, sem deslocar (letra miuda de canto) --- */
+.js-anima [data-entra="surge"]{opacity:0}
+.js-anima [data-entra="surge"].entrou{
+  opacity:1;
+  transition:opacity .8s var(--saida) var(--atraso,0ms);
+}
+
+/* --- varredura: a tinta passa da esquerda para a direita --- */
+.js-anima [data-entra="varre"]{
+  -webkit-clip-path:inset(0 100% 0 0);
+  clip-path:inset(0 100% 0 0);
+}
+.js-anima [data-entra="varre"].entrou{
+  -webkit-clip-path:inset(0 0 0 0);
+  clip-path:inset(0 0 0 0);
+  transition:clip-path .85s var(--saida) var(--atraso,0ms),
+             -webkit-clip-path .85s var(--saida) var(--atraso,0ms);
+}
+
+/* --- carimbo: desce de leve e assenta --- */
+.js-anima [data-entra="carimbo"]{
+  opacity:0;
+  transform:scale(1.09);
+}
+.js-anima [data-entra="carimbo"].entrou{
+  opacity:1;
+  transform:none;
+  transition:opacity .45s var(--saida) var(--atraso,0ms),
+             transform .8s var(--saida) var(--atraso,0ms);
+}
+
+/* O nome dentro do bloco e varrido junto, um pouco depois do bloco. */
 .js-anima .entra .cancao__nome,
-.js-anima .entra .faixa-musica__nome,
 .js-anima .entra .show__local{
   -webkit-clip-path:inset(0 100% 0 0);
   clip-path:inset(0 100% 0 0);
 }
 .js-anima .entra.entrou .cancao__nome,
-.js-anima .entra.entrou .faixa-musica__nome,
 .js-anima .entra.entrou .show__local{
   -webkit-clip-path:inset(0 0 0 0);
   clip-path:inset(0 0 0 0);
-  transition:clip-path .65s var(--saida) calc(var(--atraso,0ms) + 120ms),
-             -webkit-clip-path .65s var(--saida) calc(var(--atraso,0ms) + 120ms);
+  transition:clip-path .7s var(--saida) calc(var(--atraso,0ms) + 140ms),
+             -webkit-clip-path .7s var(--saida) calc(var(--atraso,0ms) + 140ms);
 }
 
+/* --- deslocamento por rolagem ---
+   A foto da chapa anda menos que a pagina, entao a faixa ganha
+   profundidade. O scale existe para o deslocamento nao descobrir a
+   borda da imagem. */
+.chapa__tela img,
+.secao__fundo img{
+  transform:translate3d(0,var(--paralaxe,0),0) scale(1.14);
+}
+.repetida__linha{transform:translate3d(var(--paralaxe,0),0,0)}
+
 @media (prefers-reduced-motion:reduce){
-  .js-anima .entra,
-  .js-anima .entra.entrou{opacity:1;transform:none;transition:none}
+  .js-anima [data-entra],
+  .js-anima [data-entra].entrou{
+    opacity:1;transform:none;transition:none;
+    -webkit-clip-path:none;clip-path:none;
+  }
   .js-anima .entra .cancao__nome,
-  .js-anima .entra .faixa-musica__nome,
   .js-anima .entra .show__local,
   .js-anima .entra.entrou .cancao__nome,
-  .js-anima .entra.entrou .faixa-musica__nome,
   .js-anima .entra.entrou .show__local{
     -webkit-clip-path:none;clip-path:none;transition:none;
   }
+  .chapa__tela img,
+  .secao__fundo img{transform:scale(1.14)}
+  .repetida__linha{transform:none}
 }
 
 
@@ -535,3 +583,26 @@ h1,h2,h3{margin:0;font-weight:400}
 .vaga__real{display:none}
 .vaga--cheia .vaga__real{display:block}
 .vaga--cheia .vaga__reserva{display:none}
+
+
+/* ------------------------------------------------------------ cursor
+   O ponteiro vira o chifre. So onde existe ponteiro de verdade: em tela
+   de toque nao ha cursor, e um @media que ignore isso faria o navegador
+   baixar duas imagens para nada.
+
+   Dois tamanhos, e nao um: se tudo virasse o mesmo chifre, o link
+   perderia o aviso de que e clicavel, que hoje e a mao do sistema. O
+   maior faz esse papel — e o ponteiro cresce ao passar por cima.
+
+   O ultimo valor de cada linha e a saida de emergencia: se o navegador
+   recusar a imagem, sobra auto ou pointer, nunca cursor nenhum. */
+
+@media (hover:hover) and (pointer:fine){
+  body{
+    cursor:url("data:image/png;base64,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") 4 2, auto;
+  }
+  a, button, .btn, summary, [role="button"], video,
+  .integrante__arroba, .menu a, .rodape__links a{
+    cursor:url("data:image/png;base64,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") 5 2, pointer;
+  }
+}

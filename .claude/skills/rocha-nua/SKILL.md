@@ -222,18 +222,50 @@ Duas coisas aprendidas, que custam tempo se esquecidas:
   comparação quadro a quadro deu 0/255 e o áudio bateu byte a byte. Com
   câmera fixa, dois trechos iguais lado a lado pareceriam defeito.
 
-## Entrada das músicas
+## Movimento
 
-O bloco sobe e o nome da música é revelado por varredura quando chega
-na tela. É o único movimento da página fora da régua.
+O movimento sai da linguagem de impressão. Quatro variantes de entrada:
+`varre` (a tinta passa da esquerda para a direita — palavra grande,
+título da capa, nome de música), `sobe` (bloco), `surge` (letra miúda de
+canto), `carimbo` (o logo assenta). Mais deslocamento por rolagem: a foto
+da chapa anda menos que a página, e as três linhas de AO VIVO andam em
+sentidos e velocidades diferentes, como chapa fora de registro.
 
-Escalonar **pelo grupo que entra junto**, nunca pelo índice na lista: um
-item lá embaixo herdaria um atraso enorme e pareceria travado.
+**A armadilha, e é séria: peça varrida não pode ser observada nela
+mesma.** O `clip-path` que a esconde zera a área de interseção — o
+navegador devolve `intersectionRatio: 0` para um elemento inteiramente na
+tela, o observador nunca dispara, e a peça fica escondida para sempre.
+Medido aqui: o título da capa, 1196×115 e plenamente visível, com área
+vista igual a zero; ele nunca apareceria. Quem é observado é o **pai**,
+que não está recortado, e ele carrega a lista de peças que entram junto.
 
-**O estado escondido só existe quando o JS assume** (`js-anima` na raiz),
-e a função inteira vive dentro de um `try` que remove a marca em caso de
-erro. Sem JS, sem `IntersectionObserver` ou com script quebrado, a lista
-nasce visível. Nunca esconder conteúdo que dependa de script para voltar.
+Escalonar **pelo grupo que entra junto**, nunca pelo índice: um item lá
+embaixo herdaria um atraso enorme e pareceria travado.
+
+Só `opacity`, `transform` e `clip-path` — as três que o navegador anima
+sem refazer layout. **O estado escondido só existe quando o JS assume**
+(`js-anima` na raiz), e a função vive dentro de um `try` que remove a
+marca em caso de erro. Sem JS, sem `IntersectionObserver` ou com script
+quebrado, a página nasce visível. Nunca esconder conteúdo que dependa de
+script para voltar. Movimento reduzido desliga entrada e deslocamento.
+
+Conflito de `transform`: `sections.css` carrega depois de `main.css`.
+Regra de deslocamento para elemento que já tem `transform` lá — a peça da
+repetida — precisa ficar em `sections.css`, senão é sobrescrita e a peça
+fica parada.
+
+## Cursor
+
+O ponteiro é o chifre 🤘🏼, tirado do emoji e embutido em base64.
+
+Em **dois tamanhos**: se fosse um só, o link perderia o aviso de que é
+clicável, que hoje é a mão do sistema — o maior faz esse papel. Vive
+dentro de `@media (hover:hover) and (pointer:fine)`, senão tela de toque
+baixaria duas imagens para nada, e cada linha termina em `auto` ou
+`pointer` como saída de emergência.
+
+O bloco fica no **fim** do `main.css`: `.btn` declara `cursor:pointer`
+mais acima e venceria por ordem de declaração.
 
 ## Vagas de foto
 

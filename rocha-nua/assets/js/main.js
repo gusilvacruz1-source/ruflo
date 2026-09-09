@@ -255,43 +255,152 @@
     });
   }
 
-  /* ------------------------------------------- entrada por rolagem
-     Cada faixa entra quando chega na tela, escalonada dentro do grupo
-     que entra junto — e nao pela posicao na lista, senao uma faixa la
-     embaixo herdaria um atraso enorme e pareceria travada.
+  /* ----------------------------------------------------------- movimento
 
-     Entra uma vez so: depois de entrar, para de observar.
+     Duas coisas, e as duas so existem quando o JS assume:
 
-     Tudo dentro de try: se qualquer coisa aqui falhar, a marca sai da
-     raiz e a lista volta a ser visivel. O pior defeito possivel neste
-     trecho seria esconder as musicas e nao conseguir mostrar de volta. */
+     1) ENTRADA. Cada peca ganha uma variante de entrada conforme o que
+        ela e: palavra grande e varrida como tinta, bloco sobe, letra
+        miuda so aparece, selo assenta como carimbo.
+
+        O escalonamento e dentro do grupo que entra junto, nunca pelo
+        indice no documento: pelo indice, uma peca la embaixo herdaria um
+        atraso enorme e pareceria travada.
+
+     2) DESLOCAMENTO. A foto da chapa anda menos que a pagina, e as tres
+        linhas da faixa repetida andam em sentidos e velocidades
+        diferentes, como chapa de impressao fora de registro.
+
+     Tudo dentro de try: se qualquer coisa falhar, a marca sai da raiz e
+     a pagina volta a aparecer inteira. O pior defeito possivel aqui
+     seria esconder o conteudo e nao conseguir mostrar de volta. */
+
+  var ENTRADAS = [
+    ['.capa__nome',          'varre'],
+    ['.capa__sub',           'sobe'],
+    ['.capa__acoes',         'sobe'],
+    ['.capa__ficha',         'sobe'],
+    ['.marcas',              'surge'],
+    ['.chapa__palavra',      'varre'],
+    ['.banda__palavra',      'varre'],
+    ['.banda__selo',         'carimbo'],
+    ['.integrante',          'sobe'],
+    ['.secao__etiqueta',     'sobe'],
+    ['.cancao',              'sobe'],
+    ['.faixa-musica',        'sobe'],
+    ['.show',                'sobe'],
+    ['.vazio',               'sobe'],
+    ['.videos__rodape',      'sobe'],
+    ['.fecho__titulo',       'varre'],
+    ['.fecho__texto',        'sobe'],
+    ['.contratacao__acoes',  'sobe']
+  ];
+
+  var DESLOCAMENTO = [
+    ['.chapa__tela img',  30],
+    ['.secao__fundo img', 22],
+    ['.repetida__peca',   36]
+  ];
+  var LINHAS_REPETIDA = [-82, 108, -54];
+
+  function menosMovimento() {
+    return window.matchMedia
+      && window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  }
 
   function animarEntrada() {
     if (!('IntersectionObserver' in window)) return;
 
-    var alvos = document.querySelectorAll('.cancao, .faixa-musica, .show');
+    var alvos = [];
+    ENTRADAS.forEach(function (par) {
+      Array.prototype.forEach.call(document.querySelectorAll(par[0]), function (el) {
+        if (el.hasAttribute('data-entra')) return;   // ja marcado por outro seletor
+        el.setAttribute('data-entra', par[1]);
+        el.classList.add('entra');
+        alvos.push(el);
+      });
+    });
     if (!alvos.length) return;
+
+    /* A varredura NAO pode ser observada nela mesma. O clip-path que a
+       esconde zera a area de intersecao: o navegador devolve
+       intersectionRatio 0 para um elemento inteiramente na tela, o
+       observador nunca dispara e a peca fica escondida para sempre.
+       Medido: o titulo da capa, 1196x115 e visivel, dava area vista 0.
+
+       Entao quem e observado e o PAI, que nao esta recortado, e ele
+       carrega a lista de pecas que devem entrar junto. */
+    var observados = [];
+    alvos.forEach(function (el) {
+      var alvo = (el.getAttribute('data-entra') === 'varre' && el.parentElement)
+        ? el.parentElement : el;
+      if (!alvo.__entradas) { alvo.__entradas = []; observados.push(alvo); }
+      alvo.__entradas.push(el);
+    });
 
     var raiz = document.documentElement;
     try {
       raiz.classList.add('js-anima');
-      Array.prototype.forEach.call(alvos, function (el) { el.classList.add('entra'); });
 
       var obs = new IntersectionObserver(function (entradas) {
         var ordem = 0;
         entradas.forEach(function (e) {
           if (!e.isIntersecting) return;
-          e.target.style.setProperty('--atraso', Math.min(ordem, 6) * 70 + 'ms');
-          e.target.classList.add('entrou');
+          (e.target.__entradas || []).forEach(function (el) {
+            el.style.setProperty('--atraso', Math.min(ordem, 7) * 65 + 'ms');
+            el.classList.add('entrou');
+            ordem++;
+          });
           obs.unobserve(e.target);
-          ordem++;
         });
-      }, { rootMargin: '0px 0px -10% 0px', threshold: 0.2 });
+      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
 
-      Array.prototype.forEach.call(alvos, function (el) { obs.observe(el); });
+      observados.forEach(function (n) { obs.observe(n); });
     } catch (erro) {
       raiz.classList.remove('js-anima');
+      alvos.forEach(function (el) { el.removeAttribute('data-entra'); });
     }
+  }
+
+  function deslocarNaRolagem() {
+    if (menosMovimento()) return;
+
+    var itens = [];
+    DESLOCAMENTO.forEach(function (par) {
+      Array.prototype.forEach.call(document.querySelectorAll(par[0]), function (el) {
+        itens.push({ el: el, forca: par[1], eixo: 'y' });
+      });
+    });
+    Array.prototype.forEach.call(document.querySelectorAll('.repetida__linha'),
+      function (el, n) {
+        itens.push({ el: el, forca: LINHAS_REPETIDA[n % LINHAS_REPETIDA.length], eixo: 'x' });
+      });
+    if (!itens.length) return;
+
+    var pedido = false;
+
+    function atualizar() {
+      pedido = false;
+      var alturaJanela = window.innerHeight || document.documentElement.clientHeight;
+      var meio = alturaJanela / 2;
+      itens.forEach(function (it) {
+        var r = it.el.getBoundingClientRect();
+        // fora de vista com folga: nao gasta conta com o que ninguem ve
+        if (r.bottom < -300 || r.top > alturaJanela + 300) return;
+        // -1 quando a peca esta chegando por baixo, +1 quando ja subiu
+        var pos = (r.top + r.height / 2 - meio) / (meio + r.height / 2);
+        if (pos < -1) pos = -1; else if (pos > 1) pos = 1;
+        it.el.style.setProperty('--paralaxe', (pos * it.forca).toFixed(1) + 'px');
+      });
+    }
+
+    function pedir() {
+      if (!pedido) { pedido = true; window.requestAnimationFrame(atualizar); }
+    }
+
+    window.addEventListener('scroll', pedir, { passive: true });
+    window.addEventListener('resize', pedir, { passive: true });
+    atualizar();
   }
 
   checarVagas();
@@ -304,4 +413,5 @@
 
   // depois de montar as listas, senao nao haveria o que observar
   animarEntrada();
+  deslocarNaRolagem();
 })();

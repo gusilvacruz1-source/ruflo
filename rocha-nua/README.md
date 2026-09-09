@@ -217,28 +217,66 @@ se fosse da casa.
 `video` e `cartaz` entre os dois blocos em `dados.js`. Não precisa tocar
 em código.
 
-## A entrada das músicas
+## O movimento
 
-Quando o bloco chega na tela, ele sobe e o **nome da música é revelado
-por varredura**, da esquerda para a direita, como carimbo passando no
-papel. Vale também para a agenda.
+O movimento sai da linguagem da página, que é impressão. Nada de bloco
+genérico subindo e sumindo.
 
-O escalonamento é **dentro do grupo que entra junto**, não pela posição
-na lista: se fosse pelo índice, uma faixa lá embaixo herdaria um atraso
-enorme e pareceria travada.
+**Entrada.** Cada peça tem a variante que combina com o que ela é:
 
-**A regra que sustenta isso:** o estado escondido só existe quando o JS
-assume, marcando `js-anima` na raiz. Sem JS, com JS quebrado, ou sem
-`IntersectionObserver`, a lista nasce visível. Nunca esconder conteúdo
-que dependa de script para reaparecer — e por isso a função inteira está
-dentro de um `try`: se algo falhar, a marca sai da raiz e tudo volta a
-aparecer.
+| Variante | Onde | O que faz |
+|----------|------|-----------|
+| `varre`   | palavras grandes, título da capa, nome da música | a tinta passa da esquerda para a direita |
+| `sobe`    | blocos, listas, botões | sobe e aparece |
+| `surge`   | letra miúda de canto | só aparece |
+| `carimbo` | o logo no meio de "A banda" | desce de leve e assenta |
 
-Quem configurou o sistema com menos movimento vê a lista inteira de uma
-vez, sem transição.
+O escalonamento é **dentro do grupo que entra junto**, nunca pelo índice
+no documento: pelo índice, uma peça lá embaixo herdaria um atraso enorme
+e pareceria travada.
 
-As autorais da banda ainda não estão no site: entram assim que houver
-nome e vídeo, marcadas com `autoral: true`.
+**Deslocamento por rolagem.** A foto da chapa anda menos que a página, e
+as três linhas de "AO VIVO" andam em sentidos e velocidades diferentes,
+como chapa de impressão fora de registro.
+
+### A armadilha da varredura
+
+**Peça varrida não pode ser observada nela mesma.** O `clip-path` que a
+esconde zera a área de interseção: o navegador devolve
+`intersectionRatio: 0` para um elemento inteiramente na tela, o
+`IntersectionObserver` nunca dispara, e a peça fica escondida para
+sempre. Medido aqui: o título da capa, 1196×115 px e plenamente visível,
+com área vista igual a zero. **O título nunca apareceria.**
+
+Por isso quem é observado é o **elemento pai**, que não está recortado, e
+ele carrega a lista de peças que devem entrar junto.
+
+### As garantias
+
+- Só opacity, transform e clip-path — as três propriedades que o
+  navegador anima sem refazer layout.
+- O estado escondido só existe quando o JS assume (`js-anima` na raiz), e
+  a função inteira vive dentro de um `try` que desfaz a marca em caso de
+  erro. Sem JS, sem `IntersectionObserver` ou com script quebrado, a
+  página nasce inteira e visível.
+- Quem configurou o sistema com menos movimento vê tudo de uma vez, sem
+  transição e sem deslocamento.
+- O laço de rolagem ignora o que está fora de vista e só recalcula dentro
+  de `requestAnimationFrame`.
+
+## O cursor
+
+O ponteiro é o chifre 🤘🏼, desenhado a partir do emoji e embutido no CSS.
+
+Em **dois tamanhos**, e não um: se tudo virasse o mesmo chifre, o link
+perderia o aviso de que é clicável, que hoje é a mão do sistema. O maior
+faz esse papel — o ponteiro cresce ao passar por cima de link, botão e
+vídeo.
+
+Só entra em `@media (hover:hover) and (pointer:fine)`: em tela de toque
+não há cursor, e sem isso o navegador baixaria duas imagens para nada.
+Cada linha termina com `auto` ou `pointer` — se o navegador recusar a
+imagem, sobra o cursor do sistema, nunca cursor nenhum.
 
 ## Fotos
 
