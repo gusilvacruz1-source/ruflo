@@ -234,9 +234,12 @@ logo. Tudo num `requestAnimationFrame` só.
 `perspective` no pai e `transform-style:preserve-3d` nos filhos, e as
 três linhas vivem em profundidades diferentes (-190, 40, 170) — sem
 `preserve-3d` cada linha teria a própria perspectiva e não haveria cena
-nenhuma. O ponteiro gira a cena inteira. As entradas também são 3D: o
-bloco vem deitado para trás e levanta; o logo desce girado e assenta.
+nenhuma. O ponteiro gira a cena inteira, e a palavra da chapa vira.
 Ângulos pequenos de propósito — texto muito girado perde nitidez.
+
+**O 3D fica só na tipografia.** Vídeo, card e logo ficam planos: chegaram
+a inclinar com o ponteiro e a página ficava bamba, com coisa demais
+mexendo ao mesmo tempo. As entradas de bloco também são planas.
 
 Medi três profundidades diferentes atrás de quadros lentos e as três dão
 o mesmo: a variação é entre execuções, não entre valores. Não perseguir

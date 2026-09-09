@@ -413,9 +413,11 @@
   /* ----------------------------------------------------------- interacao
 
      A pagina responde ao ponteiro, e nao so a rolagem: a palavra da
-     chapa e empurrada, o botao vira ima, o bloco de video e o card
-     inclinam, o clique deixa carimbo, a regua para e volta quando o
-     ponteiro passa por ela.
+     chapa e empurrada e vira em 3D, o botao vira ima, o clique deixa
+     carimbo, a regua para e volta quando o ponteiro passa por ela.
+
+     O 3D fica so na tipografia. Video, card e logo ficam planos: com
+     tudo inclinando, a pagina ficava bamba.
 
      Os ouvintes so GUARDAM valores. Quem escreve no estilo e o mesmo
      requestAnimationFrame do resto: mexer em transform dentro do
@@ -426,7 +428,7 @@
   var mao = {
     ativa: false,
     empurroes: [],   // palavras empurradas pelo ponteiro
-    puxados: [],     // botoes e blocos inclinados
+    puxados: [],     // botoes puxados pelo ima
     reguaParada: false
   };
 
@@ -452,10 +454,10 @@
         faixa.addEventListener('mouseleave', function () { item.ax = 0; item.ay = 0; });
       });
 
-    // ima nos botoes, inclinacao nos blocos
-    function guiar(sel, forca, inclina) {
+    // ima: o elemento inclina na direcao do ponteiro e volta sozinho
+    function guiar(sel, forca) {
       Array.prototype.forEach.call(document.querySelectorAll(sel), function (el) {
-        var item = { el: el, x: 0, y: 0, ax: 0, ay: 0, inclina: inclina };
+        var item = { el: el, x: 0, y: 0, ax: 0, ay: 0 };
         mao.puxados.push(item);
         el.addEventListener('mousemove', function (e) {
           var r = el.getBoundingClientRect();
@@ -468,10 +470,8 @@
         });
       });
     }
-    guiar('.btn', 9, false);
-    guiar('.cancao__quadro', 7, true);
-    guiar('.integrante', 5, true);
-    guiar('.banda__selo', 10, true);
+    // so o botao: video, card e logo ficam parados de proposito
+    guiar('.btn', 9);
 
     // o ponteiro gira a cena 3D da faixa repetida
     var repetida = document.querySelector('.repetida');
@@ -649,14 +649,8 @@
           if (Math.abs(it.ax - it.x) < 0.05 && Math.abs(it.ay - it.y) < 0.05) return;
           it.x += (it.ax - it.x) * 0.2;
           it.y += (it.ay - it.y) * 0.2;
-          if (it.inclina) {
-            it.el.style.transform = 'perspective(700px) rotateY(' + (it.x * 0.85).toFixed(2)
-              + 'deg) rotateX(' + (-it.y * 0.85).toFixed(2) + 'deg) translateZ('
-              + (14 - Math.abs(it.x) * 0.4).toFixed(1) + 'px)';
-          } else {
-            it.el.style.transform = 'translate3d(' + it.x.toFixed(2) + 'px,'
-              + it.y.toFixed(2) + 'px,0)';
-          }
+          it.el.style.transform = 'translate3d(' + it.x.toFixed(2) + 'px,'
+            + it.y.toFixed(2) + 'px,0)';
         });
       }
 

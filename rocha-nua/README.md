@@ -230,8 +230,8 @@ Tudo sai da linguagem da página, que é impressão.
 | Deslocamento na rolagem | fundos de seção, as três linhas de AO VIVO, o disco |
 | Régua que responde | acelera com a rolagem e volta ao passo sozinha |
 | Fio de tinta | progresso da página, no topo |
-| Sobe e assenta | blocos, listas, cards, botões — deitados, levantam em 3D |
-| Carimbo | o logo desce girado e assenta no papel |
+| Sobe e assenta | blocos, listas, cards, botões |
+| Carimbo | o logo no meio de "A banda" |
 | Cena 3D | as três linhas de AO VIVO em profundidades diferentes, giradas pelo ponteiro |
 
 O escalonamento é **dentro do grupo que entra junto**, nunca pelo índice
@@ -309,10 +309,16 @@ A página responde ao ponteiro, e não só à rolagem:
 |-------|------|
 | A palavra da chapa | é empurrada pelo ponteiro dentro da faixa |
 | Botões | viram ímã: inclinam na direção do cursor e voltam sozinhos |
-| Vídeos e cards | inclinam em perspectiva conforme o ponteiro passa |
 | Clique | deixa um carimbo de tinta que abre e some |
 | Régua | para quando o ponteiro passa por cima, e volta ao sair |
 | Faixa AO VIVO | torce com a velocidade da rolagem |
+
+### O 3D fica só na tipografia
+
+Vídeo, card e logo ficam **planos de propósito**. Chegaram a inclinar com
+o ponteiro e a página ficava bamba: coisa demais mexendo ao mesmo tempo.
+O 3D vive onde é gesto de tipografia — a palavra da chapa, que vira, e a
+faixa AO VIVO, que é cena.
 
 ### O 3D é cena, não truque
 

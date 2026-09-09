@@ -498,12 +498,11 @@ h1,h2,h3{margin:0;font-weight:400}
 /* --- entra subindo --- */
 .js-anima [data-entra="sobe"]{
   opacity:0;
-  /* vem deitado para tras e levanta: e a folha caindo na mesa */
-  transform:perspective(900px) rotateX(-16deg) translate3d(0,26px,-60px);
+  transform:translate3d(0,24px,0);
 }
 .js-anima [data-entra="sobe"].entrou{
   opacity:1;
-  transform:perspective(900px) rotateX(0deg) translate3d(0,0,0);
+  transform:none;
   transition:opacity .55s var(--saida) var(--atraso,0ms),
              transform .8s var(--saida) var(--atraso,0ms);
 }
@@ -530,12 +529,11 @@ h1,h2,h3{margin:0;font-weight:400}
 /* --- carimbo: desce de leve e assenta --- */
 .js-anima [data-entra="carimbo"]{
   opacity:0;
-  /* o carimbo desce de cima, girado, e assenta no papel */
-  transform:perspective(900px) rotateX(26deg) translate3d(0,-30px,90px) scale(1.09);
+  transform:scale(1.09);
 }
 .js-anima [data-entra="carimbo"].entrou{
   opacity:1;
-  transform:perspective(900px) rotateX(0deg) translate3d(0,0,0) scale(1);
+  transform:none;
   transition:opacity .45s var(--saida) var(--atraso,0ms),
              transform .8s var(--saida) var(--atraso,0ms);
 }
@@ -666,7 +664,9 @@ h1,h2,h3{margin:0;font-weight:400}
    escrito pelo JS num quadro so, e tudo desligado em movimento reduzido
    e em tela de toque. */
 
-/* A palavra da chapa e empurrada pelo ponteiro. */
+/* O 3D vive so na tipografia: a palavra da chapa e empurrada e VIRA com
+   o ponteiro, e a faixa repetida e uma cena de verdade. Bloco de video,
+   card e logo ficam planos — inclinar tudo deixava a pagina bamba. */
 .chapa__palavra,
 .banda__palavra,
 .fecho__titulo{
@@ -682,17 +682,6 @@ h1,h2,h3{margin:0;font-weight:400}
 .btn{transition:background-color .18s var(--saida),color .18s var(--saida),
      border-color .18s var(--saida),transform .45s var(--saida)}
 .btn.puxado{transition:transform .1s linear}
-
-/* Inclinacao do bloco de video, do card do integrante e do logo. */
-.cancao__quadro,
-.integrante,
-.banda__selo{
-  transition:transform .5s var(--saida);
-  transform-style:preserve-3d;
-}
-.cancao__quadro.puxado,
-.integrante.puxado,
-.banda__selo.puxado{transition:transform .1s linear}
 
 /* Carimbo do clique: um anel de tinta que abre e some. */
 .carimbo{
@@ -723,14 +712,9 @@ h1,h2,h3{margin:0;font-weight:400}
 .repetida__linha{transform-style:preserve-3d}
 
 @media (prefers-reduced-motion:reduce){
-  .chapa__palavra,.banda__palavra,.fecho__titulo,
-  .cancao__quadro,.integrante,.banda__selo,.btn{transform:none!important;transition:none}
+  .chapa__palavra,.banda__palavra,.fecho__titulo,.btn{transform:none!important;transition:none}
   .carimbo{display:none}
   .repetida__linhas{transform:none}
-  .js-anima [data-entra="sobe"],
-  .js-anima [data-entra="sobe"].entrou,
-  .js-anima [data-entra="carimbo"],
-  .js-anima [data-entra="carimbo"].entrou{transform:none}
 }
 
 /* ------------------------------------------------------------ cursor
