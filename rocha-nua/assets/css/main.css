@@ -659,24 +659,106 @@ h1,h2,h3{margin:0;font-weight:400}
 .vaga--cheia .vaga__reserva{display:none}
 
 
+/* --------------------------------------------------------- interacao
+   A pagina responde ao ponteiro, nao so a rolagem. Tudo por transform,
+   escrito pelo JS num quadro so, e tudo desligado em movimento reduzido
+   e em tela de toque. */
+
+/* A palavra da chapa e empurrada pelo ponteiro. */
+.chapa__palavra,
+.banda__palavra,
+.fecho__titulo{
+  transition:transform .5s var(--saida);
+}
+.mao .chapa__palavra,
+.mao .banda__palavra,
+.mao .fecho__titulo{
+  transition:transform .12s linear;   /* enquanto a mao guia, sem atraso */
+}
+
+/* Ima: o botao inclina na direcao do ponteiro e volta sozinho. */
+.btn{transition:background-color .18s var(--saida),color .18s var(--saida),
+     border-color .18s var(--saida),transform .45s var(--saida)}
+.btn.puxado{transition:transform .1s linear}
+
+/* Inclinacao do bloco de video e do card do integrante. */
+.cancao__quadro,
+.integrante{
+  transition:transform .5s var(--saida);
+  transform-style:preserve-3d;
+}
+.cancao__quadro.puxado,
+.integrante.puxado{transition:transform .1s linear}
+
+/* Carimbo do clique: um anel de tinta que abre e some. */
+.carimbo{
+  position:fixed;
+  top:0;left:0;
+  width:26px;height:26px;
+  margin:-13px 0 0 -13px;
+  border:2px solid var(--laranja);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:56;
+  animation:carimbar .55s var(--saida) forwards;
+}
+@keyframes carimbar{
+  from{transform:scale(.2);opacity:.9}
+  to{transform:scale(3.4);opacity:0}
+}
+
+/* A faixa repetida inclina com a velocidade da rolagem. */
+.repetida__linhas{transform:skewY(var(--torcao,0deg))}
+
+@media (prefers-reduced-motion:reduce){
+  .chapa__palavra,.banda__palavra,.fecho__titulo,
+  .cancao__quadro,.integrante,.btn{transform:none!important;transition:none}
+  .carimbo{display:none}
+  .repetida__linhas{transform:none}
+}
+
 /* ------------------------------------------------------------ cursor
-   O ponteiro vira o chifre. So onde existe ponteiro de verdade: em tela
-   de toque nao ha cursor, e um @media que ignore isso faria o navegador
-   baixar duas imagens para nada.
+   O ponteiro e uma bolinha: laranja com anel creme, para ler tanto no
+   asfalto quanto no papel. Em dois tamanhos, e nao um — se tudo fosse a
+   mesma bolinha, o link perderia o aviso de que e clicavel, que hoje e a
+   mao do sistema. A maior faz esse papel.
 
-   Dois tamanhos, e nao um: se tudo virasse o mesmo chifre, o link
-   perderia o aviso de que e clicavel, que hoje e a mao do sistema. O
-   maior faz esse papel — e o ponteiro cresce ao passar por cima.
+   Isto e CSS puro e nao depende de script: mesmo sem JS o cursor e a
+   bolinha. O anel que vem atras e enfeite por cima, e some se o JS nao
+   rodar.
 
-   O ultimo valor de cada linha e a saida de emergencia: se o navegador
-   recusar a imagem, sobra auto ou pointer, nunca cursor nenhum. */
+   So onde existe ponteiro de verdade: em tela de toque nao ha cursor, e
+   um @media que ignore isso faria o navegador baixar duas imagens para
+   nada. O ultimo valor de cada linha e a saida de emergencia. */
 
 @media (hover:hover) and (pointer:fine){
   body{
-    cursor:url("data:image/png;base64,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") 4 2, auto;
+    cursor:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAACAUlEQVR42pVTPWhTURT+zr2JLTXGNjo4CuqgCILUUbM4WKGCCN2cRKGrDg4OKo4quDjYbC04lKIuIiglHUqxiJXaQKtQTIlNntqk7+Xl/+XdzyFNGkta4oE73HPO951/YA8hKSQF/yvkpCaptv/3FUndJXgbuPFxIrz55XV/e0ZdgXOrn4crxfV3xVImUyhmfldK6biTWrq+M0BHcDa1+JAmR291jrmXj5gdf8Bq4gNJh3Y6EetI0qzPSS0M0eS4MfXUW7tyxEteGjDJoQGTvHy4bsXu1sg87dTXW+2YJhMBAH39d+o/VlgcfwwJBALqYERUOCKqL6QrU2Oq9GnaIBS+zclJDcAQEEVSRMT8mX1zgIHgGXd+WliragR7AL/eeFpDtCh37r2CqOPOyUNHRYQgpVWL7q0pEVH064DIzgY1dH4dAJToYGukSkRIUkUGRxz63kro7HkDUQa+D2gNqIYvvTr3D0aNCNbCxkqSFIhsdXNmRgGAcTef7zt1TvVevWGMa/vGdciCQ2NnTc/Fa17owrCSQv6FnB6pAVDS7N0/O/AzESPzLMy/ovVslNaTm8zHJ0jatK3lt/F4PLDbLkjTYKeXRivlX4tuYb3quuteuWx9y1vL97ZWfO/7aDfa32ePVVILJ+LRaADb85Zu7kF30nUCy+4kEKCVDUWEnfz+As2hQOhQIgkMAAAAAElFTkSuQmCC") 8 8, auto;
   }
   a, button, .btn, summary, [role="button"], video,
   .integrante__arroba, .menu a, .rodape__links a{
-    cursor:url("data:image/png;base64,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") 5 2, pointer;
+    cursor:url("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABgAAAAYCAYAAADgdz34AAADlklEQVR42s1VX2ibVRT/nXu/L02bNDFNl23punb+KWNI2zmoFUptmfqge7APK/jgRBz6UgYi7nUrExT0URDBTZ3dHtLB6oOTOSStjm6zMldFka0lbq40TeyXpGmaJvm+e3zI2n1J080yBS/cl3vP/f3OOfd3zgH+T4uZiZnp3wYVzGGt/DwcDmscCskHBC8FMH4MeZPfn/KtdWD9qLT1UkEAiMhKRH7YXeULHGBHVbdSqpFBIpOdm6F87rI5Hz9FRN+tviHi+xKseHPkKNHbc7+9Lz11bzqX02Jp4iIKt6bArCCCzf6a1o5Ws7Hp9cz8jc8jP/80QESLlUhoLfiwAH7lhdhLZzyBLX2x0x+q3LkhpRJxAaWK9kQsPD7l6O2jzQcPy8XkwiX37eln0fZcFgDbSag850T9ljHzywe+YONbs+8eyudHR3Th8hB0R2moVgGcTkG2d+Ub3jnhSMwbZ+q27trPzIKI1BqClQvj90ut1U07JhfPHjczn70nhS9AUBbAZeklAqQGNmKoeuFAYfOhY7rxR+R5/44nvmZmSUQWAIi7L0YFAAif/zVnLo3sV19AuLyVwYseAWYB5KlDbmyErJvXWXp8bxQvh1fNbAQ9FgBQdc3TS5NXoIy4gO6oDG5fQoCXMjI9MUbQ9M7Z8yddRP3WiliEXWLGhY+9DN62/OcUwOofVywJQq74ZlPNtu1Be/pFiWF9gAhEUGrjVakUwEwQWgmmKP5XUVYPtb+YAiNaFWwGKhTNuhWvGI5gEyCFUUhFZleOSyLgcFgjIkZhedzV2sHk8SlYZlEt9+4ngMOp3Hu6mUzzan3nywt3FFlKgJ4eBgAzYXxq1m0hZ28fOJ0EpLY+uKaD0wk4OvYqvaWNOJ06bldkCQERWRwKSf9jHeMLc9GhwMHDmmzvyrMRKxpICYg7W0qACJz8C9S8s7B1YFBPxqJj3hNnh4ve95r3aBWg6OQ31a6GRy7Uet1PRT86ZuZHvyTOZgQJWs05OZxKe3IvBwcGtYwSU2xEu9wPd8aAo0Q0qCoS2CUbvzhSW71z1ycu/6Z+6+Z1pCfGkLs1BbCCI9gE955u6C1tWEolvp2PTL+yffczM+VtoiJBeetN3b62T/fWv2pJ2cmmGWBmoel6nFhdtZKJodqGx0/bW80Gx+ORuyo7f9KVvTH+aGr6SgtfPuex/R0eaIwysyyfbLZJdt+RSRuJyGbPtIFC/E/X3xZcyjcAcqmJAAAAAElFTkSuQmCC") 12 12, pointer;
   }
+}
+
+/* O anel que segue a bolinha com atraso. Posicao e escala vao juntas no
+   mesmo transform, escrito pelo JS: animar largura e altura mexeria no
+   layout a cada quadro. */
+.anel{
+  position:fixed;
+  top:0;left:0;
+  width:34px;height:34px;
+  margin:-17px 0 0 -17px;
+  border:1px solid var(--laranja);
+  border-radius:50%;
+  pointer-events:none;
+  z-index:55;
+  opacity:0;
+  transition:opacity .3s var(--saida), border-color .25s var(--saida);
+}
+.anel--vendo{opacity:.7}
+.anel--sobre{border-color:var(--amarelo);opacity:.95}
+
+@media (prefers-reduced-motion:reduce){
+  .anel{display:none}
 }
