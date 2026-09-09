@@ -29,12 +29,12 @@ própria e o texto sai na fonte de sistema.
 Abra **`assets/js/dados.js`**. É o único arquivo que precisa ser tocado
 para o dia a dia. Quatro listas, cada uma com um exemplo comentado:
 
-| Lista      | Para quê                                        |
-|------------|-------------------------------------------------|
-| `autorais` | músicas próprias, com ano e link opcional       |
-| `agenda`   | shows marcados (data no formato `AAAA-MM-DD`)   |
-| `videos`   | vídeos do YouTube, **só o ID**, não a URL       |
-| `contato`  | WhatsApp, e-mail, Instagram e canal             |
+| Lista        | Para quê                                       |
+|--------------|------------------------------------------------|
+| `repertorio` | as músicas que a banda toca                    |
+| `agenda`     | shows marcados (data no formato `AAAA-MM-DD`)  |
+| `videos`     | vídeos do YouTube, **só o ID**, não a URL      |
+| `contato`    | WhatsApp, e-mail, Instagram e canal            |
 
 O site já resolve sozinho:
 
@@ -185,6 +185,23 @@ Os originais (2min28 e 2min38, 13 e 19 MB) não estão no repositório: são
 arquivos que a banda já tem. Para trocar um trecho, é um comando sobre
 eles.
 
+## Repertório: cover ou autoral
+
+A lista de músicas **credita quem fez**. Cover leva o nome do artista
+original embaixo do título; música da banda leva `autoral: true` e
+aparece marcada como **Autoral**, na cor de acento.
+
+```js
+{ titulo: 'Vou Deixar', artista: 'Skank' },        // cover
+{ titulo: 'Nome da música', autoral: true },        // da banda
+```
+
+Isso não é detalhe de estilo. A seção antes se chamava "Autorais": com
+cover dentro dela, o site estaria dizendo que músicas dos outros são da
+banda. O nome da seção passou a ser "Repertório" por isso, e o crédito
+é obrigatório — sem `artista` nem `autoral`, a música apareceria como se
+fosse da casa.
+
 ## A entrada das músicas
 
 Quando a lista de autorais chega na tela, cada faixa sobe e o **nome da
@@ -205,8 +222,8 @@ aparecer.
 Quem configurou o sistema com menos movimento vê a lista inteira de uma
 vez, sem transição.
 
-**Hoje não há o que animar:** a lista de autorais está vazia. A animação
-entra em ação assim que os nomes das músicas forem para `dados.js`.
+As autorais da banda ainda não estão na lista: entram assim que os nomes
+chegarem, marcadas com `autoral: true`.
 
 ## Fotos
 
@@ -278,7 +295,7 @@ exatamente este nome e aparece sozinho, sem tocar no código.
 
 Nada disso foi inventado no site:
 
-- **Nomes das autorais**, com link se houver gravação.
+- **Os nomes das autorais**, para entrarem marcadas no repertório.
 - **Datas de show.**
 - **WhatsApp ou e-mail de contratação.**
 - **O logo da banda** e **fotos dos integrantes** (as quatro vagas acima).

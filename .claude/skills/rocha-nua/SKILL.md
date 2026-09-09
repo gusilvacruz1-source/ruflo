@@ -109,7 +109,13 @@ da página e por isso aparece **uma vez só**.
 - José (@josehique): baixo
 - Descrição do perfil: "ROCHA NUA BR | Rock'n'Roll"
 
-Não há, publicamente confirmados: nomes de músicas, datas de show,
+A banda toca "Vou Deixar" (Skank) e "Wicked Game" (Chris Isaak). São
+**covers**, e estão no site como covers, com o artista original
+creditado. A seção se chama "Repertório", não "Autorais", exatamente por
+isso: cover dentro de uma seção chamada Autorais afirmaria que a música
+é da banda. Música própria leva `autoral: true` e aparece marcada.
+
+Não há, publicamente confirmados: nomes das autorais, datas de show,
 telefone ou e-mail de contratação, cidade da banda, nem o arquivo do
 logo. Tudo isso vive em `assets/js/dados.js` como lista vazia, e a
 página tem estado vazio de verdade para cada uma. Não preencher com
