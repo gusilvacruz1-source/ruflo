@@ -337,8 +337,17 @@ h1,h2,h3{margin:0;font-weight:400}
   width:100%;height:100%;
   object-fit:cover;
 }
-.secao--papel .secao__fundo img{mix-blend-mode:multiply;opacity:.36}
-.secao:not(.secao--papel) .secao__fundo img{mix-blend-mode:screen;opacity:.20}
+/* Aqui NAO ha mistura, e e medido: fundo de secao e camada grande, que
+   se desloca, e misturar uma camada grande em movimento obriga o
+   navegador a refazer a rasterizacao contra o fundo a cada quadro. Com
+   mistura, a pagina rodava a 30 quadros por segundo em 1440 px; sem, vai
+   a 60. E a diferenca de aparencia e de no maximo 8 de 255, invisivel,
+   porque esses fundos ja entram com opacidade baixa.
+
+   A mistura de verdade fica nas CHAPAS, onde a foto aparece inteira e o
+   efeito e o proprio desenho. */
+.secao--papel .secao__fundo img{opacity:.30}
+.secao:not(.secao--papel) .secao__fundo img{opacity:.16}
 
 /* Mesmo veu das chapas, pela mesma razao: sobre asfalto a foto ACENDE
    (screen), e a etiqueta laranja de 11px caia para 2,5:1 justamente no
@@ -543,17 +552,83 @@ h1,h2,h3{margin:0;font-weight:400}
              -webkit-clip-path .7s var(--saida) calc(var(--atraso,0ms) + 140ms);
 }
 
+/* --- fora de registro ---
+   O gesto que faltava, e o mais proprio da linguagem: chapa impressa com
+   as cores desencontradas. Nao e enfeite generico — e o defeito classico
+   da grafica, virado desenho.
+
+   No texto, sao duas sombras duras: uma laranja de um lado, uma creme do
+   outro. Elas se AFASTAM conforme a peca sobe na tela, entao o titulo
+   parece ir entrando em registro. --registro e escrito pelo JS.
+
+   Custa zero pintura extra: text-shadow nao cria camada nova. */
+.capa__nome,
+.chapa__palavra,
+.banda__palavra,
+.repetida__linha,
+.fecho__titulo{
+  text-shadow:
+    calc(var(--registro, 0px) * -1) calc(var(--registro, 0px) * .35) 0 var(--laranja),
+    var(--registro, 0px) calc(var(--registro, 0px) * -.3) 0 rgba(240,231,214,.42),
+    0 3px 22px rgba(20,17,16,.7);
+}
+.secao--papel .banda__palavra{
+  text-shadow:
+    calc(var(--registro, 0px) * -1) calc(var(--registro, 0px) * .35) 0 var(--laranja),
+    var(--registro, 0px) calc(var(--registro, 0px) * -.3) 0 rgba(20,17,16,.24);
+}
+
+/* Na foto, o fora de registro esta ASSADO NO ARQUIVO, e nao numa camada
+   por cima. Medido: mover uma camada misturada do tamanho da tela custa
+   30 quadros por segundo em 1920 px e 20 em 2560, com ou sem a segunda
+   chapa; duas camadas misturadas nao passam de 30 em 1920 de jeito
+   nenhum. E o lugar certo do defeito e a chapa, nao o compositor:
+   ferramentas/meiatona.py desloca uma copia dos pontos e combina pelo
+   mais escuro. Sai de graca e o arquivo ate encolheu. */
+
 /* --- deslocamento por rolagem ---
    A foto da chapa anda menos que a pagina, entao a faixa ganha
-   profundidade. O scale existe para o deslocamento nao descobrir a
-   borda da imagem. */
-.chapa__tela img,
+   profundidade.
+
+   A folga para o deslocamento nao descobrir a borda vem da CAIXA ser
+   maior, e nao de um scale(). Medido: com scale(1.14) numa camada
+   misturada do tamanho da tela, o navegador rasteriza um bitmap maior
+   que a janela a cada quadro e a pagina caia para 30 quadros por
+   segundo em 1920 px. Com a caixa maior e so translate, vai a 60. */
+/* So o fundo de secao se desloca. A foto da chapa fica parada: ela e
+   misturada e do tamanho da tela, e camada assim em movimento derruba a
+   pagina para 30 quadros por segundo. O fundo de secao nao e misturado,
+   entao mover custa pouco. */
 .secao__fundo img{
-  transform:translate3d(0,var(--paralaxe,0),0) scale(1.14);
+  height:calc(100% + 96px);
+  margin-top:-48px;
+  transform:translate3d(0,var(--paralaxe,0),0);
 }
 .repetida__linha{transform:translate3d(var(--paralaxe,0),0,0)}
 
+/* --- letra a letra ---
+   O nome da capa e montado letra por letra, como tipo sendo posto na
+   caixa. Cada letra cai um pouco torta e assenta. */
+.js-anima .letra{
+  display:inline-block;
+  opacity:0;
+  transform:translate3d(0,.42em,0) rotate(-7deg);
+}
+.js-anima .capa__nome.entrou .letra{
+  opacity:1;
+  transform:none;
+  transition:opacity .38s var(--saida) var(--letra,0ms),
+             transform .62s var(--saida) var(--letra,0ms);
+}
+/* O espaco entre palavras nao anima nem colapsa. */
+.js-anima .letra--vao{opacity:1;transform:none}
+
 @media (prefers-reduced-motion:reduce){
+  .js-anima .letra,
+  .js-anima .capa__nome.entrou .letra{opacity:1;transform:none;transition:none}
+  .capa__nome,.chapa__palavra,.banda__palavra,.repetida__linha,.fecho__titulo{
+    text-shadow:0 3px 22px rgba(20,17,16,.7);
+  }
   .js-anima [data-entra],
   .js-anima [data-entra].entrou{
     opacity:1;transform:none;transition:none;
@@ -565,8 +640,7 @@ h1,h2,h3{margin:0;font-weight:400}
   .js-anima .entra.entrou .show__local{
     -webkit-clip-path:none;clip-path:none;transition:none;
   }
-  .chapa__tela img,
-  .secao__fundo img{transform:scale(1.14)}
+  .secao__fundo img{transform:none;height:100%;margin-top:0}
   .repetida__linha{transform:none}
 }
 

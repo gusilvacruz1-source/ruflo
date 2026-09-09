@@ -297,8 +297,7 @@
   ];
 
   var DESLOCAMENTO = [
-    ['.chapa__tela img',  30],
-    ['.secao__fundo img', 22],
+    ['.secao__fundo img', 24],
     ['.repetida__peca',   36]
   ];
   var LINHAS_REPETIDA = [-82, 108, -54];
@@ -310,6 +309,8 @@
 
   function animarEntrada() {
     if (!('IntersectionObserver' in window)) return;
+
+    partirEmLetras(document.querySelector('.capa__nome'));
 
     var alvos = [];
     ENTRADAS.forEach(function (par) {
@@ -353,16 +354,62 @@
           });
           obs.unobserve(e.target);
         });
-      }, { rootMargin: '0px 0px -8% 0px', threshold: 0.05 });
+      }, { rootMargin: '0px 0px -6% 0px', threshold: 0.05 });
 
       observados.forEach(function (n) { obs.observe(n); });
+
+      /* Rede de seguranca. A margem negativa do observador exclui a
+         ultima faixa da tela, e peca que vive no rodape do documento
+         pode nunca cair na area observada: medido em 2560x1440, a letra
+         miuda do fecho ficava escondida para sempre. Chegou ao fim da
+         pagina, o que sobrou aparece. */
+      var rede = function () {
+        var fim = window.innerHeight + (window.pageYOffset || 0)
+          >= document.documentElement.scrollHeight - 4;
+        if (!fim) return;
+        alvos.forEach(function (el) {
+          if (!el.classList.contains('entrou')) el.classList.add('entrou');
+        });
+        window.removeEventListener('scroll', rede);
+      };
+      window.addEventListener('scroll', rede, { passive: true });
     } catch (erro) {
       raiz.classList.remove('js-anima');
       alvos.forEach(function (el) { el.removeAttribute('data-entra'); });
     }
   }
 
-  function deslocarNaRolagem() {
+  /* Parte o nome em letras, para o tipo ser montado uma a uma. O texto
+     inteiro fica no aria-label e as letras somem para o leitor de tela,
+     senao ele soletraria a palavra. */
+  function partirEmLetras(el) {
+    if (!el || el.querySelector('.letra')) return;
+    var texto = el.textContent;
+    el.setAttribute('aria-label', texto);
+    el.textContent = '';
+    var n = 0;
+    texto.split('').forEach(function (c) {
+      var sp = document.createElement('span');
+      sp.className = 'letra' + (c === ' ' ? ' letra--vao' : '');
+      sp.setAttribute('aria-hidden', 'true');
+      sp.textContent = c === ' ' ? '\u00a0' : c;
+      if (c !== ' ') { sp.style.setProperty('--letra', (n * 42) + 'ms'); n++; }
+      el.appendChild(sp);
+    });
+  }
+
+  /* ------------------------------------------------- um laco para tudo
+
+     Deslocamento, fora de registro, fio de progresso e a regua vivem no
+     MESMO requestAnimationFrame. Separados, cada um leria a rolagem por
+     conta e o navegador recalcularia o layout varias vezes por quadro.
+
+     A regua sai do controle do CSS e passa para ca porque ela reage a
+     VELOCIDADE da rolagem: rolou rapido, ela dispara junto e volta ao
+     passo sozinha. Isso nao da para fazer com animation-duration, que
+     salta quando muda no meio. */
+
+  function moverNaRolagem() {
     if (menosMovimento()) return;
 
     var itens = [];
@@ -375,32 +422,87 @@
       function (el, n) {
         itens.push({ el: el, forca: LINHAS_REPETIDA[n % LINHAS_REPETIDA.length], eixo: 'x' });
       });
-    if (!itens.length) return;
 
-    var pedido = false;
+    // texto que entra em registro conforme sobe na tela
+    var registros = [].slice.call(document.querySelectorAll(
+      '.capa__nome, .chapa__palavra, .banda__palavra, .repetida__linha, .fecho__titulo'));
 
-    function atualizar() {
-      pedido = false;
+    var fio = document.querySelector('.fio__tinta');
+    var trilho = document.querySelector('.regua__trilho');
+    var larguraTrilho = 0, posRegua = 0, velRegua = 0;
+    if (trilho) {
+      document.documentElement.classList.add('regua-js');
+      larguraTrilho = trilho.scrollWidth / 2;
+    }
+
+    var ultimoY = window.pageYOffset || 0;
+    var impulso = 0;
+    var ultimoTempo = 0;
+    var rodando = false;
+
+    function quadro(agora) {
+      var dt = ultimoTempo ? Math.min((agora - ultimoTempo) / 1000, 0.05) : 0.016;
+      ultimoTempo = agora;
+
+      var y = window.pageYOffset || 0;
       var alturaJanela = window.innerHeight || document.documentElement.clientHeight;
       var meio = alturaJanela / 2;
+
+      // velocidade da rolagem, suavizada: entra rapido e volta devagar
+      var delta = y - ultimoY;
+      ultimoY = y;
+      impulso += (Math.abs(delta) * 14 - impulso) * 0.18;
+      if (impulso < 0.01) impulso = 0;
+
+      // fio de progresso
+      if (fio) {
+        var rolavel = document.documentElement.scrollHeight - alturaJanela;
+        fio.style.setProperty('--passou', rolavel > 0 ? (y / rolavel).toFixed(4) : '0');
+      }
+
+      // regua: passo base mais o impulso da rolagem
+      if (trilho && larguraTrilho) {
+        velRegua = 58 + Math.min(impulso, 900);
+        posRegua = (posRegua + velRegua * dt) % larguraTrilho;
+        trilho.style.transform = 'translate3d(' + (-posRegua).toFixed(1) + 'px,0,0)';
+      }
+
       itens.forEach(function (it) {
         var r = it.el.getBoundingClientRect();
-        // fora de vista com folga: nao gasta conta com o que ninguem ve
         if (r.bottom < -300 || r.top > alturaJanela + 300) return;
-        // -1 quando a peca esta chegando por baixo, +1 quando ja subiu
         var pos = (r.top + r.height / 2 - meio) / (meio + r.height / 2);
         if (pos < -1) pos = -1; else if (pos > 1) pos = 1;
         it.el.style.setProperty('--paralaxe', (pos * it.forca).toFixed(1) + 'px');
       });
+
+      registros.forEach(function (el) {
+        var r = el.getBoundingClientRect();
+        if (r.bottom < -200 || r.top > alturaJanela + 200) return;
+        var pos = (r.top + r.height / 2 - meio) / (meio + r.height / 2);
+        if (pos < -1) pos = -1; else if (pos > 1) pos = 1;
+        // longe do meio, desencontrado; no meio, em registro
+        el.style.setProperty('--registro', (Math.abs(pos) * 7).toFixed(2) + 'px');
+      });
+
+      // so continua enquanto houver o que mover: a regua nunca para, mas
+      // se ela nao existir o laco dorme ate a proxima rolagem
+      if (trilho || impulso > 0) {
+        window.requestAnimationFrame(quadro);
+      } else {
+        rodando = false;
+      }
     }
 
-    function pedir() {
-      if (!pedido) { pedido = true; window.requestAnimationFrame(atualizar); }
+    function acordar() {
+      if (!rodando) { rodando = true; ultimoTempo = 0; window.requestAnimationFrame(quadro); }
     }
 
-    window.addEventListener('scroll', pedir, { passive: true });
-    window.addEventListener('resize', pedir, { passive: true });
-    atualizar();
+    window.addEventListener('scroll', acordar, { passive: true });
+    window.addEventListener('resize', function () {
+      if (trilho) larguraTrilho = trilho.scrollWidth / 2;
+      acordar();
+    }, { passive: true });
+    acordar();
   }
 
   checarVagas();
@@ -413,5 +515,5 @@
 
   // depois de montar as listas, senao nao haveria o que observar
   animarEntrada();
-  deslocarNaRolagem();
+  moverNaRolagem();
 })();

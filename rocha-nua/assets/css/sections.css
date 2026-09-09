@@ -116,6 +116,9 @@
   width:max-content;
   animation:correr 26s linear infinite;
 }
+/* Quando o JS assume, ele move a regua pela velocidade da rolagem, o que
+   animation-duration nao faz sem saltar. Sem JS, a animacao acima segue. */
+.regua-js .regua__trilho{animation:none}
 .regua__trilho span{white-space:nowrap;padding-right:.1em}
 .regua__trilho i{font-style:normal;padding-inline:1.1em;opacity:.55}
 
@@ -375,4 +378,29 @@
 @media (prefers-reduced-motion:reduce){
   .cancao__quadro,.integrante{transition:none}
   .cancao__quadro:hover,.integrante:hover{transform:none}
+}
+
+
+/* ---------------------------------------------------------------- fio
+   Um fio de tinta no topo, medindo quanto da pagina ja passou. Fica
+   acima da barra e nao recebe ponteiro. */
+
+.fio{
+  position:fixed;
+  top:0;left:0;right:0;
+  height:3px;
+  z-index:50;
+  pointer-events:none;
+  background:rgba(240,231,214,.10);
+}
+.fio__tinta{
+  display:block;
+  height:100%;
+  width:100%;
+  background:var(--laranja);
+  transform:scaleX(var(--passou,0));
+  transform-origin:left center;
+}
+@media (prefers-reduced-motion:reduce){
+  .fio{display:none}
 }
