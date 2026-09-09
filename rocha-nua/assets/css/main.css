@@ -494,11 +494,13 @@ h1,h2,h3{margin:0;font-weight:400}
 }
 
 /* A varredura vai no nome, que e o que se quer ler primeiro. */
+.js-anima .entra .cancao__nome,
 .js-anima .entra .faixa-musica__nome,
 .js-anima .entra .show__local{
   -webkit-clip-path:inset(0 100% 0 0);
   clip-path:inset(0 100% 0 0);
 }
+.js-anima .entra.entrou .cancao__nome,
 .js-anima .entra.entrou .faixa-musica__nome,
 .js-anima .entra.entrou .show__local{
   -webkit-clip-path:inset(0 0 0 0);
@@ -510,8 +512,10 @@ h1,h2,h3{margin:0;font-weight:400}
 @media (prefers-reduced-motion:reduce){
   .js-anima .entra,
   .js-anima .entra.entrou{opacity:1;transform:none;transition:none}
+  .js-anima .entra .cancao__nome,
   .js-anima .entra .faixa-musica__nome,
   .js-anima .entra .show__local,
+  .js-anima .entra.entrou .cancao__nome,
   .js-anima .entra.entrou .faixa-musica__nome,
   .js-anima .entra.entrou .show__local{
     -webkit-clip-path:none;clip-path:none;transition:none;
