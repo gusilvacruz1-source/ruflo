@@ -114,15 +114,17 @@ no rodapé, junto com a equipe — nunca como card ao lado dos músicos, que
 diria que ele toca na banda.
 - Descrição do perfil: "ROCHA NUA BR | Rock'n'Roll"
 
-A banda toca "Vou Deixar" (Skank), "Wicked Game" (Chris Isaak) e "Zóio
-de Lula" (Charlie Brown Jr.). São **covers**, e cada uma é o nome de um
-dos vídeos ao vivo, com o artista original creditado logo abaixo. Nunca apresentar cover como autoral:
+**"Distraído na Escuridão" é autoral da banda**, e é a primeira música
+própria no site: leva `autoral: true` e aparece marcada em amarelo, na
+frente das outras. Toca também "Vou Deixar" (Skank), "Wicked Game"
+(Chris Isaak) e "Zóio de Lula" (Charlie Brown Jr.), que são **covers**,
+com o artista original creditado logo abaixo. Nunca apresentar cover como autoral:
 música própria leva `autoral: true` e aparece marcada.
 
 Qual música é qual vídeo veio do dono do site, não de escuta: o mapa
 vive em `dados.js` e trocar é inverter duas linhas.
 
-Não há, publicamente confirmados: nomes das autorais, datas de show,
+Não há, publicamente confirmados: outras autorais, datas de show,
 telefone ou e-mail de contratação, cidade da banda, nem o arquivo do
 logo. Tudo isso vive em `assets/js/dados.js` como lista vazia, e a
 página tem estado vazio de verdade para cada uma. Não preencher com

@@ -21,6 +21,12 @@ window.ROCHA = {
      ------------------------------------------------------------------- */
   aoVivo: [
     {
+      musica: 'Distraído na Escuridão',
+      autoral: true,
+      video: 'assets/video/ao-vivo-4.mp4',
+      cartaz: 'assets/img/ao-vivo-4-poster.webp',
+    },
+    {
       musica: 'Vou Deixar',
       artista: 'Skank',
       video: 'assets/video/ao-vivo.mp4',

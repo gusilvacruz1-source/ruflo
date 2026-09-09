@@ -90,9 +90,14 @@ peso. Os 55 KB a mais são o desenho.
 
 ## Os vídeos
 
-Três músicas, cada uma com seu vídeo, em `assets/video/`. Duas do mesmo
-palco de tenda — uma em luz chapada, outra em fim de tarde — e a terceira
-num ensaio, dentro de casa.
+Quatro músicas, cada uma com seu vídeo, em `assets/video/`. A primeira é
+**autoral** e vem de um palco com luz, banner da banda e público; duas
+são do palco de tenda, em horas diferentes do dia; e a outra é de um
+ensaio dentro de casa.
+
+A autoral vai **na frente** e leva a marca **AUTORAL** em amarelo: é o
+que a banda tem de próprio, e a seção inteira foi construída para
+distinguir isso de cover.
 
 **Ele não pesa no carregamento.** Com `preload="none"`, o navegador busca
 só o cartaz (18 KB) e os 2,4 MB do vídeo só saem se alguém apertar play.
@@ -132,9 +137,14 @@ que a banda já tem.
 
 ## Os vídeos
 
-Três músicas, cada uma com seu vídeo, em `assets/video/`. Duas do mesmo
-palco de tenda — uma em luz chapada, outra em fim de tarde — e a terceira
-num ensaio, dentro de casa.
+Quatro músicas, cada uma com seu vídeo, em `assets/video/`. A primeira é
+**autoral** e vem de um palco com luz, banner da banda e público; duas
+são do palco de tenda, em horas diferentes do dia; e a outra é de um
+ensaio dentro de casa.
+
+A autoral vai **na frente** e leva a marca **AUTORAL** em amarelo: é o
+que a banda tem de próprio, e a seção inteira foi construída para
+distinguir isso de cover.
 
 **O vídeo toca como é.** A retícula fica só no cartaz, a imagem parada
 que aparece antes do play; o filme em si mantém cor e som do original.
@@ -434,7 +444,7 @@ precisa de 4,5:1. Com `.4` dava 3,5:1.
 
 Nada disso foi inventado no site:
 
-- **Os nomes das autorais**, para entrarem marcadas no ao vivo.
+- **Mais autorais**, para entrarem marcadas no ao vivo.
 - **Datas de show.**
 - **WhatsApp ou e-mail de contratação.**
 - **O logo da banda** e **fotos dos integrantes** (as quatro vagas acima).
