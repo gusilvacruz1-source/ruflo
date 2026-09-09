@@ -162,6 +162,46 @@ dobra exige.
   `encodedBodySize`. Somar `response.body()` pelo Playwright perde
   respostas e dá número errado.
 
+## Vídeo
+
+Um trecho de 30 s ao vivo, em `assets/video/`, com `preload="none"`: o
+navegador busca só o cartaz e o vídeo só baixa se alguém apertar play.
+Manter assim — sem isso a página passaria de 380 KB para quase 3 MB.
+
+O cartaz é o primeiro quadro do próprio corte, reticulado. Aperta play e
+ganha cor: é a única cor fotográfica da página, e é o pagamento.
+
+Duas coisas aprendidas e que custam tempo se esquecidas:
+
+- **`-ss` e `-t` vão ANTES do `-i`.** Depois do `-i` o corte acontece só
+  depois dos filtros, e um `fade=t=out` calculado sobre a linha do tempo
+  original apaga tudo. Saiu um vídeo preto e mudo de 72 KB, e só não foi
+  publicado porque o tamanho absurdo denunciou.
+- **Recodificar nem sempre encolhe.** O original de 2min28 já vinha
+  comprimido: em CRF 26 e 29 o arquivo ficava maior que a fonte. E o VP9
+  saiu maior que o H.264 nas duas tentativas, porque filmagem de mão com
+  granulação não é o forte dele. O que resolveu foi cortar.
+
+## Vídeo
+
+Um trecho de 30 s ao vivo, em `assets/video/`, com `preload="none"`: o
+navegador busca só o cartaz e o filme só baixa se alguém apertar play.
+Manter assim — sem isso a página passaria de 380 KB para quase 3 MB.
+
+**A retícula fica só no cartaz.** O vídeo toca em cor, como foi filmado:
+é a única cor fotográfica da página, e é o pagamento de descer até lá. O
+cartaz é o primeiro quadro do próprio corte, então não há salto.
+
+Duas coisas aprendidas, que custam tempo se esquecidas:
+
+- **`-ss` e `-t` vão ANTES do `-i`.** Depois do `-i` o corte acontece só
+  depois dos filtros, e um `fade=t=out` calculado sobre a linha do tempo
+  original apaga tudo. Saiu um vídeo preto e mudo de 72 KB, e só não foi
+  publicado porque o tamanho absurdo denunciou.
+- **Recodificar nem sempre encolhe.** O original já vinha comprimido: em
+  CRF 26 e 29 o arquivo ficava maior que a fonte, e o VP9 saiu maior que
+  o H.264 nas duas tentativas. O que resolveu foi cortar, não apertar.
+
 ## Vagas de foto
 
 Cada foto que ainda não chegou tem nome fixo e lugar reservado, e o JS

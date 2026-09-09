@@ -209,9 +209,30 @@
     </div>
 
     <div class="tira">
-      <h2 class="secao__etiqueta micro">No canal</h2>
-      <div id="lista-videos" class="lista"></div>
-      <a class="btn btn--linha videos__canal" href="https://youtube.com/@rochanuarockband" target="_blank" rel="noopener">Ver o canal no YouTube</a>
+      <h2 class="secao__etiqueta micro">Ao vivo</h2>
+      <div class="videos__grade">
+
+        <!-- O video nao baixa junto com a pagina: preload="none" faz o
+             navegador buscar so o cartaz, e os 2,4 MB so saem se alguem
+             apertar play. O cartaz e o primeiro quadro do proprio corte,
+             reticulado como o resto da pagina: aperta play e ele ganha
+             cor e som. -->
+        <figure class="aovivo">
+          <video class="aovivo__video"
+                 src="assets/video/ao-vivo.mp4"
+                 poster="assets/img/ao-vivo-poster.webp"
+                 width="576" height="1024"
+                 controls preload="none" playsinline></video>
+          <figcaption class="micro aovivo__legenda">30 s <i>&bull;</i> com som</figcaption>
+        </figure>
+
+        <div class="videos__lado">
+          <p class="videos__texto">A banda tocando ao vivo, num palco de tenda.</p>
+          <div id="lista-videos" class="lista"></div>
+          <a class="btn btn--linha videos__canal" href="https://youtube.com/@rochanuarockband" target="_blank" rel="noopener">Ver o canal no YouTube</a>
+        </div>
+
+      </div>
     </div>
   </section>
 

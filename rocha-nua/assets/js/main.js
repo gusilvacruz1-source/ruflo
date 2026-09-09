@@ -150,8 +150,8 @@
 
     if (!bons.length) {
       alvo.appendChild(vazio(
-        'Os vídeos estão no canal.',
-        'Para trazer os vídeos para dentro do site, coloque o ID de cada um na lista de vídeos em assets/js/dados.js.'
+        'Tem mais no canal.',
+        'Para trazer outros vídeos para dentro do site, coloque o ID de cada um na lista de vídeos em assets/js/dados.js.'
       ));
       return;
     }
