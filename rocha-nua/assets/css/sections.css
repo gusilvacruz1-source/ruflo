@@ -299,7 +299,17 @@
 .rodape__links{display:flex;gap:22px;margin-left:auto}
 .rodape__links a{opacity:.65}
 .rodape__links a:hover{opacity:1;color:var(--laranja-forte)}
-.rodape__nota{width:100%;opacity:.4;letter-spacing:.14em}
+/* Credito da equipe. A opacidade nao pode cair muito: em 11px isto e
+   texto pequeno e precisa de 4,5:1 — com .4 dava 3,5:1. */
+.rodape__nota{
+  width:100%;
+  margin-top:14px;
+  opacity:.75;
+  letter-spacing:.14em;
+}
+.rodape__nota i{font-style:normal;padding-inline:.5em;opacity:.5}
+.rodape__nota a{border-bottom:1px solid rgba(240,231,214,.4)}
+.rodape__nota a:hover{color:var(--laranja-forte);border-bottom-color:currentColor}
 
 /* ---------------------------------------------------------- vídeos */
 
