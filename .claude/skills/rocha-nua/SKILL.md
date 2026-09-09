@@ -108,6 +108,10 @@ da página e por isso aparece **uma vez só**.
 - Emerson (@emerson7r): voz, violão e guitarra
 - José (@josehique): baixo
 - Nathan (@nathangustavo_o): bateria
+
+**Gustavo (@isowgu) é social mídia, não integrante.** O crédito dele vai
+no rodapé, junto com a equipe — nunca como card ao lado dos músicos, que
+diria que ele toca na banda.
 - Descrição do perfil: "ROCHA NUA BR | Rock'n'Roll"
 
 A banda toca "Vou Deixar" (Skank) e "Wicked Game" (Chris Isaak). São

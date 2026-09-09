@@ -417,6 +417,14 @@ exatamente este nome e aparece sozinho, sem tocar no código.
 - Foto crua que chega pela vaga não é bilevel. O CSS aproxima o
   tratamento; para o efeito de verdade, passe antes pelo `meiatona.py`.
 
+## Crédito da equipe
+
+O rodapé traz **social mídia: Gustavo (@isowgu)**. Fica no rodapé e não
+como card em "A banda": card ao lado dos músicos diria que ele toca.
+
+A opacidade dessa linha não pode cair muito — em 11px é texto pequeno e
+precisa de 4,5:1. Com `.4` dava 3,5:1.
+
 ## O que ainda falta de verdade
 
 Nada disso foi inventado no site:
