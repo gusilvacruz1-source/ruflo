@@ -1,5 +1,5 @@
 /* =====================================================================
-   MAIN.JS · monta repertório, agenda, vídeos e os botões de contato a
+   MAIN.JS · monta o ao vivo, a agenda, os vídeos e os botões de contato a
    partir de dados.js
 
    Enquanto uma lista estiver vazia, a seção mostra um estado vazio de
@@ -11,8 +11,7 @@
   'use strict';
 
   var D = (window.ROCHA || {});
-  // aceita a chave antiga tambem, para nao quebrar se alguem editar o nome errado
-  var repertorio = D.repertorio || D.autorais || [];
+  var aoVivo = D.aoVivo || [];
   var agenda = D.agenda || [];
   var videos = D.videos || [];
   var contato = D.contato || {};
@@ -62,48 +61,63 @@
     return isNaN(d.getTime()) ? null : d;
   }
 
-  /* --------------------------------------------------------- repertório */
+  /* -------------------------------------------------------------- ao vivo
+     Um bloco por musica: o nome vai POR CIMA do video, sobre o cartaz.
 
-  function montarRepertorio() {
-    var alvo = document.getElementById('lista-repertorio');
+     O selo do nome e pointer-events:none, senao cobriria os controles do
+     video e ninguem conseguiria dar play. E ele some enquanto toca: nome
+     grande em cima de gente tocando atrapalha quem veio ver. */
+
+  function montarAoVivo() {
+    var alvo = document.getElementById('lista-aovivo');
     if (!alvo) return;
 
-    if (!repertorio.length) {
+    var bons = aoVivo.filter(function (c) { return c && c.musica && c.video; });
+    if (!bons.length) {
       alvo.appendChild(vazio(
-        'O repertório entra aqui.',
-        'É só preencher a lista de repertório em assets/js/dados.js.'
+        'Os vídeos ao vivo entram aqui.',
+        'É só preencher a lista "aoVivo" em assets/js/dados.js.'
       ));
       return;
     }
 
-    repertorio.forEach(function (musica, i) {
-      var linha = el('div', 'faixa-musica');
-      linha.appendChild(el('span', 'faixa-musica__num', String(i + 1).padStart(2, '0')));
+    var grade = el('div', 'aovivo-grade');
 
-      var meio = el('div');
-      meio.appendChild(el('h3', 'faixa-musica__nome', musica.titulo || 'Sem título'));
+    bons.forEach(function (c) {
+      var bloco = el('article', 'cancao');
 
-      /* Cover leva o nome de quem fez; autoral leva a marca. Nunca os
-         dois, e nunca nenhum silenciosamente: sem um ou outro, a musica
-         apareceria como se fosse da banda. */
-      if (musica.autoral) {
-        meio.appendChild(el('p', 'faixa-musica__autoral', 'Autoral'
-          + (musica.ano ? ' \u00b7 ' + musica.ano : '')));
-      } else if (musica.artista) {
-        meio.appendChild(el('p', 'faixa-musica__artista', musica.artista
-          + (musica.ano ? ' \u00b7 ' + musica.ano : '')));
-      } else if (musica.ano) {
-        meio.appendChild(el('p', 'faixa-musica__artista', musica.ano));
+      var quadro = el('div', 'cancao__quadro');
+
+      var v = document.createElement('video');
+      v.className = 'cancao__video';
+      v.src = c.video;
+      if (c.cartaz) v.poster = c.cartaz;
+      v.controls = true;
+      v.preload = 'none';          // os megabytes so saem se alguem apertar play
+      v.playsInline = true;
+      v.setAttribute('width', '576');
+      v.setAttribute('height', '1024');
+      quadro.appendChild(v);
+
+      var selo = el('div', 'cancao__selo');
+      selo.appendChild(el('h3', 'cancao__nome', c.musica));
+      if (c.autoral) {
+        selo.appendChild(el('p', 'cancao__autoral micro', 'Autoral'));
+      } else if (c.artista) {
+        selo.appendChild(el('p', 'cancao__artista micro', c.artista));
       }
-      linha.appendChild(meio);
+      quadro.appendChild(selo);
 
-      if (musica.link) {
-        linha.appendChild(link(musica.link, 'faixa-musica__ouvir', 'Ouvir', true));
-      } else {
-        linha.appendChild(el('span'));
-      }
-      alvo.appendChild(linha);
+      // some enquanto toca, volta quando pausa ou acaba
+      v.addEventListener('play', function () { bloco.classList.add('tocando'); });
+      v.addEventListener('pause', function () { bloco.classList.remove('tocando'); });
+      v.addEventListener('ended', function () { bloco.classList.remove('tocando'); });
+
+      bloco.appendChild(quadro);
+      grade.appendChild(bloco);
     });
+
+    alvo.appendChild(grade);
   }
 
   /* -------------------------------------------------------------- agenda */
@@ -160,14 +174,7 @@
     if (!alvo) return;
 
     var bons = videos.filter(function (v) { return v && idValido(v.id); });
-
-    if (!bons.length) {
-      alvo.appendChild(vazio(
-        'Tem mais no canal.',
-        'Para trazer outros vídeos para dentro do site, coloque o ID de cada um na lista de vídeos em assets/js/dados.js.'
-      ));
-      return;
-    }
+    if (!bons.length) return;   // a secao ja tem os videos proprios
 
     var grade = el('div', 'grade-videos');
     bons.forEach(function (v) {
@@ -262,7 +269,7 @@
   function animarEntrada() {
     if (!('IntersectionObserver' in window)) return;
 
-    var alvos = document.querySelectorAll('.faixa-musica, .show');
+    var alvos = document.querySelectorAll('.cancao, .faixa-musica, .show');
     if (!alvos.length) return;
 
     var raiz = document.documentElement;
@@ -290,7 +297,7 @@
   checarVagas();
   window.ROCHA_UI = { checarVagas: checarVagas, animarEntrada: animarEntrada };
 
-  montarRepertorio();
+  montarAoVivo();
   montarAgenda();
   montarVideos();
   montarContato();

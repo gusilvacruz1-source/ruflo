@@ -11,22 +11,27 @@
 window.ROCHA = {
 
   /* -------------------------------------------------------------------
-     REPERTÓRIO
-     Uma entrada por música. Se for cover, ponha o artista original em
-     "artista" — o site credita embaixo do nome. Se for música de vocês,
-     troque por "autoral: true" e ela aparece marcada como autoral.
+     AO VIVO
+     Um bloco por música: o nome aparece POR CIMA do vídeo. Se for cover,
+     ponha quem fez em "artista"; se for música da banda, troque por
+     "autoral: true".
 
-     "ano" e "link" são opcionais. O link pode ser YouTube, Spotify, o
-     que existir.
-
-     Exemplos:
-       { titulo: 'Nome do cover', artista: 'Quem fez' },
-       { titulo: 'Música nossa', autoral: true, ano: '2025',
-         link: 'https://youtu.be/XXXXXXXXXXX' },
+     Para trocar qual música é qual vídeo, basta inverter as duas linhas
+     de "video" e "cartaz" — nada de código.
      ------------------------------------------------------------------- */
-  repertorio: [
-    { titulo: 'Vou Deixar', artista: 'Skank' },
-    { titulo: 'Wicked Game', artista: 'Chris Isaak' },
+  aoVivo: [
+    {
+      musica: 'Vou Deixar',
+      artista: 'Skank',
+      video: 'assets/video/ao-vivo.mp4',
+      cartaz: 'assets/img/ao-vivo-poster.webp',
+    },
+    {
+      musica: 'Wicked Game',
+      artista: 'Chris Isaak',
+      video: 'assets/video/ao-vivo-2.mp4',
+      cartaz: 'assets/img/ao-vivo-2-poster.webp',
+    },
   ],
 
   /* -------------------------------------------------------------------

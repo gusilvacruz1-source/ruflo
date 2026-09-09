@@ -25,9 +25,9 @@
   <div class="tira topo__linha">
     <a class="marca micro" href="#topo">ROCHA NUA<i>.</i></a>
     <nav class="menu micro" aria-label="Seções do site">
-      <a href="#repertorio">Repertório</a>
+      <a href="#banda">A banda</a>
+      <a href="#videos">Ao vivo</a>
       <a href="#agenda">Agenda</a>
-      <a href="#videos">Vídeos</a>
     </nav>
     <a class="btn btn--cheio topo__cta" href="#contratacao">Chamar pra tocar</a>
   </div>
@@ -135,24 +135,27 @@
   <!-- REPETIDA · o gesto forte, uma vez só na página ------------------ -->
   <div class="repetida" aria-hidden="true">
     <div class="repetida__linhas">
-      <span class="repetida__linha">REPERT&Oacute;RIO</span>
-      <span class="repetida__linha">REPERT&Oacute;RIO</span>
-      <span class="repetida__linha">REPERT&Oacute;RIO</span>
+      <span class="repetida__linha">AO VIVO</span>
+      <span class="repetida__linha">AO VIVO</span>
+      <span class="repetida__linha">AO VIVO</span>
     </div>
     <div class="repetida__peca">
       <img src="assets/img/toca-discos-mt.webp" width="1100" height="1100" alt="" loading="lazy" decoding="async">
     </div>
   </div>
 
-  <!-- REPERTÓRIO ------------------------------------------------------ -->
-  <section class="secao repertorio" id="repertorio">
+  <!-- AO VIVO · uma musica por video, com o nome por cima ------------- -->
+  <section class="secao videos" id="videos">
     <div class="secao__fundo" aria-hidden="true">
-      <img src="assets/img/vinis-mt.webp" width="1300" height="1163" alt="" loading="lazy" decoding="async">
+      <img src="assets/img/guitarra-mao-mt.webp" width="1300" height="1071" alt="" loading="lazy" decoding="async">
     </div>
-
     <div class="tira">
-      <h2 class="secao__etiqueta micro">O que a gente toca</h2>
-      <div id="lista-repertorio" class="lista"></div>
+      <h2 class="secao__etiqueta micro">Ao vivo</h2>
+      <div id="lista-aovivo" class="lista"></div>
+      <div id="lista-videos"></div>
+      <div class="videos__rodape">
+        <a class="btn btn--linha videos__canal" href="https://youtube.com/@rochanuarockband" target="_blank" rel="noopener">Ver o canal no YouTube</a>
+      </div>
     </div>
   </section>
 
@@ -182,66 +185,6 @@
     <div class="tira">
       <h2 class="secao__etiqueta micro">Próximos shows</h2>
       <div id="lista-agenda" class="lista"></div>
-    </div>
-  </section>
-
-  <!-- CHAPA RUBRA · mão na guitarra ----------------------------------- -->
-  <section class="chapa chapa--rubra">
-    <div class="chapa__tela">
-      <img src="assets/img/guitarra-mao-mt.webp" width="1300" height="1071"
-           alt="Mão dedilhando o braço de uma guitarra." loading="lazy" decoding="async">
-    </div>
-    <div class="chapa__veu" aria-hidden="true"></div>
-    <div class="tira chapa__conteudo">
-      <p class="chapa__palavra">v&iacute;deos</p>
-    </div>
-    <div class="marcas micro" aria-hidden="true">
-      <span>#SOMOS <b>ROCHANUA</b></span>
-      <span class="marcas__meio">FEITO <b>PRA</b> TOCAR</span>
-      <span class="marcas__dir"><b>RN</b></span>
-    </div>
-  </section>
-
-  <!-- VÍDEOS ---------------------------------------------------------- -->
-  <section class="secao videos" id="videos">
-    <div class="secao__fundo" aria-hidden="true">
-      <img src="assets/img/skates-mt.webp" width="1200" height="1500" alt="" loading="lazy" decoding="async">
-    </div>
-
-    <div class="tira">
-      <h2 class="secao__etiqueta micro">Ao vivo</h2>
-      <div class="videos__grade">
-
-        <!-- O video nao baixa junto com a pagina: preload="none" faz o
-             navegador buscar so o cartaz, e os 2,4 MB so saem se alguem
-             apertar play. O cartaz e o primeiro quadro do proprio corte,
-             reticulado como o resto da pagina: aperta play e ele ganha
-             cor e som. -->
-        <figure class="aovivo">
-          <video class="aovivo__video"
-                 src="assets/video/ao-vivo.mp4"
-                 poster="assets/img/ao-vivo-poster.webp"
-                 width="576" height="1024"
-                 controls preload="none" playsinline></video>
-          <figcaption class="micro aovivo__legenda">30 s <i>&bull;</i> com som</figcaption>
-        </figure>
-
-        <figure class="aovivo">
-          <video class="aovivo__video"
-                 src="assets/video/ao-vivo-2.mp4"
-                 poster="assets/img/ao-vivo-2-poster.webp"
-                 width="576" height="1024"
-                 controls preload="none" playsinline></video>
-          <figcaption class="micro aovivo__legenda">30 s <i>&bull;</i> com som</figcaption>
-        </figure>
-
-        <div class="videos__lado">
-          <p class="videos__texto">A banda tocando ao vivo, num palco de tenda.</p>
-          <div id="lista-videos" class="lista"></div>
-          <a class="btn btn--linha videos__canal" href="https://youtube.com/@rochanuarockband" target="_blank" rel="noopener">Ver o canal no YouTube</a>
-        </div>
-
-      </div>
     </div>
   </section>
 

@@ -110,10 +110,12 @@ da página e por isso aparece **uma vez só**.
 - Descrição do perfil: "ROCHA NUA BR | Rock'n'Roll"
 
 A banda toca "Vou Deixar" (Skank) e "Wicked Game" (Chris Isaak). São
-**covers**, e estão no site como covers, com o artista original
-creditado. A seção se chama "Repertório", não "Autorais", exatamente por
-isso: cover dentro de uma seção chamada Autorais afirmaria que a música
-é da banda. Música própria leva `autoral: true` e aparece marcada.
+**covers**, e cada uma é o nome de um dos vídeos ao vivo, com o artista
+original creditado logo abaixo. Nunca apresentar cover como autoral:
+música própria leva `autoral: true` e aparece marcada.
+
+Qual música é qual vídeo veio do dono do site, não de escuta: o mapa
+vive em `dados.js` e trocar é inverter duas linhas.
 
 Não há, publicamente confirmados: nomes das autorais, datas de show,
 telefone ou e-mail de contratação, cidade da banda, nem o arquivo do
@@ -190,7 +192,8 @@ Duas coisas aprendidas e que custam tempo se esquecidas:
 
 ## Vídeo
 
-Dois trechos de 30 s ao vivo, lado a lado, em `assets/video/`, com
+Dois trechos de 30 s ao vivo, lado a lado — **um por música, com o nome
+por cima do vídeo** —, em `assets/video/`, com
 `preload="none"`: o navegador busca só os cartazes e os filmes só baixam
 se alguém apertar play. Manter assim — sem isso a página passaria de
 403 KB para mais de 5 MB.
@@ -198,6 +201,12 @@ se alguém apertar play. Manter assim — sem isso a página passaria de
 **A retícula fica só no cartaz.** O vídeo toca em cor, como foi filmado:
 é a única cor fotográfica da página, e é o pagamento de descer até lá. O
 cartaz é o primeiro quadro do próprio corte, então não há salto.
+
+**A tarja do nome:** `pointer-events:none`, senão cobriria os controles e
+ninguém daria play; e **chapada, não degradê**, porque em degradê a linha
+do artista de 11px cai onde a transparência já abriu e o contraste muda
+com o tamanho do bloco (2,8:1 no celular contra 4,4:1 no desktop). Some
+enquanto toca e volta ao pausar.
 
 Duas coisas aprendidas, que custam tempo se esquecidas:
 
@@ -215,8 +224,8 @@ Duas coisas aprendidas, que custam tempo se esquecidas:
 
 ## Entrada das músicas
 
-A faixa sobe e o nome da música é revelado por varredura quando a lista
-chega na tela. É o único movimento da página fora da régua.
+O bloco sobe e o nome da música é revelado por varredura quando chega
+na tela. É o único movimento da página fora da régua.
 
 Escalonar **pelo grupo que entra junto**, nunca pelo índice na lista: um
 item lá embaixo herdaria um atraso enorme e pareceria travado.

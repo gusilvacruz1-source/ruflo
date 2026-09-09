@@ -31,7 +31,7 @@ para o dia a dia. Quatro listas, cada uma com um exemplo comentado:
 
 | Lista        | Para quê                                       |
 |--------------|------------------------------------------------|
-| `repertorio` | as músicas que a banda toca                    |
+| `aoVivo`     | uma música por vídeo, com o nome que vai por cima |
 | `agenda`     | shows marcados (data no formato `AAAA-MM-DD`)  |
 | `videos`     | vídeos do YouTube, **só o ID**, não a URL      |
 | `contato`    | WhatsApp, e-mail, Instagram e canal            |
@@ -185,28 +185,43 @@ Os originais (2min28 e 2min38, 13 e 19 MB) não estão no repositório: são
 arquivos que a banda já tem. Para trocar um trecho, é um comando sobre
 eles.
 
-## Repertório: cover ou autoral
+## Uma música por vídeo
 
-A lista de músicas **credita quem fez**. Cover leva o nome do artista
-original embaixo do título; música da banda leva `autoral: true` e
-aparece marcada como **Autoral**, na cor de acento.
+A seção "Ao vivo" não é uma lista de músicas de um lado e vídeos do
+outro: **cada vídeo é uma música, e o nome dela fica por cima do vídeo**,
+numa tarja no alto. Nome, vídeo, nome, vídeo.
+
+A tarja **some enquanto toca** e volta quando pausa: nome grande em cima
+de gente tocando atrapalha quem veio ver.
+
+Dois detalhes que parecem estilo e não são:
+
+- A tarja é `pointer-events:none`. Sem isso ela cobriria os controles do
+  vídeo e ninguém conseguiria dar play.
+- A tarja é **chapada, não degradê**. Com degradê, a linha do artista
+  (11px) cai onde a transparência já abriu, e a posição dela dentro do
+  degradê muda com o tamanho do bloco: medi 2,8:1 no celular contra
+  4,4:1 no desktop. Chapada dá o mesmo contraste em qualquer largura.
+
+Cover leva o nome de quem fez; música da banda leva `autoral: true` e
+aparece marcada, em amarelo. Sem um ou outro, a música apareceria como
+se fosse da casa.
 
 ```js
-{ titulo: 'Vou Deixar', artista: 'Skank' },        // cover
-{ titulo: 'Nome da música', autoral: true },        // da banda
+{ musica: 'Vou Deixar', artista: 'Skank',
+  video: 'assets/video/ao-vivo.mp4',
+  cartaz: 'assets/img/ao-vivo-poster.webp' },
 ```
 
-Isso não é detalhe de estilo. A seção antes se chamava "Autorais": com
-cover dentro dela, o site estaria dizendo que músicas dos outros são da
-banda. O nome da seção passou a ser "Repertório" por isso, e o crédito
-é obrigatório — sem `artista` nem `autoral`, a música apareceria como se
-fosse da casa.
+**Para trocar qual música é qual vídeo**, basta inverter as linhas
+`video` e `cartaz` entre os dois blocos em `dados.js`. Não precisa tocar
+em código.
 
 ## A entrada das músicas
 
-Quando a lista de autorais chega na tela, cada faixa sobe e o **nome da
-música é revelado por varredura**, da esquerda para a direita, como
-carimbo passando no papel. Vale também para a agenda.
+Quando o bloco chega na tela, ele sobe e o **nome da música é revelado
+por varredura**, da esquerda para a direita, como carimbo passando no
+papel. Vale também para a agenda.
 
 O escalonamento é **dentro do grupo que entra junto**, não pela posição
 na lista: se fosse pelo índice, uma faixa lá embaixo herdaria um atraso
@@ -222,8 +237,8 @@ aparecer.
 Quem configurou o sistema com menos movimento vê a lista inteira de uma
 vez, sem transição.
 
-As autorais da banda ainda não estão na lista: entram assim que os nomes
-chegarem, marcadas com `autoral: true`.
+As autorais da banda ainda não estão no site: entram assim que houver
+nome e vídeo, marcadas com `autoral: true`.
 
 ## Fotos
 
@@ -295,7 +310,7 @@ exatamente este nome e aparece sozinho, sem tocar no código.
 
 Nada disso foi inventado no site:
 
-- **Os nomes das autorais**, para entrarem marcadas no repertório.
+- **Os nomes das autorais**, para entrarem marcadas no ao vivo.
 - **Datas de show.**
 - **WhatsApp ou e-mail de contratação.**
 - **O logo da banda** e **fotos dos integrantes** (as quatro vagas acima).
