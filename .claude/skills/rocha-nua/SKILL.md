@@ -184,9 +184,10 @@ Duas coisas aprendidas e que custam tempo se esquecidas:
 
 ## Vídeo
 
-Um trecho de 30 s ao vivo, em `assets/video/`, com `preload="none"`: o
-navegador busca só o cartaz e o filme só baixa se alguém apertar play.
-Manter assim — sem isso a página passaria de 380 KB para quase 3 MB.
+Dois trechos de 30 s ao vivo, lado a lado, em `assets/video/`, com
+`preload="none"`: o navegador busca só os cartazes e os filmes só baixam
+se alguém apertar play. Manter assim — sem isso a página passaria de
+403 KB para mais de 5 MB.
 
 **A retícula fica só no cartaz.** O vídeo toca em cor, como foi filmado:
 é a única cor fotográfica da página, e é o pagamento de descer até lá. O
@@ -201,6 +202,23 @@ Duas coisas aprendidas, que custam tempo se esquecidas:
 - **Recodificar nem sempre encolhe.** O original já vinha comprimido: em
   CRF 26 e 29 o arquivo ficava maior que a fonte, e o VP9 saiu maior que
   o H.264 nas duas tentativas. O que resolveu foi cortar, não apertar.
+- **Conferir se um vídeo novo é mesmo outro vídeo.** Já chegou um arquivo
+  com nome e soma de verificação diferentes que era o mesmo material:
+  comparação quadro a quadro deu 0/255 e o áudio bateu byte a byte. Com
+  câmera fixa, dois trechos iguais lado a lado pareceriam defeito.
+
+## Entrada das músicas
+
+A faixa sobe e o nome da música é revelado por varredura quando a lista
+chega na tela. É o único movimento da página fora da régua.
+
+Escalonar **pelo grupo que entra junto**, nunca pelo índice na lista: um
+item lá embaixo herdaria um atraso enorme e pareceria travado.
+
+**O estado escondido só existe quando o JS assume** (`js-anima` na raiz),
+e a função inteira vive dentro de um `try` que remove a marca em caso de
+erro. Sem JS, sem `IntersectionObserver` ou com script quebrado, a lista
+nasce visível. Nunca esconder conteúdo que dependa de script para voltar.
 
 ## Vagas de foto
 

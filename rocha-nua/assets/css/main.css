@@ -465,6 +465,52 @@ h1,h2,h3{margin:0;font-weight:400}
   font-size:14px;font-weight:700;letter-spacing:.04em;
 }
 
+/* --------------------------------------------- entrada por rolagem
+   A faixa entra subindo quando chega na tela, e o NOME da musica e
+   revelado por varredura, da esquerda para a direita, como carimbo
+   passando no papel. E o unico movimento da pagina fora da regua.
+
+   O estado escondido so existe quando o JS assume (.js-anima na raiz).
+   Sem JS, com JS quebrado, ou sem IntersectionObserver, a lista nasce
+   visivel: nunca esconder conteudo que dependa de script para voltar. */
+
+.js-anima .entra{
+  opacity:0;
+  transform:translateY(18px);
+}
+.js-anima .entra.entrou{
+  opacity:1;
+  transform:none;
+  transition:opacity .5s var(--saida) var(--atraso,0ms),
+             transform .6s var(--saida) var(--atraso,0ms);
+}
+
+/* A varredura vai no nome, que e o que se quer ler primeiro. */
+.js-anima .entra .faixa-musica__nome,
+.js-anima .entra .show__local{
+  -webkit-clip-path:inset(0 100% 0 0);
+  clip-path:inset(0 100% 0 0);
+}
+.js-anima .entra.entrou .faixa-musica__nome,
+.js-anima .entra.entrou .show__local{
+  -webkit-clip-path:inset(0 0 0 0);
+  clip-path:inset(0 0 0 0);
+  transition:clip-path .65s var(--saida) calc(var(--atraso,0ms) + 120ms),
+             -webkit-clip-path .65s var(--saida) calc(var(--atraso,0ms) + 120ms);
+}
+
+@media (prefers-reduced-motion:reduce){
+  .js-anima .entra,
+  .js-anima .entra.entrou{opacity:1;transform:none;transition:none}
+  .js-anima .entra .faixa-musica__nome,
+  .js-anima .entra .show__local,
+  .js-anima .entra.entrou .faixa-musica__nome,
+  .js-anima .entra.entrou .show__local{
+    -webkit-clip-path:none;clip-path:none;transition:none;
+  }
+}
+
+
 /* ------------------------------------------------------------- vagas
    A foto real só aparece quando o arquivo existe: o JS confirma que ela
    carregou e marca .vaga--cheia. Até lá vale a reserva.
