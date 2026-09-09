@@ -498,13 +498,14 @@ h1,h2,h3{margin:0;font-weight:400}
 /* --- entra subindo --- */
 .js-anima [data-entra="sobe"]{
   opacity:0;
-  transform:translate3d(0,24px,0);
+  /* vem deitado para tras e levanta: e a folha caindo na mesa */
+  transform:perspective(900px) rotateX(-16deg) translate3d(0,26px,-60px);
 }
 .js-anima [data-entra="sobe"].entrou{
   opacity:1;
-  transform:none;
+  transform:perspective(900px) rotateX(0deg) translate3d(0,0,0);
   transition:opacity .55s var(--saida) var(--atraso,0ms),
-             transform .7s var(--saida) var(--atraso,0ms);
+             transform .8s var(--saida) var(--atraso,0ms);
 }
 
 /* --- so aparece, sem deslocar (letra miuda de canto) --- */
@@ -529,11 +530,12 @@ h1,h2,h3{margin:0;font-weight:400}
 /* --- carimbo: desce de leve e assenta --- */
 .js-anima [data-entra="carimbo"]{
   opacity:0;
-  transform:scale(1.09);
+  /* o carimbo desce de cima, girado, e assenta no papel */
+  transform:perspective(900px) rotateX(26deg) translate3d(0,-30px,90px) scale(1.09);
 }
 .js-anima [data-entra="carimbo"].entrou{
   opacity:1;
-  transform:none;
+  transform:perspective(900px) rotateX(0deg) translate3d(0,0,0) scale(1);
   transition:opacity .45s var(--saida) var(--atraso,0ms),
              transform .8s var(--saida) var(--atraso,0ms);
 }
@@ -681,14 +683,16 @@ h1,h2,h3{margin:0;font-weight:400}
      border-color .18s var(--saida),transform .45s var(--saida)}
 .btn.puxado{transition:transform .1s linear}
 
-/* Inclinacao do bloco de video e do card do integrante. */
+/* Inclinacao do bloco de video, do card do integrante e do logo. */
 .cancao__quadro,
-.integrante{
+.integrante,
+.banda__selo{
   transition:transform .5s var(--saida);
   transform-style:preserve-3d;
 }
 .cancao__quadro.puxado,
-.integrante.puxado{transition:transform .1s linear}
+.integrante.puxado,
+.banda__selo.puxado{transition:transform .1s linear}
 
 /* Carimbo do clique: um anel de tinta que abre e some. */
 .carimbo{
@@ -708,13 +712,25 @@ h1,h2,h3{margin:0;font-weight:400}
 }
 
 /* A faixa repetida inclina com a velocidade da rolagem. */
-.repetida__linhas{transform:skewY(var(--torcao,0deg))}
+.repetida{perspective:1100px;perspective-origin:50% 45%}
+.repetida__linhas{
+  transform-style:preserve-3d;
+  transform:skewY(var(--torcao,0deg))
+            rotateX(var(--giro-x,0deg)) rotateY(var(--giro-y,0deg));
+  transition:transform .5s var(--saida);
+}
+.mao .repetida:hover .repetida__linhas{transition:transform .12s linear}
+.repetida__linha{transform-style:preserve-3d}
 
 @media (prefers-reduced-motion:reduce){
   .chapa__palavra,.banda__palavra,.fecho__titulo,
-  .cancao__quadro,.integrante,.btn{transform:none!important;transition:none}
+  .cancao__quadro,.integrante,.banda__selo,.btn{transform:none!important;transition:none}
   .carimbo{display:none}
   .repetida__linhas{transform:none}
+  .js-anima [data-entra="sobe"],
+  .js-anima [data-entra="sobe"].entrou,
+  .js-anima [data-entra="carimbo"],
+  .js-anima [data-entra="carimbo"].entrou{transform:none}
 }
 
 /* ------------------------------------------------------------ cursor

@@ -301,6 +301,7 @@
     ['.repetida__peca',   36]
   ];
   var LINHAS_REPETIDA = [-82, 108, -54];
+  var FUNDO_REPETIDA = [-190, 40, 170];   // profundidade de cada linha na cena
 
   function menosMovimento() {
     return window.matchMedia
@@ -470,6 +471,24 @@
     guiar('.btn', 9, false);
     guiar('.cancao__quadro', 7, true);
     guiar('.integrante', 5, true);
+    guiar('.banda__selo', 10, true);
+
+    // o ponteiro gira a cena 3D da faixa repetida
+    var repetida = document.querySelector('.repetida');
+    var linhas = document.querySelector('.repetida__linhas');
+    if (repetida && linhas) {
+      repetida.addEventListener('mousemove', function (e) {
+        var r = repetida.getBoundingClientRect();
+        var gx = ((e.clientY - r.top) / r.height - 0.5) * -13;
+        var gy = ((e.clientX - r.left) / r.width - 0.5) * 17;
+        linhas.style.setProperty('--giro-x', gx.toFixed(2) + 'deg');
+        linhas.style.setProperty('--giro-y', gy.toFixed(2) + 'deg');
+      }, { passive: true });
+      repetida.addEventListener('mouseleave', function () {
+        linhas.style.setProperty('--giro-x', '0deg');
+        linhas.style.setProperty('--giro-y', '0deg');
+      });
+    }
 
     // a regua para quando o ponteiro passa por cima
     var regua = document.querySelector('.regua');
@@ -503,7 +522,12 @@
     });
     Array.prototype.forEach.call(document.querySelectorAll('.repetida__linha'),
       function (el, n) {
-        itens.push({ el: el, forca: LINHAS_REPETIDA[n % LINHAS_REPETIDA.length], eixo: 'x' });
+        itens.push({
+          el: el,
+          forca: LINHAS_REPETIDA[n % LINHAS_REPETIDA.length],
+          fundo: FUNDO_REPETIDA[n % FUNDO_REPETIDA.length],
+          eixo: 'x'
+        });
       });
 
     // texto que entra em registro conforme sobe na tela
@@ -587,7 +611,16 @@
         if (r.bottom < -300 || r.top > alturaJanela + 300) return;
         var pos = (r.top + r.height / 2 - meio) / (meio + r.height / 2);
         if (pos < -1) pos = -1; else if (pos > 1) pos = 1;
-        it.el.style.setProperty('--paralaxe', (pos * it.forca).toFixed(1) + 'px');
+        if (it.fundo !== undefined) {
+          /* Linha da faixa repetida: anda no eixo X e vive numa
+             profundidade propria dentro da cena. Como a cena tem
+             perspectiva no pai e preserve-3d, o translateZ e de verdade:
+             a linha do fundo anda menos e some para tras. */
+          it.el.style.transform = 'translate3d(' + (pos * it.forca).toFixed(1)
+            + 'px,0,' + it.fundo + 'px)';
+        } else {
+          it.el.style.setProperty('--paralaxe', (pos * it.forca).toFixed(1) + 'px');
+        }
       });
 
       registros.forEach(function (el) {
@@ -604,16 +637,22 @@
           if (Math.abs(it.ax - it.x) < 0.05 && Math.abs(it.ay - it.y) < 0.05) return;
           it.x += (it.ax - it.x) * 0.14;
           it.y += (it.ay - it.y) * 0.14;
-          it.el.style.transform = 'translate3d(' + it.x.toFixed(2) + 'px,'
-            + it.y.toFixed(2) + 'px,0)';
+          /* A palavra nao so desliza: ela VIRA. Angulos pequenos de
+             proposito — texto muito girado perde nitidez. */
+          it.el.style.transform = 'perspective(850px) translate3d('
+            + it.x.toFixed(2) + 'px,' + it.y.toFixed(2) + 'px,'
+            + (Math.abs(it.x) * 1.1).toFixed(1) + 'px)'
+            + ' rotateY(' + (it.x * 0.34).toFixed(2) + 'deg)'
+            + ' rotateX(' + (-it.y * 0.5).toFixed(2) + 'deg)';
         });
         mao.puxados.forEach(function (it) {
           if (Math.abs(it.ax - it.x) < 0.05 && Math.abs(it.ay - it.y) < 0.05) return;
           it.x += (it.ax - it.x) * 0.2;
           it.y += (it.ay - it.y) * 0.2;
           if (it.inclina) {
-            it.el.style.transform = 'perspective(700px) rotateY(' + (it.x * 0.42).toFixed(2)
-              + 'deg) rotateX(' + (-it.y * 0.42).toFixed(2) + 'deg)';
+            it.el.style.transform = 'perspective(700px) rotateY(' + (it.x * 0.85).toFixed(2)
+              + 'deg) rotateX(' + (-it.y * 0.85).toFixed(2) + 'deg) translateZ('
+              + (14 - Math.abs(it.x) * 0.4).toFixed(1) + 'px)';
           } else {
             it.el.style.transform = 'translate3d(' + it.x.toFixed(2) + 'px,'
               + it.y.toFixed(2) + 'px,0)';
