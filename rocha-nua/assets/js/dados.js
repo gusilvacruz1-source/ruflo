@@ -32,6 +32,12 @@ window.ROCHA = {
       video: 'assets/video/ao-vivo-2.mp4',
       cartaz: 'assets/img/ao-vivo-2-poster.webp',
     },
+    {
+      musica: 'Zóio de Lula',
+      artista: 'Charlie Brown Jr.',
+      video: 'assets/video/ao-vivo-3.mp4',
+      cartaz: 'assets/img/ao-vivo-3-poster.webp',
+    },
   ],
 
   /* -------------------------------------------------------------------
