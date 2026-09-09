@@ -88,6 +88,91 @@ terceiros.
 O arquivo com eixo de largura pesa 90 KB contra 35 KB do que só tinha
 peso. Os 55 KB a mais são o desenho.
 
+## O vídeo
+
+Um trecho de **30 s** da banda tocando ao vivo, em `assets/video/`.
+
+**Ele não pesa no carregamento.** Com `preload="none"`, o navegador busca
+só o cartaz (18 KB) e os 2,4 MB do vídeo só saem se alguém apertar play.
+Verificado: carregando a página inteira e rolando até o fim, o arquivo
+`ao-vivo.mp4` não chega a ser pedido.
+
+O cartaz é o **primeiro quadro do próprio corte**, reticulado como o
+resto da página: aperta play e ele ganha cor e som, sem salto de imagem.
+
+Decisões, e o porquê de cada uma:
+
+- **Cortado, não inteiro.** O original tem 2min28 e 13 MB. Recodificar
+  não ajudava: em CRF 26 e 29 o arquivo ficava *maior* que a fonte, que
+  já vinha bem comprimida. Cortar foi o que resolveu — 30 s a 2,4 MB.
+- **O trecho é 1:00 → 1:30**, escolhido a dedo. Aos 1:40 alguém atravessa
+  a frente do palco empurrando uma bicicleta, e por volta de 1:38 uma
+  criança cruza o quadro. Entre 0:58 e 1:30 ninguém passa e os dois
+  músicos ficam enquadrados.
+- **Só MP4 (H.264).** Gerei um WebM/VP9 para comparar e ele saiu *maior*
+  nas duas tentativas — é filmagem de mão, com muito movimento e
+  granulação, que o VP9 não comprime melhor. Dois arquivos custariam o
+  dobro de espaço sem ganho.
+- **A rotação está assada no arquivo.** O original é `.mov` de celular,
+  em pé por metadado. Recodificando, o vídeo sai realmente 576×1024 e
+  nenhum navegador precisa interpretar matriz de rotação.
+- **Esmaecimento de som e imagem no fim**, para o corte soar proposital
+  em vez de estourado.
+
+Ao mexer nisso com ffmpeg: **`-ss` e `-t` vão ANTES do `-i`.** Depois do
+`-i`, o corte acontece só depois dos filtros, e um `fade=t=out:st=29`
+apaga a imagem aos 29 s da linha do tempo *original* — se o trecho
+guardado começa em 1:00, sai um vídeo inteiramente preto e mudo. Foi
+exatamente o que aconteceu aqui na primeira tentativa.
+
+O original de 2min28 não está no repositório: são 13 MB para um arquivo
+que a banda já tem.
+
+## O vídeo
+
+Um trecho de **30 s** da banda tocando ao vivo, em `assets/video/`.
+
+**O vídeo toca como é.** A retícula fica só no cartaz, a imagem parada
+que aparece antes do play; o filme em si mantém cor e som do original.
+O cartaz é o **primeiro quadro do próprio corte**, então apertar play não
+dá salto de imagem: o cartaz impresso ganha cor.
+
+**Ele não pesa no carregamento.** Com `preload="none"`, o navegador busca
+só o cartaz (18 KB) e os 2,4 MB do vídeo só saem se alguém apertar play.
+Verificado: carregando a página e rolando até o fim, o arquivo
+`ao-vivo.mp4` não chega a ser pedido.
+
+Decisões, e o porquê de cada uma:
+
+- **Cortado, não recomprimido.** O original tem 2min28 e 13 MB.
+  Recodificar o filme inteiro não ajudava: em CRF 26 e 29 o arquivo
+  ficava *maior* que a fonte, que já vinha bem comprimida. Cortar foi o
+  que resolveu. Os 30 s guardados ocupam 2,4 MB, e esses mesmos 30 s
+  dentro do original ocupariam cerca de 2,6 MB — ou seja, a qualidade é
+  a mesma; o que mudou foi a duração.
+- **O trecho é 1:00 → 1:30**, escolhido a dedo. Por volta de 1:38 uma
+  criança cruza a frente do palco e aos 2:02 alguém passa empurrando uma
+  bicicleta. Entre 0:58 e 1:30 ninguém atravessa e os dois músicos ficam
+  enquadrados.
+- **Só MP4 (H.264).** Gerei um WebM/VP9 para comparar e ele saiu *maior*
+  nas duas tentativas: é filmagem de mão, com muito movimento e
+  granulação, que o VP9 não comprime melhor. Dois arquivos custariam o
+  dobro de espaço sem ganho nenhum.
+- **A rotação está assada no arquivo.** O original é `.mov` de celular,
+  em pé por metadado. Assim o vídeo sai realmente 576×1024 e nenhum
+  navegador precisa interpretar matriz de rotação.
+- **Esmaecimento de som e imagem no fim**, para o corte soar proposital
+  em vez de estourado.
+
+Ao mexer nisso com ffmpeg: **`-ss` e `-t` vão ANTES do `-i`.** Depois do
+`-i`, o corte acontece só depois dos filtros, e um `fade=t=out:st=29`
+apaga a imagem aos 29 s da linha do tempo *original* — se o trecho
+guardado começa em 1:00, sai um vídeo inteiramente preto e mudo. Foi
+exatamente o que aconteceu aqui na primeira tentativa.
+
+O original de 2min28 não está no repositório: são 13 MB de um arquivo que
+a banda já tem. Para trocar o trecho, é um comando sobre ele.
+
 ## Fotos
 
 ### Como uma foto vira chapa

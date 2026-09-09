@@ -295,4 +295,53 @@
 
 /* ---------------------------------------------------------- vídeos */
 
-.videos__canal{margin-top:32px}
+.videos__grade{
+  display:grid;
+  grid-template-columns:auto minmax(0,1fr);
+  gap:clamp(26px,4vw,54px);
+  align-items:start;
+  margin-top:clamp(22px,3vw,34px);
+}
+
+/* Video vertical: veio de celular e fica em pe, sem barra preta dos
+   lados. A proporcao fixa segura o espaco antes de o cartaz chegar. */
+.aovivo{
+  margin:0;
+  width:clamp(232px,29vw,330px);
+}
+.aovivo__video{
+  display:block;
+  width:100%;
+  height:auto;
+  aspect-ratio:576/1024;
+  background:var(--asfalto-2);
+  border:1px solid rgba(240,231,214,.22);
+}
+.aovivo__legenda{
+  margin-top:10px;
+  opacity:.6;
+}
+.aovivo__legenda i{font-style:normal;padding-inline:.5em;opacity:.6}
+
+.videos__texto{
+  font-size:clamp(1.1rem,2.4vw,1.5rem);
+  font-weight:300;
+  font-stretch:110%;
+  line-height:1.3;
+  max-width:26ch;
+}
+.videos__lado .lista{margin-top:clamp(20px,2.6vw,30px)}
+/* Nesta coluna o vazio nao fica centrado: brigaria com o texto de
+   entrada, que e alinhado a esquerda. */
+.videos__lado .vazio{text-align:left}
+.videos__lado .vazio__nota{margin-inline:0}
+/* Nesta coluna o vazio nao fica centrado: brigaria com o texto de
+   entrada, que e alinhado a esquerda. */
+.videos__lado .vazio{text-align:left}
+.videos__lado .vazio__nota{margin-inline:0}
+.videos__canal{margin-top:28px}
+
+@media (max-width:760px){
+  .videos__grade{grid-template-columns:1fr;gap:30px}
+  .aovivo{width:min(320px,100%)}
+}
