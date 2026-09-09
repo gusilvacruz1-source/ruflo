@@ -114,9 +114,9 @@ no rodapé, junto com a equipe — nunca como card ao lado dos músicos, que
 diria que ele toca na banda.
 - Descrição do perfil: "ROCHA NUA BR | Rock'n'Roll"
 
-A banda toca "Vou Deixar" (Skank) e "Wicked Game" (Chris Isaak). São
-**covers**, e cada uma é o nome de um dos vídeos ao vivo, com o artista
-original creditado logo abaixo. Nunca apresentar cover como autoral:
+A banda toca "Vou Deixar" (Skank), "Wicked Game" (Chris Isaak) e "Zóio
+de Lula" (Charlie Brown Jr.). São **covers**, e cada uma é o nome de um
+dos vídeos ao vivo, com o artista original creditado logo abaixo. Nunca apresentar cover como autoral:
 música própria leva `autoral: true` e aparece marcada.
 
 Qual música é qual vídeo veio do dono do site, não de escuta: o mapa
@@ -222,6 +222,8 @@ Duas coisas aprendidas, que custam tempo se esquecidas:
 - **Recodificar nem sempre encolhe.** O original já vinha comprimido: em
   CRF 26 e 29 o arquivo ficava maior que a fonte, e o VP9 saiu maior que
   o H.264 nas duas tentativas. O que resolveu foi cortar, não apertar.
+- **Vídeo de iPhone costuma chegar em HEVC**, que Chrome e Firefox
+  geralmente não tocam. Sempre conferir o codec e recodificar para H.264.
 - **Conferir se um vídeo novo é mesmo outro vídeo.** Já chegou um arquivo
   com nome e soma de verificação diferentes que era o mesmo material:
   comparação quadro a quadro deu 0/255 e o áudio bateu byte a byte. Com

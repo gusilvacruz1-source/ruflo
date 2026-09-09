@@ -90,9 +90,9 @@ peso. Os 55 KB a mais são o desenho.
 
 ## Os vídeos
 
-Dois trechos de **30 s** da banda ao vivo, lado a lado, em
-`assets/video/`. São gravações diferentes do mesmo palco: o primeiro em
-luz chapada, o segundo em fim de tarde, com o sol entrando de lado.
+Três músicas, cada uma com seu vídeo, em `assets/video/`. Duas do mesmo
+palco de tenda — uma em luz chapada, outra em fim de tarde — e a terceira
+num ensaio, dentro de casa.
 
 **Ele não pesa no carregamento.** Com `preload="none"`, o navegador busca
 só o cartaz (18 KB) e os 2,4 MB do vídeo só saem se alguém apertar play.
@@ -132,9 +132,9 @@ que a banda já tem.
 
 ## Os vídeos
 
-Dois trechos de **30 s** da banda ao vivo, lado a lado, em
-`assets/video/`. São gravações diferentes do mesmo palco: o primeiro em
-luz chapada, o segundo em fim de tarde, com o sol entrando de lado.
+Três músicas, cada uma com seu vídeo, em `assets/video/`. Duas do mesmo
+palco de tenda — uma em luz chapada, outra em fim de tarde — e a terceira
+num ensaio, dentro de casa.
 
 **O vídeo toca como é.** A retícula fica só no cartaz, a imagem parada
 que aparece antes do play; o filme em si mantém cor e som do original.
@@ -142,9 +142,14 @@ O cartaz é o **primeiro quadro do próprio corte**, então apertar play não
 dá salto de imagem: o cartaz impresso ganha cor.
 
 **Eles não pesam no carregamento.** Com `preload="none"`, o navegador
-busca só os cartazes (19 KB cada) e os 5 MB de vídeo só saem se alguém
-apertar play. Verificado: carregando a página e rolando até o fim,
+busca só os cartazes (cerca de 19 KB cada) e os 7 MB de vídeo só saem se
+alguém apertar play. Verificado: carregando a página e rolando até o fim,
 nenhum `.mp4` chega a ser pedido.
+
+**Vídeo de iPhone costuma chegar em HEVC**, que Chrome e Firefox
+geralmente não tocam. O terceiro veio assim, com 29 MB em 20 s. Sempre
+recodificar para H.264 — ficou em 2,3 MB, e sem H.264 metade de quem
+abrisse o site não veria nada.
 
 Decisões, e o porquê de cada uma:
 
