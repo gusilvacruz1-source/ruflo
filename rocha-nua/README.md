@@ -90,14 +90,15 @@ peso. Os 55 KB a mais são o desenho.
 
 ## Os vídeos
 
-Quatro músicas, cada uma com seu vídeo, em `assets/video/`. A primeira é
-**autoral** e vem de um palco com luz, banner da banda e público; duas
-são do palco de tenda, em horas diferentes do dia; e a outra é de um
-ensaio dentro de casa.
+Quatro músicas, cada uma com seu vídeo, em `assets/video/`. Duas são do
+palco de tenda, em horas diferentes do dia; uma é de um ensaio dentro de
+casa; e a **autoral** vem de um palco com luz, banner da banda e público.
 
-A autoral vai **na frente** e leva a marca **AUTORAL** em amarelo: é o
-que a banda tem de próprio, e a seção inteira foi construída para
-distinguir isso de cover.
+As músicas ficam **na ordem em que chegaram**, e não com a autoral na
+frente: a banda é mista e o repertório de hoje é majoritariamente cover,
+então destacar a autoral criaria a expectativa errada em quem contrata.
+Ela continua marcada como **AUTORAL** em amarelo — o crédito é honesto,
+a ênfase é que não.
 
 **Ele não pesa no carregamento.** Com `preload="none"`, o navegador busca
 só o cartaz (18 KB) e os 2,4 MB do vídeo só saem se alguém apertar play.
@@ -137,14 +138,15 @@ que a banda já tem.
 
 ## Os vídeos
 
-Quatro músicas, cada uma com seu vídeo, em `assets/video/`. A primeira é
-**autoral** e vem de um palco com luz, banner da banda e público; duas
-são do palco de tenda, em horas diferentes do dia; e a outra é de um
-ensaio dentro de casa.
+Quatro músicas, cada uma com seu vídeo, em `assets/video/`. Duas são do
+palco de tenda, em horas diferentes do dia; uma é de um ensaio dentro de
+casa; e a **autoral** vem de um palco com luz, banner da banda e público.
 
-A autoral vai **na frente** e leva a marca **AUTORAL** em amarelo: é o
-que a banda tem de próprio, e a seção inteira foi construída para
-distinguir isso de cover.
+As músicas ficam **na ordem em que chegaram**, e não com a autoral na
+frente: a banda é mista e o repertório de hoje é majoritariamente cover,
+então destacar a autoral criaria a expectativa errada em quem contrata.
+Ela continua marcada como **AUTORAL** em amarelo — o crédito é honesto,
+a ênfase é que não.
 
 **O vídeo toca como é.** A retícula fica só no cartaz, a imagem parada
 que aparece antes do play; o filme em si mantém cor e som do original.

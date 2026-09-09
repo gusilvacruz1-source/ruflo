@@ -114,11 +114,23 @@ no rodapé, junto com a equipe — nunca como card ao lado dos músicos, que
 diria que ele toca na banda.
 - Descrição do perfil: "ROCHA NUA BR | Rock'n'Roll"
 
-**"Distraído na Escuridão" é autoral da banda**, e é a primeira música
-própria no site: leva `autoral: true` e aparece marcada em amarelo, na
-frente das outras. Toca também "Vou Deixar" (Skank), "Wicked Game"
-(Chris Isaak) e "Zóio de Lula" (Charlie Brown Jr.), que são **covers**,
-com o artista original creditado logo abaixo. Nunca apresentar cover como autoral:
+**A Rocha Nua é banda mista: cover, tributo e autoral — e o repertório
+de hoje é majoritariamente cover.** Isso veio da própria banda, e é
+regra de texto do site: **não enfatizar o lado autoral**. Eles ainda não
+têm autorais suficientes para segurar um show inteiro, e um site que
+promete "banda autoral" cria a expectativa errada em quem contrata.
+
+Na prática: a capa diz "cover, tributo e autoral", a ficha diz "COVER E
+AUTORAL", a régua diz o mesmo, e as músicas ficam na ordem em que
+chegaram, sem a autoral em destaque na frente.
+
+Toca "Vou Deixar" (Skank), "Wicked Game" (Chris Isaak) e "Zóio de Lula"
+(Charlie Brown Jr.), que são **covers** com o artista original creditado;
+e **"Distraído na Escravidão"**, que é **autoral** e leva
+`autoral: true`, aparecendo marcada em amarelo.
+
+Cuidado com esse nome: já foi escrito "Escuridão" por engano. É
+**Escravidão**. Nunca apresentar cover como autoral:
 música própria leva `autoral: true` e aparece marcada.
 
 Qual música é qual vídeo veio do dono do site, não de escuta: o mapa

@@ -21,12 +21,6 @@ window.ROCHA = {
      ------------------------------------------------------------------- */
   aoVivo: [
     {
-      musica: 'Distraído na Escuridão',
-      autoral: true,
-      video: 'assets/video/ao-vivo-4.mp4',
-      cartaz: 'assets/img/ao-vivo-4-poster.webp',
-    },
-    {
       musica: 'Vou Deixar',
       artista: 'Skank',
       video: 'assets/video/ao-vivo.mp4',
@@ -43,6 +37,12 @@ window.ROCHA = {
       artista: 'Charlie Brown Jr.',
       video: 'assets/video/ao-vivo-3.mp4',
       cartaz: 'assets/img/ao-vivo-3-poster.webp',
+    },
+    {
+      musica: 'Distraído na Escravidão',
+      autoral: true,
+      video: 'assets/video/ao-vivo-4.mp4',
+      cartaz: 'assets/img/ao-vivo-4-poster.webp',
     },
   ],
 
