@@ -224,7 +224,10 @@
 .repetida__peca{
   position:absolute;
   left:50%;top:50%;
-  transform:translate(-50%,-50%);
+  /* O deslocamento por rolagem entra AQUI e nao no main.css: esta folha
+     carrega depois, entao uma regra la seria sobrescrita por esta e a
+     peca ficaria parada. */
+  transform:translate(-50%,-50%) translate3d(0,var(--paralaxe,0),0);
   width:clamp(132px,21vw,280px);
   z-index:2;
   isolation:isolate;
@@ -358,4 +361,18 @@
 }
 
   .videos__lado{grid-column:auto}
+}
+
+@media (prefers-reduced-motion:reduce){
+  .repetida__peca{transform:translate(-50%,-50%)}
+}
+
+/* Toque de mao: o bloco levanta de leve ao passar o ponteiro. */
+.cancao__quadro,
+.integrante{transition:transform .3s var(--saida)}
+.cancao__quadro:hover{transform:translateY(-4px)}
+.integrante:hover{transform:translateY(-3px)}
+@media (prefers-reduced-motion:reduce){
+  .cancao__quadro,.integrante{transition:none}
+  .cancao__quadro:hover,.integrante:hover{transform:none}
 }
