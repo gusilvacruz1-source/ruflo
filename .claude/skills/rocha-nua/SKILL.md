@@ -185,6 +185,13 @@ dobra exige.
 - Meia-tona é bilevel por natureza. Guardar como tom contínuo é o erro:
   a mesma chapa dá **73 KB em WebP sem perda bilevel** e **524 KB em
   WebP com perda**. Sempre binarizar antes de salvar.
+- **A ferramenta já esteve fora de sincronia com o que ela mesma gerou.**
+  Toda chapa publicada é bilevel, mas por um tempo o `meiatona.py`
+  guardado no repositório salvava em cinza e a linha de comando do README
+  quebrava com `TypeError`, porque `sys.argv` chega como texto. Quem for
+  gerar chapa nova: confira que a saída tem **zero valores
+  intermediários** (`histogram()[1:255]` somando 0) e que ela bate com as
+  outras. É o teste que pega esse tipo de deriva.
 - Para medir, usar `performance.getEntriesByType('resource')` e somar
   `encodedBodySize`. Somar `response.body()` pelo Playwright perde
   respostas e dá número errado.
