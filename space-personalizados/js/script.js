@@ -14,6 +14,11 @@
 
 'use strict';
 
+/* Liga o modo animado. É a PRIMEIRA coisa que roda: se este arquivo não
+   carregar, nada do CSS esconde nada e a página degrada legível em vez de
+   virar uma tela preta esperando um JS que não veio. */
+document.documentElement.classList.add('js-on');
+
 /* ============================================================================
    [1] CONFIG — EDITE AQUI
    ========================================================================== */
@@ -222,6 +227,9 @@ function paint(el, key, seed = 0) {
   if (!real) return;
   const probe = new Image();
   probe.onload = () => {
+    // o #dealMedia é reaproveitado entre produtos: sem esta checagem uma
+    // sondagem lenta pinta a foto do produto anterior sobre o novo
+    if (el.dataset.src !== real) return;
     el.style.backgroundImage = `url("${real}")`;
     el.classList.add('has-photo');
   };
@@ -320,27 +328,38 @@ function unitPrice(p, qty) {
   for (const [min, val] of p.tiers) if (qty >= min) price = val;
   return price;
 }
-const fromPrice = p => Math.min(...p.tiers.map(t => t[1]));
-const topPrice  = p => Math.max(...p.tiers.map(t => t[1]));
+/* O número em destaque tem que ser o que o cliente paga no pedido mínimo.
+   O preço de volume é a promessa, não a manchete — mostrar R$ 2,25 e riscar
+   R$ 4,00 num item de mínimo 10 é anunciar um preço que exige 500 peças. */
+const startPrice = p => unitPrice(p, p.min);
+const bestPrice  = p => Math.min(...p.tiers.map(t => t[1]));
+const bestQty    = p => p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0];
+const hasVolume  = p => bestPrice(p) < startPrice(p);
 
 /* ============================================================================
    [5] SEQUÊNCIA — descoberta automática + preload dos frames
    ========================================================================== */
 
-const loadImage = src => new Promise(res => {
-  const img = new Image();
-  img.decoding = 'async';
-  img.onload  = () => res(img);
-  img.onerror = () => res(null);
-  img.src = src;
-});
+/* Toda sondagem tem prazo: 'load' e 'error' podem simplesmente nunca
+   disparar numa conexão ruim, e o site inteiro espera por isso. */
+const TIMEOUT_PROBE = 6000;
+const TIMEOUT_FRAME = 20000;
 
-const exists = src => new Promise(res => {
-  const img = new Image();
-  img.onload = () => res(true);
-  img.onerror = () => res(false);
-  img.src = src;
-});
+function settleWithTimeout(src, ms, onDone, fallback) {
+  return new Promise(res => {
+    const img = new Image();
+    img.decoding = 'async';
+    let done = false;
+    const finish = v => { if (done) return; done = true; clearTimeout(t); img.src = ''; res(v); };
+    const t = setTimeout(() => finish(fallback), ms);
+    img.onload  = () => finish(onDone(img));
+    img.onerror = () => finish(fallback);
+    img.src = src;
+  });
+}
+
+const loadImage = src => settleWithTimeout(src, TIMEOUT_FRAME, img => img, null);
+const exists    = src => settleWithTimeout(src, TIMEOUT_PROBE, () => true, false);
 
 const pad = (n, len) => len ? String(n).padStart(len, '0') : String(n);
 const buildSrc = (p, i) => `${p.dir}${p.prefix}${pad(i, p.padLen)}.${p.ext}`;
@@ -361,11 +380,19 @@ async function loadManifest() {
   return MANIFEST;
 }
 
-async function firstThatExists(list) {
-  const found = await Promise.all(
-    list.map(c => exists(buildSrc(c, c.start)).then(ok => ok ? c : null))
-  );
-  return found.find(Boolean) || null;
+/* Em lotes: o navegador só abre ~6 conexões por host, então disparar 128
+   sondagens de uma vez só enfileira 404 e atrasa o preloader. Para no
+   primeiro lote que acertar. */
+async function firstThatExists(list, chunk = 12) {
+  for (let i = 0; i < list.length; i += chunk) {
+    const batch = list.slice(i, i + chunk);
+    const found = await Promise.all(
+      batch.map(c => exists(buildSrc(c, c.start)).then(ok => ok ? c : null))
+    );
+    const hit = found.find(Boolean);
+    if (hit) return hit;
+  }
+  return null;
 }
 
 async function discoverPattern(dir) {
@@ -397,7 +424,12 @@ async function discoverPattern(dir) {
   /* estágio 1 — o que 95% das exportações usam */
   const likely = all.filter(c =>
     c.start === 1 && c.padLen >= 3 && (c.prefix === '' || c.prefix === folder + '_'));
-  return (await firstThatExists(likely)) || (await firstThatExists(all));
+  const hit = await firstThatExists(likely);
+  if (hit) return hit;
+
+  /* estágio 2 — o resto, sem repetir o que o estágio 1 já testou */
+  const tried = new Set(likely.map(c => buildSrc(c, c.start)));
+  return firstThatExists(all.filter(c => !tried.has(buildSrc(c, c.start))));
 }
 
 /** Busca exponencial + binária para saber quantos frames existem. */
@@ -647,6 +679,8 @@ const Cup = (() => {
   let procedural = true;
   let target = 0, current = 0, needsDraw = true;
   let pGiro = 0, pDive = 1, totalScroll = 0;
+  let running = false;
+  const last = { veil: -1, hud: -1, bar: -1, phase: '' };
 
   /* --- geometria do trilho de scroll ------------------------------------ */
   function measure() {
@@ -679,24 +713,33 @@ const Cup = (() => {
       }
     }
 
-    /* fade do interior para a cor exata da loja */
+    /* fade do interior para a cor exata da loja.
+       Só escreve no DOM o que mudou de verdade: antes eram 5 escritas de
+       estilo por frame para valores quase sempre idênticos. */
     const dive = phase === 'dive' ? t : 0;
-    const fade = p > pDive ? 1 : smoothstep(CONFIG.fadeStart, 1, dive);
-    veil.style.opacity = fade.toFixed(3);
+    const fade = +(p > pDive ? 1 : smoothstep(CONFIG.fadeStart, 1, dive)).toFixed(3);
+    if (fade !== last.veil) { veil.style.opacity = fade; last.veil = fade; }
 
-    /* HUD some assim que o mergulho começa */
-    const hudOpacity = (1 - smoothstep(0, 0.22, dive)).toFixed(3);
-    hud.style.opacity = hudOpacity;
-    if (!notice.hidden) notice.style.opacity = hudOpacity;
+    const hudOpacity = +(1 - smoothstep(0, 0.22, dive)).toFixed(3);
+    if (hudOpacity !== last.hud) {
+      hud.style.opacity = hudOpacity;
+      if (!notice.hidden) notice.style.opacity = hudOpacity;
+      last.hud = hudOpacity;
+    }
 
-    bar.style.width = (p * 100).toFixed(2) + '%';
-    phaseEl.textContent = phase === 'giro' ? G.label : (dive > 0.82 ? 'ENTRANDO' : M.label);
+    const barPct = +(p * 100).toFixed(2);
+    if (barPct !== last.bar) { bar.style.width = barPct + '%'; last.bar = barPct; }
+
+    const phaseTxt = phase === 'giro' ? G.label : (dive > 0.82 ? 'ENTRANDO' : M.label);
+    if (phaseTxt !== last.phase) { phaseEl.textContent = phaseTxt; last.phase = phaseTxt; }
 
     if (p > 0.96) nav.classList.add('is-live');
     else if (p < 0.93) nav.classList.remove('is-live');
   }
 
-  /* --- loop com requestAnimationFrame ----------------------------------- */
+  /* --- loop com requestAnimationFrame ------------------------------------
+     Estaciona quando o copo já saiu da tela e nada mais tem a animar; o
+     scroll acorda de novo. Antes o loop ficava vivo o site inteiro. */
   function tick() {
     const diff = target - current;
     if (Math.abs(diff) > 0.00015) {
@@ -707,6 +750,16 @@ const Cup = (() => {
       needsDraw = true;
     }
     if (needsDraw) { render(current); needsDraw = false; }
+
+    const settled = current === target;
+    const gone = section.getBoundingClientRect().bottom <= 0;
+    if (settled && gone) { running = false; return; }
+    requestAnimationFrame(tick);
+  }
+
+  function wake() {
+    if (running) return;
+    running = true;
     requestAnimationFrame(tick);
   }
 
@@ -721,7 +774,7 @@ const Cup = (() => {
         start: 'top top',
         end: 'bottom bottom',       // o palco fica fixo via position:sticky
         invalidateOnRefresh: true,
-        onUpdate: self => { target = self.progress; },
+        onUpdate: self => { target = self.progress; wake(); },
         onRefresh: self => { Stage.resize(); target = self.progress; needsDraw = true; }
       });
       ScrollTrigger.addEventListener('refreshInit', measure);
@@ -730,6 +783,7 @@ const Cup = (() => {
       const native = () => {
         const r = section.getBoundingClientRect();
         target = clamp(-r.top / (section.offsetHeight - window.innerHeight));
+        wake();
       };
       addEventListener('scroll', native, { passive: true });
       native();
@@ -742,16 +796,33 @@ const Cup = (() => {
         measure();
         Stage.resize();
         needsDraw = true;
+        wake();
         if (hasGSAP()) ScrollTrigger.refresh();
       }, 140);
     });
 
     Stage.resize();
-    tick();
+    addEventListener('scroll', wake, { passive: true });
+    wake();
   }
 
   /* --- preloader --------------------------------------------------------- */
+  let released = false;
+  function release() {
+    if (released) return;
+    released = true;
+    $('#preloader').classList.add('is-done');
+    document.body.classList.remove('is-locked');
+    bind();
+    setTimeout(() => { if (hasGSAP()) ScrollTrigger.refresh(); }, 400);
+  }
+
   async function boot() {
+    // aconteça o que acontecer, a loja abre em 25s. Nunca uma tela presa.
+    const watchdog = setTimeout(() => {
+      if (!released) { procedural = true; $('#cupNotice').hidden = false; release(); }
+    }, 25000);
+
     const fill = $('#preloaderFill');
     const pct  = $('#preloaderPct');
     const msg  = $('#preloaderMsg');
@@ -796,13 +867,11 @@ const Cup = (() => {
     setPct(1);
     msg.textContent = 'pronto';
     await new Promise(r => setTimeout(r, 320));
-    pre.classList.add('is-done');
-    document.body.classList.remove('is-locked');
-    bind();
-    setTimeout(() => { if (hasGSAP()) ScrollTrigger.refresh(); }, 400);
+    clearTimeout(watchdog);
+    release();
   }
 
-  return { boot, get info() { return { procedural, giro: giroFrames.length, mergulho: mergFrames.length }; } };
+  return { boot, release, get info() { return { procedural, giro: giroFrames.length, mergulho: mergFrames.length }; } };
 })();
 
 /* ============================================================================
@@ -828,7 +897,7 @@ function tagHTML(list) {
 }
 
 function showcaseCard(p, wide) {
-  const base = fromPrice(p), top = topPrice(p);
+  const base = startPrice(p);
   const fav = favs.has(p.id) ? ' is-on' : '';
   const media = `<div class="pcard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.jpg"></div>`;
   const top2 = `
@@ -855,8 +924,10 @@ function showcaseCard(p, wide) {
     <p class="pcard__desc">${p.desc}</p>
     <div class="pcard__foot">
       <div>
-        <span class="pcard__price"><b>${money(base)}</b>${top > base ? `<s>${money(top)}</s>` : ''}</span>
-        <span class="pcard__unit">por unidade · mín. ${p.min} uni</span>
+        <span class="pcard__price"><b>${money(base)}</b><span class="pcard__each">/un</span></span>
+        <span class="pcard__unit">${hasVolume(p)
+          ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
+          : `pedido mínimo ${p.min} uni`}</span>
       </div>
       <span class="rating">${ICO.star}<b>${p.rating.toFixed(2)}</b></span>
     </div>
@@ -864,9 +935,9 @@ function showcaseCard(p, wide) {
 }
 
 function catalogCard(p) {
-  const best = Math.min(...p.tiers.map(t => t[1]));
+  const best = bestPrice(p), start = startPrice(p);
   const tiers = p.tiers.map(([q, v]) =>
-    `<li class="${v === best ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)}</b></li>`).join('');
+    `<li class="${v === best && hasVolume(p) ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)}</b></li>`).join('');
   const fav = favs.has(p.id) ? ' is-on' : '';
   return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}">
     <div class="ccard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.jpg">
@@ -878,9 +949,11 @@ function catalogCard(p) {
     <ul class="ccard__tiers">${tiers}</ul>
     <div class="ccard__foot">
       <div>
-        <span class="ccard__from">a partir de</span>
-        <span class="ccard__price">${money(best)}</span>
-        <p class="ccard__min">pedido mínimo ${p.min} uni</p>
+        <span class="ccard__from">no pedido mínimo de ${p.min}</span>
+        <span class="ccard__price">${money(start)}</span>
+        <p class="ccard__min">${hasVolume(p)
+          ? `cai para ${money(best)} a partir de ${bestQty(p)} uni`
+          : 'preço único por unidade'}</p>
       </div>
       <div class="ccard__qty">
         <button data-step="-1" aria-label="Diminuir">${ICO.minus}</button>
@@ -898,24 +971,49 @@ function catalogCard(p) {
 /* --- vitrine (4 destaques, 3º em card largo) ------------------------------ */
 
 const SHOWCASE_IDS = ['copo-473', 'caneca-termica-700', 'garrafa-800', 'churrasco-4'];
-let showcasePool = [...SHOWCASE_IDS];
+const PAGE = 4;
+let showcaseFilter = 'todos';
+let showcaseStart = 0;
+let showcaseOrder = [...SHOWCASE_IDS, ...PRODUCTS.map(p => p.id).filter(id => !SHOWCASE_IDS.includes(id))];
 
-function renderShowcase(filter = 'todos') {
+function showcaseList() {
+  const ids = showcaseFilter === 'todos'
+    ? showcaseOrder
+    : PRODUCTS.filter(p => p.cat === showcaseFilter).map(p => p.id);
+  return ids.map(byId).filter(Boolean);
+}
+
+function renderShowcase(filter) {
+  if (filter !== undefined && filter !== showcaseFilter) { showcaseFilter = filter; showcaseStart = 0; }
   const host = $('#showcase');
-  let pool = filter === 'todos'
-    ? showcasePool.map(byId)
-    : PRODUCTS.filter(p => p.cat === filter);
-  if (!pool.length) pool = PRODUCTS.slice(0, 4);
-  pool = pool.slice(0, 4);
-  host.innerHTML = pool.map((p, i) => showcaseCard(p, i === 2 && pool.length > 2)).join('');
+  const list = showcaseList();
+  if (!list.length) return;
+
+  showcaseStart = ((showcaseStart % list.length) + list.length) % list.length;
+  const pool = Array.from({ length: Math.min(PAGE, list.length) },
+                          (_, k) => list[(showcaseStart + k) % list.length]);
+
+  // o grid acompanha quantos cards realmente existem: uma categoria com
+  // 2 itens não pode deixar 60% da linha vazia
+  host.dataset.count = String(pool.length);
+  host.innerHTML = pool.map((p, i) => showcaseCard(p, i === 2 && pool.length === PAGE)).join('');
   hydratePlaceholders(host);
-  $('#showcaseTotal').textContent = String(PRODUCTS.length);
-  $('#showcaseIndex').textContent = String(pool.length);
+
+  $('#showcaseTotal').textContent = String(list.length);
+  $('#showcaseIndex').textContent = String(showcaseStart + 1);
+
   if (hasGSAP() && !prefersReduced) {
     gsap.fromTo(host.children,
       { y: 26, opacity: 0 },
       { y: 0, opacity: 1, duration: .7, stagger: .07, ease: 'power3.out', overwrite: true });
   }
+}
+
+function shiftShowcase(dir) {
+  const n = showcaseList().length;
+  if (!n) return;
+  showcaseStart = (showcaseStart + dir * PAGE % n + n) % n;
+  renderShowcase();
 }
 
 function renderCatalog(filter = 'todos') {
@@ -934,7 +1032,10 @@ function renderCatalog(filter = 'todos') {
 /* --- orçamento (carrinho) -------------------------------------------------- */
 
 const Cart = (() => {
-  let items = store.get('cart', []);
+  // um id salvo no localStorage que saiu do catálogo derrubava o init()
+  // inteiro — e como is-locked já estava aplicado, a página ficava preta
+  // e travada em toda recarga. Saneia na entrada.
+  let items = store.get('cart', []).filter(i => i && byId(i.id) && i.qty > 0);
   const save = () => { store.set('cart', items); paint(); };
 
   function add(id, qty) {
@@ -949,12 +1050,15 @@ const Cart = (() => {
   function setQty(id, qty) {
     const p = byId(id);
     const it = items.find(i => i.id === id);
-    if (!it) return;
+    if (!p || !it) return;
     it.qty = Math.max(p.min, qty);
     save();
   }
   function remove(id) { items = items.filter(i => i.id !== id); save(); }
-  const total = () => items.reduce((s, i) => s + unitPrice(byId(i.id), i.qty) * i.qty, 0);
+  const total = () => items.reduce((s, i) => {
+    const p = byId(i.id);
+    return p ? s + unitPrice(p, i.qty) * i.qty : s;
+  }, 0);
 
   function message() {
     if (!items.length) return 'Olá! Quero um orçamento de brindes personalizados.';
@@ -1016,10 +1120,20 @@ function waLink(id, qty) {
    INTERAÇÕES GLOBAIS
    ========================================================================== */
 
+function resetCatalogFilter() {
+  $$('#catalogFilters [role="tab"]').forEach(b => {
+    const on = b.dataset.cfilter === 'todos';
+    b.classList.toggle('is-active', on);
+    b.setAttribute('aria-selected', String(on));
+  });
+  renderCatalog('todos');
+}
+
 function qtyOfCard(el) {
   const card = el.closest('.ccard');
   const input = card && $('input', card);
-  return input ? parseInt(input.value, 10) : 0;
+  const n = input ? parseInt(input.value, 10) : NaN;
+  return Number.isFinite(n) ? n : 0;
 }
 
 document.addEventListener('click', e => {
@@ -1059,7 +1173,11 @@ document.addEventListener('click', e => {
     const card = step.closest('.ccard');
     const input = $('input', card);
     const p = byId(card.dataset.id);
-    const next = parseInt(input.value, 10) + Number(step.dataset.step) * (p.min >= 10 ? 10 : 1);
+    // campo vazio dava NaN, que o input[type=number] apagava — e os
+    // botões ficavam mortos até alguém digitar um número na mão
+    const cur = parseInt(input.value, 10);
+    const from = Number.isFinite(cur) ? cur : p.min;
+    const next = from + Number(step.dataset.step) * (p.min >= 10 ? 10 : 1);
     input.value = Math.max(p.min, next);
     return;
   }
@@ -1068,11 +1186,20 @@ document.addEventListener('click', e => {
   const jump = e.target.closest('[data-jump]');
   if (jump) {
     e.preventDefault();
-    const el = $('#p-' + jump.dataset.jump);
+    const id = jump.dataset.jump;
+    let el = $('#p-' + id);
+    if (!el) {
+      // o card não está na tela porque o catálogo está filtrado noutra
+      // categoria: volta para "Todos" e procura de novo
+      resetCatalogFilter();
+      el = $('#p-' + id);
+    }
     if (el) {
       el.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'center' });
       el.classList.add('is-target');
       setTimeout(() => el.classList.remove('is-target'), 2400);
+    } else {
+      $('#catalogo').scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth' });
     }
     return;
   }
@@ -1183,16 +1310,19 @@ function wireNav() {
     nav.classList.toggle('is-stuck', scrollY > innerHeight * 1.2);
   }, { passive: true });
 
-  const ids = ['top', 'novidades', 'produtos', 'historia', 'catalogo'];
+  // #top é o <main> inteiro: cruzava a faixa do observer desde o load e
+  // nunca mais emitia, então INÍCIO jamais voltava a acender
   const links = $$('#navMenu a');
+  const targets = [$('.hero'), $('#novidades'), $('#produtos'), $('#historia'), $('#catalogo')];
   const spy = new IntersectionObserver(entries => {
     entries.forEach(en => {
       if (!en.isIntersecting) return;
-      const idx = ids.indexOf(en.target.id);
+      const idx = targets.indexOf(en.target);
+      if (idx < 0) return;
       links.forEach((a, k) => a.classList.toggle('is-active', k === idx));
     });
   }, { rootMargin: '-45% 0px -50% 0px' });
-  ids.forEach(id => { const el = document.getElementById(id); if (el) spy.observe(el); });
+  targets.forEach(el => { if (el) spy.observe(el); });
 }
 
 /* --- reveal, split, contadores, magnético, marquee ------------------------- */
@@ -1226,6 +1356,10 @@ function wireSplit() {
 }
 
 function animateCount(el) {
+  // o observer pegava o .reveal e o [data-count] dentro dele: dois loops
+  // de rAF escrevendo o mesmo textContent, o número tremia e voltava
+  if (el.dataset.counted) return;
+  el.dataset.counted = '1';
   const end = Number(el.dataset.count) || 0;
   const suffix = el.dataset.suffix || '';
   const dur = 1500;
@@ -1279,7 +1413,10 @@ function wireDeals() {
     if (!p) return;
     $('#dealName').textContent = p.name;
     $('#dealDesc').textContent = p.desc;
-    $('#dealPrice').textContent = money(fromPrice(p));
+    $('#dealPrice').textContent = money(startPrice(p));
+    $('#dealUnit').textContent = hasVolume(p)
+      ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
+      : `pedido mínimo ${p.min} uni`;
     $('#dealRating').textContent = p.rating.toFixed(2);
     $('#dealAdd').dataset.add = p.id;
     const media = $('#dealMedia');
@@ -1311,17 +1448,24 @@ function init() {
   wireFilters('#catalogFilters', 'cfilter', renderCatalog);
   wireDeals();
 
-  $('#showcaseNext').addEventListener('click', () => {
-    showcasePool = [...showcasePool.slice(1), showcasePool[0]];
-    renderShowcase('todos');
-  });
-  $('#showcasePrev').addEventListener('click', () => {
-    showcasePool = [showcasePool.at(-1), ...showcasePool.slice(0, -1)];
-    renderShowcase('todos');
-  });
+  $('#showcaseNext').addEventListener('click', () => shiftShowcase(1));
+  $('#showcasePrev').addEventListener('click', () => shiftShowcase(-1));
   $('#typesShuffle').addEventListener('click', () => {
-    showcasePool = [...PRODUCTS].sort(() => Math.random() - .5).slice(0, 4).map(p => p.id);
+    // Fisher-Yates: sort(() => Math.random() - .5) não é embaralhamento,
+    // é um comparador inconsistente que deixa o começo quase intacto
+    const ids = PRODUCTS.map(p => p.id);
+    for (let i = ids.length - 1; i > 0; i--) {
+      const k = Math.floor(Math.random() * (i + 1));
+      [ids[i], ids[k]] = [ids[k], ids[i]];
+    }
+    showcaseOrder = ids;
+    showcaseStart = 0;
     renderShowcase('todos');
+    $$('#filters [role="tab"]').forEach(b => {
+      const on = b.dataset.filter === 'todos';
+      b.classList.toggle('is-active', on);
+      b.setAttribute('aria-selected', String(on));
+    });
     toast('Destaques renovados');
   });
 
@@ -1330,7 +1474,7 @@ function init() {
   wireReveal();
   wireMagnetic();
 
-  Cup.boot();
+  Cup.boot().catch(err => { console.error('[copo]', err); Cup.release(); });
 }
 
 if (document.readyState === 'loading') {

@@ -199,15 +199,14 @@ svg{ display:block; }
 .rating svg{ width:12px; height:12px; color:var(--gold); }
 
 /* — reveal on scroll — */
-.reveal{ opacity:0; transform:translateY(28px); }
-.reveal.is-in{ opacity:1; transform:none; transition:opacity .9s var(--ease-out), transform .9s var(--ease-out); }
-.js-off .reveal{ opacity:1; transform:none; }
+.js-on .reveal{ opacity:0; transform:translateY(28px); }
+.js-on .reveal.is-in{ opacity:1; transform:none; transition:opacity .9s var(--ease-out), transform .9s var(--ease-out); }
 
 /* — split text — */
 .word{ display:inline-block; overflow:hidden; vertical-align:bottom; }
-.word > i{ display:inline-block; font-style:inherit; transform:translateY(105%); }
-.is-in .word > i, .js-off .word > i{ transform:none; }
-.word > i{ transition:transform 1s var(--ease-out); }
+.word > i{ display:inline-block; font-style:inherit; transition:transform 1s var(--ease-out); }
+.js-on .word > i{ transform:translateY(105%); }
+.js-on .is-in .word > i{ transform:none; }
 
 /* ============================================================
    PRELOADER
@@ -215,9 +214,10 @@ svg{ display:block; }
 .preloader{
   position:fixed; inset:0; z-index:120;
   background:#080808;
-  display:grid; place-items:center;
+  display:none; place-items:center;
   transition:opacity .8s var(--ease), visibility .8s;
 }
+.js-on .preloader{ display:grid; }
 .preloader.is-done{ opacity:0; visibility:hidden; }
 .preloader__grain{
   position:absolute; inset:0; opacity:.5;
@@ -245,7 +245,8 @@ svg{ display:block; }
 /* ============================================================
    INTRO — COPO / CANVAS
    ============================================================ */
-.cup{ position:relative; background:#000; }
+.cup{ display:none; position:relative; background:#000; }
+.js-on .cup{ display:block; }
 .cup__stage{
   position:sticky; top:0;
   height:100svh; height:100dvh;
@@ -308,10 +309,10 @@ svg{ display:block; }
   position:fixed; top:0; left:0; right:0; z-index:90;
   display:flex; align-items:center; justify-content:space-between; gap:18px;
   padding:calc(var(--gutter) + 8px) calc(var(--gutter) + 14px);
-  opacity:0; transform:translateY(-14px); pointer-events:none;
   transition:opacity .7s var(--ease), transform .7s var(--ease-out), padding .5s var(--ease), background .5s var(--ease);
 }
-.nav.is-live{ opacity:1; transform:none; pointer-events:auto; }
+.js-on .nav{ opacity:0; transform:translateY(-14px); pointer-events:none; }
+.js-on .nav.is-live{ opacity:1; transform:none; pointer-events:auto; }
 .nav.is-stuck{
   padding:12px calc(var(--gutter) + 14px);
   background:rgba(10,10,10,.72);
@@ -588,14 +589,27 @@ svg{ display:block; }
   gap:var(--gap);
   margin-top:var(--gap);
 }
-.showcase .pcard:nth-child(3){ grid-column:span 2; }
+/* o grid segue quantos cards a categoria tem */
+.showcase[data-count="1"]{ grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); }
+.showcase[data-count="1"] .pcard{ grid-column:1; }
+.showcase[data-count="2"]{ grid-template-columns:repeat(2,minmax(0,1fr)); }
+.showcase[data-count="3"]{ grid-template-columns:repeat(3,minmax(0,1fr)); }
+.showcase[data-count="4"] .pcard:nth-child(3){ grid-column:span 2; }
 @media (max-width:1100px){
-  .showcase{ grid-template-columns:repeat(2,minmax(0,1fr)); }
-  .showcase .pcard:nth-child(3){ grid-column:span 2; }
+  .showcase,
+  .showcase[data-count="1"],.showcase[data-count="2"],.showcase[data-count="3"]{
+    grid-template-columns:repeat(2,minmax(0,1fr));
+  }
+  .showcase[data-count="1"] .pcard{ grid-column:span 2; }
+  .showcase[data-count="4"] .pcard:nth-child(3){ grid-column:span 2; }
 }
 @media (max-width:620px){
-  .showcase{ grid-template-columns:minmax(0,1fr); }
-  .showcase .pcard:nth-child(3){ grid-column:span 1; }
+  .showcase,
+  .showcase[data-count="1"],.showcase[data-count="2"],.showcase[data-count="3"]{
+    grid-template-columns:minmax(0,1fr);
+  }
+  .showcase .pcard,
+  .showcase[data-count="4"] .pcard:nth-child(3){ grid-column:span 1; }
 }
 
 /* — card de produto — */
@@ -654,7 +668,7 @@ svg{ display:block; }
 .pcard__foot{ display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
 .pcard__price{ display:flex; align-items:baseline; gap:9px; }
 .pcard__price b{ font-family:var(--font-display); font-size:clamp(19px,2.1vw,25px); font-weight:800; letter-spacing:-.02em; }
-.pcard__price s{ font-size:11px; color:var(--ink-3); }
+.pcard__each{ font-size:11px; color:var(--ink-3); font-weight:500; }
 .pcard__unit{ display:block; font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); margin-top:3px; }
 .pcard__add{
   position:absolute; right:16px; bottom:16px;
@@ -764,7 +778,9 @@ svg{ display:block; }
 .dealCard__people i{ width:26px; height:26px; border-radius:50%; border:2px solid var(--surface); background:#222 center/cover; margin-right:-9px; }
 .dealCard__people b{ font-size:9.5px; font-weight:700; color:var(--ink-3); margin-left:16px; letter-spacing:.1em; }
 .dealCard__buy{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:12px; border-top:1px solid var(--line-soft); }
+.dealCard__priceWrap{ display:flex; flex-direction:column; gap:3px; min-width:0; }
 .dealCard__price{ font-family:var(--font-display); font-size:clamp(19px,2.2vw,26px); font-weight:800; letter-spacing:-.02em; }
+.dealCard__unit{ font-size:9.5px; color:var(--ink-3); letter-spacing:.02em; }
 
 .vcards{ display:flex; gap:var(--gap); }
 .vcard{
@@ -866,7 +882,7 @@ svg{ display:block; }
 .ccard__tiers li b{ color:var(--ink); font-weight:600; font-variant-numeric:tabular-nums; }
 .ccard__tiers li.is-best b{ color:var(--gold); }
 .ccard__foot{ margin-top:auto; display:flex; align-items:flex-end; justify-content:space-between; gap:12px; }
-.ccard__from{ font-size:9px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:2px; }
+.ccard__from{ font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--ink-3); display:block; margin-bottom:2px; }
 .ccard__price{ font-family:var(--font-display); font-size:22px; font-weight:800; letter-spacing:-.025em; }
 .ccard__min{ font-size:9.5px; color:var(--ink-3); margin-top:3px; }
 .ccard__qty{ display:flex; align-items:center; gap:0; border:1px solid var(--line); border-radius:var(--r-pill); overflow:hidden; }
