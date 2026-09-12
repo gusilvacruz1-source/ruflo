@@ -106,71 +106,90 @@ function toast(msg) {
    Se a foto existir em assets/produtos/ ela entra; se não, fica a arte SVG.
    ========================================================================== */
 
-const ICONS = {
-  copo:      '<path d="M32 22h36l-4 52a6 6 0 0 1-6 5H42a6 6 0 0 1-6-5L32 22Z"/><path d="M29 22h42M36 34h28"/><path d="M30 16h40v6H30z"/>',
-  caneca:    '<path d="M26 28h40v40a8 8 0 0 1-8 8H34a8 8 0 0 1-8-8V28Z"/><path d="M66 38h6a10 10 0 0 1 0 20h-6"/><path d="M34 40h24"/>',
-  garrafa:   '<path d="M42 14h16v14l8 12v36a6 6 0 0 1-6 6H40a6 6 0 0 1-6-6V40l8-12V14Z"/><path d="M34 52h32"/><path d="M44 8h12v6H44z"/>',
-  churrasco: '<path d="M30 12v30M24 12v18a6 6 0 0 0 12 0V12M30 42v46"/><path d="M66 12c8 6 10 18 6 28l-6 6v42"/>',
-  canivete:  '<path d="M16 62c22-6 44-20 62-38l6 8c-14 20-34 34-58 42l-10-12Z"/><path d="M20 70l58-22"/>',
-  caneta:    '<path d="M62 12 88 38 40 86 14 88l2-26L62 12Z"/><path d="m56 18 26 26M16 62l22 22"/>',
-  chaveiro:  '<circle cx="34" cy="34" r="18"/><circle cx="34" cy="34" r="7"/><path d="M47 47l30 30M66 66l10 10M72 56l12 12"/>',
-  chapeu:    '<path d="M28 56V38a22 22 0 0 1 44 0v18"/><ellipse cx="50" cy="62" rx="40" ry="13"/><path d="M26 50h48"/>',
-  xicara:    '<path d="M30 34h40l-4 26a8 8 0 0 1-8 7H42a8 8 0 0 1-8-7l-4-26Z"/><path d="M70 40h6a8 8 0 0 1 0 16h-5"/><path d="M24 78h52"/><path d="M40 22v6M50 18v10M60 22v6"/>',
-  laser:     '<circle cx="50" cy="50" r="24"/><circle cx="50" cy="50" r="6"/><path d="M50 8v18M50 74v18M8 50h18M74 50h18"/>',
-  caixa:     '<path d="M14 32 50 16l36 16v36L50 84 14 68V32Z"/><path d="M14 32l36 16 36-16M50 48v36"/>'
+/* Silhuetas PREENCHIDAS (não contorno): com gradiente metálico e sombra de
+   contato elas leem como render de estúdio, não como ícone de clipart. */
+const SHAPES = {
+  copo:      '<path d="M28 15h44v8l-1 2-5 54a8 8 0 0 1-8 7H42a8 8 0 0 1-8-7l-5-54-1-2Z"/>',
+  caneca:    '<path d="M23 29h44v35a11 11 0 0 1-11 11H34a11 11 0 0 1-11-11Z"/><path d="M67 37h5a12 12 0 0 1 0 24h-5v-7h5a5 5 0 0 0 0-10h-5Z"/>',
+  garrafa:   '<path d="M41 5h18v8H41Z"/><path d="M43 15h14v13l9 14v45a8 8 0 0 1-8 8H42a8 8 0 0 1-8-8V42l9-14Z"/>',
+  churrasco: '<path d="M20 6h5v22h-5ZM31 6h5v22h-5ZM42 6h5v22h-5Z"/>'
+           + '<path d="M18 28h31v6a12 12 0 0 1-9 11v49H27V45a12 12 0 0 1-9-11Z"/>'
+           + '<path d="M70 6c10 10 14 26 11 40-1 6-5 9-11 10-6-1-10-4-11-10-3-14 1-30 11-40Z"/>'
+           + '<path d="M64 58h12v36a6 6 0 0 1-12 0Z"/>',
+  canivete:  '<path d="M20 60c22-5 44-17 58-32l7 10c-14 17-35 30-59 37Z"/><path d="M11 63h16v14H11a5 5 0 0 1-5-5v-4a5 5 0 0 1 5-5Z"/>',
+  caneta:    '<path d="M63 8 92 37 44 85l-4-4 44-44-8-8-44 44-4-4Z"/><path d="M36 81 14 92l9-23 9 3 4 9Z"/>',
+  chaveiro:  '<path fill-rule="evenodd" d="M33 10a24 24 0 1 1 0 48 24 24 0 0 1 0-48Zm0 12a12 12 0 1 0 0 24 12 12 0 0 0 0-24Z"/><path d="M50 47 82 79l-9 9-32-32Z"/>',
+  chapeu:    '<path d="M30 55V38a20 20 0 0 1 40 0v17Z"/><ellipse cx="50" cy="60" rx="40" ry="13"/>',
+  xicara:    '<path d="M28 32h44l-5 28a11 11 0 0 1-11 9H44a11 11 0 0 1-11-9Z"/><path d="M71 39h5a9 9 0 0 1 0 18h-4v-6h4a3 3 0 0 0 0-6h-5Z"/><path d="M20 76h60v6H20Z"/>',
+  laser:     '<path fill-rule="evenodd" d="M50 22a28 28 0 1 1 0 56 28 28 0 0 1 0-56Zm0 9a19 19 0 1 0 0 38 19 19 0 0 0 0-38Z"/><circle cx="50" cy="50" r="7"/><path d="M47 2h6v14h-6ZM47 84h6v14h-6ZM2 47h14v6H2ZM84 47h14v6H84Z"/>',
+  caixa:     '<path d="M50 8 88 25 50 42 12 25Z"/><path d="M10 31 47 48v40L10 71Z"/><path d="M90 31 53 48v40l37-17Z"/>'
 };
 
-/** SVG de produto: fundo escuro + brilho dourado + ícone em linha. */
+/** Fundo de estúdio + objeto preenchido + sombra de contato + grão. */
 function phProduct(key, seed = 0) {
-  const inner = ICONS[key] || ICONS.copo;
-  const hue = 34 + (seed % 5) * 3;
+  const shape = SHAPES[key] || SHAPES.copo;
+  const lx = 34 + (seed % 4) * 8;            // posição da luz varia por produto
   const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
 <defs>
-<linearGradient id="b" x1="0" y1="0" x2="0.6" y2="1">
-<stop offset="0" stop-color="#212121"/><stop offset="0.55" stop-color="#141414"/><stop offset="1" stop-color="#0a0a0a"/>
+<linearGradient id="sw" x1="0" y1="0" x2="0.15" y2="1">
+<stop offset="0" stop-color="#1c1b19"/><stop offset="0.62" stop-color="#121110"/><stop offset="1" stop-color="#090908"/>
 </linearGradient>
-<radialGradient id="g" cx="${38 + (seed % 3) * 10}%" cy="26%" r="62%">
-<stop offset="0" stop-color="hsl(${hue} 62% 62% / 0.30)"/><stop offset="1" stop-color="hsl(${hue} 62% 62% / 0)"/>
+<radialGradient id="pool" cx="${lx}%" cy="38%" r="46%">
+<stop offset="0" stop-color="#38342c"/><stop offset="1" stop-color="#38342c" stop-opacity="0"/>
 </radialGradient>
-<pattern id="h" width="26" height="26" patternTransform="rotate(28)" patternUnits="userSpaceOnUse">
-<line x1="0" y1="0" x2="0" y2="26" stroke="#ffffff" stroke-opacity="0.035" stroke-width="1"/>
-</pattern>
+<linearGradient id="mt" x1="0" y1="0" x2="1" y2="0.1">
+<stop offset="0" stop-color="#2a2a2c"/><stop offset="0.22" stop-color="#6e6f73"/>
+<stop offset="0.42" stop-color="#d9dade"/><stop offset="0.56" stop-color="#8b8c90"/>
+<stop offset="0.78" stop-color="#3a3a3d"/><stop offset="1" stop-color="#1e1e20"/>
+</linearGradient>
+<linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" stop-color="#e6c88a" stop-opacity="0"/><stop offset="0.9" stop-color="#e6c88a" stop-opacity="0.55"/>
+</linearGradient>
+<radialGradient id="cast" cx="50%" cy="50%" r="50%">
+<stop offset="0" stop-color="#000" stop-opacity="0.75"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
+</radialGradient>
+<filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3"/>
+<feColorMatrix type="saturate" values="0"/></filter>
 </defs>
-<rect width="600" height="600" fill="url(#b)"/>
-<rect width="600" height="600" fill="url(#h)"/>
-<rect width="600" height="600" fill="url(#g)"/>
-<g transform="translate(300 292) scale(3.1) translate(-50 -50)" fill="none" stroke="#e6c88a" stroke-opacity="0.62" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">${inner}</g>
-<g fill="none" stroke="#ffffff" stroke-opacity="0.10"><circle cx="300" cy="292" r="196"/><circle cx="300" cy="292" r="238"/></g>
-<text x="300" y="556" text-anchor="middle" font-family="Syne, sans-serif" font-size="19" letter-spacing="11" fill="#ffffff" fill-opacity="0.26">SPACE</text>
+<rect width="600" height="600" fill="url(#sw)"/>
+<rect width="600" height="600" fill="url(#pool)"/>
+<ellipse cx="300" cy="470" rx="180" ry="34" fill="url(#cast)"/>
+<g transform="translate(300 296) scale(3.5) translate(-50 -52)">
+<g fill="url(#mt)">${shape}</g>
+<g fill="url(#rim)" opacity="0.7">${shape}</g>
+</g>
+<rect width="600" height="600" filter="url(#gr)" opacity="0.055"/>
 </svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
-/** SVG de cenário (fundos de hero): atmosférico, ícone discreto. */
+/** Fundo de hero: pura atmosfera de estúdio. Sem ícone, sem desenho. */
 function phScene(key, seed = 0) {
-  const inner = ICONS[key] || ICONS.copo;
-  const cx = [62, 70, 34, 58][seed % 4];
+  const lx = [64, 72, 30, 56][seed % 4];
   const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
 <defs>
-<linearGradient id="b" x1="0" y1="0" x2="0.7" y2="1">
-<stop offset="0" stop-color="#1e1b17"/><stop offset="0.5" stop-color="#121212"/><stop offset="1" stop-color="#080808"/>
+<linearGradient id="b" x1="0" y1="0" x2="0.4" y2="1">
+<stop offset="0" stop-color="#232019"/><stop offset="0.55" stop-color="#131211"/><stop offset="1" stop-color="#070707"/>
 </linearGradient>
-<radialGradient id="g" cx="${cx}%" cy="34%" r="52%">
-<stop offset="0" stop-color="rgba(230,200,138,0.34)"/><stop offset="1" stop-color="rgba(230,200,138,0)"/>
+<radialGradient id="k" cx="${lx}%" cy="26%" r="44%">
+<stop offset="0" stop-color="#6b5c3d" stop-opacity="0.55"/><stop offset="1" stop-color="#6b5c3d" stop-opacity="0"/>
 </radialGradient>
-<radialGradient id="v" cx="50%" cy="50%" r="72%">
-<stop offset="0.45" stop-color="rgba(0,0,0,0)"/><stop offset="1" stop-color="rgba(0,0,0,0.8)"/>
+<radialGradient id="f" cx="${lx - 26}%" cy="86%" r="40%">
+<stop offset="0" stop-color="#2e2a22" stop-opacity="0.6"/><stop offset="1" stop-color="#2e2a22" stop-opacity="0"/>
 </radialGradient>
+<linearGradient id="v" x1="0" y1="0" x2="1" y2="0">
+<stop offset="0" stop-color="#000" stop-opacity="0.72"/><stop offset="0.55" stop-color="#000" stop-opacity="0"/>
+</linearGradient>
+<filter id="g2"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3"/>
+<feColorMatrix type="saturate" values="0"/></filter>
 </defs>
 <rect width="1600" height="900" fill="url(#b)"/>
-<g fill="none" stroke="#ffffff" stroke-opacity="0.05">
-<circle cx="${cx * 16}" cy="306" r="230"/><circle cx="${cx * 16}" cy="306" r="360"/><circle cx="${cx * 16}" cy="306" r="500"/>
-</g>
-<rect width="1600" height="900" fill="url(#g)"/>
-<g transform="translate(${cx * 16} 420) scale(4.4) translate(-50 -50)" fill="none" stroke="#e6c88a" stroke-opacity="0.20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">${inner}</g>
+<rect width="1600" height="900" fill="url(#k)"/>
+<rect width="1600" height="900" fill="url(#f)"/>
 <rect width="1600" height="900" fill="url(#v)"/>
+<rect width="1600" height="900" filter="url(#g2)" opacity="0.07"/>
 </svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
@@ -899,10 +918,17 @@ function renderShowcase(filter = 'todos') {
   }
 }
 
-function renderCatalog() {
+function renderCatalog(filter = 'todos') {
   const host = $('#catalogGrid');
-  host.innerHTML = PRODUCTS.map(catalogCard).join('');
+  const list = filter === 'todos' ? PRODUCTS : PRODUCTS.filter(p => p.cat === filter);
+  // re-renderiza em vez de esconder: o ritmo 4-5-3 / 3-4-5 / 5-4-3 do grid
+  // é calculado por nth-child, então card escondido quebraria as linhas.
+  host.innerHTML = list.map(catalogCard).join('');
   hydratePlaceholders(host);
+  if (hasGSAP() && !prefersReduced) {
+    gsap.fromTo(host.children, { y: 22, opacity: 0 },
+      { y: 0, opacity: 1, duration: .6, stagger: .045, ease: 'power3.out', overwrite: true });
+  }
 }
 
 /* --- orçamento (carrinho) -------------------------------------------------- */
@@ -1173,16 +1199,28 @@ function wireNav() {
 
 function wireSplit() {
   $$('[data-split]').forEach(el => {
-    const html = el.innerHTML.split(/(<br\s*\/?>)/i).map(part => {
-      if (/^<br/i.test(part)) return part;
-      return part.split(/\s+/).filter(Boolean)
-        .map(w => `<span class="word"><i>${w}</i></span>`).join(' ');
-    }).join('');
-    el.innerHTML = html;
+    // percorre só os nós de TEXTO: as tags de peso (.lt) e os <br> ficam intactos
+    const texts = [];
+    const walker = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) texts.push(walker.currentNode);
+
+    texts.forEach(node => {
+      if (!node.nodeValue.trim()) return;
+      const frag = document.createDocumentFragment();
+      node.nodeValue.split(/(\s+)/).forEach(part => {
+        if (!part) return;
+        if (/^\s+$/.test(part)) { frag.appendChild(document.createTextNode(part)); return; }
+        const span = document.createElement('span');
+        span.className = 'word';
+        const i = document.createElement('i');
+        i.textContent = part;
+        span.appendChild(i);
+        frag.appendChild(span);
+      });
+      node.parentNode.replaceChild(frag, node);
+    });
+
     el.classList.add('reveal');
-  });
-  // delay em cascata por palavra
-  $$('[data-split]').forEach(el => {
     $$('.word > i', el).forEach((w, k) => { w.style.transitionDelay = (k * 55) + 'ms'; });
   });
 }
@@ -1224,11 +1262,6 @@ function wireMagnetic() {
     });
     el.addEventListener('mouseleave', () => { el.style.transform = ''; });
   });
-}
-
-function wireMarquee() {
-  const t = $('#marqueeTrack');
-  if (t) t.innerHTML += t.innerHTML;   // duplica para o loop ficar contínuo
 }
 
 /* --- destaque "Mais desejados" -------------------------------------------- */
@@ -1275,11 +1308,7 @@ function init() {
   Cart.paint();
 
   wireFilters('#filters', 'filter', renderShowcase);
-  wireFilters('#catalogFilters', 'cfilter', cat => {
-    $$('#catalogGrid .ccard').forEach(c => {
-      c.classList.toggle('is-hidden', cat !== 'todos' && c.dataset.cat !== cat);
-    });
-  });
+  wireFilters('#catalogFilters', 'cfilter', renderCatalog);
   wireDeals();
 
   $('#showcaseNext').addEventListener('click', () => {
@@ -1300,7 +1329,6 @@ function init() {
   wireNav();
   wireReveal();
   wireMagnetic();
-  wireMarquee();
 
   Cup.boot();
 }
