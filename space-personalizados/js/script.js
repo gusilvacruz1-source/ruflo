@@ -25,20 +25,13 @@ document.documentElement.classList.add('js-on');
 
 const CONFIG = {
 
+
   /* --- A ANIMAÇÃO DO COPO ------------------------------------------------ */
   sequences: {
     // PARTE 1 — o copo dando a volta de 360°
-    giro: {
-      dir:    'frames/giro/',   // pasta dos frames
-      scroll: 2800,             // ⇠ duração EM PIXELS DE SCROLL desta parte (120 quadros)
-      label:  '360°'
-    },
+    giro:     { scroll: 2800, label: '360°'     },
     // PARTE 2 — a câmera sobe e entra no copo
-    mergulho: {
-      dir:    'frames/mergulho/',
-      scroll: 1800,             // ⇠ duração EM PIXELS DE SCROLL desta parte (60 quadros)
-      label:  'MERGULHO'
-    }
+    mergulho: { scroll: 1800, label: 'MERGULHO' }
   },
 
   // Em que ponto do MERGULHO o interior começa a escurecer (0–1).
@@ -51,19 +44,6 @@ const CONFIG = {
 
   // Suavização do scrub do canvas (0 = travado no scroll, 1 = sem inércia).
   smoothing: 0.16,
-
-  // quanto o copo ocupa da tela no giro (1 = altura cheia do quadro)
-  zoom: 1.12,
-
-  // Como os frames podem se chamar. A descoberta testa estas combinações
-  // automaticamente — exporte do jeito que preferir que o site acha.
-  naming: {
-    exts:     ['webp', 'jpg', 'jpeg', 'png'],
-    pads:     [4, 3, 5, 0],            // 0001 / 001 / 00001 / 1
-    prefixes: ['', 'frame_', 'ezgif-frame-'],  // + o nome da pasta (giro_, mergulho_)
-    starts:   [1, 0],
-    maxFrames: 900
-  },
 
   /* --- NEGÓCIO ----------------------------------------------------------- */
   whatsapp: '5542991343788',
@@ -356,145 +336,6 @@ const bestQty    = p => p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0];
 const hasVolume  = p => bestPrice(p) < startPrice(p);
 
 /* ============================================================================
-   [5] SEQUÊNCIA — descoberta automática + preload dos frames
-   ========================================================================== */
-
-/* Toda sondagem tem prazo: 'load' e 'error' podem simplesmente nunca
-   disparar numa conexão ruim, e o site inteiro espera por isso. */
-const TIMEOUT_PROBE = 6000;
-const TIMEOUT_FRAME = 20000;
-
-function settleWithTimeout(src, ms, onDone, fallback) {
-  return new Promise(res => {
-    const img = new Image();
-    img.decoding = 'async';
-    let done = false;
-    const finish = (v, abort) => {
-      if (done) return;
-      done = true;
-      clearTimeout(t);
-      // só aborta o download quando NÃO vamos usar a imagem: limpar o src
-      // de um quadro que acabou de carregar o devolve em branco
-      if (abort) { img.onload = img.onerror = null; img.src = ''; }
-      res(v);
-    };
-    const t = setTimeout(() => finish(fallback, true), ms);
-    img.onload  = () => finish(onDone(img), false);
-    img.onerror = () => finish(fallback, true);
-    img.src = src;
-  });
-}
-
-const loadImage = src => settleWithTimeout(src, TIMEOUT_FRAME, img => img, null);
-const exists    = src => settleWithTimeout(src, TIMEOUT_PROBE, () => true, false);
-
-const pad = (n, len) => len ? String(n).padStart(len, '0') : String(n);
-const buildSrc = (p, i) => `${p.dir}${p.prefix}${pad(i, p.padLen)}.${p.ext}`;
-
-/**
- * Descobre como os frames estão nomeados.
- * 1º) frames/manifest.json, se você quiser fixar tudo na mão (caminho rápido).
- * 2º) sondagem em dois estágios: primeiro as combinações mais prováveis,
- *     depois o resto — evita disparar centenas de requisições à toa.
- */
-let MANIFEST_P = null;
-function loadManifest() {
-  // memoriza a PROMESSA, não o valor: as duas pastas chamam no mesmo tick
-  // e as duas disparavam a requisição
-  return (MANIFEST_P ??= fetch('frames/manifest.json', { cache: 'no-cache' })
-    .then(r => r.ok ? r.json() : false)
-    .catch(() => false));
-}
-
-/* Em lotes: o navegador só abre ~6 conexões por host, então disparar 128
-   sondagens de uma vez só enfileira 404 e atrasa o preloader. Para no
-   primeiro lote que acertar. */
-async function firstThatExists(list, chunk = 12) {
-  for (let i = 0; i < list.length; i += chunk) {
-    const batch = list.slice(i, i + chunk);
-    const found = await Promise.all(
-      batch.map(c => exists(buildSrc(c, c.start)).then(ok => ok ? c : null))
-    );
-    const hit = found.find(Boolean);
-    if (hit) return hit;
-  }
-  return null;
-}
-
-async function discoverPattern(dir) {
-  const folder = dir.replace(/\/$/, '').split('/').pop();
-
-  /* caminho rápido: manifest escrito à mão */
-  const man = await loadManifest();
-  if (man && man[folder]) {
-    const m = man[folder];
-    const p = {
-      dir,
-      ext: m.ext || 'jpg',
-      padLen: m.pad ?? 4,
-      prefix: m.prefix ?? '',
-      start: m.start ?? 1,
-      count: m.count
-    };
-    if (await exists(buildSrc(p, p.start))) return p;
-  }
-
-  const { exts, pads, prefixes, starts } = CONFIG.naming;
-  const all = [];
-  for (const ext of exts)
-    for (const padLen of pads)
-      for (const prefix of [folder + '_', ...prefixes])
-        for (const start of starts)
-          all.push({ dir, ext, padLen, prefix, start });
-
-  /* estágio 1 — o que 95% das exportações usam */
-  const likely = all.filter(c =>
-    c.start === 1 && c.padLen >= 3 && (c.prefix === '' || c.prefix === folder + '_'));
-  const hit = await firstThatExists(likely);
-  if (hit) return hit;
-
-  /* estágio 2 — o resto, sem repetir o que o estágio 1 já testou */
-  const tried = new Set(likely.map(c => buildSrc(c, c.start)));
-  return firstThatExists(all.filter(c => !tried.has(buildSrc(c, c.start))));
-}
-
-/** Busca exponencial + binária para saber quantos frames existem. */
-async function countFrames(p) {
-  if (Number.isFinite(p.count) && p.count > 0) return p.count;
-  const cap = CONFIG.naming.maxFrames;
-  let lo = p.start, hi = p.start;
-  let step = 1;
-  while (step <= cap) {
-    const probe = p.start + step;
-    if (await exists(buildSrc(p, probe))) { lo = probe; step *= 2; }
-    else { hi = probe; break; }
-  }
-  if (hi === p.start) hi = p.start + step;
-  while (lo + 1 < hi) {
-    const mid = Math.floor((lo + hi) / 2);
-    if (await exists(buildSrc(p, mid))) lo = mid; else hi = mid;
-  }
-  return lo - p.start + 1;
-}
-
-/** Carrega a sequência inteira reportando progresso. */
-async function loadSequence(p, total, onTick) {
-  const frames = new Array(total);
-  let done = 0;
-  const CONCURRENCY = 8;
-  let cursor = 0;
-  async function worker() {
-    while (cursor < total) {
-      const i = cursor++;
-      frames[i] = await loadImage(buildSrc(p, p.start + i));
-      onTick(++done);
-    }
-  }
-  await Promise.all(Array.from({ length: Math.min(CONCURRENCY, total) }, worker));
-  return frames.filter(Boolean);
-}
-
-/* ============================================================================
    [6] CANVAS — motor de render
    --------------------------------------------------------------------------
    · drawCover()  → object-fit:cover calculado na mão, com devicePixelRatio
@@ -508,7 +349,10 @@ const Stage = (() => {
   let W = 0, H = 0, dpr = 1;
 
   function resize() {
-    const r = cv.getBoundingClientRect();
+    resize3D();
+    // mede o palco, não o canvas: em modo 3D o canvas 2D está display:none
+    // e devolveria 0x0
+    const r = (cv.parentNode || cv).getBoundingClientRect();
     dpr = Math.min(window.devicePixelRatio || 1, 2.5);
     W = Math.max(1, Math.round(r.width  * dpr));
     H = Math.max(1, Math.round(r.height * dpr));
@@ -516,25 +360,33 @@ const Stage = (() => {
     if (cv.height !== H) cv.height = H;
   }
 
-  /* --- enquadramento -----------------------------------------------------
-     Os quadros são PNG-alpha com o copo recortado, então não faz sentido
-     cortar a imagem: o excedente é transparente. O giro usa 'contain' (o
-     copo inteiro cabe na tela) e o mergulho interpola até 'cover', que é o
-     que faz o interior tomar a tela ao entrar.
-     cover = MAX(W/iw, H/ih) · contain = MIN — as duas contas continuam
-     feitas na mão, com devicePixelRatio já aplicado em W e H. */
-  function drawFrame(img, toCover = 0, zoom = 1) {
-    const iw = img.naturalWidth || img.width;
-    const ih = img.naturalHeight || img.height;
-    if (!iw || !ih) return;
-    const contain = Math.min(W / iw, H / ih);
-    const cover   = Math.max(W / iw, H / ih);
-    const scale   = (contain + (cover - contain) * toCover) * zoom;
-    const w = iw * scale, h = ih * scale;
-    ctx.drawImage(img, (W - w) * 0.5, (H - h) * 0.5, w, h);
-  }
-
   function clear() { ctx.clearRect(0, 0, W, H); }
+
+  /* Quando o copo é 3D, o canvas 2D sai de cena: o WebGL desenha direto no
+     seu próprio canvas, empilhado no mesmo lugar. Dois contextos não cabem
+     no mesmo elemento. */
+  let gl3d = null;
+  function mount3D() {
+    const host = cv.parentNode;
+    const c = document.createElement('canvas');
+    c.id = 'cupGL';
+    host.insertBefore(c, cv);
+    if (!global3D() || !window.Cup3D.init(c)) { c.remove(); return false; }
+    gl3d = c;
+    cv.style.display = 'none';
+    return true;
+  }
+  function global3D() { return typeof window.Cup3D !== 'undefined'; }
+  function resize3D() {
+    if (!gl3d) return;
+    const r = gl3d.getBoundingClientRect();
+    const d = Math.min(window.devicePixelRatio || 1, 2);
+    const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
+    if (gl3d.width !== w) gl3d.width = w;
+    if (gl3d.height !== h) gl3d.height = h;
+    window.Cup3D.resize(w, h);
+  }
+  function fade3D(v) { if (gl3d) gl3d.style.opacity = v; }
 
   /* ------------------------------------------------------------------------
      COPO PROCEDURAL — prévia fiel enquanto o vídeo real não existe.
@@ -690,9 +542,9 @@ const Stage = (() => {
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   }
 
-  function fade(v) { cv.style.opacity = v; }
+  function fade(v) { cv.style.opacity = v; if (gl3d) gl3d.style.opacity = v; }
 
-  return { resize, clear, drawFrame, renderFake, fade, get w() { return W; }, get h() { return H; } };
+  return { resize, clear, renderFake, fade, mount3D, get is3D() { return !!gl3d; }, get w() { return W; }, get h() { return H; } };
 })();
 
 /* ============================================================================
@@ -705,14 +557,12 @@ const Cup = (() => {
   const hud      = $('#cupHud');
   const bar      = $('#cupProgress');
   const phaseEl  = $('#cupPhase');
-  const notice   = $('#cupNotice');
   const nav      = $('#nav');
 
   const G = CONFIG.sequences.giro;
   const M = CONFIG.sequences.mergulho;
 
-  let giroFrames = [], mergFrames = [];
-  let procedural = true;
+  let use3D = false;
   let target = 0, current = 0, needsDraw = true;
   let pGiro = 0, pDive = 1, totalScroll = 0;
   let running = false;
@@ -739,18 +589,8 @@ const Cup = (() => {
   function render(p) {
     const { phase, t } = split(p);
 
-    if (procedural) {
-      Stage.renderFake(phase, t);
-    } else {
-      const list = phase === 'giro' ? giroFrames : mergFrames;
-      if (list.length) {
-        const idx = Math.round(t * (list.length - 1));   // progresso → índice
-        Stage.clear();
-        // assim que a câmera passa da borda, o interior toma a tela
-        const toCover = phase === 'dive' ? smoothstep(0.12, 0.42, t) : 0;
-        Stage.drawFrame(list[clamp(idx, 0, list.length - 1)], toCover, CONFIG.zoom);
-      }
-    }
+    if (Stage.is3D) window.Cup3D.render(phase, t);
+    else Stage.renderFake(phase, t);   // plano B sem WebGL: Canvas 2D
 
     /* fade do interior para a cor exata da loja.
        Só escreve no DOM o que mudou de verdade: antes eram 5 escritas de
@@ -766,7 +606,6 @@ const Cup = (() => {
     const hudOpacity = +(1 - smoothstep(0, 0.22, dive)).toFixed(3);
     if (hudOpacity !== last.hud) {
       hud.style.opacity = hudOpacity;
-      if (!notice.hidden) notice.style.opacity = hudOpacity;
       last.hud = hudOpacity;
     }
 
@@ -860,59 +699,33 @@ const Cup = (() => {
 
   async function boot() {
     // aconteça o que acontecer, a loja abre em 25s. Nunca uma tela presa.
-    const watchdog = setTimeout(() => {
-      if (!released) { procedural = true; $('#cupNotice').hidden = false; release(); }
-    }, 25000);
+    const watchdog = setTimeout(() => { if (!released) release(); }, 25000);
 
     const fill = $('#preloaderFill');
     const pct  = $('#preloaderPct');
     const msg  = $('#preloaderMsg');
-    const pre  = $('#preloader');
-
     const setPct = v => {
       const n = Math.round(clamp(v) * 100);
       fill.style.width = n + '%';
       pct.textContent = n + '%';
     };
 
-    msg.textContent = 'procurando os frames do copo';
-    setPct(0.04);
-
-    const [pg, pm] = await Promise.all([discoverPattern(G.dir), discoverPattern(M.dir)]);
-    setPct(0.1);
-
-    if (pg && pm) {
-      procedural = false;
-      msg.textContent = 'contando os quadros';
-      const [ng, nm] = await Promise.all([countFrames(pg), countFrames(pm)]);
-      const total = ng + nm;
-      let loaded = 0;
-      const tickLoad = () => setPct(0.1 + (++loaded / total) * 0.9);
-      msg.textContent = 'carregando a sequência';
-      // só libera o ScrollTrigger com 100% em cache
-      [giroFrames, mergFrames] = await Promise.all([
-        loadSequence(pg, ng, () => tickLoad()),
-        loadSequence(pm, nm, () => tickLoad())
-      ]);
-      if (!giroFrames.length || !mergFrames.length) procedural = true;
-    } else {
-      // sem frames ainda → prévia procedural, com aviso discreto
-      notice.hidden = false;
-      msg.textContent = 'modo prévia do copo';
-      for (let i = 1; i <= 10; i++) {
-        await new Promise(r => setTimeout(r, 34));
-        setPct(0.1 + i * 0.09);
-      }
-    }
+    msg.textContent = 'modelando o copo';
+    setPct(0.3);
+    // O copo é gerado por código: geometria, shader e textura ficam prontos
+    // aqui mesmo, de forma síncrona. A barra marca trabalho real — não há
+    // download a esperar, então ela não finge demora.
+    use3D = Stage.mount3D();
+    if (!use3D) msg.textContent = 'preparando a prévia';
 
     setPct(1);
     msg.textContent = 'pronto';
-    await new Promise(r => setTimeout(r, 320));
+    await new Promise(r => requestAnimationFrame(r));
     clearTimeout(watchdog);
     release();
   }
 
-  return { boot, release, get info() { return { procedural, giro: giroFrames.length, mergulho: mergFrames.length }; } };
+  return { boot, release, get info() { return { engine: use3D ? 'webgl' : 'canvas2d' }; } };
 })();
 
 /* ============================================================================
