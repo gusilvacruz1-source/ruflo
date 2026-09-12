@@ -1,5 +1,5 @@
 {
-  "_comment": "Renomeie para manifest.json se quiser fixar a nomenclatura na mão. Sem este arquivo o site descobre os frames sozinho.",
+  "_comment": "Opcional. Renomeie para manifest.json se quiser fixar a nomenclatura na mão — sem ele o site descobre os quadros sozinho. Os valores abaixo refletem o que está instalado hoje.",
   "giro":     { "prefix": "giro_",     "pad": 4, "ext": "webp", "start": 1, "count": 120 },
-  "mergulho": { "prefix": "mergulho_", "pad": 4, "ext": "webp", "start": 1, "count": 90 }
+  "mergulho": { "prefix": "mergulho_", "pad": 4, "ext": "webp", "start": 1, "count": 60 }
 }

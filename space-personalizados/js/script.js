@@ -30,20 +30,20 @@ const CONFIG = {
     // PARTE 1 — o copo dando a volta de 360°
     giro: {
       dir:    'frames/giro/',   // pasta dos frames
-      scroll: 2400,             // ⇠ duração EM PIXELS DE SCROLL desta parte
+      scroll: 2800,             // ⇠ duração EM PIXELS DE SCROLL desta parte (120 quadros)
       label:  '360°'
     },
     // PARTE 2 — a câmera sobe e entra no copo
     mergulho: {
       dir:    'frames/mergulho/',
-      scroll: 2000,             // ⇠ duração EM PIXELS DE SCROLL desta parte
+      scroll: 1800,             // ⇠ duração EM PIXELS DE SCROLL desta parte (60 quadros)
       label:  'MERGULHO'
     }
   },
 
   // Em que ponto do MERGULHO o interior começa a escurecer (0–1).
   // 0.82 = os últimos 18% do mergulho fazem o fade para a cor da loja.
-  fadeStart: 0.82,
+  fadeStart: 0.70,
 
   // Pixels de scroll extras depois do último frame, já com a tela na cor da
   // loja, antes de soltar o pin. Dá o "respiro" da transição.
@@ -51,6 +51,9 @@ const CONFIG = {
 
   // Suavização do scrub do canvas (0 = travado no scroll, 1 = sem inércia).
   smoothing: 0.16,
+
+  // quanto o copo ocupa da tela no giro (1 = altura cheia do quadro)
+  zoom: 1.12,
 
   // Como os frames podem se chamar. A descoberta testa estas combinações
   // automaticamente — exporte do jeito que preferir que o site acha.
@@ -131,7 +134,8 @@ const SHAPES = {
 };
 
 /** Fundo de estúdio + objeto preenchido + sombra de contato + grão. */
-function phProduct(key, seed = 0) {
+function phProduct(key, seed = 0) { return cached('p|'+key+'|'+(seed%4), () => buildProduct(key, seed)); }
+function buildProduct(key, seed = 0) {
   const shape = SHAPES[key] || SHAPES.copo;
   const lx = 34 + (seed % 4) * 8;            // posição da luz varia por produto
   const svg =
@@ -170,7 +174,8 @@ function phProduct(key, seed = 0) {
 }
 
 /** Fundo de hero: pura atmosfera de estúdio. Sem ícone, sem desenho. */
-function phScene(key, seed = 0) {
+function phScene(key, seed = 0) { return cached('s|'+key+'|'+(seed%4), () => buildScene(key, seed)); }
+function buildScene(key, seed = 0) {
   const lx = [64, 72, 30, 56][seed % 4];
   const svg =
 `<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
@@ -200,7 +205,8 @@ function phScene(key, seed = 0) {
 }
 
 /** SVG de avatar circular (logos de empresas-clientes). */
-function phAvatar(seed = 0) {
+function phAvatar(seed = 0) { return cached('a|'+(seed%5), () => buildAvatar(seed)); }
+function buildAvatar(seed = 0) {
   const a = [[34, '#e6c88a'], [204, '#8ab6e6'], [12, '#e68a8a'], [148, '#8ae6b0'], [268, '#b98ae6']][seed % 5];
   const letters = ['MD', 'DY', 'OL', 'SP', 'BR'][seed % 5];
   const svg =
@@ -209,7 +215,7 @@ function phAvatar(seed = 0) {
 <stop offset="0" stop-color="hsl(${a[0]} 30% 26%)"/><stop offset="1" stop-color="#121212"/></linearGradient></defs>
 <rect width="100" height="100" fill="url(#a)"/>
 <circle cx="50" cy="50" r="30" fill="none" stroke="${a[1]}" stroke-opacity="0.5" stroke-width="2"/>
-<text x="50" y="58" text-anchor="middle" font-family="Syne, sans-serif" font-weight="700" font-size="26" fill="${a[1]}" fill-opacity="0.9">${letters}</text>
+<text x="50" y="58" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="26" fill="${a[1]}" fill-opacity="0.9">${letters}</text>
 </svg>`;
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
@@ -236,8 +242,21 @@ function paint(el, key, seed = 0) {
   probe.src = real;
 }
 
+function hashSeed(str) {
+  let h = 0;
+  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
 function hydratePlaceholders(root = document) {
-  $$('[data-ph]', root).forEach((el, i) => paint(el, el.dataset.ph, i));
+  $$('[data-ph]', root).forEach(el => {
+    const card = el.closest('[data-id]');
+    const idx = card ? PRODUCTS.findIndex(x => x.id === card.dataset.id) : -1;
+    // semente estável: do produto quando há um, senão da própria chave.
+    // Usar o índice no documento fazia o mesmo cliente virar três logos.
+    const seed = idx >= 0 ? idx : hashSeed(el.dataset.ph);
+    paint(el, el.dataset.ph, seed);
+  });
 }
 
 /* ============================================================================
@@ -350,10 +369,18 @@ function settleWithTimeout(src, ms, onDone, fallback) {
     const img = new Image();
     img.decoding = 'async';
     let done = false;
-    const finish = v => { if (done) return; done = true; clearTimeout(t); img.src = ''; res(v); };
-    const t = setTimeout(() => finish(fallback), ms);
-    img.onload  = () => finish(onDone(img));
-    img.onerror = () => finish(fallback);
+    const finish = (v, abort) => {
+      if (done) return;
+      done = true;
+      clearTimeout(t);
+      // só aborta o download quando NÃO vamos usar a imagem: limpar o src
+      // de um quadro que acabou de carregar o devolve em branco
+      if (abort) { img.onload = img.onerror = null; img.src = ''; }
+      res(v);
+    };
+    const t = setTimeout(() => finish(fallback, true), ms);
+    img.onload  = () => finish(onDone(img), false);
+    img.onerror = () => finish(fallback, true);
     img.src = src;
   });
 }
@@ -370,14 +397,13 @@ const buildSrc = (p, i) => `${p.dir}${p.prefix}${pad(i, p.padLen)}.${p.ext}`;
  * 2º) sondagem em dois estágios: primeiro as combinações mais prováveis,
  *     depois o resto — evita disparar centenas de requisições à toa.
  */
-let MANIFEST = null;
-async function loadManifest() {
-  if (MANIFEST !== null) return MANIFEST;
-  try {
-    const r = await fetch('frames/manifest.json', { cache: 'no-cache' });
-    MANIFEST = r.ok ? await r.json() : false;
-  } catch { MANIFEST = false; }
-  return MANIFEST;
+let MANIFEST_P = null;
+function loadManifest() {
+  // memoriza a PROMESSA, não o valor: as duas pastas chamam no mesmo tick
+  // e as duas disparavam a requisição
+  return (MANIFEST_P ??= fetch('frames/manifest.json', { cache: 'no-cache' })
+    .then(r => r.ok ? r.json() : false)
+    .catch(() => false));
 }
 
 /* Em lotes: o navegador só abre ~6 conexões por host, então disparar 128
@@ -478,7 +504,7 @@ async function loadSequence(p, total, onTick) {
 
 const Stage = (() => {
   const cv  = $('#cupCanvas');
-  const ctx = cv.getContext('2d', { alpha: false });
+  const ctx = cv.getContext('2d', { alpha: true });
   let W = 0, H = 0, dpr = 1;
 
   function resize() {
@@ -490,17 +516,25 @@ const Stage = (() => {
     if (cv.height !== H) cv.height = H;
   }
 
-  /* --- object-fit: cover, na matemática --------------------------------- */
-  function drawCover(img) {
+  /* --- enquadramento -----------------------------------------------------
+     Os quadros são PNG-alpha com o copo recortado, então não faz sentido
+     cortar a imagem: o excedente é transparente. O giro usa 'contain' (o
+     copo inteiro cabe na tela) e o mergulho interpola até 'cover', que é o
+     que faz o interior tomar a tela ao entrar.
+     cover = MAX(W/iw, H/ih) · contain = MIN — as duas contas continuam
+     feitas na mão, com devicePixelRatio já aplicado em W e H. */
+  function drawFrame(img, toCover = 0, zoom = 1) {
     const iw = img.naturalWidth || img.width;
     const ih = img.naturalHeight || img.height;
     if (!iw || !ih) return;
-    const scale = Math.max(W / iw, H / ih);   // cover = MAX (contain seria MIN)
+    const contain = Math.min(W / iw, H / ih);
+    const cover   = Math.max(W / iw, H / ih);
+    const scale   = (contain + (cover - contain) * toCover) * zoom;
     const w = iw * scale, h = ih * scale;
     ctx.drawImage(img, (W - w) * 0.5, (H - h) * 0.5, w, h);
   }
 
-  function clear() { ctx.fillStyle = '#000'; ctx.fillRect(0, 0, W, H); }
+  function clear() { ctx.clearRect(0, 0, W, H); }
 
   /* ------------------------------------------------------------------------
      COPO PROCEDURAL — prévia fiel enquanto o vídeo real não existe.
@@ -581,9 +615,9 @@ const Stage = (() => {
         ctx.fillStyle = 'rgba(28,26,22,.62)';
         ctx.beginPath(); ctx.arc(0, -u * 0.40, u * 0.075, 0, Math.PI * 2); ctx.fill();
         ctx.textAlign = 'center';
-        ctx.font = `700 ${u * 0.235}px Syne, 'Plus Jakarta Sans', sans-serif`;
+        ctx.font = `700 ${u * 0.235}px Manrope, system-ui, sans-serif`;
         ctx.fillText('SPACE', 0, u * 0.02);
-        ctx.font = `600 ${u * 0.072}px 'Plus Jakarta Sans', sans-serif`;
+        ctx.font = `600 ${u * 0.072}px Manrope, system-ui, sans-serif`;
         ctx.globalAlpha *= 0.72;
         ctx.fillText('P E R S O N A L I Z A D O S', 0, u * 0.20);
         ctx.restore();
@@ -656,7 +690,9 @@ const Stage = (() => {
     ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
   }
 
-  return { resize, clear, drawCover, renderFake, get w() { return W; }, get h() { return H; } };
+  function fade(v) { cv.style.opacity = v; }
+
+  return { resize, clear, drawFrame, renderFake, fade, get w() { return W; }, get h() { return H; } };
 })();
 
 /* ============================================================================
@@ -680,6 +716,7 @@ const Cup = (() => {
   let target = 0, current = 0, needsDraw = true;
   let pGiro = 0, pDive = 1, totalScroll = 0;
   let running = false;
+  let driveFromScroll = true;          // false quando o ScrollTrigger assume
   const last = { veil: -1, hud: -1, bar: -1, phase: '' };
 
   /* --- geometria do trilho de scroll ------------------------------------ */
@@ -709,7 +746,9 @@ const Cup = (() => {
       if (list.length) {
         const idx = Math.round(t * (list.length - 1));   // progresso → índice
         Stage.clear();
-        Stage.drawCover(list[clamp(idx, 0, list.length - 1)]);
+        // assim que a câmera passa da borda, o interior toma a tela
+        const toCover = phase === 'dive' ? smoothstep(0.12, 0.42, t) : 0;
+        Stage.drawFrame(list[clamp(idx, 0, list.length - 1)], toCover, CONFIG.zoom);
       }
     }
 
@@ -718,7 +757,11 @@ const Cup = (() => {
        estilo por frame para valores quase sempre idênticos. */
     const dive = phase === 'dive' ? t : 0;
     const fade = +(p > pDive ? 1 : smoothstep(CONFIG.fadeStart, 1, dive)).toFixed(3);
-    if (fade !== last.veil) { veil.style.opacity = fade; last.veil = fade; }
+    if (fade !== last.veil) {
+      veil.style.opacity = fade * 0.55;      // escurece o interior
+      Stage.fade(1 - fade);                  // e o copo se dissolve no fundo
+      last.veil = fade;
+    }
 
     const hudOpacity = +(1 - smoothstep(0, 0.22, dive)).toFixed(3);
     if (hudOpacity !== last.hud) {
@@ -741,6 +784,11 @@ const Cup = (() => {
      Estaciona quando o copo já saiu da tela e nada mais tem a animar; o
      scroll acorda de novo. Antes o loop ficava vivo o site inteiro. */
   function tick() {
+    const rect = section.getBoundingClientRect();
+    if (driveFromScroll) {
+      target = clamp(-rect.top / Math.max(1, totalScroll));
+    }
+
     const diff = target - current;
     if (Math.abs(diff) > 0.00015) {
       current += diff * (prefersReduced ? 1 : CONFIG.smoothing);
@@ -751,9 +799,9 @@ const Cup = (() => {
     }
     if (needsDraw) { render(current); needsDraw = false; }
 
-    const settled = current === target;
-    const gone = section.getBoundingClientRect().bottom <= 0;
-    if (settled && gone) { running = false; return; }
+    // uma única leitura de layout por quadro serve para o alvo e para a
+    // decisão de estacionar
+    if (current === target && rect.bottom <= 0) { running = false; return; }
     requestAnimationFrame(tick);
   }
 
@@ -768,6 +816,7 @@ const Cup = (() => {
     measure();
 
     if (hasGSAP()) {
+      driveFromScroll = false;
       gsap.registerPlugin(ScrollTrigger);
       ScrollTrigger.create({
         trigger: section,
@@ -778,16 +827,8 @@ const Cup = (() => {
         onRefresh: self => { Stage.resize(); target = self.progress; needsDraw = true; }
       });
       ScrollTrigger.addEventListener('refreshInit', measure);
-    } else {
-      // fallback 100% nativo — mesma matemática, sem dependência
-      const native = () => {
-        const r = section.getBoundingClientRect();
-        target = clamp(-r.top / (section.offsetHeight - window.innerHeight));
-        wake();
-      };
-      addEventListener('scroll', native, { passive: true });
-      native();
     }
+    // o alvo é lido dentro do próprio tick quando não há ScrollTrigger
 
     let rt;
     addEventListener('resize', () => {
@@ -877,6 +918,13 @@ const Cup = (() => {
 /* ============================================================================
    [8] UI — vitrine, catálogo, filtros, favoritos e orçamento
    ========================================================================== */
+
+const PH_CACHE = new Map();
+function cached(key, build) {
+  let v = PH_CACHE.get(key);
+  if (v === undefined) { v = build(); PH_CACHE.set(key, v); }
+  return v;
+}
 
 const ICO = {
   arrow: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
@@ -1072,7 +1120,7 @@ const Cart = (() => {
 
   function paint() {
     const body = $('#drawerBody');
-    $('#cartCount').textContent = String(items.reduce((s, i) => s + 1, 0));
+    $('#cartCount').textContent = String(items.length);
     $('#drawerTotal').textContent = money(total());
     const send = $('#drawerSend');
     send.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(message())}`;
@@ -1385,6 +1433,82 @@ function wireReveal() {
   $$('.reveal, [data-count]').forEach(el => io.observe(el));
 }
 
+/* ── Inclinação 3D + brilho que segue o cursor ─────────────────────────
+   Um único listener delegado no documento: 30 cards com listener cada um
+   custaria caro e não daria nada a mais. */
+function wireTilt() {
+  if (prefersReduced || matchMedia('(hover: none)').matches) return;
+
+  const SEL = '.pcard, .ccard, .feat--dark, .dealCard, .statCard';
+  let active = null, rect = null, pending = null, queued = false;
+
+  document.addEventListener('mousemove', e => {
+    const card = e.target.closest(SEL);
+    if (card !== active) {
+      if (active) reset(active);
+      active = card;
+      // o rect só muda com scroll ou resize, não a cada movimento do mouse
+      rect = card ? card.getBoundingClientRect() : null;
+      if (card) card.classList.add('is-tilting');
+    }
+    if (!card || !rect) return;
+    pending = [(e.clientX - rect.left) / rect.width, (e.clientY - rect.top) / rect.height];
+    if (queued) return;
+    queued = true;
+    requestAnimationFrame(apply);
+  }, { passive: true });
+
+  function apply() {
+    queued = false;
+    if (!active || !pending) return;
+    const [px, py] = pending;
+    active.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
+    active.style.setProperty('--my', (py * 100).toFixed(1) + '%');
+    active.style.transform =
+      `perspective(1100px) rotateX(${((0.5 - py) * 7).toFixed(2)}deg) `
+      + `rotateY(${((px - 0.5) * 9).toFixed(2)}deg) translateY(-6px)`;
+  }
+
+  function reset(card) {
+    card.classList.remove('is-tilting');
+    card.style.transform = '';
+  }
+  addEventListener('scroll', () => { if (active) rect = active.getBoundingClientRect(); }, { passive: true });
+  document.addEventListener('mouseleave', () => { if (active) { reset(active); active = null; rect = null; } });
+}
+
+/* ── Paralaxe da luz de fundo ──────────────────────────────────────────
+   As manchas derivam com o scroll além da própria animação, então o
+   material atrás do vidro nunca fica parado. */
+function wireParallax() {
+  if (prefersReduced) return;
+  const orbs = $$('.ambient__orb');
+  if (!orbs.length) return;
+
+  let ticking = false;
+  const depth = [0.06, -0.09, 0.045];
+  const RANGE = 240;   // limite do passeio, em px
+
+  function frame() {
+    const y = window.scrollY;
+    orbs.forEach((o, i) => {
+      // Deslocamento LIMITADO. Multiplicar o scrollY cru empurrava as três
+      // manchas para fora da tela depois de duas rolagens, e aí não sobrava
+      // nada atrás do vidro para desfocar.
+      const raw = y * depth[i % depth.length];
+      const py = Math.sin(raw / RANGE) * RANGE;
+      o.style.setProperty('--py', py.toFixed(1) + 'px');
+    });
+    ticking = false;
+  }
+  addEventListener('scroll', () => {
+    if (ticking) return;
+    ticking = true;
+    requestAnimationFrame(frame);
+  }, { passive: true });
+  frame();
+}
+
 function wireMagnetic() {
   if (prefersReduced || matchMedia('(hover: none)').matches) return;
   $$('.magnetic').forEach(el => {
@@ -1473,6 +1597,8 @@ function init() {
   wireNav();
   wireReveal();
   wireMagnetic();
+  wireTilt();
+  wireParallax();
 
   Cup.boot().catch(err => { console.error('[copo]', err); Cup.release(); });
 }

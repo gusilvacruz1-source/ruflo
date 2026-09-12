@@ -29,28 +29,47 @@ Duas sequências de imagens rodam em sequência contínua, sem corte:
 No último quadro o interior escurece e faz fade **exato** para a cor de fundo
 da loja (`#0d0d0d`) — a ilusão é que a loja existe dentro do copo.
 
-### Ainda não gravou o copo?
+### Os quadros já estão instalados
 
-Não tem problema: **o site já funciona agora.** Enquanto as pastas estiverem
-vazias, ele desenha um copo de inox em Canvas 2D — giro, reflexos metálicos,
-gravação a laser orbitando o corpo e o mergulho pela boca. Um aviso discreto
-aparece na tela dizendo que está em modo prévia.
+**120 quadros** em `frames/giro/` e **60** em `frames/mergulho/`, WebP com
+canal alfa, 720x1280, 3,8 MB no total. Vieram do vídeo do copo vermelho.
 
-### Quando gravar
+O fundo foi **recortado**: o copo aparece flutuando sobre o fundo animado do
+site, sem cozinha, sem piso, sem parede. O recorte é feito por chave de cor
+no corpo vermelho (H≈173, S≈235 — medido no próprio vídeo) mais detecção
+geométrica das faixas de inox, que não dá para separar por cor porque a
+parede clara tem a mesma saturação baixa. Os quadros também foram
+estabilizados: cada um é deslocado para deixar o copo centrado, o que
+transforma o vídeo de mão num turntable de estúdio.
+
+A órbita sai de uma **tomada contínua** (6,78s → 11,0s) que desemboca direto
+no mergulho: sem emenda no meio e sem a mão que cruzava a cena por volta dos
+6 segundos.
+
+A estabilização é condicional: o copo é filmado colado nas bordas e em boa
+parte dos quadros já sai da tela. Centrar um quadro desses empurraria a
+parte cortada para o meio e o copo pareceria fatiado — então só os quadros
+em que ele cabe inteiro são deslocados, e nunca no eixo vertical, onde o
+corte lê como close e não como defeito.
+
+### Para trocar por outro vídeo
 
 Jogue os arquivos dentro de `frames/giro/` e `frames/mergulho/`. Só isso.
-O site detecta sozinho o nome, a extensão, o número de dígitos e a quantidade
-de quadros. Todos estes formatos funcionam:
+O site detecta sozinho o nome, a extensão, o número de dígitos e a
+quantidade de quadros. Todos estes formatos funcionam:
 
 ```
 giro_0001.webp   0001.jpg   001.png   frame_0001.jpg   ezgif-frame-001.png
 ```
 
-Para fatiar o vídeo:
+Se as pastas ficarem vazias, o site desenha um copo de inox em Canvas 2D
+como prévia, com um aviso discreto na tela.
+
+Para fatiar um vídeo novo:
 
 ```bash
-ffmpeg -i giro.mp4     -vf "fps=30,scale=1920:-1" -q:v 3 frames/giro/giro_%04d.jpg
-ffmpeg -i mergulho.mp4 -vf "fps=30,scale=1920:-1" -q:v 3 frames/mergulho/mergulho_%04d.jpg
+ffmpeg -i giro.mp4     -vf "fps=12,scale=-2:1280" -c:v libwebp -q:v 70 frames/giro/giro_%04d.webp
+ffmpeg -i mergulho.mp4 -vf "fps=30,scale=-2:1280" -c:v libwebp -q:v 70 frames/mergulho/mergulho_%04d.webp
 ```
 
 Se preferir fixar tudo na mão, renomeie `frames/manifest.example.json` para
@@ -62,29 +81,38 @@ Tudo fica no topo de `js/script.js`, no bloco `CONFIG`:
 
 ```js
 sequences: {
-  giro:     { dir: 'frames/giro/',     scroll: 2400 },  // pixels de scroll
-  mergulho: { dir: 'frames/mergulho/', scroll: 2000 }
+  giro:     { dir: 'frames/giro/',     scroll: 2800 },  // pixels de scroll
+  mergulho: { dir: 'frames/mergulho/', scroll: 1800 }
 },
-fadeStart: 0.82,   // quando o interior começa a escurecer (0–1 do mergulho)
+fadeStart: 0.70,   // quando o interior começa a escurecer (0–1 do mergulho)
 holdAfter: 320,    // respiro em pixels antes de soltar o pin
-smoothing: 0.16    // inércia do scrub (0 = travado, 1 = sem inércia)
+smoothing: 0.16,   // inércia do scrub (0 = travado, 1 = sem inércia)
+zoom: 1.12         // tamanho do copo na tela durante o giro
 ```
 
-**Detalhes técnicos:** o `cover` do canvas é calculado na matemática
-(`Math.max(W/iw, H/ih)`), então a imagem nunca estica nem achata; o canvas
-respeita `window.devicePixelRatio` (limitado a 2.5×) para ficar nítido em
-Retina e celular; o preloader só libera o ScrollTrigger com **100% dos frames
-em cache**; e o redesenho roda em `requestAnimationFrame` com interpolação.
+**Detalhes técnicos:** o enquadramento é calculado na matemática — `contain`
+(`Math.min(W/iw, H/ih)`) durante o giro, interpolando até `cover`
+(`Math.max`) no mergulho, que é o que faz o interior tomar a tela ao entrar.
+A imagem nunca estica nem achata. O canvas respeita `window.devicePixelRatio`
+(limitado a 2.5×) para ficar nítido em Retina e celular; o preloader só
+libera o ScrollTrigger com **100% dos quadros em cache**, com prazo em toda
+sondagem e um watchdog de 25s para nunca prender a página; e o redesenho roda
+em `requestAnimationFrame` com interpolação, estacionando quando o copo sai
+da tela.
 
 ---
 
 ## 2. A loja
 
-Layout de e-commerce dark, bento grids, pílulas e glassmorphism.
+Layout de e-commerce dark com **vidro translúcido** (`backdrop-filter` sobre
+uma camada de luz animada), tipografia **serifada de alto contraste**
+(Playfair Display) contra uma sans limpa (Manrope), bento grids assimétricos
+e pílulas.
 Todas as seções usam os **18 produtos reais** do catálogo Space, com as
 faixas de preço por quantidade exatamente como no PDF.
 
-- **Hero** — título gigante, card flutuante do Copo Térmico, slider de 4 telas
+- **Hero** — título gigante em serifada editorial, moldura fina com etiquetas
+  de canto, card de vidro do Copo Térmico, slider de 4 telas
 - **Bento** — "Personalize seu próprio brinde" + "Empresas que escolhem"
 - **Novos Brindes / Por Tipo** — filtros em pílula e 4 cards em destaque
 - **Descubra os Mais Desejados** — contador 14.500+ e card de oferta
