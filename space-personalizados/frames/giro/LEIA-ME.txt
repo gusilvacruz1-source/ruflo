@@ -1,0 +1,15 @@
+COLOQUE AQUI OS FRAMES DA PARTE 1 — O COPO GIRANDO 360°
+
+Aceita qualquer uma destas nomenclaturas (o site descobre sozinho):
+  giro_0001.webp  giro_0001.jpg  giro_0001.png
+  0001.webp       001.jpg        frame_0001.png
+
+Dicas:
+  · 90 a 150 frames dão um giro bem fluido.
+  · Exporte em 1920x1080 (ou 1080x1920 se o vídeo for vertical) — o canvas
+    faz o "cover" matematicamente, então nada estica nem achata.
+  · WebP em qualidade 80 pesa ~3x menos que JPG com a mesma aparência.
+  · O último frame do giro deve emendar com o primeiro do mergulho.
+
+Como fatiar um vídeo em frames (ffmpeg):
+  ffmpeg -i giro.mp4 -vf "fps=30,scale=1920:-1" -q:v 3 frames/giro/giro_%04d.jpg

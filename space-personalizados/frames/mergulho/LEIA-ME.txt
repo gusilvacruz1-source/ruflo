@@ -1,0 +1,15 @@
+COLOQUE AQUI OS FRAMES DA PARTE 2 — A CÂMERA SUBINDO E ENTRANDO NO COPO
+
+Aceita qualquer uma destas nomenclaturas (o site descobre sozinho):
+  mergulho_0001.webp  mergulho_0001.jpg  mergulho_0001.png
+  0001.webp       001.jpg        frame_0001.png
+
+Dicas:
+  · 60 a 120 frames dão um mergulho bem fluido.
+  · Exporte em 1920x1080 (ou 1080x1920 se o vídeo for vertical) — o canvas
+    faz o "cover" matematicamente, então nada estica nem achata.
+  · WebP em qualidade 80 pesa ~3x menos que JPG com a mesma aparência.
+  · O primeiro frame daqui deve emendar com o último do giro.
+
+Como fatiar um vídeo em frames (ffmpeg):
+  ffmpeg -i mergulho.mp4 -vf "fps=30,scale=1920:-1" -q:v 3 frames/mergulho/mergulho_%04d.jpg

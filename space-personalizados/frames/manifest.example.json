@@ -1,0 +1,5 @@
+{
+  "_comment": "Renomeie para manifest.json se quiser fixar a nomenclatura na mão. Sem este arquivo o site descobre os frames sozinho.",
+  "giro":     { "prefix": "giro_",     "pad": 4, "ext": "webp", "start": 1, "count": 120 },
+  "mergulho": { "prefix": "mergulho_", "pad": 4, "ext": "webp", "start": 1, "count": 90 }
+}
