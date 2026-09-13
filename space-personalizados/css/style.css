@@ -20,7 +20,10 @@
   --paper-deep: #E4E1DC;
   --brass:      #B08D57;                    /* o ouro da marca, dessaturado */
   --brass-soft: #C9AC7E;
-  --muted:      #8B8781;                    /* apoio sobre tinta */
+  --muted:      #9A958E;                    /* apoio sobre tinta — clareado ao
+                                               entrar o fundo cósmico: nos
+                                               trechos claros da imagem o tom
+                                               antigo caía para 4,4:1 */
   --muted-dark: #635F59;                    /* apoio sobre papel — 5.4:1 */
   --hairline:   rgba(239,237,234,.14);      /* 1px sobre escuro */
   --hairline-d: rgba(13,13,14,.14);         /* 1px sobre claro */
@@ -48,11 +51,11 @@
 
 /* ---------- 2. RESET ---------- */
 *, *::before, *::after{ box-sizing: border-box; }
-html{ -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+html{ -webkit-text-size-adjust: 100%; scroll-behavior: smooth; background: var(--ink); }
 body{
   margin: 0;
   overflow-x: hidden;                        /* nunca usar 100vw em lugar nenhum */
-  background: var(--ink);
+  background: transparent;                   /* quem pinta o fundo é .ambient */
   color: var(--paper);
   font-family: var(--font-ui);
   font-size: var(--fs-body);
@@ -81,7 +84,8 @@ svg{ display: block; }
 .section{ padding-block: clamp(80px, 11vh, 152px); position: relative; }
 
 /* ---------- 4. TEMAS DE SEÇÃO ---------- */
-[data-theme="ink"]{ background: var(--ink); color: var(--paper); }
+/* translúcido: é por aqui que o fundo cósmico aparece */
+[data-theme="ink"]{ background: color-mix(in srgb, var(--ink) 70%, transparent); color: var(--paper); }
 [data-theme="paper"]{ background: var(--paper); color: var(--ink); }
 [data-theme="paper-deep"]{ background: var(--paper-deep); color: var(--ink); }
 
@@ -242,15 +246,24 @@ svg{ display: block; }
   background-position: center;
 }
 
-/* ---------- 8. CAMADA DE GRÃO (uma só) ---------- */
+/* ---------- 8. FUNDO CÓSMICO + GRÃO ---------- */
+/* Uma imagem fixa atrás do site inteiro. As faixas de tinta ficam
+   translúcidas e ela aparece por trás; as de papel continuam opacas e viram
+   painéis apoiados em cima dela. O véu é o que mantém o texto legível — sem
+   ele a imagem come a tipografia. */
 .ambient{
-  position: fixed; inset: 0; z-index: 60;
-  pointer-events: none; opacity: .035;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  position: fixed; inset: 0; z-index: -2;
+  pointer-events: none;
+  background: var(--ink) url("../assets/fundo-site.webp") center / cover no-repeat;
 }
-/* Os três orbes de luz existiam para o vidro fosco ter o que refletir.
-   Sem vidro, não há o que iluminar. */
-.ambient__orb, .ambient__grid, .ambient__grain{ display: none; }
+.ambient__orb, .ambient__grid{ display: none; }
+.ambient__grain{
+  display: block; position: absolute; inset: 0;
+  background:
+    radial-gradient(120% 80% at 50% 0%, rgba(13,13,14,.20), rgba(13,13,14,.56) 62%, rgba(13,13,14,.74) 100%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-blend-mode: normal, soft-light;
+}
 
 /* ---------- 9. UTILITÁRIOS ---------- */
 .skip{
@@ -285,7 +298,18 @@ body.is-locked{ overflow: hidden; }
 
 /* ---------- 11. INTRO — O COPO ---------- */
 .cup{ position: relative; background: var(--ink); }
-.cup__stage{ position: sticky; top: 0; height: 100svh; overflow: hidden; }
+/* O copo tem papel de parede próprio: a nebulosa. É ela que o vidro reflete
+   e refrata — contra preto liso o copo não teria o que atravessar. */
+.cup__stage{
+  position: sticky; top: 0; height: 100svh; overflow: hidden;
+  background: var(--ink) url("../assets/fundo-copo.webp") center / cover no-repeat;
+}
+.cup__stage::before{
+  content: ""; position: absolute; inset: 0; z-index: 1;
+  background:
+    radial-gradient(96% 70% at 50% 42%, rgba(10,10,12,.10), rgba(10,10,12,.62) 76%, rgba(10,10,12,.86) 100%);
+}
+#cupCanvas, #cupGL{ z-index: 2; }
 #cupCanvas, #cupGL{ position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 .cup__veil{ position: absolute; inset: 0; pointer-events: none; background: var(--ink); opacity: 0; }
 .cup__hud{
@@ -411,7 +435,7 @@ body.is-locked{ overflow: hidden; }
   min-height: min(100svh, 900px); display: flex; align-items: center;
   padding-top: clamp(110px, 15vh, 168px);
   padding-bottom: clamp(58px, 9vh, 104px);
-  background: var(--ink);
+  background: color-mix(in srgb, var(--ink) 58%, transparent);
 }
 /* Duas colunas: a manchete manda na largura, e a direita empilha a foto e a
    ficha do produto. Antes as duas disputavam o mesmo canto e a foto sumia
@@ -878,7 +902,7 @@ body.is-locked{ overflow: hidden; }
 }
 
 /* ---------- 20. RODAPÉ ---------- */
-.footer{ background: var(--ink); color: var(--paper); padding-top: clamp(60px, 9vh, 110px); }
+.footer{ background: color-mix(in srgb, var(--ink) 84%, transparent); color: var(--paper); padding-top: clamp(60px, 9vh, 110px); }
 .footer__top{
   display: grid; grid-template-columns: repeat(12, minmax(0,1fr)); gap: var(--gap);
   max-width: var(--container); margin-inline: auto; padding-inline: var(--pad-x);
