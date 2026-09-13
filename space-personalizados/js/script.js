@@ -184,12 +184,20 @@ function buildScene(key, seed = 0) {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
-/** Aplica o placeholder e tenta trocar pela foto real, se ela existir. */
-function paint(el, key, seed = 0) {
-  const isScene = el.hasAttribute('data-scene');
-  el.style.backgroundImage = isScene ? phScene(key, seed) : phProduct(key, seed);
-  el.style.backgroundSize = 'cover';
-  el.style.backgroundPosition = 'center';
+/* A foto real só é buscada quando o card chega perto da tela. Com 18 cards no
+   catálogo mais o hero, pedir as 22 no boot enfileirava tudo antes de a
+   primeira dobra terminar de pintar. */
+const fotoIO = 'IntersectionObserver' in window
+  ? new IntersectionObserver((entradas, obs) => {
+      entradas.forEach(en => {
+        if (!en.isIntersecting) return;
+        obs.unobserve(en.target);
+        buscaFoto(en.target);
+      });
+    }, { rootMargin: '700px 0px' })
+  : null;
+
+function buscaFoto(el) {
   const real = el.dataset.src;
   if (!real) return;
   const probe = new Image();
@@ -199,9 +207,29 @@ function paint(el, key, seed = 0) {
     if (el.dataset.src !== real) return;
     el.style.setProperty('--photo', `url("${real}")`);
     el.style.backgroundImage = `url("${real}")`;
+    // Quem enquadra a foto real é o CSS (.has-photo e companhia). O tamanho e
+    // a posição escritos no placeholder são inline e venciam a folha de
+    // estilo — qualquer regra de enquadramento da foto virava letra morta.
+    el.style.removeProperty('background-size');
+    el.style.removeProperty('background-position');
     el.classList.add('has-photo');
   };
   probe.src = real;
+}
+
+/** Aplica o placeholder e agenda a troca pela foto real, se ela existir. */
+function paint(el, key, seed = 0) {
+  const isScene = el.hasAttribute('data-scene');
+  el.style.backgroundImage = isScene ? phScene(key, seed) : phProduct(key, seed);
+  el.style.backgroundSize = 'cover';
+  el.style.backgroundPosition = 'center';
+  el.classList.remove('has-photo');
+  if (!el.dataset.src) return;
+  if (!fotoIO) { buscaFoto(el); return; }
+  fotoIO.unobserve(el);                       // o #dealMedia volta aqui trocado
+  const r = el.getBoundingClientRect();
+  if (r.top < innerHeight + 700 && r.bottom > -700) buscaFoto(el);
+  else fotoIO.observe(el);
 }
 
 function hashSeed(str) {
@@ -754,35 +782,42 @@ function showcaseCard(p, wide) {
   if (wide) {
     return `<article class="pcard pcard--wide" data-cat="${p.cat}" data-id="${p.id}">
       ${media}${top2}
-      <h3 class="pcard__name">${p.name}</h3>
-      <div class="pcard__foot">
-        <a class="pill pill--light pcard__more" href="#catalogo" data-jump="${p.id}">SAIBA MAIS ${ICO.arrow.replace('<svg', '<svg class="ico-arrow"')}</a>
-        <span class="minlot">mín. ${p.min} uni</span>
+      <div class="pcard__corpo">
+        <h3 class="pcard__name">${p.name}</h3>
+        <div class="pcard__foot">
+          <a class="pill pill--light pcard__more" href="#catalogo" data-jump="${p.id}">SAIBA MAIS ${ICO.arrow.replace('<svg', '<svg class="ico-arrow"')}</a>
+          <span class="minlot">mín. ${p.min} uni</span>
+        </div>
       </div>
     </article>`;
   }
 
   return `<article class="pcard" data-cat="${p.cat}" data-id="${p.id}">
     ${media}${top2}
-    <div class="pcard__tags">${selo(p)}</div>
-    <h3 class="pcard__name">${p.name}</h3>
-    <p class="pcard__desc">${p.desc}</p>
-    <div class="pcard__foot">
-      <div>
-        <span class="pcard__price"><b>${money(base)}</b><span class="pcard__each">/un</span></span>
-        <span class="pcard__unit">${hasVolume(p)
-          ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
-          : `pedido mínimo ${p.min} uni`}</span>
+    <div class="pcard__corpo">
+      <div class="pcard__tags">${selo(p)}</div>
+      <h3 class="pcard__name">${p.name}</h3>
+      <p class="pcard__desc">${p.desc}</p>
+      <div class="pcard__foot">
+        <div>
+          <span class="pcard__price"><b>${money(base)}</b><span class="pcard__each">/un</span></span>
+          <span class="pcard__unit">${hasVolume(p)
+            ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
+            : `pedido mínimo ${p.min} uni`}</span>
+        </div>
       </div>
-      <span class="minlot">mín. ${p.min} uni</span>
     </div>
   </article>`;
 }
 
 function catalogCard(p) {
   const best = bestPrice(p), start = startPrice(p);
-  const tiers = p.tiers.map(([q, v]) =>
-    `<li class="${v === best && hasVolume(p) ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)}</b></li>`).join('');
+  // Com uma faixa só, a tabela repete o preço que já está em destaque logo
+  // abaixo — quatro vezes a mesma informação no mesmo card.
+  const tiers = hasVolume(p)
+    ? p.tiers.map(([q, v]) =>
+        `<li class="${v === best ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)}</b></li>`).join('')
+    : '';
   const fav = favs.has(p.id) ? ' is-on' : '';
   return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}">
     <div class="ccard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp">
@@ -791,7 +826,7 @@ function catalogCard(p) {
     </div>
     <h3 class="ccard__name">${p.name}</h3>
     <p class="ccard__desc">${p.desc}</p>
-    <ul class="ccard__tiers">${tiers}</ul>
+    ${tiers ? `<ul class="ccard__tiers">${tiers}</ul>` : ''}
     <div class="ccard__foot">
       <div>
         <span class="ccard__from">no pedido mínimo de ${p.min}</span>
@@ -892,7 +927,7 @@ const Cart = (() => {
     const found = items.find(i => i.id === id);
     if (found) found.qty += q; else items.push({ id, qty: q });
     save();
-    toast(`${p.name} · ${q} uni adicionadas ao orçamento`);
+    toast(`${q} uni de ${p.name} no orçamento`);
   }
   function setQty(id, qty) {
     const p = byId(id);
@@ -1163,9 +1198,25 @@ function wireNav() {
       burger.setAttribute('aria-expanded', 'false');
     }
   });
+  /* O cabeçalho passa por faixas claras e escuras: sobre papel ele inverte,
+     senão o texto claro some. Quem decide é a seção que está DEBAIRO da
+     barra, não a posição de rolagem. */
+  const faixas = $$('[data-theme]');
+  function corDaBarra() {
+    const y = nav.getBoundingClientRect().bottom - 4;
+    let claro = false;
+    for (const f of faixas) {
+      const r = f.getBoundingClientRect();
+      if (r.top <= y && r.bottom > y) claro = f.dataset.theme !== 'ink';
+    }
+    nav.classList.toggle('is-light', claro);
+  }
   addEventListener('scroll', () => {
     nav.classList.toggle('is-stuck', scrollY > innerHeight * 1.2);
+    corDaBarra();
   }, { passive: true });
+  addEventListener('resize', corDaBarra);
+  corDaBarra();
 
   // #top é o <main> inteiro: cruzava a faixa do observer desde o load e
   // nunca mais emitia, então INÍCIO jamais voltava a acender
