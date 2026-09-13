@@ -814,9 +814,8 @@ function showcaseCard(p, wide) {
       <div class="pcard__foot">
         <div>
           <span class="pcard__price"><b>${money(base)}</b><span class="pcard__each">/un</span></span>
-          <span class="pcard__unit">${hasVolume(p)
-            ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
-            : `pedido mínimo ${p.min} uni`}</span>
+          <span class="pcard__unit">mín. ${p.min} uni = ${money(base * p.min)}${
+            hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : ''}</span>
         </div>
       </div>
     </div>
@@ -829,7 +828,7 @@ function catalogCard(p) {
   // abaixo — quatro vezes a mesma informação no mesmo card.
   const tiers = hasVolume(p)
     ? p.tiers.map(([q, v]) =>
-        `<li class="${v === best ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)}</b></li>`).join('')
+        `<li class="${v === best ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)} <i>/un</i></b></li>`).join('')
     : '';
   const fav = favs.has(p.id) ? ' is-on' : '';
   return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}">
@@ -842,11 +841,10 @@ function catalogCard(p) {
     ${tiers ? `<ul class="ccard__tiers">${tiers}</ul>` : ''}
     <div class="ccard__foot">
       <div>
-        <span class="ccard__from">no pedido mínimo de ${p.min}</span>
-        <span class="ccard__price">${money(start)}</span>
-        <p class="ccard__min">${hasVolume(p)
-          ? `cai para ${money(best)} a partir de ${bestQty(p)} uni`
-          : 'preço único por unidade'}</p>
+        <span class="ccard__from">preço por unidade</span>
+        <span class="ccard__price">${money(start)}<i class="ccard__each">/un</i></span>
+        <p class="ccard__min">mínimo ${p.min} uni = <b>${money(start * p.min)}</b>${
+          hasVolume(p) ? `<br>cai para ${money(best)}/un a partir de ${bestQty(p)}` : ''}</p>
       </div>
       <div class="ccard__qty">
         <button data-step="-1" aria-label="Diminuir">${ICO.minus}</button>
@@ -1425,10 +1423,9 @@ function mostraDestaque(p) {
   if (!p) return;
   $('#dealName').textContent = p.name;
   $('#dealDesc').textContent = p.desc;
-  $('#dealPrice').textContent = money(startPrice(p));
-  $('#dealUnit').textContent = hasVolume(p)
-    ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
-    : `pedido mínimo ${p.min} uni`;
+  $('#dealPrice').innerHTML = `${money(startPrice(p))}<i class="dealCard__each">/un</i>`;
+  $('#dealUnit').textContent = `mín. ${p.min} uni = ${money(startPrice(p) * p.min)}` +
+    (hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : '');
   $('#dealMin').textContent = `mín. ${p.min} uni`;
   $('#dealAdd').dataset.add = p.id;
   const media = $('#dealMedia');

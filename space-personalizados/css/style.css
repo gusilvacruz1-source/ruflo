@@ -849,6 +849,21 @@ body.is-locked{ overflow: hidden; }
 .ccard__tiers li.is-best b{ color: var(--brass); }
 .ccard__foot{ display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-top: auto; flex-wrap: wrap; }
 .ccard__from{ display: block; letter-spacing: .16em; }
+/* O "/un" fica colado no preço, em corpo pequeno. O rótulo de unidade
+   morava só na linha de baixo e o olho lia o preço grande como o total do
+   lote mínimo: "pedido mínimo de 10" seguido de "R$ 29,90". */
+.ccard__each, .dealCard__each, .floatCard__each{
+  font-family: var(--font-ui); font-style: normal; font-weight: 500;
+  font-size: .5em; letter-spacing: .06em; margin-left: .28em;
+  color: var(--muted-dark); vertical-align: .18em;
+}
+[data-theme="ink"] .ccard__each, [data-theme="ink"] .dealCard__each{ color: var(--muted); }
+.ccard__tiers li b i{
+  font-family: var(--font-ui); font-style: normal; font-size: .78em;
+  letter-spacing: .04em; color: var(--muted-dark); margin-left: .2em;
+}
+[data-theme="ink"] .ccard__tiers li b i{ color: var(--muted); }
+.ccard__min b{ font-weight: 600; color: inherit; }
 .ccard__price{ display: block; font-size: 1.875rem; letter-spacing: -.025em; line-height: 1.2; }
 .ccard__min{ font-size: .75rem; color: var(--muted-dark); margin-top: 2px; }
 [data-theme="ink"] .ccard__min{ color: var(--muted); }
