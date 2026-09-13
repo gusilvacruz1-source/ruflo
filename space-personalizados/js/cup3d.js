@@ -36,7 +36,8 @@ const PROFILE_IN = [
   [0.052, 0.117], [0.022, 0.122], [0.000, 0.124]   // calota central do fundo
 ];
 
-const SEG = 168;                    // divisões ao redor do eixo
+const SEG = 128;                    // divisões ao redor do eixo (em 168 não
+                                    // havia diferença visível na silhueta)
 const BAND_TOP = 0.938;             // acima disto: aro de aço da boca
 const BAND_BOT = 0.017;             // abaixo disto: pé de aço
 
@@ -311,8 +312,11 @@ void main() {
     col += vec3(1.0, 0.985, 0.96) * s1 * 1.55;
     col += vec3(0.80, 0.90, 1.0)  * s2 * 0.20;
 
+    /* studio() é a conta mais cara deste shader. Uma chamada só, guardada:
+       o ambiente e a gravação usavam o mesmo R e pediam duas. */
+    vec3 amb = studio(R);
     /* o ambiente entra fraco: superfície pintada reflete pouco */
-    col += studio(R) * 0.038 * vec3(0.80, 0.92, 1.15);
+    col += amb * 0.038 * vec3(0.80, 0.92, 1.15);
 
     /* recorte de borda: separa o copo do fundo e arredonda a silhueta */
     col += vec3(0.46, 0.68, 1.0) * pow(graz, 3.0) * 0.58;
@@ -327,8 +331,7 @@ void main() {
     float v = clamp((h - uBandBot) / (uBandTop - uBandBot), 0.0, 1.0);
     float e = texture2D(uEtch, vec2(1.25 - ang, 1.0 - (v - 0.30) / 0.42)).r;
     e *= step(0.30, v) * step(v, 0.72) * (1.0 - inside);
-    vec3 exposto = vec3(0.80, 0.84, 0.88) * (0.46 + 0.82 * d1)
-                 + studio(R) * 0.12;
+    vec3 exposto = vec3(0.80, 0.84, 0.88) * (0.46 + 0.82 * d1) + amb * 0.12;
     col = mix(col, exposto, e * 0.97);
 
     if (inside > 0.5) {

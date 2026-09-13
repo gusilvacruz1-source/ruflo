@@ -404,10 +404,14 @@ const Stage = (() => {
   function resize3D() {
     if (!gl3d) return;
     const r = gl3d.getBoundingClientRect();
-    /* Teto de resolução do copo. Em 2x, num celular 3x, são quatro vezes
-       mais pixels para sombrear por quadro do que em 1x — e o copo é
-       sombreado por inteiro a cada quadro da introdução. */
-    const d = Math.min(window.devicePixelRatio || 1, 1.75);
+    /* Teto do copo em PIXELS, não em densidade. O que custa por quadro é a
+       contagem total de fragmentos, e ela depende do tamanho da tela junto
+       com a densidade: 1.75x num tablet grande é muito mais trabalho que
+       1.75x num celular. Este teto vale igual em qualquer aparelho. */
+    const TETO = 1.15e6;
+    let d = Math.min(window.devicePixelRatio || 1, 2);
+    const area = r.width * r.height * d * d;
+    if (area > TETO) d *= Math.sqrt(TETO / area);
     const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
     if (gl3d.width !== w) gl3d.width = w;
     if (gl3d.height !== h) gl3d.height = h;
