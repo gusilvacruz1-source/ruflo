@@ -3,10 +3,17 @@
    Copo gerado por código. WebGL puro, sem three.js, sem biblioteca nenhuma.
    ----------------------------------------------------------------------------
    O copo é uma SUPERFÍCIE DE REVOLUÇÃO: um perfil 2D (parede externa, lábio da
-   borda, parede interna, fundo) girado em torno do eixo Y. Aço e revestimento
-   vermelho são decididos pela altura no shader, e o estúdio — luz principal,
-   preenchimento e rebote quente do chão — é procedural, então não há HDR para
-   baixar: o metal reflete um ambiente que existe só como matemática.
+   borda, parede interna, fundo) girado em torno do eixo Y.
+
+   O corpo é VIDRO: transparência de verdade, com Fresnel decidindo quanto
+   reflete e quanto deixa passar, refração pela parede, absorção que escurece
+   onde o vidro é mais espesso e a gravação a laser jateada. Só o aro da boca
+   e o pé continuam em aço escovado. O estúdio — luz principal, preenchimento
+   e rebote quente do chão — é procedural: não há HDR para baixar, o vidro
+   reflete um ambiente que existe só como matemática.
+
+   Vidro exige ordem de desenho. São três passadas: o aço opaco escreve
+   profundidade, depois o vidro de trás, depois o vidro da frente.
    ========================================================================== */
 
 (function (global) {
@@ -21,15 +28,17 @@ const PROFILE_OUT = [
 const LIP = [
   [0.329, 0.945], [0.327, 0.957], [0.317, 0.962], [0.307, 0.956]
 ];
+/* Parede mais grossa e base pesada: é o que separa um copo de vidro de um
+   cilindro oco. A espessura é o que dá a lente na borda e o brilho no fundo. */
 const PROFILE_IN = [
-  [0.307, 0.956], [0.301, 0.900], [0.288, 0.620], [0.267, 0.300],
-  [0.249, 0.078], [0.234, 0.054], [0.180, 0.044], [0.090, 0.041],
-  [0.052, 0.050], [0.022, 0.058], [0.000, 0.061]   // calota central do fundo
+  [0.307, 0.956], [0.299, 0.900], [0.283, 0.620], [0.259, 0.300],
+  [0.242, 0.150], [0.231, 0.124], [0.180, 0.115], [0.090, 0.112],
+  [0.052, 0.117], [0.022, 0.122], [0.000, 0.124]   // calota central do fundo
 ];
 
 const SEG = 168;                    // divisões ao redor do eixo
-const BAND_TOP = 0.800;             // acima disto: aço
-const BAND_BOT = 0.072;             // abaixo disto: aço
+const BAND_TOP = 0.938;             // acima disto: aro de aço da boca
+const BAND_BOT = 0.017;             // abaixo disto: pé de aço
 
 /* --- matemática mínima de matriz ----------------------------------------- */
 const M4 = {
@@ -99,8 +108,13 @@ function buildGeometry() {
     }
   }
   const W = SEG + 1;
+  // onde a casca de FORA termina e a de DENTRO começa: o vidro precisa ser
+  // desenhado de trás para a frente, e do lado de cá isso significa pintar a
+  // parede interna ANTES da externa
+  const fimExterna = (PROFILE_OUT.length + LIP.length - 1) * SEG * 6;
   for (let i = 0; i < rings.length - 1; i++) {
-    // não costura o salto entre o fim do perfil externo e o início do interno
+    // o último ponto do lábio e o primeiro do perfil interno são o mesmo:
+    // a faixa entre eles nasce degenerada e não desenha nada
     for (let s = 0; s < SEG; s++) {
       const a = i * W + s, b = a + 1, c = a + W, d = c + 1;
       idx.push(a, c, b, b, c, d);
@@ -108,7 +122,7 @@ function buildGeometry() {
   }
   return {
     pos: new Float32Array(pos), nrm: new Float32Array(nrm),
-    att: new Float32Array(att), idx: new Uint32Array(idx)
+    att: new Float32Array(att), idx: new Uint32Array(idx), fimExterna
   };
 }
 
@@ -161,31 +175,33 @@ varying vec3 vW, vN, vA;
 uniform vec3 uCam;
 uniform sampler2D uEtch;
 uniform float uBandTop, uBandBot;
+uniform float uPass;        // 0 = aço opaco · 1 = vidro
 
-/* Estúdio procedural: o que o aço reflete. Uma softbox grande em cima à
-   esquerda, um preenchimento frio do outro lado e um rebote quente do chão —
-   é a iluminação de mesa de produto, escrita como função. */
+/* Estúdio procedural: o que o vidro reflete e o que se vê através dele. Uma
+   softbox grande em cima à esquerda, um preenchimento frio do outro lado e um
+   rebote quente do chão — é a iluminação de mesa de produto, escrita como
+   função. */
 vec3 studio(vec3 d) {
   d = normalize(d);
   float up = d.y * 0.5 + 0.5;
-  vec3 col = mix(vec3(0.035, 0.036, 0.042), vec3(0.20, 0.205, 0.225), smoothstep(0.18, 1.0, up));
+  vec3 col = mix(vec3(0.030, 0.031, 0.037), vec3(0.19, 0.195, 0.215), smoothstep(0.18, 1.0, up));
 
-  /* softbox principal: estreita e forte — é o que desenha a faixa branca que
-     corre pelo inox e dá a leitura de metal em vez de plástico cinza */
+  /* softbox principal: estreita e forte — é o que desenha a listra branca que
+     corre pelo vidro e faz a parede aparecer */
   vec3 keyDir = normalize(vec3(-0.42, 0.80, 0.43));
-  col += vec3(1.0, 0.98, 0.95) * smoothstep(0.80, 0.999, dot(d, keyDir)) * 7.0;
-  col += vec3(1.0, 0.97, 0.92) * smoothstep(0.30, 0.92, dot(d, keyDir)) * 1.15;
+  col += vec3(1.0, 0.98, 0.95) * smoothstep(0.80, 0.999, dot(d, keyDir)) * 9.0;
+  col += vec3(1.0, 0.97, 0.92) * smoothstep(0.30, 0.92, dot(d, keyDir)) * 1.10;
 
   vec3 key2 = normalize(vec3(-0.10, 0.55, 0.83));
-  col += vec3(0.95, 0.95, 1.0) * smoothstep(0.55, 0.98, dot(d, key2)) * 1.3;
+  col += vec3(0.95, 0.95, 1.0) * smoothstep(0.55, 0.98, dot(d, key2)) * 1.5;
 
   /* preenchimento frio do lado oposto, para o lado escuro não morrer */
   vec3 fillDir = normalize(vec3(0.88, 0.10, -0.46));
-  col += vec3(0.42, 0.52, 0.72) * smoothstep(0.55, 1.0, dot(d, fillDir)) * 0.75;
+  col += vec3(0.42, 0.52, 0.72) * smoothstep(0.55, 1.0, dot(d, fillDir)) * 0.85;
 
   /* recorte quente vindo de trás: separa o copo do fundo escuro */
   vec3 rimDir = normalize(vec3(0.10, 0.42, -0.90));
-  col += vec3(1.0, 0.84, 0.52) * smoothstep(0.72, 1.0, dot(d, rimDir)) * 1.9;
+  col += vec3(1.0, 0.84, 0.52) * smoothstep(0.72, 1.0, dot(d, rimDir)) * 2.2;
 
   col += vec3(0.92, 0.76, 0.46) * smoothstep(0.42, -0.1, up) * 0.30;  // rebote do chão
   return col;
@@ -197,51 +213,105 @@ void main() {
   float h = vA.x, inside = vA.y, ang = vA.z;
   vec3 N = normalize(vN);
   vec3 V = normalize(uCam - vW);
+  /* de que lado do copo esta face está, antes de virar a normal para a câmera:
+     serve para apagar a gravação da parede de trás, que o vidro da frente
+     espalha e some quase toda */
+  float frente = step(0.0, dot(N, V));
   if (dot(N, V) < 0.0) N = -N;                       // faces internas
   vec3 R = reflect(-V, N);
-  float fres = pow(1.0 - clamp(dot(N, V), 0.0, 1.0), 4.0);
+  float ndv  = clamp(dot(N, V), 0.0, 1.0);
+  float graz = 1.0 - ndv;                            // 0 de frente, 1 na silhueta
 
-  bool steel = (h > uBandTop) || (h < uBandBot) || inside > 0.5;
+  bool steel = (h > uBandTop) || (h < uBandBot);
+  /* Cada passada desenha só o seu material: sem isto o aço apareceria de novo
+     na passada do vidro, por cima de si mesmo e com a profundidade desligada. */
+  if (steel != (uPass < 0.5)) discard;
 
-  vec3 col;
+  vec3 col; float alpha;
+
   if (steel) {
-    /* escovado: perturba a reflexão em faixas circunferenciais */
-    /* O copo é torneado: as estrias dão a volta na peça, então na silhueta
-       elas aparecem HORIZONTAIS. Perturbar por ângulo dava estria vertical,
-       que é o que fazia o metal parecer plástico escovado errado. */
+    /* aço escovado do aro e do pé. O copo é torneado: as estrias dão a volta
+       na peça, então na silhueta elas aparecem HORIZONTAIS. */
     float band  = hash(vec2(floor(h * 460.0), 7.0)) - 0.5;
     float band2 = hash(vec2(floor(h * 120.0), 3.0)) - 0.5;
     vec3 Rb = normalize(R + N * (band * 0.085 + band2 * 0.035));
     vec3 env = studio(Rb) * 0.62 + studio(R) * 0.38;
     col = env * vec3(0.93, 0.945, 0.97);
-    col += vec3(1.0) * fres * 0.9;
+    col += vec3(1.0) * pow(graz, 4.0) * 0.9;
     col *= mix(0.34, 1.18, smoothstep(-0.55, 0.75, N.y));   // oclusão vertical
-    if (inside > 0.5) col *= 0.40;                          // dentro é mais escuro
+    if (inside > 0.5) col *= 0.40;
+    alpha = 1.0;
   } else {
-    /* revestimento vermelho fosco */
-    vec3 base = vec3(0.78, 0.038, 0.105);
-    vec3 L = normalize(vec3(-0.42, 0.80, 0.43));
-    float diff = clamp(dot(N, L), 0.0, 1.0);
-    float wrap = clamp((dot(N, L) + 0.55) / 1.55, 0.0, 1.0);
-    col = base * (0.13 + 1.30 * diff + 0.42 * wrap * wrap);
-    col *= mix(0.74, 1.04, smoothstep(-0.25, 0.95, N.y));   // escurece para a base
-    vec3 H = normalize(L + V);
-    col += vec3(1.0, 0.94, 0.90) * pow(clamp(dot(N, H), 0.0, 1.0), 14.0) * 0.30;
-    col += vec3(1.0, 0.90, 0.84) * pow(clamp(dot(N, H), 0.0, 1.0), 90.0) * 0.55;
-    col += studio(R) * 0.018;
-    col += vec3(1.0, 0.62, 0.42) * fres * 0.30;             // recorte quente na borda
+    /* ------------------------------ VIDRO ------------------------------- */
+    /* Fresnel de Schlick: de frente o vidro quase não reflete e some; na
+       silhueta reflete quase tudo e vira um contorno luminoso. É essa curva,
+       e não uma opacidade fixa, que faz o olho ler "vidro". */
+    float f = 0.04 + 0.96 * pow(graz, 5.0);
 
-    /* gravação a laser: some o revestimento e aparece o aço por baixo */
+    /* refração: o que se enxerga ATRAVÉS da parede, com o índice do vidro */
+    vec3 T = refract(-V, N, 0.666);
+    vec3 trans = studio(length(T) > 0.0 ? T : R);
+
+    /* Absorção: o caminho óptico é curto de frente e longo na silhueta. Este
+       é um vidro PRETO FUMÊ, então a absorção é forte e o que atravessa sai
+       quase apagado — mesmo de frente a parede já puxa para o escuro. */
+    float espessura = 0.97 + pow(graz, 1.3) + (1.0 - smoothstep(0.10, 0.30, h)) * 0.55;
+    vec3 vidro = vec3(0.017, 0.018, 0.024);
+    vec3 absorve = mix(vec3(1.0), vidro, clamp(espessura, 0.0, 1.0));
+
+    col  = trans * absorve * (1.0 - f) * 0.30;
+    col += studio(R) * f * 1.05;             // preto polido: o reflexo é a forma
+
+    /* realce duro das softboxes: a linha de luz que corre pela parede */
+    vec3 L1 = normalize(vec3(-0.42, 0.80, 0.43));
+    vec3 L2 = normalize(vec3(-0.10, 0.55, 0.83));
+    vec3 H1 = normalize(L1 + V), H2 = normalize(L2 + V);
+    float s1 = pow(clamp(dot(N, H1), 0.0, 1.0), 260.0);
+    float s2 = pow(clamp(dot(N, H2), 0.0, 1.0), 120.0);
+    vec3 spec = vec3(1.0, 0.985, 0.96) * s1 * 3.4 + vec3(0.93, 0.95, 1.0) * s2 * 0.9;
+    /* o fundo por dentro encara a softbox de frente e devolvia um disco branco
+       chapado; num vidro preto ele é só uma poça de luz */
+    spec *= mix(1.0, 0.10, smoothstep(0.20, 0.10, h) * inside);
+    col += spec;
+
+    /* o fundo é maciço e concentra luz como uma lente — mas é vidro, não um
+       disco leitoso: o brilho fica no anel da borda, o miolo continua limpo */
+    float fundo = 1.0 - smoothstep(0.02, 0.14, h);
+    float anel  = smoothstep(0.55, 1.0, graz) * fundo;
+    col += vec3(0.98, 0.93, 0.86) * (anel * 0.30 + fundo * 0.012);
+
+    /* a opacidade é a espessura aparente: quase nada no meio da parede,
+       quase tudo na silhueta, mais o que os realces acrescentam */
+    /* vidro fumê é denso: deixa passar um fio de luz, não a página inteira */
+    alpha = clamp(0.80 + 0.20 * pow(graz, 1.6) + anel * 0.16
+                  + dot(spec, vec3(0.33)), 0.0, 1.0);
+
+    /* gravação a laser: no vidro ela é jateada, vira leitosa e opaca */
     float v = clamp((h - uBandBot) / (uBandTop - uBandBot), 0.0, 1.0);
-    float e = texture2D(uEtch, vec2(1.25 - ang, 1.0 - (v - 0.26) / 0.46)).r;
-    e *= step(0.26, v) * step(v, 0.72);
-    vec3 etched = studio(R) * vec3(0.72, 0.70, 0.68) * 0.55 + vec3(0.06);
-    col = mix(col, etched, e * 0.92);
+    float e = texture2D(uEtch, vec2(1.25 - ang, 1.0 - (v - 0.30) / 0.42)).r;
+    e *= step(0.30, v) * step(v, 0.72) * (1.0 - inside);
+    e *= mix(0.26, 1.0, frente);            // a do outro lado chega espalhada
+    vec3 jateado = vec3(0.86, 0.88, 0.90) * (0.30 + 0.55 * clamp(dot(N, L1), 0.0, 1.0))
+                 + studio(R) * 0.05;
+    col   = mix(col, jateado, e * 0.95);
+    alpha = mix(alpha, 0.92, e * 0.95);
+
+    /* Por dentro é um poço preto: a luz que entra pela boca bate na parede
+       escura e não volta. Sem isto o interior saía bege e o copo deixava de
+       ser preto assim que a câmera olhava para baixo. */
+    if (inside > 0.5) {
+      col *= 0.26;
+      // e dessatura: o rebote quente do chão pintava o interior de bege e
+      // tirava o preto do copo justamente no mergulho
+      col = mix(col, vec3(dot(col, vec3(0.299, 0.587, 0.114))), 0.6);
+    }
   }
 
   col = col / (col + vec3(0.72));                      // tonemap
   col = pow(col, vec3(1.0 / 2.2));
-  gl_FragColor = vec4(col, 1.0);
+  /* alfa pré-multiplicado: o canvas compõe sobre a página, e é isto que faz o
+     fundo do site aparecer de verdade através do vidro */
+  gl_FragColor = vec4(col * alpha, alpha);
 }`;
 
 /* --- renderizador --------------------------------------------------------- */
@@ -261,8 +331,10 @@ const Cup3D = {
   ok: false,
 
   init(canvas) {
+    // alfa PRÉ-MULTIPLICADO: o shader já devolve col*alpha, e é assim que o
+    // navegador compõe o vidro sobre o fundo da página sem halo escuro
     const gl = canvas.getContext('webgl', {
-      alpha: true, antialias: true, premultipliedAlpha: false,
+      alpha: true, antialias: true, premultipliedAlpha: true,
       preserveDrawingBuffer: false, powerPreference: 'high-performance'
     });
     if (!gl) return false;
@@ -306,6 +378,8 @@ const Cup3D = {
     gl.generateMipmap(gl.TEXTURE_2D);
 
     this.gl = gl; this.prog = prog; this.count = idx.length; this.idxType = idxType;
+    this.fimExterna = g.fimExterna;
+    this.bytesIdx = (idxType === gl.UNSIGNED_INT) ? 4 : 2;
     this._proj = new Float32Array(16);
     this._view = new Float32Array(16);
     this._eye  = new Float32Array(3);
@@ -318,7 +392,8 @@ const Cup3D = {
       uCam: gl.getUniformLocation(prog, 'uCam'),
       uEtch: gl.getUniformLocation(prog, 'uEtch'),
       uBandTop: gl.getUniformLocation(prog, 'uBandTop'),
-      uBandBot: gl.getUniformLocation(prog, 'uBandBot')
+      uBandBot: gl.getUniformLocation(prog, 'uBandBot'),
+      uPass: gl.getUniformLocation(prog, 'uPass')
     };
     this.bufs = { bPos, bNrm, bAtt, bIdx, tex };
 
@@ -330,8 +405,8 @@ const Cup3D = {
     }
 
     gl.enable(gl.DEPTH_TEST);
-    // sem culling: no mergulho a câmera fica DENTRO da geometria
-    gl.disable(gl.CULL_FACE);
+    gl.enable(gl.BLEND);
+    gl.blendFunc(gl.ONE, gl.ONE_MINUS_SRC_ALPHA);   // pré-multiplicado
     gl.clearColor(0, 0, 0, 0);
 
     // (3) contexto de WebGL se perde quando a aba vai para segundo plano ou
@@ -398,6 +473,21 @@ const Cup3D = {
     gl.vertexAttribPointer(loc, 3, gl.FLOAT, false, 0, 0);
   },
 
+  /* A câmera está dentro do copo? Vale para o fim do mergulho: ali não dá
+     para separar "parede de trás" de "parede da frente", então o vidro sai
+     numa passada só. */
+  dentroDoCopo(eye) {
+    const raio = Math.hypot(eye[0], eye[2]);
+    return raio < 0.31 && eye[1] < 0.95 && eye[1] > 0.05;
+  },
+
+  desenha(de, ate) {
+    const gl = this.gl;
+    const ini = de || 0, fim = (ate === undefined ? this.count : ate);
+    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufs.bIdx);
+    gl.drawElements(gl.TRIANGLES, fim - ini, this.idxType, ini * this.bytesIdx);
+  },
+
   render(phase, t) {
     if (!this.ok) return;
     const gl = this.gl, L = this.loc;
@@ -423,8 +513,32 @@ const Cup3D = {
     this.bind(this.bufs.bNrm, L.aNrm);
     this.bind(this.bufs.bAtt, L.aAtt);
 
-    gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, this.bufs.bIdx);
-    gl.drawElements(gl.TRIANGLES, this.count, this.idxType, 0);
+    /* Vidro não tem ordem natural: o que está atrás precisa ser pintado antes
+       do que está na frente, senão a parede de trás some. Daí três passadas. */
+
+    // 1) aço opaco — escreve profundidade e trava o que vem depois
+    gl.depthMask(true);
+    gl.uniform1f(L.uPass, 0);
+    this.desenha();
+
+    // 2) e 3) vidro, de trás para a frente, sem escrever profundidade
+    gl.depthMask(false);
+    gl.uniform1f(L.uPass, 1);
+    const fim = this.fimExterna;
+    if (this.dentroDoCopo(eye)) {
+      gl.disable(gl.CULL_FACE);
+      this.desenha();
+    } else {
+      gl.enable(gl.CULL_FACE);
+      // do fundo para a frente: externa de trás, interna de trás,
+      // interna da frente, externa da frente
+      gl.cullFace(gl.FRONT);
+      this.desenha(0, fim); this.desenha(fim, this.count);
+      gl.cullFace(gl.BACK);
+      this.desenha(fim, this.count); this.desenha(0, fim);
+      gl.disable(gl.CULL_FACE);
+    }
+    gl.depthMask(true);
   }
 };
 
