@@ -140,8 +140,12 @@ quantidades, o site calcula o preço unitário **na faixa certa** e monta uma
 mensagem pronta para o WhatsApp `(42) 99134-3788`. Carrinho e favoritos
 ficam salvos no navegador.
 
-O preço em destaque é sempre o do **pedido mínimo** — o de volume vira nota.
-Anunciar R$ 2,25 num item cujo mínimo de 10 unidades custa R$ 4,00 é
+**Não há pedido mínimo em item nenhum**: dá para comprar uma peça só, pelo
+mesmo preço unitário da tabela. Os `tiers` de cada produto começam em 1, e as
+faixas acima disso são descontos por volume, não exigências.
+
+O preço em destaque é sempre o da **unidade avulsa** e o de volume vira nota.
+Anunciar R$ 2,25 num chaveiro que só chega a esse preço em 500 peças é
 anunciar um preço que o cliente não consegue.
 
 ### Fotos dos produtos

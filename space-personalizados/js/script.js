@@ -258,81 +258,82 @@ function hydratePlaceholders(root = document) {
 /* ============================================================================
    [4] CATÁLOGO — dados reais do catálogo Space Personalizados
    --------------------------------------------------------------------------
-   tiers: faixas de preço por quantidade [qtd mínima, preço unitário]
+   tiers: faixas de preço por quantidade [a partir de quantas, preço unitário]
+           A primeira faixa começa em 1: não há pedido mínimo em item nenhum.
    ========================================================================== */
 
 const PRODUCTS = [
   { id:'copo-473', name:'Copo Térmico Inox 473ml', cat:'copos', ph:'copo',
     desc:'Dupla parede em inox, acompanha tampa e abridor personalizado a laser.',
-    tiers:[[10,29.90]], min:10 },
+    tiers:[[1,29.90]] },
 
   { id:'copo-360', name:'Copo Térmico Inox 360ml', cat:'copos', ph:'copo',
     desc:'Parede em inox com tampa, para bebidas quentes e frias.',
-    tiers:[[10,29.90]], min:10 },
+    tiers:[[1,29.90]] },
 
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',
     desc:'Dupla parede em inox de 700 ml personalizada a laser.',
-    tiers:[[10,69.90],[20,49.90],[50,48.90]], min:10 },
+    tiers:[[1,69.90],[20,49.90],[50,48.90]] },
 
   { id:'caneca-aluminio-350', name:'Caneca em Alumínio 350ml', cat:'copos', ph:'caneca',
     desc:'Leve, resistente e com ótimo custo por unidade em grandes volumes.',
-    tiers:[[20,17.99],[50,15.99],[100,14.99]], min:20 },
+    tiers:[[1,17.99],[50,15.99],[100,14.99]] },
 
   { id:'caneca-porcelana', name:'Caneca de Porcelana 325ml', cat:'copos', ph:'xicara',
     desc:'Clássica de escritório, acabamento liso e impressão de alta definição.',
-    tiers:[[10,35.00],[20,32.00],[25,29.00]], min:10 },
+    tiers:[[1,35.00],[20,32.00],[25,29.00]] },
 
   { id:'torre-xicaras', name:'Torre de Xícaras 150ml', cat:'copos', ph:'xicara',
     desc:'Jogo de xícaras com suporte em metal, presente corporativo de alto impacto.',
-    tiers:[[10,70.00],[20,68.00],[25,65.00]], min:10 },
+    tiers:[[1,70.00],[20,68.00],[25,65.00]] },
 
   { id:'garrafa-500', name:'Garrafa Térmica 500ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 500 ml com infusor para chá.',
-    tiers:[[10,29.90]], min:10 },
+    tiers:[[1,29.90]] },
 
   { id:'garrafa-800', name:'Garrafa Térmica 800ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 800 ml com tampa rosqueável e vedação reforçada.',
-    tiers:[[10,49.90]], min:10 },
+    tiers:[[1,49.90]] },
 
   { id:'garrafa-aluminio-600', name:'Garrafa em Alumínio 600ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa esportiva em alumínio de 600 ml, gravada a laser.',
-    tiers:[[10,44.90],[20,42.90],[50,39.90]], min:10 },
+    tiers:[[1,44.90],[20,42.90],[50,39.90]] },
 
   { id:'churrasco-5', name:'Kit Churrasco 5 Peças', cat:'churrasco', ph:'churrasco',
     desc:'Garfo, faca, pegador, espátula, pincel e espetos. Acompanha bolsa.',
-    tiers:[[1,99.90],[10,79.90]], min:1 },
+    tiers:[[1,99.90],[10,79.90]] },
 
   { id:'churrasco-4', name:'Kit Churrasco Maleta 4 Peças', cat:'churrasco', ph:'churrasco',
     desc:'Maleta de alumínio com travas: pegador, garfo, faca e espátula em inox.',
-    tiers:[[1,159.90],[10,119.90]], min:1 },
+    tiers:[[1,159.90],[10,119.90]] },
 
   { id:'churrasco-2-estojo', name:'Kit Churrasco 2 Peças · Estojo', cat:'churrasco', ph:'churrasco',
     desc:'Garfo e faca de 8 polegadas acondicionados em estojo.',
-    tiers:[[1,75.90],[10,55.90]], min:1 },
+    tiers:[[1,75.90],[10,55.90]] },
 
   { id:'churrasco-2-caixa', name:'Kit Churrasco 2 Peças · Caixa', cat:'churrasco', ph:'churrasco',
     desc:'Garfo e faca de 8 polegadas, acompanha caixa para presente.',
-    tiers:[[1,75.90],[10,55.90]], min:1 },
+    tiers:[[1,75.90],[10,55.90]] },
 
   { id:'canivete-inox', name:'Canivete Inox com Presilha', cat:'canivetes', ph:'canivete',
     desc:'Canivete em aço inox com presilha de bolso e gravação a laser.',
-    tiers:[[1,99.90],[10,49.90]], min:1 },
+    tiers:[[1,99.90],[10,49.90]] },
 
   { id:'canivete-aco', name:'Canivete com Lâmina de Aço', cat:'canivetes', ph:'canivete',
     desc:'Lâmina de aço com cabo ergonômico, ideal para brinde masculino.',
-    tiers:[[1,69.90],[10,39.90]], min:1 },
+    tiers:[[1,69.90],[10,39.90]] },
 
   { id:'caneta-metal', name:'Caneta Esferográfica em Metal', cat:'escritorio', ph:'caneta',
     desc:'Caneta em metal escovado com gravação a laser da sua marca.',
-    tiers:[[10,6.00],[50,4.50],[100,4.00]], min:10 },
+    tiers:[[1,6.00],[50,4.50],[100,4.00]] },
 
   { id:'chaveiro-abridor', name:'Chaveiro Abridor a Laser', cat:'escritorio', ph:'chaveiro',
     desc:'Chaveiro abridor personalizado a laser, o brinde de maior giro.',
-    tiers:[[10,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]], min:10 },
+    tiers:[[1,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]] },
 
   { id:'chapeu-juta', name:'Chapéu de Juta', cat:'estilo', ph:'chapeu',
     desc:'Chapéu de juta com faixa em couro ecológico personalizada a laser.',
-    tiers:[[1,80.00],[5,70.00],[10,60.00]], min:1 }
+    tiers:[[1,80.00],[5,70.00],[10,60.00]] }
 ];
 
 const byId = id => PRODUCTS.find(p => p.id === id);
@@ -343,14 +344,14 @@ function unitPrice(p, qty) {
   for (const [min, val] of p.tiers) if (qty >= min) price = val;
   return price;
 }
-/* O número em destaque tem que ser o que o cliente paga no pedido mínimo.
-   O preço de volume é a promessa, não a manchete — mostrar R$ 2,25 e riscar
-   R$ 4,00 num item de mínimo 10 é anunciar um preço que exige 500 peças. */
-const startPrice = p => unitPrice(p, p.min);
+/* O número em destaque é o que o cliente paga levando UMA peça. O preço de
+   volume é a promessa, não a manchete: anunciar R$ 2,25 e riscar R$ 4,00 é
+   mostrar um preço que exige 500 peças para existir. */
+const startPrice = p => unitPrice(p, 1);
 const bestPrice  = p => Math.min(...p.tiers.map(t => t[1]));
 const bestQty    = p => p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0];
 const hasVolume  = p => bestPrice(p) < startPrice(p);
-/* Quanto o preço da peça cai do lote mínimo até a melhor faixa. É o único
+/* Quanto o preço da peça cai da unidade avulsa até a melhor faixa. É o único
    selo que o card carrega: sai direto da tabela do catálogo, ao contrário de
    "Mais vendido" ou "Premium", que eram rótulos que eu tinha inventado. */
 const dropPct    = p => Math.round((1 - bestPrice(p) / startPrice(p)) * 100);
@@ -799,7 +800,7 @@ function showcaseCard(p, wide) {
         <h3 class="pcard__name">${p.name}</h3>
         <div class="pcard__foot">
           <a class="pill pill--light pcard__more" href="#catalogo" data-jump="${p.id}">SAIBA MAIS ${ICO.arrow.replace('<svg', '<svg class="ico-arrow"')}</a>
-          <span class="minlot">mín. ${p.min} uni</span>
+          <span class="minlot">a partir de 1 uni</span>
         </div>
       </div>
     </article>`;
@@ -814,7 +815,7 @@ function showcaseCard(p, wide) {
       <div class="pcard__foot">
         <div>
           <span class="pcard__price"><b>${money(base)}</b><span class="pcard__each">/un</span></span>
-          <span class="pcard__unit">mín. ${p.min} uni = ${money(base * p.min)}${
+          <span class="pcard__unit">sem pedido mínimo${
             hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : ''}</span>
         </div>
       </div>
@@ -826,9 +827,15 @@ function catalogCard(p) {
   const best = bestPrice(p), start = startPrice(p);
   // Com uma faixa só, a tabela repete o preço que já está em destaque logo
   // abaixo — quatro vezes a mesma informação no mesmo card.
+  // Sem pedido mínimo a primeira faixa começa em 1, e "1+ unidades" lê torto.
+  // Intervalo fechado diz a mesma coisa sem ambiguidade: quem leva 12 vê na
+  // hora que está na faixa de 1 a 29, não na de 30.
   const tiers = hasVolume(p)
-    ? p.tiers.map(([q, v]) =>
-        `<li class="${v === best ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)} <i>/un</i></b></li>`).join('')
+    ? p.tiers.map(([q, v], i) => {
+        const ate = p.tiers[i + 1] ? p.tiers[i + 1][0] - 1 : 0;
+        const faixa = ate ? `${q} a ${ate} unidades` : `${q} unidades ou mais`;
+        return `<li class="${v === best ? 'is-best' : ''}"><span>${faixa}</span><b>${money(v)} <i>/un</i></b></li>`;
+      }).join('')
     : '';
   const fav = favs.has(p.id) ? ' is-on' : '';
   return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}">
@@ -843,12 +850,12 @@ function catalogCard(p) {
       <div>
         <span class="ccard__from">preço por unidade</span>
         <span class="ccard__price">${money(start)}<i class="ccard__each">/un</i></span>
-        <p class="ccard__min">mínimo ${p.min} uni = <b>${money(start * p.min)}</b>${
+        <p class="ccard__min"><b>sem pedido mínimo</b>${
           hasVolume(p) ? `<br>cai para ${money(best)}/un a partir de ${bestQty(p)}` : ''}</p>
       </div>
       <div class="ccard__qty">
         <button data-step="-1" aria-label="Diminuir">${ICO.minus}</button>
-        <input type="number" value="${p.min}" min="${p.min}" step="1" aria-label="Quantidade de ${p.name}">
+        <input type="number" value="1" min="1" step="1" aria-label="Quantidade de ${p.name}">
         <button data-step="1" aria-label="Aumentar">${ICO.plus}</button>
       </div>
     </div>
@@ -938,7 +945,7 @@ const Cart = (() => {
   function add(id, qty) {
     const p = byId(id);
     if (!p) return;
-    const q = Math.max(p.min, qty || p.min);
+    const q = Math.max(1, qty || 1);
     const found = items.find(i => i.id === id);
     if (found) found.qty += q; else items.push({ id, qty: q });
     save();
@@ -948,7 +955,7 @@ const Cart = (() => {
     const p = byId(id);
     const it = items.find(i => i.id === id);
     if (!p || !it) return;
-    it.qty = Math.max(p.min, qty);
+    it.qty = Math.max(1, qty);
     save();
   }
   function remove(id) { items = items.filter(i => i.id !== id); save(); }
@@ -982,11 +989,16 @@ const Cart = (() => {
     body.innerHTML = items.map(i => {
       const p = byId(i.id);
       const u = unitPrice(p, i.qty);
+      /* "faixa de 1+" nao dizia nada com o pedido minimo fora. No lugar entra
+         a proxima faixa: quanto a peca custaria subindo o lote. E a unica
+         informacao do orcamento que ajuda quem esta decidindo a quantidade. */
+      const prox = p.tiers.find(([q]) => q > i.qty);
+      const dica = prox ? ` · a partir de ${prox[0]} uni sai a ${money(prox[1])}` : '';
       return `<div class="ditem" data-id="${p.id}">
         <span class="ditem__thumb" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp"></span>
         <div class="ditem__body">
           <p class="ditem__name">${p.name}</p>
-          <p class="ditem__meta">${money(u)} / uni · faixa de ${i.qty}+ </p>
+          <p class="ditem__meta">${money(u)} / uni${dica}</p>
           <div class="ditem__row">
             <span class="ditem__qty">
               <button data-q="-1" aria-label="Diminuir">−</button>
@@ -1007,7 +1019,7 @@ const Cart = (() => {
 
 function waLink(id, qty) {
   const p = byId(id);
-  const q = qty || p.min;
+  const q = qty || 1;
   const u = unitPrice(p, q);
   const txt = `Olá, Space! Tenho interesse em:\n\n• ${p.name}\n• Quantidade: ${q} uni\n• Valor de referência: ${money(u)} / uni\n\nPodem me passar o orçamento?`;
   return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
@@ -1073,9 +1085,9 @@ document.addEventListener('click', e => {
     // campo vazio dava NaN, que o input[type=number] apagava — e os
     // botões ficavam mortos até alguém digitar um número na mão
     const cur = parseInt(input.value, 10);
-    const from = Number.isFinite(cur) ? cur : p.min;
-    const next = from + Number(step.dataset.step) * (p.min >= 10 ? 10 : 1);
-    input.value = Math.max(p.min, next);
+    const from = Number.isFinite(cur) ? cur : 1;
+    const next = from + Number(step.dataset.step);
+    input.value = Math.max(1, next);
     return;
   }
 
@@ -1131,7 +1143,7 @@ document.addEventListener('click', e => {
     const id = q.closest('.ditem').dataset.id;
     const p = byId(id);
     const it = Cart.items.find(i => i.id === id);
-    Cart.setQty(id, it.qty + Number(q.dataset.q) * (p.min >= 10 ? 10 : 1));
+    Cart.setQty(id, it.qty + Number(q.dataset.q));
     return;
   }
   const del = e.target.closest('[data-del]');
@@ -1141,7 +1153,7 @@ document.addEventListener('click', e => {
 document.addEventListener('input', e => {
   if (e.target.matches('.ccard__qty input')) {
     const p = byId(e.target.closest('.ccard').dataset.id);
-    if (e.target.value !== '' && +e.target.value < p.min) e.target.setAttribute('aria-invalid', 'true');
+    if (e.target.value !== '' && +e.target.value < 1) e.target.setAttribute('aria-invalid', 'true');
     else e.target.removeAttribute('aria-invalid');
   }
 });
@@ -1409,9 +1421,9 @@ function wireMagnetic() {
    grupo é uma pergunta que o catálogo responde sozinho. */
 const GRUPOS = {
   queda:   { ordem: (a, b) => dropPct(b) - dropPct(a),           filtra: hasVolume },
-  unidade: { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => p.min === 1 },
-  dez:     { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => p.min >= 10 },
-  ate30:   { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => startPrice(p) <= 30 }
+  ate30:    { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => startPrice(p) <= 30 },
+  acima70:  { ordem: (a, b) => startPrice(b) - startPrice(a),     filtra: p => startPrice(p) > 70 },
+  churrasco:{ ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => p.cat === 'churrasco' }
 };
 
 function grupo(key) {
@@ -1424,9 +1436,9 @@ function mostraDestaque(p) {
   $('#dealName').textContent = p.name;
   $('#dealDesc').textContent = p.desc;
   $('#dealPrice').innerHTML = `${money(startPrice(p))}<i class="dealCard__each">/un</i>`;
-  $('#dealUnit').textContent = `mín. ${p.min} uni = ${money(startPrice(p) * p.min)}` +
+  $('#dealUnit').textContent = 'sem pedido mínimo' +
     (hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : '');
-  $('#dealMin').textContent = `mín. ${p.min} uni`;
+  $('#dealMin').textContent = 'a partir de 1 uni';
   $('#dealAdd').dataset.add = p.id;
   const media = $('#dealMedia');
   media.dataset.ph = p.ph;
