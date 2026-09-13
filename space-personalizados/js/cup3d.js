@@ -307,7 +307,13 @@ void main() {
 
     /* o estúdio entra só como luz de apoio: o que se enxerga através da
        parede é o papel de parede da página, que chega pelo alfa */
-    col  = trans * absorve * (1.0 - f) * 0.34;
+    col  = trans * absorve * (1.0 - f) * 0.22;
+
+    /* COR DO VIDRO. Com alfa baixo quem manda na parede é o que está atrás,
+       e o copo saía cinza-esverdeado. Este é o azul do próprio vidro: entra
+       como corpo, mais forte de frente (onde a parede é fina e o Fresnel não
+       devolve nada) e cedendo na silhueta, onde o reflexo assume. */
+    col += vec3(0.038, 0.118, 0.360) * (0.34 + 0.66 * pow(1.0 - graz, 1.4));
     col += studio(R) * f * 1.05 * vec3(0.86, 0.94, 1.10);   /* reflexo puxa frio */             // preto polido: o reflexo é a forma
 
     /* realce duro das softboxes: a linha de luz que corre pela parede */
@@ -334,7 +340,7 @@ void main() {
     /* Vidro de verdade deixa passar. Com uma imagem atrás, é este alfa que
        entrega a nebulosa através da parede — em 0.8 o copo virava um bloco
        fosco e o fundo não servia para nada. */
-    alpha = clamp(0.30 + 0.62 * pow(graz, 1.5) + anel * 0.12
+    alpha = clamp(0.46 + 0.50 * pow(graz, 1.5) + anel * 0.12
                   + dot(spec, vec3(0.33)), 0.0, 1.0);
 
     /* gravação a laser: no vidro ela é jateada, vira leitosa e opaca */
@@ -342,10 +348,10 @@ void main() {
     float e = texture2D(uEtch, vec2(1.25 - ang, 1.0 - (v - 0.30) / 0.42)).r;
     e *= step(0.30, v) * step(v, 0.72) * (1.0 - inside);
     e *= mix(0.26, 1.0, frente);            // a do outro lado chega espalhada
-    vec3 jateado = vec3(0.86, 0.88, 0.90) * (0.30 + 0.55 * clamp(dot(N, L1), 0.0, 1.0))
-                 + studio(R) * 0.05;
-    col   = mix(col, jateado, e * 0.96);
-    alpha = mix(alpha, 0.90, e * 0.96);
+    vec3 jateado = vec3(0.93, 0.95, 0.98) * (0.42 + 0.62 * clamp(dot(N, L1), 0.0, 1.0))
+                 + studio(R) * 0.06;
+    col   = mix(col, jateado, e * 0.97);
+    alpha = mix(alpha, 0.94, e * 0.97);
 
     /* Por dentro é um poço preto: a luz que entra pela boca bate na parede
        escura e não volta. Sem isto o interior saía bege e o copo deixava de
