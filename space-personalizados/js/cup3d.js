@@ -5,15 +5,15 @@
    O copo é uma SUPERFÍCIE DE REVOLUÇÃO: um perfil 2D (parede externa, lábio da
    borda, parede interna, fundo) girado em torno do eixo Y.
 
-   O corpo é VIDRO: transparência de verdade, com Fresnel decidindo quanto
-   reflete e quanto deixa passar, refração pela parede, absorção que escurece
-   onde o vidro é mais espesso e a gravação a laser jateada. Só o aro da boca
-   e o pé continuam em aço escovado. O estúdio — luz principal, preenchimento
-   e rebote quente do chão — é procedural: não há HDR para baixar, o vidro
-   reflete um ambiente que existe só como matemática.
+   O corpo é inox com REVESTIMENTO ANODIZADO azul: pigmento fosco por baixo,
+   verniz por cima. Quem devolve a forma da luz é o verniz, via Fresnel. Só o
+   aro da boca e o pé ficam com o metal cru à mostra.
 
-   Vidro exige ordem de desenho. São três passadas: o aço opaco escreve
-   profundidade, depois o vidro de trás, depois o vidro da frente.
+   O estúdio é procedural: não há HDR para baixar. Mas as luzes são PAINÉIS
+   retangulares, não pontos — é o que faz a parede curva devolver uma listra
+   comprida em vez de um borrão redondo. Junto com o horizonte refletido, o
+   grão do acabamento e o tonemap filmico, é o que separa "foto de produto"
+   de "render".
    ========================================================================== */
 
 (function (global) {
@@ -202,60 +202,105 @@ uniform sampler2D uEtch;
 uniform float uBandTop, uBandBot;
 uniform float uPass;        // 0 = o copo · 2 = sombra de contato
 uniform float uSombra;      // força da sombra de contato
+uniform float uRuido;       // semente do grão de sensor
+uniform vec2  uRig;         // cosseno/seno do azimute da câmera
 
-/* Estúdio procedural: o que o vidro reflete e o que se vê através dele. Uma
-   softbox grande em cima à esquerda, um preenchimento frio do outro lado e um
-   rebote quente do chão — é a iluminação de mesa de produto, escrita como
-   função. */
+/* MESA GIRATÓRIA. Antes as luzes ficavam paradas no mundo e a câmera é que
+   dava a volta: a peça passava de quase branca a quase preta ao longo do
+   giro, o que nenhum packshot faz. Num estúdio de verdade quem gira é a peça;
+   a softbox, a tira de recorte e o preenchimento ficam onde estão em relação
+   à câmera. Esta rotação leva a normal e o reflexo para o referencial do rig,
+   com a câmera fixa em +X. O grão e a gravação continuam presos à superfície
+   — é a peça que roda, e é isso que se vê. */
+vec3 paraRig(vec3 v) {
+  return vec3(v.x * uRig.x + v.z * uRig.y, v.y, uRig.x * v.z - uRig.y * v.x);
+}
+
+/* ---------------------------------------------------------------------------
+   ESTÚDIO PROCEDURAL
+   Antes cada luz era um PONTO: smoothstep(dot(d, dir)) devolve um borrão
+   redondo, e borrão redondo refletido em parede cilíndrica vira degradê. Era
+   por isso que o copo lia como plástico — de perfil não havia nada na parede
+   além de um gradiente perfeito.
+   Numa mesa de produto de verdade a luz é um PAINEL: alto, estreito, de borda
+   definida. Refletido na curva ele vira uma listra comprida que corre pela
+   peça — a assinatura de foto de produto. E o cenário tem um HORIZONTE, que a
+   parede reflete como uma faixa escura atravessando o copo. Sem essas duas
+   coisas nenhuma difusa, por mais correta, salva o render.
+--------------------------------------------------------------------------- */
+
+/* Painel retangular como fonte de área: projeta a direção no plano do painel
+   e testa se caiu dentro do retângulo. 'suave' é a borda do difusor. */
+float painel(vec3 d, vec3 c, vec3 rt, vec3 up, vec2 meia, float suave) {
+  float dd = dot(d, c);
+  if (dd < 0.08) return 0.0;
+  vec3 p = d / dd - c;
+  return (1.0 - smoothstep(meia.x - suave, meia.x + suave, abs(dot(p, rt))))
+       * (1.0 - smoothstep(meia.y - suave, meia.y + suave, abs(dot(p, up))));
+}
+
 vec3 studio(vec3 d) {
   d = normalize(d);
-  float up = d.y * 0.5 + 0.5;
-  vec3 col = mix(vec3(0.030, 0.031, 0.037), vec3(0.19, 0.195, 0.215), smoothstep(0.18, 1.0, up));
 
-  /* softbox principal: estreita e forte — é o que desenha a listra branca que
-     corre pelo vidro e faz a parede aparecer */
-  vec3 keyDir = normalize(vec3(-0.42, 0.80, 0.43));
-  col += vec3(1.0, 0.98, 0.95) * smoothstep(0.80, 0.999, dot(d, keyDir)) * 9.0;
-  col += vec3(1.0, 0.97, 0.92) * smoothstep(0.30, 0.92, dot(d, keyDir)) * 1.10;
+  /* Mesa embaixo, ciclorama atrás. O horizonte é uma LINHA, não um degradê:
+     é ele que a parede curva devolve como faixa escura, e é essa faixa que
+     faz o olho ler "peça apoiada num lugar" em vez de "peça num vazio". */
+  vec3 mesa  = vec3(0.022, 0.022, 0.026);
+  vec3 ciclo = mix(vec3(0.050, 0.053, 0.064), vec3(0.150, 0.158, 0.188),
+                   smoothstep(0.0, 0.72, d.y));
+  vec3 col = mix(mesa, ciclo, smoothstep(-0.030, 0.040, d.y));
 
-  vec3 key2 = normalize(vec3(-0.10, 0.55, 0.83));
-  col += vec3(0.95, 0.95, 1.0) * smoothstep(0.55, 0.98, dot(d, key2)) * 1.5;
+  /* softbox principal: alta, estreita, em cima à esquerda. Os eixos são
+     constantes — o compilador dobra estas contas. */
+  vec3 kc = normalize(vec3(0.38, 0.64, 0.67));      // softbox: alto, ~60° à esquerda
+  vec3 kr = normalize(cross(vec3(0.0, 1.0, 0.0), kc));
+  vec3 ku = cross(kc, kr);
+  col += vec3(1.0, 0.985, 0.955) * painel(d, kc, kr, ku, vec2(0.150, 2.10), 0.130) * 4.6;
+  col += vec3(1.0, 0.970, 0.930) * painel(d, kc, kr, ku, vec2(0.82, 3.20), 1.05) * 0.62;
 
-  /* preenchimento frio do lado oposto, para o lado escuro não morrer */
-  vec3 fillDir = normalize(vec3(0.88, 0.10, -0.46));
-  col += vec3(0.42, 0.52, 0.72) * smoothstep(0.55, 1.0, dot(d, fillDir)) * 0.85;
+  /* tira estreita à direita e atrás: é ela que acende o recorte da silhueta */
+  vec3 rc = normalize(vec3(-0.62, 0.38, -0.70));   // tira de recorte: atrás, à direita
+  vec3 rr = normalize(cross(vec3(0.0, 1.0, 0.0), rc));
+  vec3 ru = cross(rc, rr);
+  col += vec3(1.0, 0.86, 0.60) * painel(d, rc, rr, ru, vec2(0.105, 1.65), 0.130) * 3.2;
 
-  /* recorte quente vindo de trás: separa o copo do fundo escuro */
-  vec3 rimDir = normalize(vec3(0.10, 0.42, -0.90));
-  col += vec3(1.0, 0.84, 0.52) * smoothstep(0.72, 1.0, dot(d, rimDir)) * 2.2;
-
-  col += vec3(0.92, 0.76, 0.46) * smoothstep(0.42, -0.1, up) * 0.30;  // rebote do chão
+  /* preenchimento frio do lado oposto: largo e fraco, sem forma nenhuma */
+  col += vec3(0.40, 0.50, 0.72) * smoothstep(0.30, 1.0, dot(d, vec3(0.49, 0.16, -0.86))) * 0.62;
+  col += vec3(0.34, 0.28, 0.20) * smoothstep(0.10, -0.55, d.y) * 0.50;  // rebote do chão
   return col;
 }
 
 float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
 
+/* ruído de valor, suave — serve à casca de laranja do revestimento */
+float ruido(vec2 p) {
+  vec2 i = floor(p), f = fract(p);
+  f = f * f * (3.0 - 2.0 * f);
+  return mix(mix(hash(i),               hash(i + vec2(1.0, 0.0)), f.x),
+             mix(hash(i + vec2(0.0, 1.0)), hash(i + vec2(1.0, 1.0)), f.x), f.y);
+}
+
+/* Tonemap filmico (ACES aproximado). O Reinhard simples levava todo realce a
+   um cinza lavado; este rola para o branco com a curva em S do filme, que é
+   como uma câmera de verdade responde à luz. */
+vec3 filmico(vec3 x) {
+  return clamp((x * (2.51 * x + 0.03)) / (x * (2.43 * x + 0.59) + 0.14), 0.0, 1.0);
+}
+
 void main() {
   float h = vA.x, inside = vA.y, ang = vA.z;
   vec3 N = normalize(vN);
   vec3 V = normalize(uCam - vW);
-  /* de que lado do copo esta face está, antes de virar a normal para a câmera:
-     serve para apagar a gravação da parede de trás, que o vidro da frente
-     espalha e some quase toda */
-  float frente = step(0.0, dot(N, V));
   float ny = N.y;                                    // antes de virar a normal
   if (dot(N, V) < 0.0) N = -N;                       // faces internas
-  vec3 R = reflect(-V, N);
-  float ndv  = clamp(dot(N, V), 0.0, 1.0);
-  float graz = 1.0 - ndv;                            // 0 de frente, 1 na silhueta
 
   /* Sombra de contato: o disco do chão entra marcado com inside == 2. */
   if (inside > 1.5) {
     if (uPass < 1.5) discard;
     float r = clamp(h, 0.0, 1.0);                 // 0 no centro, 1 na borda
-    float nucleo = 1.0 - smoothstep(0.0, 0.42, r);
-    float halo   = 1.0 - smoothstep(0.12, 1.0, r);
-    float a = (nucleo * 0.72 + halo * 0.26) * uSombra;
+    float nucleo = 1.0 - smoothstep(0.0, 0.46, r);
+    float halo   = 1.0 - smoothstep(0.10, 1.0, r);
+    float a = (nucleo * 0.80 + halo * 0.38) * uSombra;
     gl_FragColor = vec4(vec3(0.0), clamp(a, 0.0, 1.0));
     return;
   }
@@ -265,86 +310,116 @@ void main() {
      não o disco de baixo — a normal apontando para baixo separa os dois. */
   bool steel = (h > uBandTop) || (h < uBandBot && ny > -0.55);
 
-  vec3 col; float alpha;
+  /* Tangentes da superfície de revolução: uma dá a volta na peça, a outra
+     sobe. São elas que orientam o grão do acabamento. */
+  vec3 Tc = cross(vec3(0.0, 1.0, 0.0), N);
+  float lt = length(Tc);
+  Tc = (lt > 0.001) ? Tc / lt : vec3(1.0, 0.0, 0.0);
+  vec3 Tv = cross(N, Tc);
+
+  vec3 col; float alpha = 1.0;
 
   if (steel) {
-    /* aço escovado do aro e do pé. O copo é torneado: as estrias dão a volta
-       na peça, então na silhueta elas aparecem HORIZONTAIS. */
-    float band  = hash(vec2(floor(h * 460.0), 7.0)) - 0.5;
-    float band2 = hash(vec2(floor(h * 120.0), 3.0)) - 0.5;
-    vec3 Rb = normalize(R + N * (band * 0.085 + band2 * 0.035));
-    vec3 env = studio(Rb) * 0.62 + studio(R) * 0.38;
-    col = env * vec3(0.93, 0.945, 0.97);
-    col += vec3(1.0) * pow(graz, 4.0) * 0.9;
-    col *= mix(0.34, 1.18, smoothstep(-0.55, 0.75, N.y));   // oclusão vertical
-    if (inside > 0.5) col *= 0.40;
-    alpha = 1.0;
+    /* aço escovado do aro e do pé. A peça é torneada: as estrias dão a volta
+       nela, então na silhueta aparecem HORIZONTAIS. */
+    float band  = hash(vec2(floor(h * 1600.0), 7.0)) - 0.5;
+    float band2 = hash(vec2(floor(h * 380.0), 3.0)) - 0.5;
+    vec3 Ns = normalize(N + Tv * (band * 0.075 + band2 * 0.030));
+    vec3 Rs = paraRig(reflect(-V, Ns));
+    float ndvS = clamp(dot(Ns, V), 0.0, 1.0);
+    /* metal cru: F0 alto e colorido, quase sem difusa */
+    vec3 F = vec3(0.91, 0.92, 0.94) + (1.0 - vec3(0.91, 0.92, 0.94)) * pow(1.0 - ndvS, 5.0);
+    col = studio(Rs) * F * 0.46;
+    col *= mix(0.30, 1.12, smoothstep(-0.55, 0.75, ny));      // oclusão vertical
+    if (inside > 0.5) col *= 0.26;
   } else {
-    /* -------------------- REVESTIMENTO AZUL, OPACO --------------------- */
-    /* O copo é pintado, não é vidro: o corpo é sólido e o que dá volume são
-       a difusa envolvente, dois realces e o recorte de borda. Nada aqui
-       depende do que está atrás — o alfa é 1. */
-    vec3 base = vec3(0.055, 0.165, 0.470);
+    /* -------------------- REVESTIMENTO AZUL ANODIZADO ------------------ */
+    /* Duas camadas: o pigmento, que é fosco, e o verniz por cima, que é o que
+       reflete o estúdio. Antes existia só a primeira, e superfície sem verniz
+       não tem como devolver a forma da luz — daí o aspecto de plástico. */
 
-    vec3 L1 = normalize(vec3(-0.42, 0.80, 0.43));
-    vec3 L2 = normalize(vec3(-0.10, 0.55, 0.83));
-    vec3 L3 = normalize(vec3(0.88, 0.10, -0.46));      // preenchimento frio
+    /* Grão do acabamento. Anéis finos do torno (variam rápido na altura,
+       nada ao redor) mais a casca de laranja da pintura em pó. É pouco: 2%
+       de inclinação na normal. Mas degradê matematicamente perfeito é
+       exatamente o que o olho lê como CGI, e isto quebra a perfeição. */
+    float anel  = hash(vec2(floor(h * 150.0), 11.0)) - 0.5;
+    float casca = ruido(vec2(ang * 11.0, h * 26.0)) - 0.5;
 
-    float d1 = clamp(dot(N, L1), 0.0, 1.0);
-    float d2 = clamp(dot(N, L2), 0.0, 1.0);
-    /* difusa envolvente: a luz vaza um pouco para além do terminador, que é
-       o que impede a lateral do copo de cair num preto chapado */
-    float wrap = clamp((dot(N, L1) + 0.62) / 1.62, 0.0, 1.0);
-
-    /* A envolvente tinha peso demais e o cilindro saía chapado: a lateral
-       ficava quase tão clara quanto a frente. Menos envolvente e mais luz
-       direcional é o que devolve a curvatura. */
-    col  = base * (0.085 + 1.32 * d1 + 0.30 * d2 + 0.26 * wrap * wrap);
-    col += base * vec3(0.55, 0.80, 1.25) * clamp(dot(N, L3), 0.0, 1.0) * 0.34;
-
-    /* gradiente vertical: qualquer peça sob luz de cima escurece para a base */
-    col *= mix(0.62, 1.10, smoothstep(0.02, 0.92, h));
-
-    /* verniz: dois realces, um duro e um largo */
-    vec3 H1 = normalize(L1 + V), H2 = normalize(L2 + V);
-    float s1 = pow(clamp(dot(N, H1), 0.0, 1.0), 140.0);
-    float s2 = pow(clamp(dot(N, H2), 0.0, 1.0), 26.0);
-    col += vec3(1.0, 0.985, 0.96) * s1 * 1.55;
-    col += vec3(0.80, 0.90, 1.0)  * s2 * 0.20;
-
-    /* studio() é a conta mais cara deste shader. Uma chamada só, guardada:
-       o ambiente e a gravação usavam o mesmo R e pediam duas. */
-    vec3 amb = studio(R);
-    /* o ambiente entra fraco: superfície pintada reflete pouco */
-    col += amb * 0.038 * vec3(0.80, 0.92, 1.15);
-
-    /* recorte de borda: separa o copo do fundo e arredonda a silhueta */
-    col += vec3(0.46, 0.68, 1.0) * pow(graz, 3.0) * 0.58;
-
-    /* escurece para a base, como qualquer cilindro sob luz de cima */
-    col *= mix(0.78, 1.04, smoothstep(-0.30, 0.95, N.y));
-
-    alpha = 1.0;
-
-    /* Gravação a laser: o feixe queima o revestimento e aparece o inox por
-       baixo. É por isso que a marca sai clara e fosca, não pintada. */
+    /* A gravação tem PROFUNDIDADE: o laser cava o revestimento até o inox.
+       Duas amostras vizinhas dão a inclinação da parede do sulco, e é ela que
+       acende a borda da letra de um lado e apaga do outro. Sem isso a marca
+       lê como adesivo colado — o erro mais comum de mockup. Por isso ela entra
+       aqui, antes da luz, e não como uma cor pintada por cima no fim. */
     float v = clamp((h - uBandBot) / (uBandTop - uBandBot), 0.0, 1.0);
-    float e = texture2D(uEtch, vec2(1.25 - ang, 1.0 - (v - 0.30) / 0.42)).r;
-    e *= step(0.30, v) * step(v, 0.72) * (1.0 - inside);
-    vec3 exposto = vec3(0.80, 0.84, 0.88) * (0.46 + 0.82 * d1) + amb * 0.12;
+    vec2 uvE = vec2(1.25 - ang, 1.0 - (v - 0.30) / 0.42);
+    float dentro = step(0.30, v) * step(v, 0.72) * (1.0 - inside);
+    float e  = texture2D(uEtch, uvE).r * dentro;
+    float eu = texture2D(uEtch, uvE + vec2(0.0020, 0.0)).r * dentro;
+    float ev = texture2D(uEtch, uvE + vec2(0.0, 0.0030)).r * dentro;
+
+    N = normalize(N + Tv * (anel * 0.015 + casca * 0.026 + (e - ev) * 0.40)
+                    + Tc * (casca * 0.010 + (e - eu) * 0.40));
+
+    float ndv = clamp(dot(N, V), 0.0, 1.0);
+    /* para o referencial do rig: daqui para baixo a peça é que girou */
+    vec3 Nr = paraRig(N);
+    vec3 R  = paraRig(reflect(-V, N));
+
+    vec3 base = vec3(0.038, 0.118, 0.395);
+    vec3 L1 = normalize(vec3(0.38, 0.64, 0.67));       // softbox principal
+    vec3 L2 = normalize(vec3(-0.62, 0.38, -0.70));     // tira quente de trás
+    vec3 L3 = normalize(vec3(0.49, 0.16, -0.86));      // preenchimento frio
+
+    float d1 = clamp(dot(Nr, L1), 0.0, 1.0);
+    /* difusa envolvente: a luz vaza um pouco além do terminador, que é o que
+       impede a lateral de cair num azul chapado */
+    float wrap = clamp((dot(Nr, L1) + 0.58) / 1.58, 0.0, 1.0);
+
+    col  = base * (0.070 + 1.55 * d1 + 0.16 * wrap * wrap);
+    col += base * vec3(0.50, 0.74, 1.22) * clamp(dot(Nr, L3), 0.0, 1.0) * 0.17;
+    col += base * vec3(2.30, 1.55, 0.80) * clamp(dot(Nr, L2), 0.0, 1.0) * 0.18;
+
+    /* oclusão de ambiente: onde a parede encontra o pé e no degrau do aro
+       chega menos luz. Canto que não escurece é o erro clássico de render. */
+    col *= mix(0.52, 1.0, smoothstep(uBandBot, uBandBot + 0.13, h));
+    col *= 1.0 - 0.26 * (1.0 - smoothstep(0.0, 0.050, uBandTop - h));
+    col *= mix(0.64, 1.06, smoothstep(0.02, 0.86, h));   // degradê vertical
+
+    /* VERNIZ. Fresnel manda: quase nada de frente, quase tudo na silhueta.
+       É esta conta — e não um brilho desenhado à mão — que põe a listra da
+       softbox correndo pela parede e acende a borda com a cor certa. */
+    vec3 amb = studio(R);
+    float F = 0.042 + 0.958 * pow(1.0 - ndv, 5.0);
+    col += amb * F * 0.95;
+
+    /* Micro-riscos de manuseio. Nenhuma peça que saiu da caixa é impecável, e
+       superfície impecável é meio caminho da cara de CGI. Só aparecem no lado
+       que pega a luz — no escuro não existem, como na vida. */
+    float linha = floor(ang * 430.0 + h * 165.0);              // levemente inclinadas
+    float trecho = floor(h * 8.0 + hash(vec2(linha, 2.0)) * 6.0);  // quebradas em trechos
+    float risco = smoothstep(0.955, 1.0, hash(vec2(linha, trecho)));
+    col += vec3(0.88, 0.92, 1.0) * risco * d1 * 0.034;
+
+    /* Onde o feixe passou fica inox cru à mostra: claro, fosco e obedecendo
+       à mesma luz da parede. */
+    vec3 exposto = vec3(0.60, 0.635, 0.685) * (0.26 + 1.30 * d1) + amb * F * 0.85;
+    exposto *= mix(0.52, 1.0, smoothstep(uBandBot, uBandBot + 0.13, h));
     col = mix(col, exposto, e * 0.97);
 
-    if (inside > 0.5) {
-      /* por dentro é o mesmo revestimento, sem luz direta chegando */
-      col *= 0.22;
-    }
+    /* por dentro é o mesmo revestimento, sem luz direta e com o fundo
+       ocluindo o que sobra */
+    if (inside > 0.5) col *= 0.30 + 0.26 * smoothstep(0.12, 0.85, h);
   }
 
-  col = col / (col + vec3(0.72));                      // tonemap
+  col = filmico(col);
   col = pow(col, vec3(1.0 / 2.2));
-  /* alfa pré-multiplicado: o canvas compõe sobre a página, e é isto que faz o
-     fundo do site aparecer de verdade através do vidro */
-  gl_FragColor = vec4(col * alpha, alpha);
+
+  /* Grão de sensor. Nenhuma foto tem ruído zero; render tem — e ruído zero é
+     metade do que o olho chama de "cara de CGI". Meio nível em 255. */
+  col += (hash(gl_FragCoord.xy + vec2(uRuido)) - 0.5) * 0.018;
+
+  /* alfa pré-multiplicado: é o que compõe o copo sobre a página sem halo */
+  gl_FragColor = vec4(clamp(col, 0.0, 1.0) * alpha, alpha);
 }`;
 
 /* --- renderizador --------------------------------------------------------- */
@@ -427,7 +502,9 @@ const Cup3D = {
       uBandTop: gl.getUniformLocation(prog, 'uBandTop'),
       uBandBot: gl.getUniformLocation(prog, 'uBandBot'),
       uPass: gl.getUniformLocation(prog, 'uPass'),
-      uSombra: gl.getUniformLocation(prog, 'uSombra')
+      uSombra: gl.getUniformLocation(prog, 'uSombra'),
+      uRuido: gl.getUniformLocation(prog, 'uRuido'),
+      uRig: gl.getUniformLocation(prog, 'uRig')
     };
     this.bufs = { bPos, bNrm, bAtt, bIdx, tex };
 
@@ -509,7 +586,7 @@ const Cup3D = {
       fov = mix(0.58, 1.30, drop);
     }
     const eye = [Math.cos(ang) * radius, height, Math.sin(ang) * radius];
-    return { eye, target: [0, targetY, 0], fov };
+    return { eye, target: [0, targetY, 0], fov, ang };
   },
 
   bind(buffer, loc) {
@@ -547,7 +624,7 @@ const Cup3D = {
   render(phase, t) {
     if (!this.ok) return;
     const gl = this.gl, L = this.loc;
-    const { eye, target, fov } = this.camera(phase, t);
+    const { eye, target, fov, ang } = this.camera(phase, t);
 
     gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
     gl.useProgram(this.prog);
@@ -560,6 +637,16 @@ const Cup3D = {
     gl.uniform3fv(L.uCam, this._eye);
     gl.uniform1f(L.uBandTop, BAND_TOP);
     gl.uniform1f(L.uBandBot, BAND_BOT);
+    /* Semente do grão. Troca 24 vezes ao longo da rolagem, como os 24 quadros
+       por segundo de um filme: mexe o bastante para não virar sujeira fixa na
+       tela e fica parado quando a rolagem para. */
+    gl.uniform1f(L.uRuido, Math.floor(t * 24) * 137.0);
+    /* O rig acompanha o azimute da câmera, mas só 94% dele: travado em 100%
+       o realce ficaria cravado no mesmo pixel o giro inteiro. Os 6% que
+       sobram fazem a listra varrer a peça devagar, como a mesa giratória que
+       nunca está perfeitamente centrada. */
+    const aRig = ang * 0.94;
+    gl.uniform2f(L.uRig, Math.cos(aRig), Math.sin(aRig));
 
     gl.activeTexture(gl.TEXTURE0);
     gl.bindTexture(gl.TEXTURE_2D, this.bufs.tex);
