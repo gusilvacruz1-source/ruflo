@@ -878,7 +878,11 @@ function renderShowcase(filter) {
   // atributo de layout do CSS (.showcase[data-count="N"]); o contador animado
   // usa data-count-to justamente para não escrever por cima destes cards
   host.dataset.count = String(pool.length);
-  host.innerHTML = pool.map((p, i) => showcaseCard(p, i === 2 && pool.length === PAGE)).join('');
+  // O terceiro card era largo, ocupando duas colunas: com quatro cards em
+  // quatro colunas isso pede cinco vagas e o último caía sozinho numa linha
+  // nova, deixando meia seção vazia. Agora todos têm a mesma medida e o
+  // ritmo vem do degrau vertical, no CSS.
+  host.innerHTML = pool.map(p => showcaseCard(p, false)).join('');
   hydratePlaceholders(host);
 
   $('#showcaseTotal').textContent = String(list.length);
@@ -1211,12 +1215,16 @@ function wireNav() {
     }
     nav.classList.toggle('is-light', claro);
   }
+  // a barra só entra quando a introdução do copo termina
+  const intro = $('#cup');
   addEventListener('scroll', () => {
     nav.classList.toggle('is-stuck', scrollY > innerHeight * 1.2);
+    if (intro) nav.classList.toggle('is-hidden', intro.getBoundingClientRect().bottom > 90);
     corDaBarra();
   }, { passive: true });
   addEventListener('resize', corDaBarra);
   corDaBarra();
+  if (intro) nav.classList.toggle('is-hidden', intro.getBoundingClientRect().bottom > 90);
 
   // #top é o <main> inteiro: cruzava a faixa do observer desde o load e
   // nunca mais emitia, então INÍCIO jamais voltava a acender

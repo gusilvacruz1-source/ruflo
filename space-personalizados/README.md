@@ -15,6 +15,29 @@ space-personalizados/
 
 ---
 
+## 0. O sistema visual
+
+O site segue a linguagem do estúdio Eloize Betim, adaptada para a loja:
+
+- **Duas tintas.** `--ink` #0D0D0E e `--paper` #EFEDEA. O ouro da marca
+  virou latão dessaturado (`--brass` #B08D57) e saiu de painel: só aparece
+  em fio, número e num botão — é o papel que o taupe faz no original.
+- **Bodoni Moda** no display, **Archivo** na interface.
+- As **seções alternam tinta e papel** de ponta a ponta (`data-theme`), com
+  o conteúdo num `.site-container` de 1320 px. O corte entre elas é seco.
+- `.section` define o ritmo vertical **uma vez**; nenhuma seção sobrescreve.
+- **Fio de 1px** separa blocos. Não existe cartão com borda e sombra.
+- **Micro-rótulo** em caixa alta com entreletra de .22em, em poucos pontos.
+- O **cabeçalho inverte** a cor sobre as faixas claras, decidido pela seção
+  que está debaixo da barra.
+
+Duas armadilhas de CSS que este layout encontrou, anotadas para não
+voltarem: `backdrop-filter` e `transform` num elemento **fixo** criam bloco
+de contenção para os descendentes fixos — com qualquer um dos dois na barra,
+o menu de tela cheia passa a medir a barra em vez da janela e o
+`translateY(-100%)` esconde só a altura dela. Os testes [19] e [20] cobrem
+isso.
+
 ## 1. O copo
 
 A primeira tela é um copo térmico **modelado em código**. Não é vídeo, não é
