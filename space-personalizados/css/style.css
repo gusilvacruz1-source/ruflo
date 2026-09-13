@@ -83,6 +83,12 @@ svg{ display: block; }
 /* Ritmo vertical — definido UMA vez, sem sobrescrita por seção. */
 .section{ padding-block: clamp(80px, 11vh, 152px); position: relative; }
 
+/* Tentei content-visibility:auto nas seções para pular o desenho do que está
+   fora da tela. Não vale aqui: seção não renderizada não tem caixa, então o
+   observador que busca as fotos dos produtos nunca dispara — 13 fotos não
+   carregavam no celular — e a altura do documento encolhe, fazendo a barra
+   de rolagem pular conforme as seções entram. */
+
 /* ---------- 4. TEMAS DE SEÇÃO ---------- */
 /* translúcido: é por aqui que o fundo cósmico aparece */
 [data-theme="ink"]{ background: color-mix(in srgb, var(--ink) 70%, transparent); color: var(--paper); }
@@ -263,7 +269,8 @@ svg{ display: block; }
   background:
     radial-gradient(120% 80% at 50% 0%, rgba(13,13,14,.20), rgba(13,13,14,.56) 62%, rgba(13,13,14,.74) 100%),
     url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='180' height='180'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-  background-blend-mode: normal, soft-light;
+  /* soft-light aqui custava composição do grupo todo, e o grão é sutil
+     demais para pagar por isso */
 }
 
 /* ---------- 9. UTILITÁRIOS ---------- */
@@ -318,9 +325,11 @@ body.is-locked{ overflow: hidden; }
    uma ampliação, não para cobrir borrão. */
 .cup__stage::after{
   content: ""; position: absolute; inset: 0; z-index: 1;
-  pointer-events: none; opacity: .07;
+  pointer-events: none; opacity: .05;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
-  mix-blend-mode: overlay;
+  /* sem mix-blend-mode: uma camada do tamanho da tela em modo de mistura
+     obriga o navegador a compor o grupo inteiro a cada quadro, e a rolagem
+     da introdução é justamente quando não sobra folga */
 }
 #cupCanvas, #cupGL{ z-index: 2; }
 #cupCanvas, #cupGL{ position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
@@ -365,17 +374,18 @@ body.is-locked{ overflow: hidden; }
               border-color .5s var(--ease), color .5s var(--ease),
               opacity .5s var(--ease);
 }
+/* Sem backdrop-filter: o desfoque é recalculado a cada quadro de rolagem,
+   sobre a faixa inteira da barra, e é uma das contas mais caras que uma
+   página fixa pode pedir. Fundo sólido entrega a mesma leitura. */
 .nav.is-stuck{
   padding-block: 11px;
-  background: color-mix(in srgb, var(--ink) 74%, transparent);
-  -webkit-backdrop-filter: blur(14px);
-          backdrop-filter: blur(14px);
+  background: color-mix(in srgb, var(--ink) 92%, transparent);
   border-bottom-color: var(--hairline);
 }
 /* Sobre as seções claras o cabeçalho inverte. */
 .nav.is-light{ color: var(--ink); }
 .nav.is-light.is-stuck{
-  background: color-mix(in srgb, var(--paper) 78%, transparent);
+  background: color-mix(in srgb, var(--paper) 94%, transparent);
   border-bottom-color: var(--hairline-d);
 }
 .nav.is-light .iconbtn, .nav.is-light .pill--ghost{ border-color: var(--hairline-d); }
@@ -412,16 +422,11 @@ body.is-locked{ overflow: hidden; }
 .nav__burger[aria-expanded="true"] i:last-child{ transform: translateY(-3.5px) rotate(-45deg); }
 
 @media (max-width: 1080px){
-  /* backdrop-filter cria BLOCO DE CONTENÇÃO para descendentes fixos: com ele
-     ligado, o menu de tela cheia media os 70px da barra em vez da janela, e
-     o translateY(-100%) escondia só 70px — o menu ficava por cima do hero.
-     No estreito a barra usa fundo sólido e o menu volta a ser da janela. */
-  .nav.is-stuck{
-    -webkit-backdrop-filter: none; backdrop-filter: none;
-    background: color-mix(in srgb, var(--ink) 96%, transparent);
-  }
-  .nav.is-light.is-stuck{ background: color-mix(in srgb, var(--paper) 97%, transparent); }
-
+  /* A barra não pode ganhar backdrop-filter nem transform: qualquer um dos
+     dois cria BLOCO DE CONTENÇÃO para descendentes fixos, e o menu de tela
+     cheia passa a medir os 70px da barra em vez da janela — o
+     translateY(-100%) esconderia só 70px e o menu ficaria por cima do hero.
+     Testes [19] e [20]. */
   .nav__menu{
     position: fixed; inset: 0; z-index: 65;
     margin: 0; flex-direction: column; justify-content: center; align-items: flex-start;
@@ -1018,7 +1023,7 @@ body.is-locked .toast{ bottom: calc(190px + env(safe-area-inset-bottom)); }
 /* ---------- 24. REVELAÇÕES ---------- */
 /* Estado visível por padrão: quem esconde antes de animar é o JS, então
    nada some se ele falhar. */
-.js-on .reveal{ opacity: 0; transform: translateY(18px); transition: opacity .9s var(--ease), transform .9s var(--ease); }
+.js-on .reveal{ opacity: 0; transform: translateY(14px); transition: opacity .55s var(--ease), transform .55s var(--ease); }
 .js-on .reveal.is-in{ opacity: 1; transform: none; }
 
 /* ---------- 25. MOVIMENTO REDUZIDO ---------- */

@@ -28,10 +28,14 @@ const CONFIG = {
 
   /* --- A ANIMAÇÃO DO COPO ------------------------------------------------ */
   sequences: {
+    /* Estes números são o PESO do site. A introdução inteira custava 5.820px
+       — seis telas e meia de rolagem antes de chegar na loja, e é isso que
+       dá a sensação de arrastar. Encurtada, a volta de 360° continua inteira,
+       só acontece em menos rolagem. */
     // PARTE 1 — o copo dando a volta de 360°
-    giro:     { scroll: 2800, label: '360°'     },
+    giro:     { scroll: 1700, label: '360°'     },
     // PARTE 2 — a câmera sobe e entra no copo
-    mergulho: { scroll: 1800, label: 'MERGULHO' }
+    mergulho: { scroll: 1150, label: 'MERGULHO' }
   },
 
   // Em que ponto do MERGULHO o interior começa a escurecer (0–1).
@@ -43,7 +47,9 @@ const CONFIG = {
   holdAfter: 320,
 
   // Suavização do scrub do canvas (0 = travado no scroll, 1 = sem inércia).
-  smoothing: 0.16,
+  /* O copo persegue a rolagem com atraso. Em 0.16 ele ficava visivelmente
+     para trás do dedo, e atraso é exatamente o que o olho lê como peso. */
+  smoothing: 0.26,
 
   /* --- NEGÓCIO ----------------------------------------------------------- */
   whatsapp: '5542991343788',
@@ -398,7 +404,10 @@ const Stage = (() => {
   function resize3D() {
     if (!gl3d) return;
     const r = gl3d.getBoundingClientRect();
-    const d = Math.min(window.devicePixelRatio || 1, 2);
+    /* Teto de resolução do copo. Em 2x, num celular 3x, são quatro vezes
+       mais pixels para sombrear por quadro do que em 1x — e o copo é
+       sombreado por inteiro a cada quadro da introdução. */
+    const d = Math.min(window.devicePixelRatio || 1, 1.75);
     const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
     if (gl3d.width !== w) gl3d.width = w;
     if (gl3d.height !== h) gl3d.height = h;
