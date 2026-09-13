@@ -27,11 +27,18 @@ em 168 divisões. O perfil inteiro está no topo de `js/cup3d.js`, em
 `PROFILE_OUT`, `LIP` e `PROFILE_IN`: mexa nos números e o copo muda de
 formato.
 
-**O material** sai do shader. Inox acima de `BAND_TOP` e abaixo de
-`BAND_BOT`, revestimento vermelho fosco no meio, e a parede interna sempre
-metálica. As estrias do escovado dão a volta na peça, então aparecem
-horizontais na silhueta — perturbar a reflexão por ângulo em vez de altura é
-o que faz metal parecer plástico.
+**O material** é **vidro preto fumê**, e sai inteiro do shader. Aço escovado
+sobra só acima de `BAND_TOP` (o aro da boca) e abaixo de `BAND_BOT` (o pé);
+o resto é vidro. Quem decide o que reflete e o que deixa passar é o Fresnel
+de Schlick: de frente o copo quase some, na silhueta vira um contorno
+luminoso. A absorção cresce com o caminho óptico, então a borda escurece
+porque ali o vidro é mais espesso — não porque foi pintada.
+
+Vidro precisa de ordem de desenho: o que está atrás tem que ser pintado
+antes. São quatro passadas — o aço opaco escrevendo profundidade, depois
+externa de trás, interna de trás, interna da frente e externa da frente.
+O contexto e o shader trabalham com **alfa pré-multiplicado**, que é o que
+faz o fundo da página aparecer através do copo sem halo escuro em volta.
 
 **A luz** também é código. `studio()` é um ambiente procedural: uma softbox
 estreita e forte em cima à esquerda, uma segunda mais larga à frente, um
@@ -40,8 +47,11 @@ separa o copo do fundo escuro. Nenhum HDR para baixar — o metal reflete um
 estúdio que existe só como matemática.
 
 **A gravação a laser** é desenhada num `<canvas>` 2D (a marca SPACE com o
-planeta) e vira textura, aplicada só na faixa vermelha. Ela é reassada
-quando a Manrope termina de carregar, senão sairia na fonte do sistema.
+planeta) e vira textura, aplicada só na parede de vidro. No vidro o laser
+deixa a marca **jateada**: leitosa e quase opaca, ao contrário do resto. A do
+outro lado do copo sai fraca de propósito — o vidro da frente espalha a luz
+dela. A textura é reassada quando a Manrope termina de carregar, senão
+sairia na fonte do sistema.
 
 ### O scroll
 
@@ -113,10 +123,15 @@ anunciar um preço que o cliente não consegue.
 
 ### Fotos dos produtos
 
-Enquanto não houver foto, cada card mostra uma arte SVG gerada na hora.
-Basta colocar o arquivo em `assets/produtos/` com o id do produto
-(ex.: `copo-473.jpg`) que ele entra sozinho — a lista completa está em
-`assets/produtos/LEIA-ME.txt`.
+Os 18 produtos já usam as fotos do catálogo PDF, em
+`assets/produtos/<id>.webp`, recortadas com alfa e enquadradas em `contain`
+sobre um halo dourado. Para trocar uma, basta sobrescrever o arquivo com o id
+do produto (ex.: `copo-473.webp`) — a lista completa está em
+`assets/produtos/LEIA-ME.txt`. Se um arquivo faltar, o card cai sozinho numa
+arte SVG gerada na hora.
+
+**Atenção:** as fotos vieram do catálogo do fornecedor e várias mostram peças
+já gravadas com a marca, o Instagram e o telefone de outros clientes.
 
 ---
 
