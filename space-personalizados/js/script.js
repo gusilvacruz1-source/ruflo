@@ -283,7 +283,7 @@ const PRODUCTS = [
     tiers:[[10,35.00],[20,32.00],[25,29.00]], min:10 },
 
   { id:'torre-xicaras', name:'Torre de Xícaras 150ml', cat:'copos', ph:'xicara',
-    desc:'Jogo de xícaras com suporte em metal — presente corporativo de alto impacto.',
+    desc:'Jogo de xícaras com suporte em metal, presente corporativo de alto impacto.',
     tiers:[[10,70.00],[20,68.00],[25,65.00]], min:10 },
 
   { id:'garrafa-500', name:'Garrafa Térmica 500ml', cat:'garrafas', ph:'garrafa',
@@ -327,7 +327,7 @@ const PRODUCTS = [
     tiers:[[10,6.00],[50,4.50],[100,4.00]], min:10 },
 
   { id:'chaveiro-abridor', name:'Chaveiro Abridor a Laser', cat:'escritorio', ph:'chaveiro',
-    desc:'Chaveiro abridor personalizado a laser — o brinde de maior giro.',
+    desc:'Chaveiro abridor personalizado a laser, o brinde de maior giro.',
     tiers:[[10,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]], min:10 },
 
   { id:'chapeu-juta', name:'Chapéu de Juta', cat:'estilo', ph:'chapeu',
@@ -964,7 +964,7 @@ const Cart = (() => {
     const lines = items.map(i => {
       const p = byId(i.id);
       const u = unitPrice(p, i.qty);
-      return `• ${p.name} — ${i.qty} uni × ${money(u)} = ${money(u * i.qty)}`;
+      return `• ${p.name}: ${i.qty} uni × ${money(u)} = ${money(u * i.qty)}`;
     });
     return `Olá, Space! Montei meu orçamento no site:\n\n${lines.join('\n')}\n\nEstimativa: ${money(total())}\n\nPodem confirmar prazo e valor final?`;
   }
