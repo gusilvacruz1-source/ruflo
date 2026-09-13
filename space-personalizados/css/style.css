@@ -313,12 +313,12 @@ body.is-locked{ overflow: hidden; }
     radial-gradient(110% 82% at 50% 44%, rgba(10,10,12,0), rgba(10,10,12,.22) 68%, rgba(10,10,12,.52) 100%),
     linear-gradient(to bottom, rgba(10,10,12,.34), rgba(10,10,12,0) 22%, rgba(10,10,12,0) 74%, rgba(10,10,12,.46));
 }
-/* Grão. A nebulosa é uma imagem de celular e sobe quase 2x na tela — é a
-   textura que devolve a leitura fotográfica no lugar do borrão. Mora aqui, e
-   não gravada no arquivo, porque ruído em WebP custa perto de 400 KB. */
+/* Grão fino por cima da nebulosa. Agora que as estrelas foram redesenhadas
+   em resolução cheia ele entra leve — serve para o gás, que continua sendo
+   uma ampliação, não para cobrir borrão. */
 .cup__stage::after{
   content: ""; position: absolute; inset: 0; z-index: 1;
-  pointer-events: none; opacity: .14;
+  pointer-events: none; opacity: .07;
   background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='g'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.92' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23g)'/%3E%3C/svg%3E");
   mix-blend-mode: overlay;
 }
