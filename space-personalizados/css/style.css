@@ -581,14 +581,16 @@ main, .footer{ position:relative; z-index:1; }
 .floatCard__desc{ font-size:10.5px; line-height:1.5; color:#5a5a5a; margin-bottom:12px; }
 .floatCard__foot{ display:flex; align-items:center; justify-content:space-between; gap:10px; }
 .floatCard__price{ font-family:var(--font-sans); font-size:22px; font-weight:800; letter-spacing:-.03em; }
-.floatCard--gold{
-  background:linear-gradient(150deg, rgba(240,220,174,.88), rgba(212,175,55,.82));
-  color:var(--gold-ink);
+.floatCard--note{
+  background:rgba(255,255,255,.055);
+  border:1px solid var(--glass-line);
+  -webkit-backdrop-filter:var(--blur);
+          backdrop-filter:var(--blur);
+  color:var(--ink);
   display:flex; align-items:flex-end; justify-content:space-between; gap:12px;
   padding:16px;
 }
-.floatCard--gold p{ font-size:11px; line-height:1.45; font-weight:500; }
-.floatCard--gold strong{ font-weight:800; }
+.floatCard--note p{ font-size:11px; line-height:1.5; color:var(--ink-2); }
 
 /* — passos do slider — */
 .hero__steps{
@@ -648,30 +650,30 @@ main, .footer{ position:relative; z-index:1; }
 .feat__title{ font-size:clamp(26px,3.2vw,44px); letter-spacing:-.02em; line-height:1.06; font-weight:500; }
 .feat__go{ position:absolute; right:clamp(20px,2.6vw,34px); top:clamp(20px,2.6vw,34px); }
 
-.feat--gold{
-  background:linear-gradient(150deg, var(--gold-soft), var(--gold) 62%, var(--gold-2));
-  color:var(--gold-ink);
+/* — índice do catálogo: régua fina, numeração e nome, como sumário de
+     publicação. Estava aqui um bloco dourado com avatares de clientes que eu
+     havia inventado — não existe cliente nenhum por trás daqueles círculos. — */
+.feat--index{
+  background:var(--glass);
+  border:1px solid var(--glass-line);
+  -webkit-backdrop-filter:var(--blur);
+          backdrop-filter:var(--blur);
   display:flex; flex-direction:column; justify-content:center;
+  padding-block:clamp(16px,2vw,24px);
 }
-.feat--gold:hover{ transform:translateY(-4px); }
-.feat__goldTitle{ font-size:clamp(21px,2.4vw,33px); letter-spacing:-.015em; font-weight:500; display:flex; flex-wrap:wrap; gap:.28em; align-items:center; }
-.feat__goldTitle .chip{ background:#141414; color:var(--gold); }
-.feat__goldSub{ font-size:12px; font-weight:600; margin-top:6px; opacity:.72; }
-.feat__avatars{ display:flex; align-items:center; margin-top:20px; }
-.feat__avatars span{
-  width:40px; height:40px; border-radius:50%;
-  border:2px solid var(--gold-soft);
-  background:#1c1c1c center/cover;
-  margin-right:-12px;
+.idx{ list-style:none; margin:0; padding:0; }
+.idx__row{ border-top:1px solid var(--line-soft); }
+.idx__row:last-child{ border-bottom:1px solid var(--line-soft); }
+.idx__row a{
+  display:grid; grid-template-columns:auto minmax(0,1fr) auto;
+  align-items:baseline; gap:14px;
+  padding:clamp(7px,.9vw,11px) 0;
+  color:var(--ink-2); text-decoration:none;
+  transition:color .35s var(--ease-out), padding-left .35s var(--ease-out);
 }
-.feat__avatarMore{
-  display:grid !important; place-items:center;
-  background:#141414 !important; color:var(--gold);
-  font-size:10px; font-weight:800; letter-spacing:.02em;
-}
-.feat__dots{ display:flex; gap:7px; margin-top:18px; }
-.feat__dots i{ width:9px; height:9px; border-radius:50%; background:rgba(20,20,20,.28); }
-.feat__dots i:first-child{ background:#141414; }
+.idx__row a:hover{ color:var(--ink); padding-left:8px; }
+.idx__n{ font-size:10px; letter-spacing:.14em; color:var(--ink-3); font-variant-numeric:tabular-nums; }
+.idx__nome{ font-family:var(--font-display); font-size:clamp(15px,1.5vw,21px); font-weight:500; letter-spacing:-.015em; }
 
 @media (max-width:900px){
   .features{ grid-template-columns:minmax(0,1fr); }
@@ -708,6 +710,12 @@ main, .footer{ position:relative; z-index:1; }
   background-image:
     var(--photo),
     radial-gradient(60% 52% at 50% 46%, rgba(230,200,138,.16), transparent 72%);
+  /* .ccard__media e .dealCard__media pintam o fundo com o ATALHO
+     'background:', que zera background-repeat — e como vêm depois na folha,
+     ganhavam do .has-photo e ladrilhavam a foto três vezes. Repetir aqui, num
+     seletor mais específico, resolve sem mexer no atalho. */
+  background-repeat:no-repeat;
+  background-position:center;
 }
 .floatCard__thumb.has-photo{ background-size:contain !important; }
 .hero__slide.has-photo{ background-size:contain !important; opacity:.95; }
@@ -817,8 +825,14 @@ main, .footer{ position:relative; z-index:1; }
   background:rgba(255,255,255,.1); color:var(--ink); border:1px solid var(--line);
   backdrop-filter:blur(10px);
 }
-.tag--gold{ background:var(--gold); color:var(--gold-ink); border-color:var(--gold); }
-.tag--dark{ background:rgba(10,10,10,.7); color:var(--ink-2); }
+/* Um selo só por card, e ele diz um número do catálogo em vez de um rótulo
+   de vitrine. Existiam .tag--gold e .tag--dark para "Oferta", "Premium",
+   "Mais vendido" — rótulos sem nada por trás. */
+.tag--drop{
+  background:rgba(10,10,10,.72); color:var(--gold);
+  border-color:rgba(230,200,138,.35);
+  font-variant-numeric:tabular-nums;
+}
 .pcard__name{ font-size:clamp(19px,2vw,25px); letter-spacing:-.015em; line-height:1.1; font-weight:500; margin-bottom:8px; }
 .pcard__desc{
   font-size:10.5px; line-height:1.55; color:var(--ink-3); margin-bottom:14px;
@@ -901,8 +915,6 @@ main, .footer{ position:relative; z-index:1; }
   font-variant-numeric:tabular-nums;
 }
 .statCard__people{ display:flex; align-items:center; gap:12px; margin-top:14px; flex-wrap:wrap; }
-.statCard__avatars{ display:flex; }
-.statCard__avatars i{ width:30px; height:30px; border-radius:50%; border:2px solid var(--surface); background:#222 center/cover; margin-right:-10px; }
 .statCard__peopleTxt{ font-size:10px; letter-spacing:.16em; text-transform:uppercase; color:var(--ink-3); margin-left:8px; }
 .statCard__copy{
   margin-top:20px; padding-top:20px; border-top:1px solid var(--line-soft);
@@ -939,9 +951,6 @@ main, .footer{ position:relative; z-index:1; }
 .dealCard__name{ font-size:clamp(19px,2.2vw,26px); letter-spacing:-.015em; font-weight:500; }
 .dealCard__desc{ font-size:10px; line-height:1.6; letter-spacing:.05em; text-transform:uppercase; color:var(--ink-3); }
 .dealCard__foot{ display:flex; align-items:center; justify-content:space-between; gap:12px; }
-.dealCard__people{ display:flex; align-items:center; }
-.dealCard__people i{ width:26px; height:26px; border-radius:50%; border:2px solid var(--surface); background:#222 center/cover; margin-right:-9px; }
-.dealCard__people b{ font-size:9.5px; font-weight:700; color:var(--ink-3); margin-left:16px; letter-spacing:.1em; }
 .dealCard__buy{ display:flex; align-items:center; justify-content:space-between; gap:12px; padding-top:12px; border-top:1px solid var(--line-soft); }
 .dealCard__priceWrap{ display:flex; flex-direction:column; gap:3px; min-width:0; }
 .dealCard__price{ font-family:var(--font-sans); font-size:clamp(19px,2.2vw,25px); font-weight:800; letter-spacing:-.03em; }

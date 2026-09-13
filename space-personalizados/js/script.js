@@ -184,29 +184,10 @@ function buildScene(key, seed = 0) {
   return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
 }
 
-/** SVG de avatar circular (logos de empresas-clientes). */
-function phAvatar(seed = 0) { return cached('a|'+(seed%5), () => buildAvatar(seed)); }
-function buildAvatar(seed = 0) {
-  const a = [[34, '#e6c88a'], [204, '#8ab6e6'], [12, '#e68a8a'], [148, '#8ae6b0'], [268, '#b98ae6']][seed % 5];
-  const letters = ['MD', 'DY', 'OL', 'SP', 'BR'][seed % 5];
-  const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
-<defs><linearGradient id="a" x1="0" y1="0" x2="1" y2="1">
-<stop offset="0" stop-color="hsl(${a[0]} 30% 26%)"/><stop offset="1" stop-color="#121212"/></linearGradient></defs>
-<rect width="100" height="100" fill="url(#a)"/>
-<circle cx="50" cy="50" r="30" fill="none" stroke="${a[1]}" stroke-opacity="0.5" stroke-width="2"/>
-<text x="50" y="58" text-anchor="middle" font-family="Manrope, sans-serif" font-weight="700" font-size="26" fill="${a[1]}" fill-opacity="0.9">${letters}</text>
-</svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
 /** Aplica o placeholder e tenta trocar pela foto real, se ela existir. */
 function paint(el, key, seed = 0) {
-  const isAvatar = /^empresa/.test(key);
-  const isScene  = el.hasAttribute('data-scene');
-  el.style.backgroundImage = isAvatar ? phAvatar(seed)
-                           : isScene  ? phScene(key, seed)
-                           : phProduct(key, seed);
+  const isScene = el.hasAttribute('data-scene');
+  el.style.backgroundImage = isScene ? phScene(key, seed) : phProduct(key, seed);
   el.style.backgroundSize = 'cover';
   el.style.backgroundPosition = 'center';
   const real = el.dataset.src;
@@ -249,75 +230,75 @@ function hydratePlaceholders(root = document) {
 const PRODUCTS = [
   { id:'copo-473', name:'Copo Térmico Inox 473ml', cat:'copos', ph:'copo',
     desc:'Dupla parede em inox, acompanha tampa e abridor personalizado a laser.',
-    tiers:[[10,29.90]], min:10, badges:['Oferta','Copos'], deals:['hot','best','rec'] },
+    tiers:[[10,29.90]], min:10 },
 
   { id:'copo-360', name:'Copo Térmico Inox 360ml', cat:'copos', ph:'copo',
     desc:'Parede em inox com tampa, para bebidas quentes e frias.',
-    tiers:[[10,29.90]], min:10, badges:['Copos'], deals:['best','rec'] },
+    tiers:[[10,29.90]], min:10 },
 
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',
     desc:'Dupla parede em inox de 700 ml personalizada a laser.',
-    tiers:[[10,69.90],[20,49.90],[50,48.90]], min:10, badges:['Novo','Canecas'], deals:['new','best'] },
+    tiers:[[10,69.90],[20,49.90],[50,48.90]], min:10 },
 
   { id:'caneca-aluminio-350', name:'Caneca em Alumínio 350ml', cat:'copos', ph:'caneca',
     desc:'Leve, resistente e com ótimo custo por unidade em grandes volumes.',
-    tiers:[[20,17.99],[50,15.99],[100,14.99]], min:20, badges:['Volume'], deals:['rec'] },
+    tiers:[[20,17.99],[50,15.99],[100,14.99]], min:20 },
 
   { id:'caneca-porcelana', name:'Caneca de Porcelana 325ml', cat:'copos', ph:'xicara',
     desc:'Clássica de escritório, acabamento liso e impressão de alta definição.',
-    tiers:[[10,35.00],[20,32.00],[25,29.00]], min:10, badges:['Porcelana'], deals:['new','rec'] },
+    tiers:[[10,35.00],[20,32.00],[25,29.00]], min:10 },
 
   { id:'torre-xicaras', name:'Torre de Xícaras 150ml', cat:'copos', ph:'xicara',
     desc:'Jogo de xícaras com suporte em metal — presente corporativo de alto impacto.',
-    tiers:[[10,70.00],[20,68.00],[25,65.00]], min:10, badges:['Premium'], deals:['new'] },
+    tiers:[[10,70.00],[20,68.00],[25,65.00]], min:10 },
 
   { id:'garrafa-500', name:'Garrafa Térmica 500ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 500 ml com infusor para chá.',
-    tiers:[[10,29.90]], min:10, badges:['Oferta','Garrafas'], deals:['hot','best'] },
+    tiers:[[10,29.90]], min:10 },
 
   { id:'garrafa-800', name:'Garrafa Térmica 800ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 800 ml com tampa rosqueável e vedação reforçada.',
-    tiers:[[10,49.90]], min:10, badges:['Mais vendido','Garrafas'], deals:['best','rec'] },
+    tiers:[[10,49.90]], min:10 },
 
   { id:'garrafa-aluminio-600', name:'Garrafa em Alumínio 600ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa esportiva em alumínio de 600 ml, gravada a laser.',
-    tiers:[[10,44.90],[20,42.90],[50,39.90]], min:10, badges:['Garrafas'], deals:['rec'] },
+    tiers:[[10,44.90],[20,42.90],[50,39.90]], min:10 },
 
   { id:'churrasco-5', name:'Kit Churrasco 5 Peças', cat:'churrasco', ph:'churrasco',
     desc:'Garfo, faca, pegador, espátula, pincel e espetos. Acompanha bolsa.',
-    tiers:[[1,99.90],[10,79.90]], min:1, badges:['Oferta','Churrasco'], deals:['hot','best'] },
+    tiers:[[1,99.90],[10,79.90]], min:1 },
 
   { id:'churrasco-4', name:'Kit Churrasco Maleta 4 Peças', cat:'churrasco', ph:'churrasco',
     desc:'Maleta de alumínio com travas: pegador, garfo, faca e espátula em inox.',
-    tiers:[[1,159.90],[10,119.90]], min:1, badges:['Recomendado','Premium'], deals:['rec','best'] },
+    tiers:[[1,159.90],[10,119.90]], min:1 },
 
   { id:'churrasco-2-estojo', name:'Kit Churrasco 2 Peças · Estojo', cat:'churrasco', ph:'churrasco',
     desc:'Garfo e faca de 8 polegadas acondicionados em estojo.',
-    tiers:[[1,75.90],[10,55.90]], min:1, badges:['Churrasco'], deals:['rec'] },
+    tiers:[[1,75.90],[10,55.90]], min:1 },
 
   { id:'churrasco-2-caixa', name:'Kit Churrasco 2 Peças · Caixa', cat:'churrasco', ph:'churrasco',
     desc:'Garfo e faca de 8 polegadas, acompanha caixa para presente.',
-    tiers:[[1,75.90],[10,55.90]], min:1, badges:['Churrasco'], deals:['new'] },
+    tiers:[[1,75.90],[10,55.90]], min:1 },
 
   { id:'canivete-inox', name:'Canivete Inox com Presilha', cat:'canivetes', ph:'canivete',
     desc:'Canivete em aço inox com presilha de bolso e gravação a laser.',
-    tiers:[[1,99.90],[10,49.90]], min:1, badges:['Oferta','Canivetes'], deals:['hot','rec'] },
+    tiers:[[1,99.90],[10,49.90]], min:1 },
 
   { id:'canivete-aco', name:'Canivete com Lâmina de Aço', cat:'canivetes', ph:'canivete',
     desc:'Lâmina de aço com cabo ergonômico, ideal para brinde masculino.',
-    tiers:[[1,69.90],[10,39.90]], min:1, badges:['Canivetes'], deals:['best'] },
+    tiers:[[1,69.90],[10,39.90]], min:1 },
 
   { id:'caneta-metal', name:'Caneta Esferográfica em Metal', cat:'escritorio', ph:'caneta',
     desc:'Caneta em metal escovado com gravação a laser da sua marca.',
-    tiers:[[10,6.00],[50,4.50],[100,4.00]], min:10, badges:['Escritório'], deals:['rec','best'] },
+    tiers:[[10,6.00],[50,4.50],[100,4.00]], min:10 },
 
   { id:'chaveiro-abridor', name:'Chaveiro Abridor a Laser', cat:'escritorio', ph:'chaveiro',
     desc:'Chaveiro abridor personalizado a laser — o brinde de maior giro.',
-    tiers:[[10,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]], min:10, badges:['Mais vendido','Volume'], deals:['best','hot'] },
+    tiers:[[10,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]], min:10 },
 
   { id:'chapeu-juta', name:'Chapéu de Juta', cat:'estilo', ph:'chapeu',
     desc:'Chapéu de juta com faixa em couro ecológico personalizada a laser.',
-    tiers:[[1,80.00],[5,70.00],[10,60.00]], min:1, badges:['Novo','Estilo'], deals:['new'] }
+    tiers:[[1,80.00],[5,70.00],[10,60.00]], min:1 }
 ];
 
 const byId = id => PRODUCTS.find(p => p.id === id);
@@ -335,6 +316,14 @@ const startPrice = p => unitPrice(p, p.min);
 const bestPrice  = p => Math.min(...p.tiers.map(t => t[1]));
 const bestQty    = p => p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0];
 const hasVolume  = p => bestPrice(p) < startPrice(p);
+/* Quanto o preço da peça cai do lote mínimo até a melhor faixa. É o único
+   selo que o card carrega: sai direto da tabela do catálogo, ao contrário de
+   "Mais vendido" ou "Premium", que eram rótulos que eu tinha inventado. */
+const dropPct    = p => Math.round((1 - bestPrice(p) / startPrice(p)) * 100);
+function selo(p) {
+  if (!hasVolume(p)) return '';
+  return `<span class="tag tag--drop">−${dropPct(p)}% no lote de ${bestQty(p)}</span>`;
+}
 
 /* ============================================================================
    [6] CANVAS — motor de render
@@ -752,11 +741,6 @@ const saveFavs = () => store.set('favs', [...favs]);
 
 /* --- templates ------------------------------------------------------------ */
 
-function tagHTML(list) {
-  return list.map((t, i) =>
-    `<span class="tag${i === 0 ? ' tag--gold' : ' tag--dark'}">${t}</span>`).join('');
-}
-
 function showcaseCard(p, wide) {
   const base = startPrice(p);
   const fav = favs.has(p.id) ? ' is-on' : '';
@@ -780,7 +764,7 @@ function showcaseCard(p, wide) {
 
   return `<article class="pcard" data-cat="${p.cat}" data-id="${p.id}">
     ${media}${top2}
-    <div class="pcard__tags">${tagHTML(p.badges)}</div>
+    <div class="pcard__tags">${selo(p)}</div>
     <h3 class="pcard__name">${p.name}</h3>
     <p class="pcard__desc">${p.desc}</p>
     <div class="pcard__foot">
@@ -802,7 +786,7 @@ function catalogCard(p) {
   const fav = favs.has(p.id) ? ' is-on' : '';
   return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}">
     <div class="ccard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp">
-      <div class="ccard__tags">${tagHTML(p.badges)}</div>
+      <div class="ccard__tags">${selo(p)}</div>
       <button class="iconbtn iconbtn--outline ccard__fav pcard__fav${fav}" data-fav="${p.id}" aria-label="Favoritar ${p.name}" aria-pressed="${!!fav}">${ICO.heart}</button>
     </div>
     <h3 class="ccard__name">${p.name}</h3>
@@ -1042,6 +1026,16 @@ document.addEventListener('click', e => {
     const from = Number.isFinite(cur) ? cur : p.min;
     const next = from + Number(step.dataset.step) * (p.min >= 10 ? 10 : 1);
     input.value = Math.max(p.min, next);
+    return;
+  }
+
+  /* índice: cai no catálogo já filtrado pela categoria escolhida */
+  const cjump = e.target.closest('[data-cjump]');
+  if (cjump) {
+    e.preventDefault();
+    const alvo = $(`#catalogFilters [data-cfilter="${cjump.dataset.cjump}"]`);
+    if (alvo) alvo.click();
+    $('#catalogo').scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth' });
     return;
   }
 
@@ -1339,34 +1333,46 @@ function wireMagnetic() {
 
 /* --- destaque "Mais desejados" -------------------------------------------- */
 
+/* Os quatro grupos eram Oferta / Mais vendidos / Novidades / Recomendados, e
+   a lista de cada um era escrita na mão — a loja não tem ranking de venda nem
+   data de entrada de produto para sustentar nenhum dos quatro. Agora cada
+   grupo é uma pergunta que o catálogo responde sozinho. */
+const GRUPOS = {
+  queda:   { ordem: (a, b) => dropPct(b) - dropPct(a),           filtra: hasVolume },
+  unidade: { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => p.min === 1 },
+  dez:     { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => p.min >= 10 },
+  ate30:   { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => startPrice(p) <= 30 }
+};
+
+function grupo(key) {
+  const g = GRUPOS[key] || GRUPOS.queda;
+  return PRODUCTS.filter(g.filtra).sort(g.ordem);
+}
+
+function mostraDestaque(p) {
+  if (!p) return;
+  $('#dealName').textContent = p.name;
+  $('#dealDesc').textContent = p.desc;
+  $('#dealPrice').textContent = money(startPrice(p));
+  $('#dealUnit').textContent = hasVolume(p)
+    ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
+    : `pedido mínimo ${p.min} uni`;
+  $('#dealMin').textContent = `mín. ${p.min} uni`;
+  $('#dealAdd').dataset.add = p.id;
+  const media = $('#dealMedia');
+  media.dataset.ph = p.ph;
+  media.dataset.src = `assets/produtos/${p.id}.webp`;
+  media.setAttribute('aria-label', p.name);
+  paint(media, p.ph, PRODUCTS.indexOf(p));
+  if (hasGSAP() && !prefersReduced) {
+    gsap.fromTo('#dealCard', { y: 14, opacity: .4 }, { y: 0, opacity: 1, duration: .5, ease: 'power2.out' });
+  }
+}
+
 function wireDeals() {
-  const map = {
-    hot:  { pick: 'churrasco-5',  price: 79.90 },
-    best: { pick: 'chaveiro-abridor' },
-    new:  { pick: 'torre-xicaras' },
-    rec:  { pick: 'churrasco-4' }
-  };
-  wireFilters('#dealFilters', 'deal', key => {
-    const pool = PRODUCTS.filter(p => p.deals.includes(key));
-    const p = byId(map[key].pick) || pool[0];
-    if (!p) return;
-    $('#dealName').textContent = p.name;
-    $('#dealDesc').textContent = p.desc;
-    $('#dealPrice').textContent = money(startPrice(p));
-    $('#dealUnit').textContent = hasVolume(p)
-      ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
-      : `pedido mínimo ${p.min} uni`;
-    $('#dealMin').textContent = `mín. ${p.min} uni`;
-    $('#dealAdd').dataset.add = p.id;
-    const media = $('#dealMedia');
-    media.dataset.ph = p.ph;
-    media.dataset.src = `assets/produtos/${p.id}.webp`;
-    media.setAttribute('aria-label', p.name);
-    paint(media, p.ph, PRODUCTS.indexOf(p));
-    if (hasGSAP() && !prefersReduced) {
-      gsap.fromTo('#dealCard', { y: 14, opacity: .4 }, { y: 0, opacity: 1, duration: .5, ease: 'power2.out' });
-    }
-  });
+  wireFilters('#dealFilters', 'deal', key => mostraDestaque(grupo(key)[0]));
+  // o HTML já nasce com a primeira aba marcada; deixa o card de acordo com ela
+  mostraDestaque(grupo('queda')[0]);
 }
 
 /* ============================================================================
