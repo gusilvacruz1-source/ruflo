@@ -216,6 +216,7 @@ function paint(el, key, seed = 0) {
     // o #dealMedia é reaproveitado entre produtos: sem esta checagem uma
     // sondagem lenta pinta a foto do produto anterior sobre o novo
     if (el.dataset.src !== real) return;
+    el.style.setProperty('--photo', `url("${real}")`);
     el.style.backgroundImage = `url("${real}")`;
     el.classList.add('has-photo');
   };
@@ -248,75 +249,75 @@ function hydratePlaceholders(root = document) {
 const PRODUCTS = [
   { id:'copo-473', name:'Copo Térmico Inox 473ml', cat:'copos', ph:'copo',
     desc:'Dupla parede em inox, acompanha tampa e abridor personalizado a laser.',
-    tiers:[[10,29.90]], min:10, rating:4.95, badges:['Oferta','Copos'], deals:['hot','best','rec'] },
+    tiers:[[10,29.90]], min:10, badges:['Oferta','Copos'], deals:['hot','best','rec'] },
 
   { id:'copo-360', name:'Copo Térmico Inox 360ml', cat:'copos', ph:'copo',
     desc:'Parede em inox com tampa, para bebidas quentes e frias.',
-    tiers:[[10,29.90]], min:10, rating:4.90, badges:['Copos'], deals:['best','rec'] },
+    tiers:[[10,29.90]], min:10, badges:['Copos'], deals:['best','rec'] },
 
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',
     desc:'Dupla parede em inox de 700 ml personalizada a laser.',
-    tiers:[[10,69.90],[20,49.90],[50,48.90]], min:10, rating:4.92, badges:['Novo','Canecas'], deals:['new','best'] },
+    tiers:[[10,69.90],[20,49.90],[50,48.90]], min:10, badges:['Novo','Canecas'], deals:['new','best'] },
 
   { id:'caneca-aluminio-350', name:'Caneca em Alumínio 350ml', cat:'copos', ph:'caneca',
     desc:'Leve, resistente e com ótimo custo por unidade em grandes volumes.',
-    tiers:[[20,17.99],[50,15.99],[100,14.99]], min:20, rating:4.80, badges:['Volume'], deals:['rec'] },
+    tiers:[[20,17.99],[50,15.99],[100,14.99]], min:20, badges:['Volume'], deals:['rec'] },
 
   { id:'caneca-porcelana', name:'Caneca de Porcelana 325ml', cat:'copos', ph:'xicara',
     desc:'Clássica de escritório, acabamento liso e impressão de alta definição.',
-    tiers:[[10,35.00],[20,32.00],[25,29.00]], min:10, rating:4.86, badges:['Porcelana'], deals:['new','rec'] },
+    tiers:[[10,35.00],[20,32.00],[25,29.00]], min:10, badges:['Porcelana'], deals:['new','rec'] },
 
   { id:'torre-xicaras', name:'Torre de Xícaras 150ml', cat:'copos', ph:'xicara',
     desc:'Jogo de xícaras com suporte em metal — presente corporativo de alto impacto.',
-    tiers:[[10,70.00],[20,68.00],[25,65.00]], min:10, rating:4.94, badges:['Premium'], deals:['new'] },
+    tiers:[[10,70.00],[20,68.00],[25,65.00]], min:10, badges:['Premium'], deals:['new'] },
 
   { id:'garrafa-500', name:'Garrafa Térmica 500ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 500 ml com infusor para chá.',
-    tiers:[[10,29.90]], min:10, rating:4.88, badges:['Oferta','Garrafas'], deals:['hot','best'] },
+    tiers:[[10,29.90]], min:10, badges:['Oferta','Garrafas'], deals:['hot','best'] },
 
   { id:'garrafa-800', name:'Garrafa Térmica 800ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 800 ml com tampa rosqueável e vedação reforçada.',
-    tiers:[[10,49.90]], min:10, rating:4.91, badges:['Mais vendido','Garrafas'], deals:['best','rec'] },
+    tiers:[[10,49.90]], min:10, badges:['Mais vendido','Garrafas'], deals:['best','rec'] },
 
   { id:'garrafa-aluminio-600', name:'Garrafa em Alumínio 600ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa esportiva em alumínio de 600 ml, gravada a laser.',
-    tiers:[[10,44.90],[20,42.90],[50,39.90]], min:10, rating:4.79, badges:['Garrafas'], deals:['rec'] },
+    tiers:[[10,44.90],[20,42.90],[50,39.90]], min:10, badges:['Garrafas'], deals:['rec'] },
 
   { id:'churrasco-5', name:'Kit Churrasco 5 Peças', cat:'churrasco', ph:'churrasco',
     desc:'Garfo, faca, pegador, espátula, pincel e espetos. Acompanha bolsa.',
-    tiers:[[1,99.90],[10,79.90]], min:1, rating:4.95, badges:['Oferta','Churrasco'], deals:['hot','best'] },
+    tiers:[[1,99.90],[10,79.90]], min:1, badges:['Oferta','Churrasco'], deals:['hot','best'] },
 
   { id:'churrasco-4', name:'Kit Churrasco Maleta 4 Peças', cat:'churrasco', ph:'churrasco',
     desc:'Maleta de alumínio com travas: pegador, garfo, faca e espátula em inox.',
-    tiers:[[1,159.90],[10,119.90]], min:1, rating:4.97, badges:['Recomendado','Premium'], deals:['rec','best'] },
+    tiers:[[1,159.90],[10,119.90]], min:1, badges:['Recomendado','Premium'], deals:['rec','best'] },
 
   { id:'churrasco-2-estojo', name:'Kit Churrasco 2 Peças · Estojo', cat:'churrasco', ph:'churrasco',
     desc:'Garfo e faca de 8 polegadas acondicionados em estojo.',
-    tiers:[[1,75.90],[10,55.90]], min:1, rating:4.85, badges:['Churrasco'], deals:['rec'] },
+    tiers:[[1,75.90],[10,55.90]], min:1, badges:['Churrasco'], deals:['rec'] },
 
   { id:'churrasco-2-caixa', name:'Kit Churrasco 2 Peças · Caixa', cat:'churrasco', ph:'churrasco',
     desc:'Garfo e faca de 8 polegadas, acompanha caixa para presente.',
-    tiers:[[1,75.90],[10,55.90]], min:1, rating:4.84, badges:['Churrasco'], deals:['new'] },
+    tiers:[[1,75.90],[10,55.90]], min:1, badges:['Churrasco'], deals:['new'] },
 
   { id:'canivete-inox', name:'Canivete Inox com Presilha', cat:'canivetes', ph:'canivete',
     desc:'Canivete em aço inox com presilha de bolso e gravação a laser.',
-    tiers:[[1,99.90],[10,49.90]], min:1, rating:4.89, badges:['Oferta','Canivetes'], deals:['hot','rec'] },
+    tiers:[[1,99.90],[10,49.90]], min:1, badges:['Oferta','Canivetes'], deals:['hot','rec'] },
 
   { id:'canivete-aco', name:'Canivete com Lâmina de Aço', cat:'canivetes', ph:'canivete',
     desc:'Lâmina de aço com cabo ergonômico, ideal para brinde masculino.',
-    tiers:[[1,69.90],[10,39.90]], min:1, rating:4.82, badges:['Canivetes'], deals:['best'] },
+    tiers:[[1,69.90],[10,39.90]], min:1, badges:['Canivetes'], deals:['best'] },
 
   { id:'caneta-metal', name:'Caneta Esferográfica em Metal', cat:'escritorio', ph:'caneta',
     desc:'Caneta em metal escovado com gravação a laser da sua marca.',
-    tiers:[[10,6.00],[50,4.50],[100,4.00]], min:10, rating:4.76, badges:['Escritório'], deals:['rec','best'] },
+    tiers:[[10,6.00],[50,4.50],[100,4.00]], min:10, badges:['Escritório'], deals:['rec','best'] },
 
   { id:'chaveiro-abridor', name:'Chaveiro Abridor a Laser', cat:'escritorio', ph:'chaveiro',
     desc:'Chaveiro abridor personalizado a laser — o brinde de maior giro.',
-    tiers:[[10,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]], min:10, rating:4.88, badges:['Mais vendido','Volume'], deals:['best','hot'] },
+    tiers:[[10,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]], min:10, badges:['Mais vendido','Volume'], deals:['best','hot'] },
 
   { id:'chapeu-juta', name:'Chapéu de Juta', cat:'estilo', ph:'chapeu',
     desc:'Chapéu de juta com faixa em couro ecológico personalizada a laser.',
-    tiers:[[1,80.00],[5,70.00],[10,60.00]], min:1, rating:4.81, badges:['Novo','Estilo'], deals:['new'] }
+    tiers:[[1,80.00],[5,70.00],[10,60.00]], min:1, badges:['Novo','Estilo'], deals:['new'] }
 ];
 
 const byId = id => PRODUCTS.find(p => p.id === id);
@@ -742,7 +743,6 @@ function cached(key, build) {
 const ICO = {
   arrow: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
   heart: '<svg viewBox="0 0 24 24"><path d="M12 20s-7.2-4.4-7.2-9.3A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.2 3.1C19.2 15.6 12 20 12 20Z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
-  star:  '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="m12 3 2.6 5.6 6.1.8-4.5 4.2 1.2 6L12 16.8 6.6 19.6l1.2-6L3.3 9.4l6.1-.8L12 3Z" fill="currentColor"/></svg>',
   minus: '<svg viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="1.8"/></svg>',
   plus:  '<svg viewBox="0 0 24 24"><path d="M12 6v12M6 12h12" stroke="currentColor" stroke-width="1.8"/></svg>'
 };
@@ -760,7 +760,7 @@ function tagHTML(list) {
 function showcaseCard(p, wide) {
   const base = startPrice(p);
   const fav = favs.has(p.id) ? ' is-on' : '';
-  const media = `<div class="pcard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.jpg"></div>`;
+  const media = `<div class="pcard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp"></div>`;
   const top2 = `
     <div class="pcard__top">
       <button class="iconbtn iconbtn--outline" data-add="${p.id}" aria-label="Adicionar ${p.name} ao orçamento">${ICO.arrow}</button>
@@ -773,7 +773,7 @@ function showcaseCard(p, wide) {
       <h3 class="pcard__name">${p.name}</h3>
       <div class="pcard__foot">
         <a class="pill pill--light pcard__more" href="#catalogo" data-jump="${p.id}">SAIBA MAIS ${ICO.arrow.replace('<svg', '<svg class="ico-arrow"')}</a>
-        <span class="rating">${ICO.star}<b>${p.rating.toFixed(2)}</b></span>
+        <span class="minlot">mín. ${p.min} uni</span>
       </div>
     </article>`;
   }
@@ -790,7 +790,7 @@ function showcaseCard(p, wide) {
           ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
           : `pedido mínimo ${p.min} uni`}</span>
       </div>
-      <span class="rating">${ICO.star}<b>${p.rating.toFixed(2)}</b></span>
+      <span class="minlot">mín. ${p.min} uni</span>
     </div>
   </article>`;
 }
@@ -801,7 +801,7 @@ function catalogCard(p) {
     `<li class="${v === best && hasVolume(p) ? 'is-best' : ''}"><span>${q}+ unidades</span><b>${money(v)}</b></li>`).join('');
   const fav = favs.has(p.id) ? ' is-on' : '';
   return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}">
-    <div class="ccard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.jpg">
+    <div class="ccard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp">
       <div class="ccard__tags">${tagHTML(p.badges)}</div>
       <button class="iconbtn iconbtn--outline ccard__fav pcard__fav${fav}" data-fav="${p.id}" aria-label="Favoritar ${p.name}" aria-pressed="${!!fav}">${ICO.heart}</button>
     </div>
@@ -856,6 +856,8 @@ function renderShowcase(filter) {
 
   // o grid acompanha quantos cards realmente existem: uma categoria com
   // 2 itens não pode deixar 60% da linha vazia
+  // atributo de layout do CSS (.showcase[data-count="N"]); o contador animado
+  // usa data-count-to justamente para não escrever por cima destes cards
   host.dataset.count = String(pool.length);
   host.innerHTML = pool.map((p, i) => showcaseCard(p, i === 2 && pool.length === PAGE)).join('');
   hydratePlaceholders(host);
@@ -947,7 +949,7 @@ const Cart = (() => {
       const p = byId(i.id);
       const u = unitPrice(p, i.qty);
       return `<div class="ditem" data-id="${p.id}">
-        <span class="ditem__thumb" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.jpg"></span>
+        <span class="ditem__thumb" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp"></span>
         <div class="ditem__body">
           <p class="ditem__name">${p.name}</p>
           <p class="ditem__meta">${money(u)} / uni · faixa de ${i.qty}+ </p>
@@ -1217,11 +1219,11 @@ function wireSplit() {
 }
 
 function animateCount(el) {
-  // o observer pegava o .reveal e o [data-count] dentro dele: dois loops
+  // o observer pegava o .reveal e o [data-count-to] dentro dele: dois loops
   // de rAF escrevendo o mesmo textContent, o número tremia e voltava
   if (el.dataset.counted) return;
   el.dataset.counted = '1';
-  const end = Number(el.dataset.count) || 0;
+  const end = Number(el.dataset.countTo) || 0;
   const suffix = el.dataset.suffix || '';
   const dur = 1500;
   const t0 = performance.now();
@@ -1238,12 +1240,12 @@ function wireReveal() {
     entries.forEach(en => {
       if (!en.isIntersecting) return;
       en.target.classList.add('is-in');
-      $$('[data-count]', en.target).forEach(animateCount);
-      if (en.target.matches('[data-count]')) animateCount(en.target);
+      $$('[data-count-to]', en.target).forEach(animateCount);
+      if (en.target.matches('[data-count-to]')) animateCount(en.target);
       obs.unobserve(en.target);
     });
   }, { rootMargin: '0px 0px -12% 0px', threshold: 0.12 });
-  $$('.reveal, [data-count]').forEach(el => io.observe(el));
+  $$('.reveal, [data-count-to]').forEach(el => io.observe(el));
 }
 
 /* ── Inclinação 3D + brilho que segue o cursor ─────────────────────────
@@ -1354,11 +1356,11 @@ function wireDeals() {
     $('#dealUnit').textContent = hasVolume(p)
       ? `mín. ${p.min} uni · até ${money(bestPrice(p))} a partir de ${bestQty(p)}`
       : `pedido mínimo ${p.min} uni`;
-    $('#dealRating').textContent = p.rating.toFixed(2);
+    $('#dealMin').textContent = `mín. ${p.min} uni`;
     $('#dealAdd').dataset.add = p.id;
     const media = $('#dealMedia');
     media.dataset.ph = p.ph;
-    media.dataset.src = `assets/produtos/${p.id}.jpg`;
+    media.dataset.src = `assets/produtos/${p.id}.webp`;
     media.setAttribute('aria-label', p.name);
     paint(media, p.ph, PRODUCTS.indexOf(p));
     if (hasGSAP() && !prefersReduced) {
