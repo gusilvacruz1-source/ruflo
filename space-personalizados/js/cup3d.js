@@ -161,7 +161,7 @@ function engravingTexture() {
     const h = c.height * 0.90;
     const w = h * (marcaImg.naturalWidth / marcaImg.naturalHeight);
     g.drawImage(marcaImg, (c.width - w) / 2, (c.height - h) / 2, w, h);
-    return c;
+    return assaRelevo(c);
   }
 
   // reserva: só o nome, até o arquivo da marca chegar
@@ -172,7 +172,46 @@ function engravingTexture() {
   g.font = '600 34px Archivo, system-ui, sans-serif';
   g.letterSpacing = '10px';
   g.fillText('PERSONALIZADOS', 5, 74);
-  return c;
+  return assaRelevo(c);
+}
+
+/* O RELEVO DA GRAVAÇÃO, ASSADO NA TEXTURA
+   A parede do sulco é o que faz a marca parecer cavada e não colada, e ela
+   vem da inclinação do desenho. O shader calculava essa inclinação com duas
+   buscas extras na textura, uma deslocada em cada eixo. Medido: as três
+   buscas custavam 30 ms dos 149 de um quadro, e só o par do relevo custava
+   23 — o item mais caro do shader inteiro, porque cada busca é trilinear e lê
+   oito texels.
+
+   A inclinação não muda nunca: é a mesma marca, o mesmo desenho. Então ela é
+   calculada UMA vez aqui, em JavaScript, e guardada nos canais verde e azul
+   da própria textura. O shader faz uma busca só e recebe cobertura e
+   inclinação juntas. Mesma imagem, um terço do custo.
+
+   Os deslocamentos em pixel são os mesmos que o shader usava em UV:
+   0,0020 × 2048 = 4 px na horizontal e 0,0030 × 512 ≈ 2 px na vertical. */
+function assaRelevo(c) {
+  const g = c.getContext('2d');
+  const img = g.getImageData(0, 0, c.width, c.height);
+  const d = img.data, W = c.width, H = c.height;
+  const DU = 4, DV = 2;
+  const cobertura = new Uint8Array(W * H);
+  for (let i = 0, n = W * H; i < n; i++) cobertura[i] = d[i * 4];
+  for (let y = 0; y < H; y++) {
+    const linha = y * W;
+    // em v a textura é presa nas bordas; em u ela dá a volta, como no copo
+    const linhaV = Math.min(H - 1, y + DV) * W;
+    for (let x = 0; x < W; x++) {
+      const e  = cobertura[linha + x];
+      const eu = cobertura[linha + ((x + DU) % W)];
+      const ev = cobertura[linhaV + x];
+      const k = (linha + x) * 4;
+      d[k + 1] = ((e - eu) >> 1) + 128;   // inclinação ao redor da peça
+      d[k + 2] = ((e - ev) >> 1) + 128;   // inclinação na altura
+      d[k + 3] = 255;
+    }
+  }
+  return img;
 }
 
 /* --- shaders -------------------------------------------------------------- */
@@ -252,16 +291,18 @@ vec3 studio(vec3 d) {
 
   /* softbox principal: alta, estreita, em cima à esquerda. Os eixos são
      constantes — o compilador dobra estas contas. */
-  vec3 kc = normalize(vec3(0.38, 0.64, 0.67));      // softbox: alto, ~60° à esquerda
-  vec3 kr = normalize(cross(vec3(0.0, 1.0, 0.0), kc));
-  vec3 ku = cross(kc, kr);
+  // = normalize(vec3(0.38, 0.64, 0.67)) e seus dois eixos, já resolvidos
+  const vec3 kc = vec3( 0.37945, 0.63907,  0.66903);
+  const vec3 kr = vec3( 0.86984, 0.0,      -0.49334);
+  const vec3 ku = vec3(-0.31528, 0.76915,  -0.55589);
   col += vec3(1.0, 0.985, 0.955) * painel(d, kc, kr, ku, vec2(0.150, 2.10), 0.130) * 4.6;
   col += vec3(1.0, 0.970, 0.930) * painel(d, kc, kr, ku, vec2(0.82, 3.20), 1.05) * 0.62;
 
   /* tira estreita à direita e atrás: é ela que acende o recorte da silhueta */
-  vec3 rc = normalize(vec3(-0.62, 0.38, -0.70));   // tira de recorte: atrás, à direita
-  vec3 rr = normalize(cross(vec3(0.0, 1.0, 0.0), rc));
-  vec3 ru = cross(rc, rr);
+  // = normalize(vec3(-0.62, 0.38, -0.70)) e seus dois eixos
+  const vec3 rc = vec3(-0.61425, 0.37648, -0.69351);
+  const vec3 rr = vec3(-0.74859, 0.0,      0.66304);
+  const vec3 ru = vec3( 0.24962, 0.92643,  0.28183);
   col += vec3(1.0, 0.86, 0.60) * painel(d, rc, rr, ru, vec2(0.105, 1.65), 0.130) * 3.2;
 
   /* preenchimento frio do lado oposto: largo e fraco, sem forma nenhuma */
@@ -270,7 +311,17 @@ vec3 studio(vec3 d) {
   return col;
 }
 
-float hash(vec2 p) { return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
+/* Espalhador sem seno. O shader chama isto oito vezes por fragmento (grão do
+   acabamento, anéis do torno, riscos, grão de sensor) e sin() é uma função
+   transcendental: barata numa placa de vídeo, cara numa GPU de celular, que é
+   onde o copo estava travando. Esta versão é só multiplicação e fract. De
+   quebra aguenta entrada grande, coisa que a do seno não fazia — a semente do
+   grão chegava a 2877 e ali a precisão do seno já tinha ido embora. */
+float hash(vec2 p) {
+  vec3 q = fract(vec3(p.xyx) * 0.1031);
+  q += dot(q, q.yzx + 33.33);
+  return fract((q.x + q.y) * q.z);
+}
 
 /* ruído de valor, suave — serve à casca de laranja do revestimento */
 float ruido(vec2 p) {
@@ -353,12 +404,15 @@ void main() {
     float v = clamp((h - uBandBot) / (uBandTop - uBandBot), 0.0, 1.0);
     vec2 uvE = vec2(1.25 - ang, 1.0 - (v - 0.30) / 0.42);
     float dentro = step(0.30, v) * step(v, 0.72) * (1.0 - inside);
-    float e  = texture2D(uEtch, uvE).r * dentro;
-    float eu = texture2D(uEtch, uvE + vec2(0.0020, 0.0)).r * dentro;
-    float ev = texture2D(uEtch, uvE + vec2(0.0, 0.0030)).r * dentro;
+    /* Uma busca só: vermelho é a cobertura da marca, verde e azul são a
+       inclinação da parede do sulco, já assada na textura (ver assaRelevo).
+       Eram três buscas trilineares aqui, 30 ms dos 149 de um quadro. */
+    vec3 grav = texture2D(uEtch, uvE).rgb;
+    float e = grav.r * dentro;
+    vec2 decl = (grav.gb - 0.5) * (2.0 * dentro);
 
-    N = normalize(N + Tv * (anel * 0.015 + casca * 0.026 + (e - ev) * 0.40)
-                    + Tc * (casca * 0.010 + (e - eu) * 0.40));
+    N = normalize(N + Tv * (anel * 0.015 + casca * 0.026 + decl.y * 0.40)
+                    + Tc * (casca * 0.010 + decl.x * 0.40));
 
     float ndv = clamp(dot(N, V), 0.0, 1.0);
     /* para o referencial do rig: daqui para baixo a peça é que girou */
@@ -366,9 +420,9 @@ void main() {
     vec3 R  = paraRig(reflect(-V, N));
 
     vec3 base = vec3(0.038, 0.118, 0.395);
-    vec3 L1 = normalize(vec3(0.38, 0.64, 0.67));       // softbox principal
-    vec3 L2 = normalize(vec3(-0.62, 0.38, -0.70));     // tira quente de trás
-    vec3 L3 = normalize(vec3(0.49, 0.16, -0.86));      // preenchimento frio
+    const vec3 L1 = vec3(0.37945, 0.63907, 0.66903);   // eixo da softbox
+    const vec3 L2 = vec3(-0.61425, 0.37648, -0.69351); // tira quente de trás
+    const vec3 L3 = vec3(0.48871, 0.15958, -0.85773);  // preenchimento frio
 
     float d1 = clamp(dot(Nr, L1), 0.0, 1.0);
     /* difusa envolvente: a luz vaza um pouco além do terminador, que é o que
@@ -397,7 +451,7 @@ void main() {
        que pega a luz — no escuro não existem, como na vida. */
     float linha = floor(ang * 430.0 + h * 165.0);              // levemente inclinadas
     float trecho = floor(h * 8.0 + hash(vec2(linha, 2.0)) * 6.0);  // quebradas em trechos
-    float risco = smoothstep(0.955, 1.0, hash(vec2(linha, trecho)));
+    float risco = smoothstep(0.978, 1.0, hash(vec2(linha, trecho)));
     col += vec3(0.88, 0.92, 1.0) * risco * d1 * 0.034;
 
     /* Onde o feixe passou fica inox cru à mostra: claro, fosco e obedecendo
