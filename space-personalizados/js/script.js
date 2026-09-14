@@ -203,11 +203,31 @@ const fotoIO = 'IntersectionObserver' in window
     }, { rootMargin: '700px 0px' })
   : null;
 
+/* Uma foto por quadro.
+   Com margem de 700 px o observador dispara várias fotos de uma vez, e elas
+   chegam praticamente juntas. Aplicadas no mesmo quadro, o navegador pinta
+   todas de uma vez e devolve o engasgo pela porta dos fundos. Esta fila
+   entrega uma por quadro: o custo vira uma fatia fina em vários quadros em
+   vez de um pico num só. */
+const filaFotos = [];
+let passandoFotos = false;
+function enfileiraFoto(aplica) {
+  filaFotos.push(aplica);
+  if (passandoFotos) return;
+  passandoFotos = true;
+  requestAnimationFrame(function passa() {
+    const proxima = filaFotos.shift();
+    if (proxima) proxima();
+    if (filaFotos.length) requestAnimationFrame(passa);
+    else passandoFotos = false;
+  });
+}
+
 function buscaFoto(el) {
   const real = el.dataset.src;
   if (!real) return;
   const probe = new Image();
-  probe.onload = () => {
+  const aplica = () => {
     // o #dealMedia é reaproveitado entre produtos: sem esta checagem uma
     // sondagem lenta pinta a foto do produto anterior sobre o novo
     if (el.dataset.src !== real) return;
@@ -220,7 +240,17 @@ function buscaFoto(el) {
     el.style.removeProperty('background-position');
     el.classList.add('has-photo');
   };
+  /* onload avisa que os BYTES chegaram, não que a imagem está decodificada: a
+     decodificação sobrava para a hora de pintar, dentro do quadro. decode()
+     faz esse trabalho fora da thread principal e só resolve com o bitmap
+     pronto — aí pintar é só copiar. */
   probe.src = real;
+  if (probe.decode) {
+    probe.decode().then(() => enfileiraFoto(aplica))
+                  .catch(() => { if (probe.complete && probe.naturalWidth) enfileiraFoto(aplica); });
+  } else {
+    probe.onload = () => enfileiraFoto(aplica);
+  }
 }
 
 /** Aplica o placeholder e agenda a troca pela foto real, se ela existir. */
@@ -402,6 +432,43 @@ const Stage = (() => {
     return true;
   }
   function global3D() { return typeof window.Cup3D !== 'undefined'; }
+  /* ESCALA ADAPTATIVA
+     Não há como saber de antemão quanto o aparelho do cliente aguenta: o
+     mesmo copo que roda a 60 quadros num desktop engasga num celular de
+     entrada. Então o site mede. O laço guarda o intervalo entre quadros e a
+     cada 30 chama aqui com a MEDIANA — mediana, não média, para um engasgo
+     solto do coletor de lixo não derrubar a qualidade sozinho.
+
+     O fator só desce, nunca sobe. Subir e descer produz oscilação visível:
+     corta, fica rápido, devolve, engasga de novo. Descendo em degraus o
+     aparelho encontra o nível dele em menos de um segundo de rolagem e fica
+     lá. Custa um pouco de nitidez num aparelho que teve um azar pontual, e
+     num copo de sombreado liso isso quase não aparece. */
+  const Q_MIN = 0.26, Q_ALVO = 17;
+  /* O aparelho que já visitou o site não precisa aprender de novo: o nível
+     que ele aguentou fica guardado e a primeira rolagem da segunda visita já
+     nasce fluida. */
+  let qualidade = (() => {
+    try {
+      const g = parseFloat(localStorage.getItem('space:q'));
+      if (g >= Q_MIN && g <= 1) return g;
+    } catch (e) { /* navegação privada: segue no palpite */ }
+    return matchMedia('(pointer: coarse)').matches ? 0.55 : 1;
+  })();
+  function afereQualidade(ms) {
+    if (ms <= 21 || qualidade <= Q_MIN) return;
+    /* Corte PROPORCIONAL ao atraso. Em degraus fixos um celular fraco levava
+       vários segundos para achar o nível dele, e esses segundos são
+       justamente os do copo girando na tela. Quem está em 50 ms por quadro
+       apanha um corte grande de uma vez; quem está em 24 apanha um pequeno.
+       O limite de metade por vez evita derrubar a nitidez por um engasgo. */
+    const q = Math.max(Q_MIN, qualidade * Math.max(0.45, Q_ALVO / ms));
+    if (q >= qualidade - 0.005) return;
+    qualidade = q;
+    try { localStorage.setItem('space:q', q.toFixed(3)); } catch (e) { /* idem */ }
+    resize3D();
+  }
+
   function resize3D() {
     if (!gl3d) return;
     const r = gl3d.getBoundingClientRect();
@@ -409,7 +476,7 @@ const Stage = (() => {
        contagem total de fragmentos, e ela depende do tamanho da tela junto
        com a densidade: 1.75x num tablet grande é muito mais trabalho que
        1.75x num celular. Este teto vale igual em qualquer aparelho. */
-    const TETO = 1.15e6;
+    const TETO = 1.15e6 * qualidade;
     let d = Math.min(window.devicePixelRatio || 1, 2);
     const area = r.width * r.height * d * d;
     if (area > TETO) d *= Math.sqrt(TETO / area);
@@ -576,7 +643,8 @@ const Stage = (() => {
 
   function fade(v) { cv.style.opacity = v; if (gl3d) gl3d.style.opacity = v; }
 
-  return { resize, clear, renderFake, fade, mount3D, get is3D() { return !!gl3d; }, get w() { return W; }, get h() { return H; } };
+  return { resize, clear, renderFake, fade, mount3D, afereQualidade,
+           get is3D() { return !!gl3d; }, get w() { return W; }, get h() { return H; } };
 })();
 
 /* ============================================================================
@@ -654,7 +722,26 @@ const Cup = (() => {
   /* --- loop com requestAnimationFrame ------------------------------------
      Estaciona quando o copo já saiu da tela e nada mais tem a animar; o
      scroll acorda de novo. Antes o loop ficava vivo o site inteiro. */
+  /* amostragem para a escala adaptativa: 30 quadros, mediana, e recomeça */
+  const intervalos = [];
+  let quadroAnterior = 0, descartados = 0;
+
   function tick() {
+    const agora = performance.now();
+    /* Os primeiros quadros levam junto a compilação do shader e o envio da
+       textura: medir ali condenaria qualquer aparelho ao piso. Descartados um
+       a um, e não uma janela inteira, para o primeiro ajuste chegar antes. */
+    if (quadroAnterior) {
+      if (descartados < 8) descartados++;
+      else intervalos.push(agora - quadroAnterior);
+    }
+    quadroAnterior = agora;
+    if (intervalos.length >= 20) {
+      intervalos.sort((a, b) => a - b);
+      Stage.afereQualidade(intervalos[10]);   // mediana, não média: um
+      intervalos.length = 0;                  // engasgo solto não decide nada
+    }
+
     const rect = section.getBoundingClientRect();
     if (driveFromScroll) {
       target = clamp(-rect.top / Math.max(1, totalScroll));
@@ -672,13 +759,15 @@ const Cup = (() => {
 
     // uma única leitura de layout por quadro serve para o alvo e para a
     // decisão de estacionar
-    if (current === target && rect.bottom <= 0) { running = false; return; }
+    if (current === target && rect.bottom <= 0) { running = false; quadroAnterior = 0; return; }
     requestAnimationFrame(tick);
   }
 
   function wake() {
     if (running) return;
     running = true;
+    quadroAnterior = 0;      // a pausa entre acordadas não é tempo de quadro
+    intervalos.length = 0;
     requestAnimationFrame(tick);
   }
 

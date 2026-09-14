@@ -263,6 +263,7 @@ svg{ display: block; }
   background: var(--ink) url("../assets/fundo-site.webp") center / cover no-repeat;
 }
 .ambient__orb, .ambient__grid{ display: none; }
+
 .ambient__grain{
   display: block; position: absolute; inset: 0;
   /* mesmo motivo do palco do copo: a imagem é de celular e sobe na tela */
@@ -311,6 +312,22 @@ body.is-locked{ overflow: hidden; }
 .cup__stage{
   position: sticky; top: 0; height: 100svh; overflow: hidden;
   background: var(--ink) url("../assets/fundo-copo.webp") center / cover no-repeat;
+}
+
+/* PAPEL DE PAREDE MAIS LEVE PARA CELULAR DE DENSIDADE 2x
+   As duas imagens grandes somam 27 MB de bitmap depois de decodificadas, e o
+   fundo do site fica na tela o tempo todo. Num celular barato isso é pressão
+   de memória que vira engasgo de rolagem.
+   O corte vale SÓ para tela estreita com densidade até 2x, que é onde 900 px
+   de largura já cobrem o aparelho inteiro. Celular de tela densa continua
+   recebendo a imagem grande: a nitidez do fundo foi pedida duas vezes e não é
+   para ser desfeita em quem tem folga para ela.
+   Mora DEPOIS das duas declarações originais de propósito: mesma
+   especificidade, então quem vem por último é que vale. */
+@media (max-width: 760px) and (max-resolution: 2dppx),
+       (max-width: 760px) and (-webkit-max-device-pixel-ratio: 2) {
+  .ambient{ background-image: url("../assets/fundo-site-p.webp"); }
+  .cup__stage{ background-image: url("../assets/fundo-copo-p.webp"); }
 }
 /* Véu leve, só o suficiente para o HUD se sustentar nos cantos. O anterior
    fechava a imagem em 86% na borda e a nebulosa virava um fundo preto. */
