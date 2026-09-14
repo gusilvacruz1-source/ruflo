@@ -1,0 +1,183 @@
+# SPACE PERSONALIZADOS — site
+
+Site independente, 100% estático. **HTML + CSS + JavaScript puro.**
+Sem React, sem Vue, sem three.js, sem build, sem npm. Abre o `index.html`
+e funciona.
+
+```
+space-personalizados/
+├── index.html          ← a página inteira
+├── css/style.css       ← todo o design (variáveis em :root)
+├── js/cup3d.js         ← o copo 3D, em WebGL cru
+├── js/script.js        ← scroll, catálogo e orçamento
+└── assets/produtos/    ← fotos dos produtos (opcionais)
+```
+
+---
+
+## 0. O sistema visual
+
+O site segue a linguagem do estúdio Eloize Betim, adaptada para a loja:
+
+- **Duas tintas.** `--ink` #0D0D0E e `--paper` #EFEDEA. O ouro da marca
+  virou latão dessaturado (`--brass` #B08D57) e saiu de painel: só aparece
+  em fio, número e num botão — é o papel que o taupe faz no original.
+- **Bodoni Moda** no display, **Archivo** na interface.
+- As **seções alternam tinta e papel** de ponta a ponta (`data-theme`), com
+  o conteúdo num `.site-container` de 1320 px. O corte entre elas é seco.
+- `.section` define o ritmo vertical **uma vez**; nenhuma seção sobrescreve.
+- **Fio de 1px** separa blocos. Não existe cartão com borda e sombra.
+- **Micro-rótulo** em caixa alta com entreletra de .22em, em poucos pontos.
+- O **cabeçalho inverte** a cor sobre as faixas claras, decidido pela seção
+  que está debaixo da barra.
+
+Duas armadilhas de CSS que este layout encontrou, anotadas para não
+voltarem: `backdrop-filter` e `transform` num elemento **fixo** criam bloco
+de contenção para os descendentes fixos — com qualquer um dos dois na barra,
+o menu de tela cheia passa a medir a barra em vez da janela e o
+`translateY(-100%)` esconde só a altura dela. Os testes [19] e [20] cobrem
+isso.
+
+## 1. O copo
+
+A primeira tela é um copo térmico **modelado em código**. Não é vídeo, não é
+foto, não é textura de foto: é geometria gerada em tempo de execução e
+desenhada em WebGL cru, sem biblioteca nenhuma.
+
+**A forma** é uma superfície de revolução. Um perfil 2D — parede externa,
+lábio da borda, parede interna e a calota do fundo — gira em torno do eixo Y
+em 168 divisões. O perfil inteiro está no topo de `js/cup3d.js`, em
+`PROFILE_OUT`, `LIP` e `PROFILE_IN`: mexa nos números e o copo muda de
+formato.
+
+**O material** é **vidro preto fumê**, e sai inteiro do shader. Aço escovado
+sobra só acima de `BAND_TOP` (o aro da boca) e abaixo de `BAND_BOT` (o pé);
+o resto é vidro. Quem decide o que reflete e o que deixa passar é o Fresnel
+de Schlick: de frente o copo quase some, na silhueta vira um contorno
+luminoso. A absorção cresce com o caminho óptico, então a borda escurece
+porque ali o vidro é mais espesso — não porque foi pintada.
+
+Vidro precisa de ordem de desenho: o que está atrás tem que ser pintado
+antes. São quatro passadas — o aço opaco escrevendo profundidade, depois
+externa de trás, interna de trás, interna da frente e externa da frente.
+O contexto e o shader trabalham com **alfa pré-multiplicado**, que é o que
+faz o fundo da página aparecer através do copo sem halo escuro em volta.
+
+**A luz** também é código. `studio()` é um ambiente procedural: uma softbox
+estreita e forte em cima à esquerda, uma segunda mais larga à frente, um
+preenchimento frio do lado oposto e um recorte quente vindo de trás, que
+separa o copo do fundo escuro. Nenhum HDR para baixar — o metal reflete um
+estúdio que existe só como matemática.
+
+**A gravação a laser** é desenhada num `<canvas>` 2D (a marca SPACE com o
+planeta) e vira textura, aplicada só na parede de vidro. No vidro o laser
+deixa a marca **jateada**: leitosa e quase opaca, ao contrário do resto. A do
+outro lado do copo sai fraca de propósito — o vidro da frente espalha a luz
+dela. A textura é reassada quando a Manrope termina de carregar, senão
+sairia na fonte do sistema.
+
+### O scroll
+
+| Parte | O que acontece |
+|---|---|
+| 1 | A câmera orbita o copo 360° |
+| 2 | Sobe acima da boca, inclina e desce para dentro |
+
+No fim o interior escurece e o copo se dissolve, revelando o fundo da loja —
+a ilusão é que a loja existe dentro do copo.
+
+Tudo que vale editar está no `CONFIG`, no topo de `js/script.js`:
+
+```js
+sequences: {
+  giro:     { scroll: 2800 },   // pixels de scroll da órbita
+  mergulho: { scroll: 1800 }    // pixels de scroll do mergulho
+},
+fadeStart: 0.70,   // quando o interior começa a escurecer (0–1 do mergulho)
+holdAfter: 320,    // respiro em pixels antes de soltar o palco
+smoothing: 0.16    // inércia do scrub (0 = travado, 1 = sem inércia)
+```
+
+O caminho da câmera está em `Cup3D.camera()`, em `js/cup3d.js`. A distância
+se ajusta sozinha à proporção da tela: num celular alto e estreito o campo
+horizontal é bem menor, e a mesma distância do desktop estouraria o copo
+para fora da tela.
+
+**Sem WebGL** (navegador antigo, contexto perdido, driver sem `highp`), o
+site cai numa prévia do copo desenhada em Canvas 2D. Nada a baixar, nada que
+possa faltar.
+
+---
+
+## 2. A loja
+
+Dark mode com acento champagne, **vidro translúcido** de verdade
+(`backdrop-filter` sobre uma camada de luz animada — desfocar preto liso não
+produz vidro nenhum), tipografia **serifada de alto contraste** (Playfair
+Display) com itálico de contraponto, contra Manrope no corpo. Bento grids
+assimétricos, pílulas e cantos generosos.
+
+Todas as seções usam os **18 produtos reais** do catálogo Space, com as
+faixas de preço por quantidade exatamente como no PDF.
+
+- **Hero** — título gigante, moldura fina com etiquetas de canto, card de
+  vidro do Copo Térmico, slider de 4 telas
+- **Bento** — "Personalize seu próprio brinde" + "Empresas que escolhem"
+- **Novos Brindes / Por Tipo** — filtros em pílula, 4 cards em destaque e
+  paginação que percorre o catálogo inteiro
+- **Descubra os Mais Desejados** — contador 14.500+ e card de oferta
+- **Catálogo completo** — os 18 itens num grid assimétrico de 12 colunas
+- **Nossa História**, CTA final e rodapé
+
+**Movimento:** inclinação 3D nos cards, brilho que segue o cursor, paralaxe
+das manchas de luz, revelação palavra a palavra nos títulos e contadores
+animados.
+
+### Orçamento pelo WhatsApp
+
+O botão ORÇAMENTO abre uma gaveta lateral. O cliente escolhe produtos e
+quantidades, o site calcula o preço unitário **na faixa certa** e monta uma
+mensagem pronta para o WhatsApp `(42) 99134-3788`. Carrinho e favoritos
+ficam salvos no navegador.
+
+**Não há pedido mínimo em item nenhum**: dá para comprar uma peça só, pelo
+mesmo preço unitário da tabela. Os `tiers` de cada produto começam em 1, e as
+faixas acima disso são descontos por volume, não exigências.
+
+O preço em destaque é sempre o da **unidade avulsa** e o de volume vira nota.
+Anunciar R$ 2,25 num chaveiro que só chega a esse preço em 500 peças é
+anunciar um preço que o cliente não consegue.
+
+### Fotos dos produtos
+
+Os 18 produtos já usam as fotos do catálogo PDF, em
+`assets/produtos/<id>.webp`, recortadas com alfa e enquadradas em `contain`
+sobre um halo dourado. Para trocar uma, basta sobrescrever o arquivo com o id
+do produto (ex.: `copo-473.webp`) — a lista completa está em
+`assets/produtos/LEIA-ME.txt`. Se um arquivo faltar, o card cai sozinho numa
+arte SVG gerada na hora.
+
+**Atenção:** as fotos vieram do catálogo do fornecedor e várias mostram peças
+já gravadas com a marca, o Instagram e o telefone de outros clientes.
+
+---
+
+## 3. Rodar
+
+```bash
+python3 -m http.server 8000    # depois abra http://localhost:8000
+```
+
+Abrir o `index.html` direto pelo arquivo também funciona.
+
+## 4. Dependências
+
+Duas, ambas por CDN e ambas com plano B:
+
+- **GSAP + ScrollTrigger** — se o CDN não carregar, o scroll cai num
+  fallback nativo com a mesma matemática.
+- **Google Fonts** (Playfair Display + Manrope) — se não carregar, cai na
+  fonte do sistema.
+
+O copo não depende de nenhuma das duas: é WebGL cru. Sem framework, sem
+build, sem asset para faltar.

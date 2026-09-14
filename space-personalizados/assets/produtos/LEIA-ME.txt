@@ -1,0 +1,30 @@
+FOTOS DOS PRODUTOS
+
+Enquanto não houver foto, o site desenha um placeholder em SVG sozinho.
+Assim que você colocar o arquivo aqui, ele entra no lugar automaticamente.
+
+Nome do arquivo = id do produto + .jpg. A lista completa:
+
+  copo-473.jpg              Copo Térmico Inox 473ml
+  copo-360.jpg              Copo Térmico Inox 360ml
+  caneca-termica-700.jpg    Caneca Térmica Inox 700ml
+  caneca-aluminio-350.jpg   Caneca em Alumínio 350ml
+  caneca-porcelana.jpg      Caneca de Porcelana 325ml
+  torre-xicaras.jpg         Torre de Xícaras 150ml
+  garrafa-500.jpg           Garrafa Térmica 500ml
+  garrafa-800.jpg           Garrafa Térmica 800ml
+  garrafa-aluminio-600.jpg  Garrafa em Alumínio 600ml
+  churrasco-5.jpg           Kit Churrasco 5 Peças
+  churrasco-4.jpg           Kit Churrasco Maleta 4 Peças
+  churrasco-2-estojo.jpg    Kit Churrasco 2 Peças · Estojo
+  churrasco-2-caixa.jpg     Kit Churrasco 2 Peças · Caixa
+  canivete-inox.jpg         Canivete Inox com Presilha
+  canivete-aco.jpg          Canivete com Lâmina de Aço
+  caneta-metal.jpg          Caneta Esferográfica em Metal
+  chaveiro-abridor.jpg      Chaveiro Abridor a Laser
+  chapeu-juta.jpg           Chapéu de Juta
+
+Fundos do hero (4 fotos grandes, 1920x1080):
+  hero-1.jpg  hero-2.jpg  hero-3.jpg  hero-4.jpg
+
+Formato ideal: 1200x1200 px, fundo escuro, produto centralizado.
