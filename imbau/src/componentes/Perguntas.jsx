@@ -69,7 +69,7 @@ export function Perguntas() {
         <div className="grid gap-12 lg:grid-cols-[0.85fr_1.15fr] lg:gap-20">
           <div className="lg:sticky lg:top-[22vh] lg:self-start">
             <Revelar>
-              <h2 className="titulo text-[clamp(1.9rem,3.8vw,2.7rem)] leading-[1.03] text-noite-900">
+              <h2 className="titulo text-[clamp(1.9rem,3.8vw,2.7rem)] text-noite-900">
                 {perguntas.titulo}
               </h2>
             </Revelar>

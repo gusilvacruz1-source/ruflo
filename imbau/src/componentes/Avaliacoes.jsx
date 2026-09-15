@@ -1,7 +1,6 @@
 import { avaliacoes, marca } from '../conteudo';
 import { Contagem } from './Contagem';
 import { EstrelaCheia, Seta } from './Interface';
-import { Caixa } from './Caixa';
 import { Revelar } from './Movimento';
 
 function Estrelas({ className = 'h-3.5 w-3.5' }) {
@@ -40,7 +39,7 @@ export function Avaliacoes() {
               </span>
             </p>
 
-            <h2 className="titulo max-w-sm text-[clamp(1.7rem,3.2vw,2.4rem)] leading-[1.05] text-noite-900">
+            <h2 className="titulo max-w-sm text-[clamp(1.7rem,3.2vw,2.4rem)] text-noite-900">
               {avaliacoes.titulo}
             </h2>
           </div>
@@ -58,17 +57,25 @@ export function Avaliacoes() {
           </a>
         </Revelar>
 
-        {/* Três colunas separadas por fio — texto de gente, não cartão. */}
-        <ul className="mt-14 grid gap-4 sm:mt-16 lg:grid-cols-3">
+        {/* Três colunas separadas por fio — fala de gente, não cartão de
+            borda cinza. Sem moldura, o depoimento curto não deixa mais um
+            vazio esperando ser preenchido até a altura do vizinho. */}
+        <ul className="mt-14 grid gap-11 sm:mt-16 lg:grid-cols-3 lg:gap-0">
           {avaliacoes.itens.map((item, i) => (
-            <Revelar as="li" key={item.nome} atraso={i * 110} distancia={24}>
-              <Caixa className="flex h-full flex-col rounded-[1.25rem] border border-noite-900/12 bg-osso-200/50 p-7 hover:border-noite-900/30">
-                <Estrelas className="h-3 w-3" />
-                <blockquote className="mt-5 text-[0.95rem] leading-relaxed text-noite-900/80">
-                  {item.texto}
-                </blockquote>
-                <p className="mt-auto pt-5 text-sm text-noite-900">{item.nome}</p>
-              </Caixa>
+            <Revelar
+              as="li"
+              key={item.nome}
+              atraso={i * 120}
+              distancia={24}
+              className="coluna-fio flex flex-col lg:pr-9"
+            >
+              <blockquote className="text-[0.95rem] leading-relaxed text-noite-900/80">
+                {item.texto}
+              </blockquote>
+              <p className="mt-auto flex items-center gap-3 pt-7 text-sm text-noite-900">
+                <span className="h-px w-6 bg-noite-900/30" />
+                {item.nome}
+              </p>
             </Revelar>
           ))}
         </ul>

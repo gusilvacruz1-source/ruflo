@@ -210,7 +210,7 @@ export function Visita() {
 
           <div className="site-container pointer-events-none absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
             <p className="sobretexto text-ouro-400">{visita.sobretexto}</p>
-            <h2 className="titulo mt-4 max-w-2xl text-[clamp(1.9rem,4vw,3rem)] leading-[1.04] text-osso-100">
+            <h2 className="titulo mt-4 max-w-2xl text-[clamp(1.9rem,4vw,3rem)] text-osso-100">
               {visita.titulo}
             </h2>
             <p className="mt-4 max-w-md text-[0.92rem] leading-relaxed text-osso-100/70">

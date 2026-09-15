@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { imoveis, mensagens, vitrine, zap } from '../conteudo';
 import { Selo, Seta, Whatsapp } from './Interface';
 import { Revelar } from './Movimento';
-import { Caixa } from './Caixa';
 import { Galeria } from './Galeria';
 import { ImagemProfunda } from './Profundidade';
 
@@ -13,11 +12,10 @@ function Cartao({ imovel, indice, aoAbrirFotos }) {
 
   return (
     <Revelar as="article" atraso={indice * 90} distancia={34}>
-      <Caixa
-        inclinacao={3}
-        eleva={4}
-        className="group grid overflow-hidden rounded-[2rem] border border-ouro-500/30 bg-noite-800/70 p-1.5 hover:border-ouro-500/60 lg:grid-cols-[1.05fr_0.95fr]"
-      >
+      {/* O cartão sobe no hover, sem inclinar. A 1.190 px de largura, três
+          graus de inclinação não leem como espessura — leem como a borda
+          reta empenando, e é justamente a borda que segura este cartão. */}
+      <div className="group grid overflow-hidden rounded-[2rem] border border-ouro-500/30 bg-noite-800/70 p-1.5 transition-[transform,border-color] duration-700 ease-[cubic-bezier(.16,1,.3,1)] hover:-translate-y-1.5 hover:border-ouro-500/60 lg:grid-cols-[1.05fr_0.95fr]">
         {/* A foto ocupa metade do cartão, não o cartão inteiro. As imagens
             têm 828 px de largura: esticadas para os 1.190 px do cartão elas
             perdiam nitidez, e nenhum efeito devolve o que a ampliação come. */}
@@ -54,7 +52,7 @@ function Cartao({ imovel, indice, aoAbrirFotos }) {
             de verdade, alinhada e legível. */}
         <div className="flex flex-col justify-center p-7 sm:p-10">
           <p className="sobretexto text-ouro-400">{imovel.local}</p>
-          <h3 className="titulo mt-4 text-[clamp(1.7rem,2.8vw,2.5rem)] leading-[1.05] text-osso-100">
+          <h3 className="titulo mt-4 text-[clamp(1.7rem,2.8vw,2.5rem)] text-osso-100">
             {imovel.nome}
           </h3>
           <p className="medida-curta mt-4 text-[0.92rem] leading-relaxed text-osso-100/70">
@@ -82,7 +80,7 @@ function Cartao({ imovel, indice, aoAbrirFotos }) {
             Tenho interesse
           </a>
         </div>
-      </Caixa>
+      </div>
     </Revelar>
   );
 }
@@ -99,17 +97,22 @@ export function Vitrine() {
       >
         <div className="site-container relative">
 
-        <header className="mx-auto max-w-2xl text-center">
-          <Revelar>
-            <Selo>{vitrine.selo}</Selo>
-          </Revelar>
-          <Revelar atraso={100}>
-            <h2 className="titulo mt-7 text-[clamp(2.1rem,5vw,3.9rem)] leading-[1.02] text-osso-100">
-              {vitrine.titulo}
-            </h2>
-          </Revelar>
-          <Revelar atraso={190}>
-            <p className="medida mx-auto mt-5 text-[0.95rem] leading-relaxed text-osso-100/60">
+        {/* Cabeçalho alinhado à esquerda, como o resto da página. Centralizar
+            só este bloco quebrava o eixo que o site segue de ponta a ponta —
+            e era a única coisa aqui que não tinha decidido nada. */}
+        <header className="grid gap-8 lg:grid-cols-[1.25fr_1fr] lg:items-end lg:gap-16">
+          <div>
+            <Revelar>
+              <Selo>{vitrine.selo}</Selo>
+            </Revelar>
+            <Revelar atraso={100}>
+              <h2 className="titulo mt-7 text-[clamp(2.1rem,5vw,3.9rem)] text-osso-100">
+                {vitrine.titulo}
+              </h2>
+            </Revelar>
+          </div>
+          <Revelar atraso={190} className="lg:pb-2">
+            <p className="medida text-[0.95rem] leading-relaxed text-osso-100/60">
               {vitrine.texto}
             </p>
           </Revelar>
@@ -121,12 +124,19 @@ export function Vitrine() {
           ))}
         </div>
 
-        <Revelar atraso={120} className="mt-14 flex justify-center">
+        {/* Fecho da vitrine: uma linha só, com o fio se desenhando até o
+            link. O mesmo gesto das etapas, do outro lado do tom. */}
+        <Revelar atraso={120} className="mt-16 flex items-center gap-6 sm:gap-10">
+          <span
+            aria-hidden="true"
+            className="fio-desenho h-px flex-1 bg-white/15"
+            style={{ '--fio-atraso': '280ms' }}
+          />
           <a
             href={zap(mensagens.menu)}
             target="_blank"
             rel="noopener noreferrer"
-            className="group inline-flex items-center gap-3 text-sm text-osso-100/65 transition-colors duration-300 hover:text-osso-100"
+            className="group inline-flex shrink-0 items-center gap-3 text-sm text-osso-100/65 transition-colors duration-300 hover:text-osso-100"
           >
             {vitrine.botao}
             <span className="grid h-8 w-8 place-items-center rounded-full border border-white/15 transition-transform duration-500 ease-[cubic-bezier(.16,1,.3,1)] group-hover:rotate-45">

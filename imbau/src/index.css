@@ -39,10 +39,41 @@
 
 @layer base {
   html {
+    /* Vale para quem roda sem o Lenis — movimento reduzido no sistema. */
     scroll-behavior: smooth;
     -webkit-text-size-adjust: 100%;
     scrollbar-color: var(--color-noite-500) var(--color-osso-200);
     scrollbar-width: thin;
+  }
+
+  /* Com o Lenis no ar, a rolagem suave do navegador briga com ele: cada
+     quadro do Lenis é um `window.scrollTo`, e com `scroll-behavior: smooth`
+     o navegador interpola cada um desses saltos de novo. O que se sente é
+     uma página que responde com atraso — o contrário do que a inércia
+     deveria dar. O Lenis marca a raiz com `.lenis`; é aqui que se desliga. */
+  html.lenis {
+    scroll-behavior: auto;
+  }
+
+  /* O resto é a folha do próprio Lenis, embutida em vez de importada: são
+     seis regras, e uma dependência a menos no caminho crítico. */
+  html.lenis,
+  html.lenis body {
+    height: auto;
+  }
+
+  .lenis:not(.lenis-autoToggle).lenis-stopped {
+    overflow: clip;
+  }
+
+  .lenis [data-lenis-prevent],
+  .lenis [data-lenis-prevent-wheel],
+  .lenis [data-lenis-prevent-touch] {
+    overscroll-behavior: contain;
+  }
+
+  .lenis.lenis-smooth iframe {
+    pointer-events: none;
   }
 
   body {
@@ -133,14 +164,14 @@
 
   /* Pílula de vidro do menu, sobre o creme. */
   .vidro-claro {
-    background: color-mix(in srgb, var(--color-osso-100) 70%, transparent);
+    background: color-mix(in srgb, var(--color-osso-100) 86%, transparent);
     backdrop-filter: blur(18px) saturate(140%);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
   }
 
   /* Pílula de vidro do menu, sobre o escuro. */
   .vidro {
-    background: color-mix(in srgb, var(--color-noite-800) 55%, transparent);
+    background: color-mix(in srgb, var(--color-noite-800) 72%, transparent);
     backdrop-filter: blur(18px) saturate(140%);
     -webkit-backdrop-filter: blur(18px) saturate(140%);
   }
@@ -173,16 +204,6 @@
 
   .mascara {
     animation: subir-mascara 1.3s var(--ease-suave) both;
-  }
-
-  /* Caixa que reage ao cursor. A volta ao lugar é lenta porque é a saída
-     que dá a sensação de peso; a ida é imediata, escrita quadro a quadro
-     pelo ponteiro. `transform-style` mantém o conteúdo no plano da caixa —
-     sem ele, o texto sobe junto e desalinha. */
-  .caixa {
-    transition: transform 0.9s var(--ease-suave), border-color 0.5s ease;
-    transform-style: preserve-3d;
-    will-change: transform;
   }
 
   /* ---------- capa ---------- */
@@ -405,6 +426,82 @@
     animation: desce 2.6s var(--ease-suave) infinite;
   }
 
+  /* O fio que se desenha. É o mesmo gesto do começo ao fim da página: a
+     linha nasce da esquerda quando o bloco entra, em vez de já estar lá.
+     Um movimento repetido vira assinatura; dez efeitos diferentes viram
+     barulho. Herda o `data-visivel` que o Revelar escreve no ancestral. */
+  .fio-desenho {
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 1.25s var(--ease-suave) var(--fio-atraso, 0ms);
+  }
+
+  [data-visivel='true'] .fio-desenho {
+    transform: scaleX(1);
+  }
+
+  /* Coluna de depoimento: separada por fio, não fechada em cartão. O fio
+     fica à esquerda no desktop e em cima no celular, onde as colunas
+     empilham e um fio vertical não separaria nada. */
+  .coluna-fio {
+    position: relative;
+    padding-top: 26px;
+  }
+
+  .coluna-fio::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 1px;
+    width: 100%;
+    background: color-mix(in srgb, var(--color-noite-900) 16%, transparent);
+  }
+
+  @media (min-width: 1024px) {
+    .coluna-fio {
+      padding-top: 0;
+      padding-left: 34px;
+    }
+
+    .coluna-fio::before {
+      width: 1px;
+      height: 100%;
+      background: color-mix(in srgb, var(--color-noite-900) 14%, transparent);
+    }
+
+    .coluna-fio:first-child {
+      padding-left: 0;
+    }
+
+    .coluna-fio:first-child::before {
+      display: none;
+    }
+  }
+
+  /* Etapa da trilha: número grande, sem caixa. O número é a informação —
+     a ordem é o que a pessoa precisa entender — então ele é que cresce. */
+  .etapa__numero {
+    display: block;
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-optical-sizing: auto;
+    font-size: clamp(2.6rem, 4.4vw, 3.6rem);
+    line-height: 0.82;
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+    /* O taupe fechado, não um cinza claro: o número diz a ordem das etapas,
+       então ele é conteúdo e tem de passar o contraste como tal. A 26% de
+       preto sobre o creme a razão dava 1,79 — um número grande e ilegível.
+       No hover ele fecha até o preto, e a direção do movimento fica clara. */
+    color: var(--color-ouro-700);
+    transition: color 0.7s var(--ease-suave);
+  }
+
+  .etapa:hover .etapa__numero {
+    color: var(--color-noite-900);
+  }
+
   /* Linha de respiro entre blocos — some quase por completo, mas alinha. */
   .fio {
     background: linear-gradient(
@@ -428,7 +525,10 @@
     font-optical-sizing: auto;
     letter-spacing: -0.02em;
     text-transform: uppercase;
-    line-height: 1.02;
+    /* 1,02 servia enquanto os títulos cabiam numa linha. Quando quebram, o
+       cedilha de PRESTAÇÃO encosta no S de SERVIÇOS da linha seguinte —
+       em português a caixa alta tem acento, e o espaço tem de existir. */
+    line-height: 1.08;
   }
 
   /* Primeira dobra: um passo mais leve e ainda mais aberto, porque o

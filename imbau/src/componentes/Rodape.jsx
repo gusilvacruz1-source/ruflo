@@ -9,7 +9,7 @@ export function Rodape() {
         <Revelar className="flex flex-col gap-10 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <Marca tamanho="h-11 w-11" />
-            <p className="titulo mt-8 max-w-md text-[clamp(1.7rem,3.4vw,2.7rem)] leading-[1.06] text-osso-100">
+            <p className="titulo mt-8 max-w-md text-[clamp(1.7rem,3.4vw,2.7rem)] text-osso-100">
               {rodape.frase}
             </p>
           </div>

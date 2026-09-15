@@ -27,7 +27,7 @@ export function Sobre() {
         <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_1fr] lg:gap-20">
           <div>
             <Revelar>
-              <h2 className="titulo text-[clamp(1.8rem,3.6vw,2.7rem)] leading-[1.05] text-noite-900">
+              <h2 className="titulo text-[clamp(1.8rem,3.6vw,2.7rem)] text-noite-900">
                 {sobre.titulo}
               </h2>
             </Revelar>

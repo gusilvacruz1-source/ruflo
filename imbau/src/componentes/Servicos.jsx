@@ -1,6 +1,5 @@
 import { mensagens, servicos, zap } from '../conteudo';
 import { Whatsapp } from './Interface';
-import { Caixa } from './Caixa';
 import { Revelar } from './Movimento';
 
 /**
@@ -16,7 +15,7 @@ function Linha({ servico, indice }) {
       className="group relative border-t border-noite-900/10 first:border-t-0"
     >
       <div className="relative flex flex-col gap-2 py-7 transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] sm:flex-row sm:items-baseline sm:gap-10 lg:group-hover:translate-x-2">
-        <h3 className="titulo shrink-0 text-[1.45rem] leading-none text-noite-900 sm:w-56 sm:text-[1.7rem]">
+        <h3 className="titulo shrink-0 text-[1.45rem] text-noite-900 sm:w-56 sm:text-[1.7rem]">
           {servico.nome}
         </h3>
         <p className="medida text-[0.92rem] leading-relaxed text-noite-900/65">
@@ -41,7 +40,7 @@ export function Servicos() {
           {/* Cabeçalho fica parado enquanto a lista passa. */}
           <div className="lg:sticky lg:top-[22vh] lg:self-start">
             <Revelar>
-              <h2 className="titulo text-[clamp(2.1rem,4.6vw,3.5rem)] leading-[1.02] text-noite-900">
+              <h2 className="titulo text-[clamp(2.1rem,4.6vw,3.5rem)] text-noite-900">
                 {servicos.titulo}
               </h2>
             </Revelar>
@@ -70,25 +69,36 @@ export function Servicos() {
           </ul>
         </div>
 
-        {/* Etapas: aqui o número conta, porque a ordem é a informação. */}
-        <div className="mt-24 sm:mt-32">
+        {/* Etapas: uma trilha, não quatro cartõezinhos de borda cinza. Cada
+            etapa fica pendurada no próprio fio, que se desenha quando ela
+            entra — o número cresce porque a ordem é a informação. */}
+        <div className="mt-20 sm:mt-24">
           <Revelar className="flex items-center gap-6">
             <h3 className="sobretexto shrink-0 text-noite-900/60">{servicos.etapasTitulo}</h3>
             <span className="fio h-px flex-1 text-noite-900" />
           </Revelar>
 
-          <ol className="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+          <ol className="mt-12 grid gap-y-11 sm:grid-cols-2 sm:gap-x-10 lg:grid-cols-4 lg:gap-x-8">
             {servicos.etapas.map((etapa, i) => (
-              <Revelar as="li" key={etapa.numero} atraso={i * 110} distancia={22}>
-                <Caixa className="h-full rounded-[1.25rem] border border-noite-900/12 bg-osso-100 px-7 py-8 hover:border-noite-900/30">
-                  <span className="sobretexto block text-ouro-700">{etapa.numero}</span>
-                  <h4 className="titulo mt-5 text-[1.35rem] leading-none text-noite-900">
-                    {etapa.titulo}
-                  </h4>
-                  <p className="mt-3 text-[0.85rem] leading-relaxed text-noite-900/60">
-                    {etapa.texto}
-                  </p>
-                </Caixa>
+              <Revelar
+                as="li"
+                key={etapa.numero}
+                atraso={i * 110}
+                distancia={22}
+                className="etapa group relative pt-7"
+              >
+                <span
+                  aria-hidden="true"
+                  className="fio-desenho absolute inset-x-0 top-0 h-px bg-noite-900/20"
+                  style={{ '--fio-atraso': `${i * 110 + 240}ms` }}
+                />
+                <span className="etapa__numero">{etapa.numero}</span>
+                <h4 className="titulo mt-5 text-[1.3rem] text-noite-900 transition-transform duration-700 ease-[cubic-bezier(.16,1,.3,1)] lg:group-hover:translate-x-1.5">
+                  {etapa.titulo}
+                </h4>
+                <p className="mt-3 text-[0.87rem] leading-relaxed text-noite-900/60">
+                  {etapa.texto}
+                </p>
               </Revelar>
             ))}
           </ol>

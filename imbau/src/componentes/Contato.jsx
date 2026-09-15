@@ -43,7 +43,7 @@ export function Contato() {
         <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:gap-16">
           <div>
             <Revelar>
-              <h2 className="titulo text-[clamp(2.1rem,4.6vw,3.4rem)] leading-[1.02] text-noite-900">
+              <h2 className="titulo text-[clamp(2.1rem,4.6vw,3.4rem)] text-noite-900">
                 {contato.titulo}
               </h2>
             </Revelar>

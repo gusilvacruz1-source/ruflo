@@ -75,7 +75,20 @@ export function Menu() {
       {/* Mesma margem da placa, para o menu nascer alinhado com o conteúdo. */}
       <div className="placa px-0 sm:px-4 lg:px-5">
         <div className="site-container flex items-center justify-between gap-6">
-          <a href="#inicio" ref={assinatura} aria-label={`${marca.nome} ${marca.sobrenome} — início`}>
+          {/* A assinatura e o botão ganham a mesma pílula de vidro da
+              navegação. Sem ela, os dois dependem do tom da página atrás —
+              e nas pontas do cabeçalho esse tom é mentira: o bloco escuro
+              tem canto arredondado, então ali embaixo ainda é creme, embora
+              a caixa dele diga que já é escuro. O resultado era texto claro
+              sobre creme, ilegível, no instante em que a borda passa. */}
+          <a
+            href="#inicio"
+            ref={assinatura}
+            aria-label={`${marca.nome} ${marca.sobrenome} — início`}
+            className={`rounded-full border py-2 pl-2.5 pr-5 transition-colors duration-500 ${
+              claro ? 'vidro border-white/10' : 'vidro-claro border-noite-900/10'
+            }`}
+          >
             <Marca tamanho="h-9 w-9" claro={claro} />
           </a>
 
@@ -113,6 +126,9 @@ export function Menu() {
               href={zap(mensagens.menu)}
               variante={claro ? 'claro' : 'escuro'}
               icone="whatsapp"
+              className={`rounded-full transition-colors duration-500 ${
+                claro ? 'vidro' : 'vidro-claro'
+              }`}
             >
               Fale conosco
             </Botao>

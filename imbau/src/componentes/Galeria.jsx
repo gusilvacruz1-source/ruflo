@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Seta } from './Interface';
+import { travarRolagem } from './Rolagem';
 
 /**
  * Visualizador das fotos de um imóvel.
@@ -27,8 +28,12 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
     focoAnterior.current = document.activeElement;
     painel.current?.focus();
 
+    // Duas travas, porque há dois jeitos de rolar esta página: o overflow
+    // cobre a rolagem nativa (movimento reduzido, Lenis desligado) e a
+    // `travarRolagem` para o laço do Lenis, que ignora overflow.
     const anterior = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    travarRolagem(true);
 
     const aoTeclar = (e) => {
       if (e.key === 'Escape') {
@@ -47,6 +52,7 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
     return () => {
       window.removeEventListener('keydown', aoTeclar);
       document.body.style.overflow = anterior;
+      travarRolagem(false);
       focoAnterior.current?.focus?.();
     };
   }, [andar, aoFechar]);

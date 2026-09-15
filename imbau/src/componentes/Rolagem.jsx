@@ -2,6 +2,22 @@ import { useEffect } from 'react';
 import Lenis from 'lenis';
 
 /**
+ * Trava a rolagem do site inteiro enquanto algo se abre por cima dele.
+ *
+ * `overflow: hidden` no body não basta: o Lenis rola a janela pelo próprio
+ * laço de quadros e não olha o overflow de ninguém. Quem pede a trava — o
+ * visualizador de fotos — não tem por que conhecer o Lenis, então a
+ * instância mora aqui e o pedido é uma função.
+ */
+let instancia = null;
+
+export function travarRolagem(travar) {
+  if (!instancia) return;
+  if (travar) instancia.stop();
+  else instancia.start();
+}
+
+/**
  * Rolagem com inércia no site inteiro.
  *
  * O navegador rola em degraus: cada giro da roda salta um bloco de pixels, e
@@ -28,6 +44,8 @@ export function Rolagem() {
       syncTouch: false,
     });
 
+    instancia = lenis;
+
     let quadro = 0;
     const passo = (tempo) => {
       lenis.raf(tempo);
@@ -50,6 +68,7 @@ export function Rolagem() {
       document.removeEventListener('click', aoClicar);
       cancelAnimationFrame(quadro);
       lenis.destroy();
+      instancia = null;
     };
   }, []);
 

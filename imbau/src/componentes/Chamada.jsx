@@ -21,7 +21,7 @@ export function Chamada() {
                 </Revelar>
 
                 <Revelar atraso={90}>
-                  <h2 className="titulo mt-7 text-[clamp(2.1rem,4.4vw,3.6rem)] leading-[1.02] text-noite-900">
+                  <h2 className="titulo mt-7 text-[clamp(2.1rem,4.4vw,3.6rem)] text-noite-900">
                     {chamada.titulo}
                   </h2>
                 </Revelar>
