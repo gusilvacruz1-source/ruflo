@@ -1,14 +1,12 @@
 /* ============================================================================
    SPACE PERSONALIZADOS — script.js
-   Vanilla JS · Canvas API · GSAP ScrollTrigger
+   Vanilla JS · GSAP
    ----------------------------------------------------------------------------
    [1] CONFIG          — tudo que você precisa editar fica aqui em cima
    [2] UTILS           — helpers
    [3] PLACEHOLDERS    — arte SVG gerada em runtime (some quando entram as fotos)
    [4] CATALOGO        — os 18 produtos reais do catálogo Space
-   [5] SEQUENCIA       — descoberta + preload dos frames do copo
-   [6] CANVAS          — render cover matemático + fallback procedural
-   [7] SCROLL          — ScrollTrigger (pin virtual por sticky) + fallback nativo
+   [6] ABERTURA        — a nebulosa com a marca no meio + preloader
    [8] UI              — hero, filtros, favoritos, contadores, orçamento
    ========================================================================== */
 
@@ -24,32 +22,6 @@ document.documentElement.classList.add('js-on');
    ========================================================================== */
 
 const CONFIG = {
-
-
-  /* --- A ANIMAÇÃO DO COPO ------------------------------------------------ */
-  sequences: {
-    /* Estes números são o PESO do site. A introdução inteira custava 5.820px
-       — seis telas e meia de rolagem antes de chegar na loja, e é isso que
-       dá a sensação de arrastar. Encurtada, a volta de 360° continua inteira,
-       só acontece em menos rolagem. */
-    // PARTE 1 — o copo dando a volta de 360°
-    giro:     { scroll: 1700, label: '360°'     },
-    // PARTE 2 — a câmera sobe e entra no copo
-    mergulho: { scroll: 1150, label: 'MERGULHO' }
-  },
-
-  // Em que ponto do MERGULHO o interior começa a escurecer (0–1).
-  // 0.82 = os últimos 18% do mergulho fazem o fade para a cor da loja.
-  fadeStart: 0.70,
-
-  // Pixels de scroll extras depois do último frame, já com a tela na cor da
-  // loja, antes de soltar o pin. Dá o "respiro" da transição.
-  holdAfter: 320,
-
-  // Suavização do scrub do canvas (0 = travado no scroll, 1 = sem inércia).
-  /* O copo persegue a rolagem com atraso. Em 0.16 ele ficava visivelmente
-     para trás do dedo, e atraso é exatamente o que o olho lê como peso. */
-  smoothing: 0.26,
 
   /* --- NEGÓCIO ----------------------------------------------------------- */
   whatsapp: '5542991343788',
@@ -76,7 +48,11 @@ const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' 
 const money = n => BRL.format(n);
 
 const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-const hasGSAP = () => typeof window.gsap !== 'undefined' && typeof window.ScrollTrigger !== 'undefined';
+/* Só o gsap principal. O ScrollTrigger existia para prender a introdução do
+   copo e saiu junto com ela; as três animações que sobraram são de card e
+   nunca precisaram dele. Se continuasse sendo exigido aqui, elas parariam de
+   rodar no dia em que o arquivo deixou de ser baixado. */
+const hasGSAP = () => typeof window.gsap !== 'undefined';
 
 const store = {
   get(k, fb) { try { return JSON.parse(localStorage.getItem('space.' + k)) ?? fb; } catch { return fb; } },
@@ -391,436 +367,58 @@ function selo(p) {
 }
 
 /* ============================================================================
-   [6] CANVAS — motor de render
+   [6] ABERTURA — a nebulosa com a marca no meio
    --------------------------------------------------------------------------
-   · drawCover()  → object-fit:cover calculado na mão, com devicePixelRatio
-   · renderReal() → desenha o frame da sequência
-   · renderFake() → copo desenhado em Canvas 2D enquanto os frames não chegam
+   Aqui moravam 460 linhas: um copo modelado por código em WebGL puro, com
+   superfície de revolução, shader de iluminação de estúdio, mesa giratória e
+   escala adaptativa de resolução, mais quatro telas e meia de rolagem
+   controlada — e um copo de reserva desenhado em Canvas 2D para quem não
+   tivesse WebGL. Saiu inteiro a pedido.
+
+   O que ficou é uma capa: o papel de parede, a marca no meio e uma tela de
+   altura. Sem canvas, sem laço de animação, sem rolagem presa.
+
+   A barra de carregamento continua, mas agora espera trabalho de verdade —
+   a marca e o papel de parede, decodificados. Sem o copo para construir não
+   existe mais progresso a fingir, e barra que finge é a parte do site que
+   some primeiro na confiança de quem olha.
    ========================================================================== */
+const Abertura = (() => {
+  let liberado = false;
 
-const Stage = (() => {
-  const cv  = $('#cupCanvas');
-  const ctx = cv.getContext('2d', { alpha: true });
-  let W = 0, H = 0, dpr = 1;
-
-  function resize() {
-    resize3D();
-    // mede o palco, não o canvas: em modo 3D o canvas 2D está display:none
-    // e devolveria 0x0
-    const r = (cv.parentNode || cv).getBoundingClientRect();
-    dpr = Math.min(window.devicePixelRatio || 1, 2.5);
-    W = Math.max(1, Math.round(r.width  * dpr));
-    H = Math.max(1, Math.round(r.height * dpr));
-    if (cv.width !== W)  cv.width  = W;
-    if (cv.height !== H) cv.height = H;
-  }
-
-  function clear() { ctx.clearRect(0, 0, W, H); }
-
-  /* Quando o copo é 3D, o canvas 2D sai de cena: o WebGL desenha direto no
-     seu próprio canvas, empilhado no mesmo lugar. Dois contextos não cabem
-     no mesmo elemento. */
-  let gl3d = null;
-  function mount3D() {
-    const host = cv.parentNode;
-    const c = document.createElement('canvas');
-    c.id = 'cupGL';
-    host.insertBefore(c, cv);
-    if (!global3D() || !window.Cup3D.init(c)) { c.remove(); return false; }
-    gl3d = c;
-    cv.style.display = 'none';
-    return true;
-  }
-  function global3D() { return typeof window.Cup3D !== 'undefined'; }
-  /* ESCALA ADAPTATIVA
-     Não há como saber de antemão quanto o aparelho do cliente aguenta: o
-     mesmo copo que roda a 60 quadros num desktop engasga num celular de
-     entrada. Então o site mede. O laço guarda o intervalo entre quadros e a
-     cada 30 chama aqui com a MEDIANA — mediana, não média, para um engasgo
-     solto do coletor de lixo não derrubar a qualidade sozinho.
-
-     O fator só desce, nunca sobe. Subir e descer produz oscilação visível:
-     corta, fica rápido, devolve, engasga de novo. Descendo em degraus o
-     aparelho encontra o nível dele em menos de um segundo de rolagem e fica
-     lá. Custa um pouco de nitidez num aparelho que teve um azar pontual, e
-     num copo de sombreado liso isso quase não aparece. */
-  const Q_MIN = 0.26, Q_ALVO = 17;
-  /* O aparelho que já visitou o site não precisa aprender de novo: o nível
-     que ele aguentou fica guardado e a primeira rolagem da segunda visita já
-     nasce fluida. */
-  let qualidade = (() => {
-    try {
-      const g = parseFloat(localStorage.getItem('space:q'));
-      if (g >= Q_MIN && g <= 1) return g;
-    } catch (e) { /* navegação privada: segue no palpite */ }
-    return matchMedia('(pointer: coarse)').matches ? 0.55 : 1;
-  })();
-  function afereQualidade(ms) {
-    if (ms <= 21 || qualidade <= Q_MIN) return;
-    /* Corte PROPORCIONAL ao atraso. Em degraus fixos um celular fraco levava
-       vários segundos para achar o nível dele, e esses segundos são
-       justamente os do copo girando na tela. Quem está em 50 ms por quadro
-       apanha um corte grande de uma vez; quem está em 24 apanha um pequeno.
-       O limite de metade por vez evita derrubar a nitidez por um engasgo. */
-    const q = Math.max(Q_MIN, qualidade * Math.max(0.45, Q_ALVO / ms));
-    if (q >= qualidade - 0.005) return;
-    qualidade = q;
-    try { localStorage.setItem('space:q', q.toFixed(3)); } catch (e) { /* idem */ }
-    resize3D();
-  }
-
-  function resize3D() {
-    if (!gl3d) return;
-    const r = gl3d.getBoundingClientRect();
-    /* Teto do copo em PIXELS, não em densidade. O que custa por quadro é a
-       contagem total de fragmentos, e ela depende do tamanho da tela junto
-       com a densidade: 1.75x num tablet grande é muito mais trabalho que
-       1.75x num celular. Este teto vale igual em qualquer aparelho. */
-    const TETO = 1.15e6 * qualidade;
-    let d = Math.min(window.devicePixelRatio || 1, 2);
-    const area = r.width * r.height * d * d;
-    if (area > TETO) d *= Math.sqrt(TETO / area);
-    const w = Math.max(1, Math.round(r.width * d)), h = Math.max(1, Math.round(r.height * d));
-    if (gl3d.width !== w) gl3d.width = w;
-    if (gl3d.height !== h) gl3d.height = h;
-    window.Cup3D.resize(w, h);
-  }
-  function fade3D(v) { if (gl3d) gl3d.style.opacity = v; }
-
-  /* ------------------------------------------------------------------------
-     COPO PROCEDURAL — prévia fiel enquanto o vídeo real não existe.
-     Tudo em coordenadas locais com origem no CENTRO DA BOCA do copo,
-     o que faz o zoom do mergulho "entrar" exatamente pela borda.
-     ---------------------------------------------------------------------- */
-
-  function metalGradient(g, angle) {
-    const s = (Math.sin(angle) * 0.5 + 0.5);
-    const stops = [
-      [0, '#0d0d0d'], [s - 0.36, '#242424'], [s - 0.15, '#8f8f8f'],
-      [s, '#efeeea'], [s + 0.15, '#8f8f8f'], [s + 0.36, '#242424'], [1, '#0d0d0d']
-    ];
-    let last = -1;
-    for (const [pos, col] of stops) {
-      const p = clamp(pos, 0, 1);
-      if (p <= last) continue;
-      g.addColorStop(p, col);
-      last = p;
-    }
-    return g;
-  }
-
-  function drawTumbler(ctx, u, angle, detail = true) {
-    const rimRX = u, rimRY = u * 0.33;
-    const bodyH = u * 2.35, botRX = u * 0.80, botRY = u * 0.25;
-
-    /* dentro do copo o corpo não aparece: pula os detalhes caros */
-    if (detail) {
-      /* sombra de chão */
-      const sh = ctx.createRadialGradient(0, bodyH + botRY * 1.4, 0, 0, bodyH + botRY * 1.4, u * 1.5);
-      sh.addColorStop(0, 'rgba(0,0,0,.75)');
-      sh.addColorStop(1, 'rgba(0,0,0,0)');
-      ctx.fillStyle = sh;
-      ctx.beginPath();
-      ctx.ellipse(0, bodyH + botRY * 1.5, u * 1.45, u * 0.30, 0, 0, Math.PI * 2);
-      ctx.fill();
-
-      /* corpo */
-      ctx.beginPath();
-      ctx.ellipse(0, 0, rimRX, rimRY, 0, 0, Math.PI);
-      ctx.lineTo(-botRX, bodyH);
-      ctx.ellipse(0, bodyH, botRX, botRY, 0, Math.PI, 0, true);
-      ctx.closePath();
-      ctx.fillStyle = metalGradient(ctx.createLinearGradient(-rimRX, 0, rimRX, 0), angle);
-      ctx.fill();
-
-      /* linha de dupla parede */
-      ctx.save();
-      ctx.clip();
-      ctx.strokeStyle = 'rgba(0,0,0,.28)';
-      ctx.lineWidth = u * 0.012;
-      for (const y of [bodyH * 0.19, bodyH * 0.86]) {
-        ctx.beginPath();
-        ctx.ellipse(0, y, rimRX * 0.98, rimRY * 0.9, 0, 0.08, Math.PI - 0.08);
-        ctx.stroke();
-      }
-      /* brilho especular que corre com o giro */
-      const sg = ctx.createLinearGradient(-rimRX, 0, rimRX, 0);
-      const sp = clamp(Math.sin(angle + 0.5) * 0.5 + 0.5, 0.05, 0.95);
-      sg.addColorStop(clamp(sp - 0.08, 0, 1), 'rgba(255,255,255,0)');
-      sg.addColorStop(sp, 'rgba(255,255,255,.34)');
-      sg.addColorStop(clamp(sp + 0.08, 0, 1), 'rgba(255,255,255,0)');
-      ctx.fillStyle = sg;
-      ctx.fillRect(-rimRX, -rimRY, rimRX * 2, bodyH + botRY * 2);
-      ctx.restore();
-
-      /* gravação a laser que orbita o corpo */
-      const ca = Math.cos(angle);
-      if (ca > 0.03) {
-        ctx.save();
-        ctx.globalAlpha = clamp(ca * 1.25, 0, 1) * 0.96;
-        ctx.translate(Math.sin(angle) * rimRX * 0.58, bodyH * 0.47);
-        ctx.scale(Math.max(ca, 0.04), 1);
-        ctx.strokeStyle = 'rgba(28,26,22,.62)';
-        ctx.lineWidth = u * 0.02;
-        ctx.beginPath(); ctx.arc(0, -u * 0.40, u * 0.20, 0, Math.PI * 2); ctx.stroke();
-        ctx.fillStyle = 'rgba(28,26,22,.62)';
-        ctx.beginPath(); ctx.arc(0, -u * 0.40, u * 0.075, 0, Math.PI * 2); ctx.fill();
-        ctx.textAlign = 'center';
-        ctx.font = `700 ${u * 0.235}px Manrope, system-ui, sans-serif`;
-        ctx.fillText('SPACE', 0, u * 0.02);
-        ctx.font = `600 ${u * 0.072}px Manrope, system-ui, sans-serif`;
-        ctx.globalAlpha *= 0.72;
-        ctx.fillText('P E R S O N A L I Z A D O S', 0, u * 0.20);
-        ctx.restore();
-      }
-    }
-
-    /* interior */
-    const inner = ctx.createRadialGradient(0, -rimRY * 0.2, u * 0.05, 0, rimRY * 0.2, rimRX);
-    inner.addColorStop(0, '#000000');
-    inner.addColorStop(0.62, '#0b0a09');
-    inner.addColorStop(1, '#211c15');
-    ctx.beginPath();
-    ctx.ellipse(0, 0, rimRX * 0.955, rimRY * 0.955, 0, 0, Math.PI * 2);
-    ctx.fillStyle = inner;
-    ctx.fill();
-
-    /* parede interna iluminada ao fundo */
-    ctx.save();
-    ctx.clip();
-    const wall = ctx.createLinearGradient(0, -rimRY, 0, rimRY * 0.4);
-    wall.addColorStop(0, 'rgba(230,200,138,.30)');
-    wall.addColorStop(1, 'rgba(230,200,138,0)');
-    ctx.fillStyle = wall;
-    ctx.fillRect(-rimRX, -rimRY, rimRX * 2, rimRY * 2);
-    ctx.restore();
-
-    /* borda */
-    ctx.beginPath();
-    ctx.ellipse(0, 0, rimRX * 0.978, rimRY * 0.978, 0, 0, Math.PI * 2);
-    ctx.lineWidth = u * 0.045;
-    ctx.strokeStyle = metalGradient(ctx.createLinearGradient(-rimRX, 0, rimRX, 0), angle + 0.6);
-    ctx.stroke();
-  }
-
-  function renderFake(phase, t) {
-    const glow = phase === 'dive' ? 1 - easeIn(t) : 1;
-
-    const bg = ctx.createLinearGradient(0, 0, 0, H);
-    bg.addColorStop(0, '#0a0a0a'); bg.addColorStop(0.5, '#151515'); bg.addColorStop(1, '#060606');
-    ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
-
-    const rg = ctx.createRadialGradient(W * 0.5, H * 0.32, 0, W * 0.5, H * 0.32, Math.max(W, H) * 0.62);
-    rg.addColorStop(0, `rgba(230,200,138,${0.17 * glow})`);
-    rg.addColorStop(1, 'rgba(230,200,138,0)');
-    ctx.fillStyle = rg; ctx.fillRect(0, 0, W, H);
-
-    let angle, zoom, rimY;
-    if (phase === 'giro') {
-      angle = t * Math.PI * 2;                 // exatamente uma volta
-      zoom  = 1;
-      rimY  = H * 0.27;
-    } else {
-      const e = easeIn(t);
-      angle = Math.PI * 2 + t * 1.15;          // continua de onde parou: sem corte
-      zoom  = 1 + e * 26;                      // a câmera entra pela boca
-      rimY  = lerp(H * 0.27, H * 0.52, easeOut(t));
-    }
-
-    const u = Math.min(W * 0.34, H * 0.235);
-    ctx.save();
-    ctx.translate(W * 0.5, rimY);
-    ctx.scale(zoom, zoom);
-    drawTumbler(ctx, u, angle, zoom < 5);
-    ctx.restore();
-
-    /* vinheta */
-    const vg = ctx.createRadialGradient(W * 0.5, H * 0.5, Math.min(W, H) * 0.28, W * 0.5, H * 0.5, Math.max(W, H) * 0.78);
-    vg.addColorStop(0, 'rgba(0,0,0,0)');
-    vg.addColorStop(1, 'rgba(0,0,0,.72)');
-    ctx.fillStyle = vg; ctx.fillRect(0, 0, W, H);
-  }
-
-  function fade(v) { cv.style.opacity = v; if (gl3d) gl3d.style.opacity = v; }
-
-  return { resize, clear, renderFake, fade, mount3D, afereQualidade,
-           get is3D() { return !!gl3d; }, get w() { return W; }, get h() { return H; } };
-})();
-
-/* ============================================================================
-   [7] SCROLL — ScrollTrigger ligado ao índice dos frames
-   ========================================================================== */
-
-const Cup = (() => {
-  const section  = $('#cup');
-  const veil     = $('#cupVeil');
-  const hud      = $('#cupHud');
-  const bar      = $('#cupProgress');
-  const phaseEl  = $('#cupPhase');
-  const nav      = $('#nav');
-
-  const G = CONFIG.sequences.giro;
-  const M = CONFIG.sequences.mergulho;
-
-  let use3D = false;
-  let target = 0, current = 0, needsDraw = true;
-  let pGiro = 0, pDive = 1, totalScroll = 0;
-  let running = false;
-  let driveFromScroll = true;          // false quando o ScrollTrigger assume
-  const last = { veil: -1, hud: -1, bar: -1, phase: '' };
-
-  /* --- geometria do trilho de scroll ------------------------------------ */
-  function measure() {
-    const factor = prefersReduced ? 0.28 : 1;
-    totalScroll = Math.round((G.scroll + M.scroll + CONFIG.holdAfter) * factor);
-    pGiro = (G.scroll * factor) / totalScroll;
-    pDive = ((G.scroll + M.scroll) * factor) / totalScroll;
-    section.style.height = (window.innerHeight + totalScroll) + 'px';
-  }
-
-  /* --- do progresso global para fase + t local -------------------------- */
-  function split(p) {
-    if (p <= pGiro)  return { phase: 'giro', t: pGiro ? p / pGiro : 0 };
-    if (p <= pDive)  return { phase: 'dive', t: (p - pGiro) / (pDive - pGiro) };
-    return { phase: 'dive', t: 1 };
-  }
-
-  /* --- desenho ----------------------------------------------------------- */
-  function render(p) {
-    const { phase, t } = split(p);
-
-    if (Stage.is3D) window.Cup3D.render(phase, t);
-    else Stage.renderFake(phase, t);   // plano B sem WebGL: Canvas 2D
-
-    /* fade do interior para a cor exata da loja.
-       Só escreve no DOM o que mudou de verdade: antes eram 5 escritas de
-       estilo por frame para valores quase sempre idênticos. */
-    const dive = phase === 'dive' ? t : 0;
-    const fade = +(p > pDive ? 1 : smoothstep(CONFIG.fadeStart, 1, dive)).toFixed(3);
-    if (fade !== last.veil) {
-      veil.style.opacity = fade * 0.55;      // escurece o interior
-      Stage.fade(1 - fade);                  // e o copo se dissolve no fundo
-      last.veil = fade;
-    }
-
-    const hudOpacity = +(1 - smoothstep(0, 0.22, dive)).toFixed(3);
-    if (hudOpacity !== last.hud) {
-      hud.style.opacity = hudOpacity;
-      last.hud = hudOpacity;
-    }
-
-    const barPct = +(p * 100).toFixed(2);
-    if (barPct !== last.bar) { bar.style.width = barPct + '%'; last.bar = barPct; }
-
-    const phaseTxt = phase === 'giro' ? G.label : (dive > 0.82 ? 'ENTRANDO' : M.label);
-    if (phaseTxt !== last.phase) { phaseEl.textContent = phaseTxt; last.phase = phaseTxt; }
-
-    if (p > 0.96) nav.classList.add('is-live');
-    else if (p < 0.93) nav.classList.remove('is-live');
-  }
-
-  /* --- loop com requestAnimationFrame ------------------------------------
-     Estaciona quando o copo já saiu da tela e nada mais tem a animar; o
-     scroll acorda de novo. Antes o loop ficava vivo o site inteiro. */
-  /* amostragem para a escala adaptativa: 30 quadros, mediana, e recomeça */
-  const intervalos = [];
-  let quadroAnterior = 0, descartados = 0;
-
-  function tick() {
-    const agora = performance.now();
-    /* Os primeiros quadros levam junto a compilação do shader e o envio da
-       textura: medir ali condenaria qualquer aparelho ao piso. Descartados um
-       a um, e não uma janela inteira, para o primeiro ajuste chegar antes. */
-    if (quadroAnterior) {
-      if (descartados < 8) descartados++;
-      else intervalos.push(agora - quadroAnterior);
-    }
-    quadroAnterior = agora;
-    if (intervalos.length >= 20) {
-      intervalos.sort((a, b) => a - b);
-      Stage.afereQualidade(intervalos[10]);   // mediana, não média: um
-      intervalos.length = 0;                  // engasgo solto não decide nada
-    }
-
-    const rect = section.getBoundingClientRect();
-    if (driveFromScroll) {
-      target = clamp(-rect.top / Math.max(1, totalScroll));
-    }
-
-    const diff = target - current;
-    if (Math.abs(diff) > 0.00015) {
-      current += diff * (prefersReduced ? 1 : CONFIG.smoothing);
-      needsDraw = true;
-    } else if (current !== target) {
-      current = target;
-      needsDraw = true;
-    }
-    if (needsDraw) { render(current); needsDraw = false; }
-
-    // uma única leitura de layout por quadro serve para o alvo e para a
-    // decisão de estacionar
-    if (current === target && rect.bottom <= 0) { running = false; quadroAnterior = 0; return; }
-    requestAnimationFrame(tick);
-  }
-
-  function wake() {
-    if (running) return;
-    running = true;
-    quadroAnterior = 0;      // a pausa entre acordadas não é tempo de quadro
-    intervalos.length = 0;
-    requestAnimationFrame(tick);
-  }
-
-  /* --- ligação com o scroll --------------------------------------------- */
-  function bind() {
-    measure();
-
-    if (hasGSAP()) {
-      driveFromScroll = false;
-      gsap.registerPlugin(ScrollTrigger);
-      ScrollTrigger.create({
-        trigger: section,
-        start: 'top top',
-        end: 'bottom bottom',       // o palco fica fixo via position:sticky
-        invalidateOnRefresh: true,
-        onUpdate: self => { target = self.progress; wake(); },
-        onRefresh: self => { Stage.resize(); target = self.progress; needsDraw = true; }
-      });
-      ScrollTrigger.addEventListener('refreshInit', measure);
-    }
-    // o alvo é lido dentro do próprio tick quando não há ScrollTrigger
-
-    let rt;
-    addEventListener('resize', () => {
-      clearTimeout(rt);
-      rt = setTimeout(() => {
-        measure();
-        Stage.resize();
-        needsDraw = true;
-        wake();
-        if (hasGSAP()) ScrollTrigger.refresh();
-      }, 140);
-    });
-
-    Stage.resize();
-    addEventListener('scroll', wake, { passive: true });
-    wake();
-  }
-
-  /* --- preloader --------------------------------------------------------- */
-  let released = false;
-  function release() {
-    if (released) return;
-    released = true;
+  function libera() {
+    if (liberado) return;
+    liberado = true;
     $('#preloader').classList.add('is-done');
     document.body.classList.remove('is-locked');
-    bind();
-    setTimeout(() => { if (hasGSAP()) ScrollTrigger.refresh(); }, 400);
+  }
+
+  /* Qual papel de parede o CSS escolheu. A regra de celular 2x troca a imagem
+     por uma mais leve, e é a escolhida que tem que ser esperada — pré-carregar
+     a outra baixaria duas. */
+  function fundoDoPalco() {
+    const palco = $('#cupStage');
+    if (!palco) return null;
+    const m = (getComputedStyle(palco).backgroundImage || '').match(/url\(["']?([^"')]+)["']?\)/);
+    return m ? m[1] : null;
+  }
+
+  /* Espera DECODIFICAR, não só chegar. Soltar a tela com o bitmap ainda por
+     decodificar entrega justamente o quadro engasgado que a barra existe para
+     esconder. */
+  function carrega(url) {
+    return new Promise(resolve => {
+      const im = new Image();
+      im.onerror = () => resolve(false);
+      im.src = url;
+      if (im.decode) im.decode().then(() => resolve(true)).catch(() => resolve(false));
+      else im.onload = () => resolve(true);
+    });
   }
 
   async function boot() {
-    // aconteça o que acontecer, a loja abre em 25s. Nunca uma tela presa.
-    const watchdog = setTimeout(() => { if (!released) release(); }, 25000);
+    // aconteça o que acontecer, a loja abre em 8s. Nunca uma tela presa.
+    const cao = setTimeout(libera, 8000);
 
     const fill = $('#preloaderFill');
     const pct  = $('#preloaderPct');
@@ -831,22 +429,22 @@ const Cup = (() => {
       pct.textContent = n + '%';
     };
 
-    msg.textContent = 'modelando o copo';
-    setPct(0.3);
-    // O copo é gerado por código: geometria, shader e textura ficam prontos
-    // aqui mesmo, de forma síncrona. A barra marca trabalho real — não há
-    // download a esperar, então ela não finge demora.
-    use3D = Stage.mount3D();
-    if (!use3D) msg.textContent = 'preparando a prévia';
+    const alvos = ['assets/marca.webp', fundoDoPalco()].filter(Boolean);
+    let prontas = 0;
+    setPct(0.06);
+    await Promise.all(alvos.map(u => carrega(u).then(() => {
+      prontas++;
+      setPct(0.06 + 0.94 * (prontas / alvos.length));
+    })));
 
-    setPct(1);
     msg.textContent = 'pronto';
+    setPct(1);
     await new Promise(r => requestAnimationFrame(r));
-    clearTimeout(watchdog);
-    release();
+    clearTimeout(cao);
+    libera();
   }
 
-  return { boot, release, get info() { return { engine: use3D ? 'webgl' : 'canvas2d' }; } };
+  return { boot, libera };
 })();
 
 /* ============================================================================
@@ -1591,7 +1189,7 @@ function init() {
   wireTilt();
   wireParallax();
 
-  Cup.boot().catch(err => { console.error('[copo]', err); Cup.release(); });
+  Abertura.boot().catch(err => { console.error('[abertura]', err); Abertura.libera(); });
 }
 
 if (document.readyState === 'loading') {
@@ -1601,4 +1199,4 @@ if (document.readyState === 'loading') {
 }
 
 /* diagnóstico rápido no console */
-window.SPACE = { CONFIG, PRODUCTS, Cart, get sequences() { return Cup.info; } };
+window.SPACE = { CONFIG, PRODUCTS, Cart };

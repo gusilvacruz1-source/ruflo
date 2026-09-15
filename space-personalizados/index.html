@@ -38,33 +38,30 @@
     <p class="preloader__brand">SPACE <em>PERSONALIZADOS</em></p>
     <div class="preloader__bar"><span id="preloaderFill"></span></div>
     <div class="preloader__meta">
-      <span id="preloaderMsg">preparando a gravação</span>
+      <span id="preloaderMsg">carregando</span>
       <span class="preloader__pct" id="preloaderPct">0%</span>
     </div>
   </div>
 </div>
 
-<!-- ══════════════════════════ INTRO — COPO (CANVAS) ══════════════════════════ -->
-<section class="cup" id="cup" data-theme="ink" aria-label="Introdução animada">
+<!-- ══════════════════════════ ABERTURA — MARCA SOBRE A NEBULOSA ══════════════════════════ -->
+<section class="cup" id="cup" data-theme="ink" aria-label="Abertura">
   <div class="cup__stage" id="cupStage">
-    <canvas id="cupCanvas" aria-hidden="true"></canvas>
-    <div class="cup__veil" id="cupVeil" aria-hidden="true"></div>
     <div class="cup__hud" id="cupHud">
       <div class="cup__hudTop">
         <p class="cup__brand">SPACE <em>PERSONALIZADOS</em></p>
         <p class="cup__tag">Imbaú · PR</p>
       </div>
       <div class="cup__hudMid">
+        <img class="cup__marca" id="cupMarca" src="assets/marca.webp"
+             width="596" height="500" alt="SPACE Personalizados"
+             fetchpriority="high" decoding="async">
         <p class="cup__kicker"><span class="dotpulse"></span> GRAVAÇÃO A LASER</p>
-        <p class="cup__title">Sua marca<br><em>eternizada</em></p>
       </div>
       <div class="cup__hudBottom">
-        <p class="cup__hint">role para entrar no copo</p>
-        <div class="cup__track"><span id="cupProgress"></span></div>
-        <p class="cup__phase" id="cupPhase">360°</p>
+        <p class="cup__hint">role para ver o catálogo</p>
       </div>
     </div>
-
   </div>
 </section>
 
@@ -461,8 +458,6 @@
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="js/cup3d.js"></script>
 <script src="js/script.js"></script>
 </body>
 </html>

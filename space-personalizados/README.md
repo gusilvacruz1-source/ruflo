@@ -8,8 +8,7 @@ e funciona.
 space-personalizados/
 ├── index.html          ← a página inteira
 ├── css/style.css       ← todo o design (variáveis em :root)
-├── js/cup3d.js         ← o copo 3D, em WebGL cru
-├── js/script.js        ← scroll, catálogo e orçamento
+├── js/script.js        ← abertura, catálogo e orçamento
 └── assets/produtos/    ← fotos dos produtos (opcionais)
 ```
 
@@ -38,74 +37,43 @@ o menu de tela cheia passa a medir a barra em vez da janela e o
 `translateY(-100%)` esconde só a altura dela. Os testes [19] e [20] cobrem
 isso.
 
-## 1. O copo
+## 1. A abertura
 
-A primeira tela é um copo térmico **modelado em código**. Não é vídeo, não é
-foto, não é textura de foto: é geometria gerada em tempo de execução e
-desenhada em WebGL cru, sem biblioteca nenhuma.
+A primeira tela é uma capa: o papel de parede de nebulosa com a marca da
+empresa no meio, ocupando exatamente uma tela de altura.
 
-**A forma** é uma superfície de revolução. Um perfil 2D — parede externa,
-lábio da borda, parede interna e a calota do fundo — gira em torno do eixo Y
-em 168 divisões. O perfil inteiro está no topo de `js/cup3d.js`, em
-`PROFILE_OUT`, `LIP` e `PROFILE_IN`: mexa nos números e o copo muda de
-formato.
-
-**O material** é **vidro preto fumê**, e sai inteiro do shader. Aço escovado
-sobra só acima de `BAND_TOP` (o aro da boca) e abaixo de `BAND_BOT` (o pé);
-o resto é vidro. Quem decide o que reflete e o que deixa passar é o Fresnel
-de Schlick: de frente o copo quase some, na silhueta vira um contorno
-luminoso. A absorção cresce com o caminho óptico, então a borda escurece
-porque ali o vidro é mais espesso — não porque foi pintada.
-
-Vidro precisa de ordem de desenho: o que está atrás tem que ser pintado
-antes. São quatro passadas — o aço opaco escrevendo profundidade, depois
-externa de trás, interna de trás, interna da frente e externa da frente.
-O contexto e o shader trabalham com **alfa pré-multiplicado**, que é o que
-faz o fundo da página aparecer através do copo sem halo escuro em volta.
-
-**A luz** também é código. `studio()` é um ambiente procedural: uma softbox
-estreita e forte em cima à esquerda, uma segunda mais larga à frente, um
-preenchimento frio do lado oposto e um recorte quente vindo de trás, que
-separa o copo do fundo escuro. Nenhum HDR para baixar — o metal reflete um
-estúdio que existe só como matemática.
-
-**A gravação a laser** é desenhada num `<canvas>` 2D (a marca SPACE com o
-planeta) e vira textura, aplicada só na parede de vidro. No vidro o laser
-deixa a marca **jateada**: leitosa e quase opaca, ao contrário do resto. A do
-outro lado do copo sai fraca de propósito — o vidro da frente espalha a luz
-dela. A textura é reassada quando a Manrope termina de carregar, senão
-sairia na fonte do sistema.
-
-### O scroll
-
-| Parte | O que acontece |
-|---|---|
-| 1 | A câmera orbita o copo 360° |
-| 2 | Sobe acima da boca, inclina e desce para dentro |
-
-No fim o interior escurece e o copo se dissolve, revelando o fundo da loja —
-a ilusão é que a loja existe dentro do copo.
-
-Tudo que vale editar está no `CONFIG`, no topo de `js/script.js`:
-
-```js
-sequences: {
-  giro:     { scroll: 2800 },   // pixels de scroll da órbita
-  mergulho: { scroll: 1800 }    // pixels de scroll do mergulho
-},
-fadeStart: 0.70,   // quando o interior começa a escurecer (0–1 do mergulho)
-holdAfter: 320,    // respiro em pixels antes de soltar o palco
-smoothing: 0.16    // inércia do scrub (0 = travado, 1 = sem inércia)
+```
+index.html   → section#cup > .cup__stage > .cup__hud
+css/style.css → .cup, .cup__stage, .cup__marca
+js/script.js  → o módulo Abertura
 ```
 
-O caminho da câmera está em `Cup3D.camera()`, em `js/cup3d.js`. A distância
-se ajusta sozinha à proporção da tela: num celular alto e estreito o campo
-horizontal é bem menor, e a mesma distância do desktop estouraria o copo
-para fora da tela.
+A imagem grande (`assets/fundo-copo.webp`) é o fundo do palco; a marca é o
+`img#cupMarca`, que sai de `assets/marca.webp` — o mesmo arquivo em PNG com
+alfa extraído do material da empresa. Ela é branca sobre transparente e a
+nebulosa tem partes claras, então leva uma `drop-shadow` para não se
+dissolver justo onde o gás acende.
 
-**Sem WebGL** (navegador antigo, contexto perdido, driver sem `highp`), o
-site cai numa prévia do copo desenhada em Canvas 2D. Nada a baixar, nada que
-possa faltar.
+Em tela estreita de densidade até 2x entram variantes menores das duas
+imagens de fundo (`-p.webp`): 11 MB de bitmap em vez de 27. Aparelho de tela
+densa continua recebendo as grandes.
+
+### O que havia aqui antes
+
+Um copo térmico modelado em código: superfície de revolução gerada em tempo
+de execução, desenhada em WebGL cru sem biblioteca nenhuma, com iluminação de
+estúdio por painéis retangulares, mesa giratória, gravação a laser com relevo
+assado na textura e escala adaptativa de resolução. A rolagem prendia a
+seção por quatro telas e meia enquanto a câmera dava a volta de 360° e depois
+entrava pela boca do copo. Havia ainda um copo de reserva desenhado em Canvas
+2D para quem não tivesse WebGL.
+
+Saiu inteiro a pedido, junto com o `js/cup3d.js`: 1.140 linhas. Está no
+histórico do git, se um dia fizer falta.
+
+A barra de carregamento continuou, mas agora espera trabalho de verdade — a
+marca e o papel de parede, decodificados. Sem o copo para construir não
+existe mais progresso a fingir.
 
 ---
 
@@ -179,5 +147,5 @@ Duas, ambas por CDN e ambas com plano B:
 - **Google Fonts** (Playfair Display + Manrope) — se não carregar, cai na
   fonte do sistema.
 
-O copo não depende de nenhuma das duas: é WebGL cru. Sem framework, sem
-build, sem asset para faltar.
+A abertura não depende de nenhuma das duas: é uma imagem de fundo e um
+`<img>`. Sem framework, sem build, sem asset que possa faltar.
