@@ -198,24 +198,34 @@ export function Visita() {
       {/* A altura daqui é a distância de rolagem da visita: uma tela para o
           palco e duas para percorrer os 160 quadros — uns 10 px por quadro. */}
       <div ref={trilho} className={parado ? '' : 'h-[300svh]'}>
-        <div className="sticky top-0 h-[100svh] overflow-hidden bg-noite-900">
-          <canvas
-            ref={tela}
-            role="img"
-            aria-label={visita.alt}
-            className="foto block h-full w-full"
-          />
+        <div className="sticky top-0 flex h-[100svh] items-center overflow-hidden bg-noite-900">
+          {/* A filmagem é vertical, então o palco é vertical. Esticá-la num
+              palco panorâmico cortaria o céu e o chão e deixaria o assunto
+              numa tira fina — leria como defeito, não como enquadramento. */}
+          <div className="site-container grid w-full items-center gap-10 lg:grid-cols-[1fr_min(440px,50svh)] lg:gap-16">
+            <div className="order-2 lg:order-1">
+              <p className="sobretexto text-ouro-400">{visita.sobretexto}</p>
+              <h2 className="titulo mt-4 max-w-[16ch] text-[clamp(1.9rem,4.4vw,3.4rem)] text-osso-100">
+                {visita.titulo}
+              </h2>
+              <p className="medida-curta mt-5 text-[0.92rem] leading-relaxed text-osso-100/70">
+                {visita.texto}
+              </p>
+            </div>
 
-          <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-noite-900 via-transparent to-noite-900/70" />
-
-          <div className="site-container pointer-events-none absolute inset-x-0 bottom-0 pb-14 sm:pb-20">
-            <p className="sobretexto text-ouro-400">{visita.sobretexto}</p>
-            <h2 className="titulo mt-4 max-w-2xl text-[clamp(1.9rem,4vw,3rem)] text-osso-100">
-              {visita.titulo}
-            </h2>
-            <p className="mt-4 max-w-md text-[0.92rem] leading-relaxed text-osso-100/70">
-              {visita.texto}
-            </p>
+            <div className="order-1 mx-auto w-full max-w-[min(340px,82vw,54svh)] lg:order-2 lg:mx-0 lg:max-w-none">
+              <div className="relative overflow-hidden rounded-[1.5rem] border border-ouro-500/25 bg-noite-800">
+                <canvas
+                  ref={tela}
+                  role="img"
+                  aria-label={visita.alt}
+                  className="foto block aspect-[9/16] w-full"
+                />
+                {/* Véu só nas pontas: o alto e o pé do quadro encostam na
+                    borda do palco, e sem ele a emenda aparece. */}
+                <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-noite-900/35 via-transparent to-noite-900/45" />
+              </div>
+            </div>
           </div>
         </div>
       </div>

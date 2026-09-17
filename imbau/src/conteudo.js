@@ -51,12 +51,15 @@ export const hero = {
     'Compra, venda e locação com avaliação honesta e documentação em ordem. A Imbaú acompanha cada etapa — do primeiro contato à entrega das chaves.',
   botao: 'Falar no WhatsApp',
   ver: 'Ver os imóveis',
-  // O vídeo é a própria visita, em laço e sem som. O poster cobre o intervalo
-  // até ele carregar e fica no lugar dele se não tocar.
+  // Um imóvel da carteira, em laço e sem som: o terreno arborizado da
+  // Charqueada de Baixo, o mesmo que a seção da visita percorre. O laço é
+  // ida e volta — sem isso a emenda dá um tranco justo onde o olho está.
+  // O poster cobre o intervalo até o vídeo tocar e fica no lugar dele se
+  // não tocar.
   video: 'imagens/capa-fundo.mp4',
   poster: 'imagens/capa-fundo.webp',
   arco: 'imagens/capa-arco.webp',
-  arcoAlt: 'Varanda com arcos de um imóvel da carteira da Imbaú',
+  arcoAlt: 'Fachada de arcos da casa de 210 m² na Rua Otávio Borges',
 };
 
 
@@ -73,12 +76,16 @@ export const hero = {
  */
 export const visita = {
   sobretexto: 'A visita',
-  titulo: 'Role para andar por dentro',
-  texto: 'O passo é seu: a casa avança no ritmo em que você rola a página.',
-  alt: 'Caminhada da entrada até a área coberta de um imóvel da carteira',
+  titulo: 'Role para entrar no terreno',
+  texto:
+    'O passo é seu: a chegada avança no ritmo em que você rola a página. Do portão na Avenida Paraná até a casa, pelos 1.723 m² arborizados da Charqueada de Baixo.',
+  alt: 'Caminhada do portão da Avenida Paraná até a casa, pelo terreno arborizado de 1.723 m² na Charqueada de Baixo',
+  // A filmagem é de celular, na vertical. Os quadros ficam na proporção em
+  // que ela foi feita: cortar 9:16 para caber num palco panorâmico jogaria
+  // fora dois terços da altura e deixaria uma tira fina de assunto.
   conjuntos: {
-    desktop: { caminho: 'visita/desktop', total: 160, largura: 1440 },
-    mobile: { caminho: 'visita/mobile', total: 80, largura: 800 },
+    desktop: { caminho: 'visita/desktop', total: 96, largura: 480 },
+    mobile: { caminho: 'visita/mobile', total: 48, largura: 360 },
   },
 };
 
