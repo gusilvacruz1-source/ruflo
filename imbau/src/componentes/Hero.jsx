@@ -1,4 +1,4 @@
-import { useCallback, useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 import { hero, mensagens, zap } from '../conteudo';
 import { Botao } from './Interface';
 import { useCena } from './Profundidade';
@@ -67,13 +67,32 @@ export function Hero() {
     </span>
   ));
 
+  // Paisagem e retrato não servem à mesma tela, e nenhum recorte salva as
+  // duas: um vídeo deitado no celular vira uma tira vertical do meio, e um
+  // vídeo em pé no desktop é ampliado até ficar macio. Então são dois
+  // arquivos, e a decisão é uma só, tomada na montagem.
+  //
+  // `<source media>` dentro de `<video>` não é confiável entre navegadores —
+  // saiu de parte das especificações. Aqui a escolha é explícita.
+  const [emPe, setEmPe] = useState(false);
+
+  useEffect(() => {
+    const consulta = window.matchMedia('(max-width: 767px)');
+    setEmPe(consulta.matches);
+    const aoMudar = (e) => setEmPe(e.matches);
+    consulta.addEventListener('change', aoMudar);
+    return () => consulta.removeEventListener('change', aoMudar);
+  }, []);
+
   return (
     <section id="inicio" data-tom="escuro" className="capa">
-      {/* Fundo da seção inteira: o vídeo da visita, em laço e sem som. */}
+      {/* Fundo da seção inteira: um imóvel da carteira, em laço e sem som.
+          A fonte muda com a tela — ver `emPe`. */}
       <div className="capa__fundo" aria-hidden="true">
         <video
+          key={emPe ? 'alto' : 'largo'}
           className="foto-cenario capa__video"
-          poster={hero.poster}
+          poster={emPe ? hero.posterAlto : hero.poster}
           autoPlay
           muted
           loop
@@ -81,7 +100,7 @@ export function Hero() {
           preload="metadata"
           tabIndex={-1}
         >
-          <source src={hero.video} type="video/mp4" />
+          <source src={emPe ? hero.videoAlto : hero.video} type="video/mp4" />
         </video>
         <div ref={veu} className="capa__veu" />
       </div>
