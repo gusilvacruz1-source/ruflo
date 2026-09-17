@@ -91,62 +91,219 @@ export const vitrine = {
 };
 
 /**
- * Imóveis da carteira, tirados dos anúncios do próprio perfil.
+ * Imóveis da carteira. Os dados vêm dos anúncios que a Raquel escreve, e as
+ * fotos são as que ela mandou — conferidas uma por uma antes de entrar aqui.
+ *
  * Para publicar um novo: copie um bloco, troque os textos e aponte cada
- * entrada de `fotos` para um arquivo em public/imagens/. Quantas quiser — a
- * primeira é a capa do cartão, as outras entram no visualizador.
+ * entrada de `fotos` para um arquivo em public/imagens/imoveis/. Quantas
+ * quiser — a primeira é a capa do cartão, as outras entram no visualizador.
+ * Arquivo terminado em .mp4 entra como vídeo, sem precisar dizer nada.
+ *
+ * `destaque: true` em UM imóvel: é ele que ganha o cartão grande no topo da
+ * vitrine. Para mudar a vitrine de dono, mova essa linha — nada mais.
+ *
+ * A capa pede foto na horizontal: o cartão corta em 4:3 e uma foto em pé
+ * perde o telhado e o chão.
  *
  * Sem foto ainda, não publique o imóvel: uma ilustração de reserva no lugar
- * de uma casa real é o que faz um site de imobiliária parecer catálogo
- * genérico.
+ * de uma casa real é o que faz um site de imobiliária parecer catálogo.
  *
- * ⚠️ Confirme com a Raquel se os três seguem disponíveis antes de publicar.
+ * ⚠️ Confirme com a Raquel antes de publicar: se os sete seguem disponíveis
+ * e se os valores continuam de pé.
  */
 export const imoveis = [
   {
-    id: 'casa-210m2',
-    nome: 'Casa 210 m²',
-    local: 'Imbaú · PR',
-    resumo: 'Cozinha, sala de estar e sala de jantar, com área externa em volta',
-    ficha: ['210 m² construídos', '3 quartos', '1 suíte'],
-    // A primeira é a capa do cartão; as outras aparecem no visualizador.
-    // Ordene pensando em quem vai olhar: fachada primeiro, depois o que
-    // convence — sala, cozinha, garagem, quintal.
+    id: 'casa-120m2-pedra-do-sol',
+    destaque: true,
+    nome: 'Casa 120 m²',
+    local: 'Rua Pedra do Sol · Loteamento São Pedro · Cidade Alta',
+    preco: 'R$ 320 mil',
+    resumo:
+      'Varanda ampla na frente, edícula com churrasqueira no fundo e garagem coberta. Dois quartos mais suíte, em terreno de 375 m² com portão eletrônico e canil.',
+    ficha: [
+      '120 m² construídos',
+      '375 m² de terreno',
+      '2 quartos + 1 suíte',
+      'Varanda',
+      'Edícula com churrasqueira',
+      'Portão eletrônico',
+    ],
     fotos: [
-      {
-        arquivo: 'imagens/casa-210m2-fachada.webp',
-        alt: 'Fachada da casa de 210 m² em esquina, com muro claro e rua de paralelepípedo',
-      },
-      {
-        arquivo: 'imagens/casa-210m2-varanda.webp',
-        alt: 'Varanda com arcos e jardim da casa de 210 m²',
-      },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-14.webp', alt: 'Fachada da casa, cinza-azulada com telhado de cerâmica, e pátio de piso queimado na frente' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-02.webp', alt: 'A varanda coberta sobre colunas, que corre pela frente inteira da casa' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-12.webp', alt: 'A casa no fim da tarde, com a varanda e o pátio iluminados de lado' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-07.webp', alt: 'A casa vista de lado, mostrando o comprimento do telhado e o quintal' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-01.webp', alt: 'A varanda por dentro: piso frio, bancada com pia e espaço para mesa' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-11.webp', alt: 'Edícula com churrasqueira de tijolo e poltronas de vime' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-06.webp', alt: 'Quintal com piso na frente, canteiro novo e muro ao fundo' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-15.webp', alt: 'Lateral da casa com a garagem coberta e o terreno em declive' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-10.webp', alt: 'Garagem coberta, com piso de concreto e espaço para carro e moto' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-04.webp', alt: 'Cozinha e sala de jantar juntas, com armários de madeira clara e mesa posta' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-08.webp', alt: 'A mesma cozinha do outro lado, com geladeira e bancada' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-03.webp', alt: 'Quarto com cama de casal, guarda-roupa embutido e recamier no pé da cama' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-09.webp', alt: 'Segundo quarto, com guarda-roupa de duas cores e duas camas' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-13.webp', alt: 'Banheiro com box de vidro, cuba de apoio e espelho' },
+      { arquivo: 'imagens/imoveis/casa-120m2-pedra-do-sol-05.webp', alt: 'Banheiro da suíte, com box e banheira' },
     ],
   },
   {
-    id: 'imovel-rural',
-    nome: 'Imóvel com terreno de 1.723 m²',
-    local: 'Imbaú · PR',
-    resumo: 'Casa de 130 m² em terreno amplo e arborizado, com espaço para ampliar',
-    ficha: ['1.723 m² de terreno', '130 m² construídos', 'Área verde'],
+    id: 'casa-210m2',
+    nome: 'Casa 210 m²',
+    local: 'Rua Otávio Borges · Cidade Alta',
+    preco: 'R$ 900 mil',
+    resumo:
+      'Fachada de arcos e jardim na frente, sala de estar e sala de jantar separadas, três quartos sendo um suíte, e garagem com área gourmet. Terreno de 275 m² em esquina.',
+    ficha: [
+      '210 m² construídos',
+      '275 m² de terreno',
+      '3 quartos + 1 suíte',
+      'Sala de estar e de jantar',
+      'Garagem com área gourmet',
+      'Esquina',
+    ],
     fotos: [
-      {
-        arquivo: 'imagens/imovel-rural-1723m2.webp',
-        alt: 'Casa térrea com telhado de cerâmica em terreno amplo com árvores',
-      },
+      { arquivo: 'imagens/imoveis/casa-210m2-07.webp', alt: 'Fachada branca com arcos, jardim e caminho de pedra até a entrada' },
+      { arquivo: 'imagens/imoveis/casa-210m2-06.webp', alt: 'A varanda de arcos vista de perto, com o pátio calçado' },
+      { arquivo: 'imagens/imoveis/casa-210m2-09.webp', alt: 'A casa vista da rua de paralelepípedo, na esquina' },
+      { arquivo: 'imagens/imoveis/casa-210m2-10.webp', alt: 'A esquina, com o muro de faixas escuras e a placa de trânsito' },
+      { arquivo: 'imagens/imoveis/casa-210m2-12.webp', alt: 'Vista da rua mostrando o volume mais alto da casa' },
+      { arquivo: 'imagens/imoveis/casa-210m2-13.webp', alt: 'O mesmo volume mais alto, de perto' },
+      { arquivo: 'imagens/imoveis/casa-210m2-08.webp', alt: 'Jardim lateral com sebe, caminho calçado e muro' },
+      { arquivo: 'imagens/imoveis/casa-210m2-11.webp', alt: 'Terraço com guarda-corpo e vista para a cidade' },
+      { arquivo: 'imagens/imoveis/casa-210m2-02.webp', alt: 'Sala de jantar com janelas do chão ao teto e mesa para seis' },
+      { arquivo: 'imagens/imoveis/casa-210m2-17.webp', alt: 'Sala de jantar e cozinha, com a escada de madeira ao lado' },
+      { arquivo: 'imagens/imoveis/casa-210m2-05.webp', alt: 'A mesa de jantar com a escada ao fundo' },
+      { arquivo: 'imagens/imoveis/casa-210m2-03.webp', alt: 'Sala de estar com teto trabalhado, lustre e sofá de canto' },
+      { arquivo: 'imagens/imoveis/casa-210m2-01.webp', alt: 'Cozinha com ilha, bancada de granito e revestimento de mosaico' },
+      { arquivo: 'imagens/imoveis/casa-210m2-15.webp', alt: 'A cozinha do outro lado, com banquetas na bancada' },
+      { arquivo: 'imagens/imoveis/casa-210m2-14.webp', alt: 'Quarto amplo com janela larga' },
+      { arquivo: 'imagens/imoveis/casa-210m2-16.webp', alt: 'Quarto com guarda-roupa branco e penteadeira com espelho' },
+      { arquivo: 'imagens/imoveis/casa-210m2-19.webp', alt: 'Quarto de parede verde, com cama e armário embutido' },
+      { arquivo: 'imagens/imoveis/casa-210m2-18.webp', alt: 'Banheiro com box de vidro e paredes verde e amarela' },
+      { arquivo: 'imagens/imoveis/casa-210m2-04.webp', alt: 'Lavabo com parede de tijolo de vidro' },
+    ],
+  },
+  {
+    id: 'casa-325m2-comercial',
+    nome: 'Casa 325 m² com frente comercial',
+    local: 'Rua Laura Vieira Jangada · Cidade Alta',
+    preco: 'R$ 450 mil',
+    resumo:
+      'Cinco quartos sendo um suíte, garagem para três carros e edícula com churrasqueira — mais uma frente comercial de 50 m² com porta para a rua, pronta para alugar ou trabalhar.',
+    ficha: [
+      '325 m² construídos',
+      '385 m² de terreno',
+      '5 quartos + 1 suíte',
+      'Frente comercial de 50 m²',
+      'Garagem para 3 carros',
+      'Edícula com churrasqueira',
+    ],
+    fotos: [
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-12.webp', alt: 'Fachada rosa com a frente comercial fechada e o portão de madeira da garagem' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-13.webp', alt: 'A mesma fachada do outro lado da rua' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-10.webp', alt: 'A frente inteira do imóvel, em ângulo, mostrando a extensão do terreno' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-09.webp', alt: 'A sala comercial vazia, de paredes vermelhas e piso frio' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-07.webp', alt: 'Passagem lateral coberta, com muro de pedra' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-08.webp', alt: 'Área coberta nos fundos, com piso xadrez e churrasqueira' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-06.webp', alt: 'Passagem interna ligando os ambientes' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-01.webp', alt: 'Cozinha e sala de jantar, com armários claros e mesa posta' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-02.webp', alt: 'O mesmo ambiente, mais aberto' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-03.webp', alt: 'Cozinha com cooktop, armários e bancada' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-04.webp', alt: 'Quarto de parede verde, com cama de casal' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-11.webp', alt: 'Corredor com um dos quartos ao fundo' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-05.webp', alt: 'Banheiro com revestimento de mosaico, cuba e vaso' },
+      { arquivo: 'imagens/imoveis/casa-325m2-comercial-14.mp4', alt: 'Vídeo percorrendo a casa e a frente comercial' },
     ],
   },
   {
     id: 'casa-122m2',
     nome: 'Casa 122 m²',
-    local: 'Imbaú · PR',
-    resumo: 'Terreno de 220 m² com garagem coberta e frente para rua calçada',
-    ficha: ['122 m² construídos', '220 m² de terreno', 'Garagem coberta'],
+    local: 'Rua Jacutinga · Bairro São Cristóvão',
+    preco: 'R$ 300 mil',
+    resumo:
+      'Casa térrea com garagem coberta e frente para rua calçada, em terreno de 220 m². Na negociação, aceita terreno no Cidade Alta ou no Bela Vista como parte do pagamento.',
+    ficha: [
+      '122 m² construídos',
+      '220 m² de terreno',
+      '3 quartos',
+      'Garagem coberta',
+      'Aceita terreno na troca',
+    ],
     fotos: [
-      {
-        arquivo: 'imagens/casa-122m2.webp',
-        alt: 'Casa com garagem coberta e portão, vista da rua de paralelepípedo',
-      },
+      { arquivo: 'imagens/imoveis/casa-122m2-02.webp', alt: 'Fachada cinza com acabamento escuro, vista da rua de paralelepípedo, com carro na garagem' },
+      { arquivo: 'imagens/imoveis/casa-122m2-12.webp', alt: 'A frente da casa com o portão aberto e o pátio de concreto' },
+      { arquivo: 'imagens/imoveis/casa-122m2-01.webp', alt: 'A garagem coberta vista de dentro do terreno' },
+      { arquivo: 'imagens/imoveis/casa-122m2-03.webp', alt: 'Passagem coberta ao lado da casa, com piso frio' },
+      { arquivo: 'imagens/imoveis/casa-122m2-04.webp', alt: 'Cozinha com armários brancos, mesa e geladeira' },
+      { arquivo: 'imagens/imoveis/casa-122m2-11.webp', alt: 'A cozinha do outro lado' },
+      { arquivo: 'imagens/imoveis/casa-122m2-05.webp', alt: 'Sala de estar de parede cinza, com sofá e janela ampla' },
+      { arquivo: 'imagens/imoveis/casa-122m2-06.webp', alt: 'A sala com a televisão na parede' },
+      { arquivo: 'imagens/imoveis/casa-122m2-07.webp', alt: 'Quarto vazio, com janela alta' },
+      { arquivo: 'imagens/imoveis/casa-122m2-09.webp', alt: 'Quarto com cama de casal' },
+      { arquivo: 'imagens/imoveis/casa-122m2-10.webp', alt: 'Quarto com guarda-roupa embutido' },
+      { arquivo: 'imagens/imoveis/casa-122m2-08.webp', alt: 'Banheiro com cuba de apoio e box' },
+    ],
+  },
+  {
+    id: 'imovel-rural-1723m2',
+    nome: 'Casa 130 m² em terreno de 1.723 m²',
+    local: 'Avenida Paraná · Charqueada de Baixo',
+    preco: 'R$ 400 mil',
+    resumo:
+      'Terreno de 1.723 m², arborizado, com casa de 130 m² a terminar os acabamentos: sala de estar e de jantar, três quartos e dois banheiros. Aceita casa ou carro na negociação.',
+    ficha: [
+      '1.723 m² de terreno',
+      '130 m² construídos',
+      '3 quartos',
+      '2 banheiros',
+      'A terminar acabamentos',
+      'Aceita casa ou carro',
+    ],
+    fotos: [
+      { arquivo: 'imagens/imoveis/imovel-rural-1723m2-01.webp', alt: 'O terreno arborizado, com a casa aparecendo no fundo entre as árvores' },
+      { arquivo: 'imagens/imoveis/imovel-rural-1723m2-02.webp', alt: 'Sala de estar com forro de madeira e janelas corridas' },
+      { arquivo: 'imagens/imoveis/imovel-rural-1723m2-04.mp4', alt: 'Vídeo percorrendo o terreno e a casa' },
+      { arquivo: 'imagens/imoveis/imovel-rural-1723m2-03.mp4', alt: 'Vídeo da frente da casa e da área arborizada' },
+    ],
+  },
+  {
+    id: 'casa-80m2-bela-vista',
+    nome: 'Casa 80 m²',
+    local: 'Rua Tenente Armando da Costa Moreira · Bela Vista',
+    preco: 'R$ 150 mil',
+    resumo:
+      'Casa habitada e conservada, de piso de cerâmica e telhado de barro, em terreno de 330 m² com vaga na frente.',
+    ficha: ['80 m² construídos', '330 m² de terreno', 'Bairro Bela Vista'],
+    fotos: [
+      { arquivo: 'imagens/imoveis/casa-80m2-bela-vista-01.webp', alt: 'Fachada com telhado de barro, vista da rua, com carro estacionado na frente' },
+      { arquivo: 'imagens/imoveis/casa-80m2-bela-vista-05.webp', alt: 'Cozinha com armários brancos, mesa de quatro lugares e janela' },
+      { arquivo: 'imagens/imoveis/casa-80m2-bela-vista-06.webp', alt: 'Corredor com aparador e tapete' },
+      { arquivo: 'imagens/imoveis/casa-80m2-bela-vista-02.webp', alt: 'Quarto com cama de casal e cortina na janela' },
+      { arquivo: 'imagens/imoveis/casa-80m2-bela-vista-04.webp', alt: 'Segundo quarto, com cama de casal e janela para o quintal' },
+      { arquivo: 'imagens/imoveis/casa-80m2-bela-vista-03.webp', alt: 'Banheiro com box, cuba e vaso' },
+      { arquivo: 'imagens/imoveis/casa-80m2-bela-vista-07.mp4', alt: 'Vídeo percorrendo os ambientes da casa' },
+    ],
+  },
+  {
+    id: 'casa-70m2-bela-vista',
+    nome: 'Casa 70 m²',
+    local: 'Rua Tenente Arnaldo Costa Moreira · Bela Vista',
+    preco: 'R$ 150 mil',
+    resumo:
+      'Casa vazia e pronta para entrar, com piso granilite e quintal de terra nos fundos, em terreno de 330 m².',
+    ficha: ['70 m² construídos', '330 m² de terreno', 'Desocupada'],
+    fotos: [
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-08.webp', alt: 'Fachada azul e branca com telhado metálico, vista da rua, com a placa de venda no gradil' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-09.webp', alt: 'A mesma fachada em ângulo, mostrando a lateral' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-01.webp', alt: 'Sala vazia, com piso granilite e porta azul na entrada' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-10.webp', alt: 'Segundo ambiente vazio, com piso granilite' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-02.webp', alt: 'Quarto vazio, com janela gradeada' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-03.webp', alt: 'Quarto vazio com porta de madeira' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-05.webp', alt: 'Ambiente de parede verde-escura e porta de madeira' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-04.webp', alt: 'Banheiro pequeno, com box e vaso' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-06.webp', alt: 'Área de serviço nos fundos, com tanque e vista para o quintal' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-07.webp', alt: 'Quintal de terra nos fundos, com árvores e sol entrando' },
+      { arquivo: 'imagens/imoveis/casa-70m2-bela-vista-11.mp4', alt: 'Vídeo percorrendo a casa desocupada' },
     ],
   },
 ];
@@ -159,8 +316,8 @@ export const chamada = {
     'Peça a avaliação gratuita do seu imóvel ou conte para a gente o que você procura. A Imbaú cuida da negociação, dos contratos e da regularização do começo ao fim.',
   botaoSecundario: 'Ver imóveis',
   botaoPrincipal: 'Falar no WhatsApp',
-  imagem: 'imagens/casa-210m2-varanda.webp',
-  imagemAlt: 'Varanda com arcos e jardim de uma casa da carteira da Imbaú',
+  imagem: 'imagens/imoveis/casa-210m2-06-capa.webp',
+  imagemAlt: 'Varanda de arcos e pátio calçado de uma casa da carteira da Imbaú',
   beneficios: [
     { icone: 'local', titulo: 'Imbaú e região', texto: 'Quem conhece cada rua' },
     { icone: 'preco', titulo: 'Avaliação justa', texto: 'Valor com base em dados' },

@@ -13,6 +13,9 @@ import { travarRolagem } from './Rolagem';
  * A legenda é o `alt` da foto — o mesmo texto que o leitor de tela recebe.
  * Escrever um alt preguiçoso aqui aparece duas vezes.
  */
+/** A extensão decide: .mp4 é vídeo, o resto é foto. */
+const eVideo = (arquivo) => /\.mp4$/i.test(arquivo);
+
 export function Galeria({ fotos, inicial = 0, aoFechar }) {
   const [indice, setIndice] = useState(inicial);
   const painel = useRef(null);
@@ -39,12 +42,12 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
       if (e.key === 'Escape') {
         e.preventDefault();
         aoFechar();
-      } else if (e.key === 'ArrowRight') {
+      } else if (e.key === 'ArrowRight' || e.key === 'ArrowLeft') {
+        // Com o vídeo em foco, as setas são dele: servem para avançar a
+        // gravação. Trocar de item ali seria roubar o controle da pessoa.
+        if (e.target instanceof HTMLVideoElement) return;
         e.preventDefault();
-        andar(1);
-      } else if (e.key === 'ArrowLeft') {
-        e.preventDefault();
-        andar(-1);
+        andar(e.key === 'ArrowRight' ? 1 : -1);
       }
     };
     window.addEventListener('keydown', aoTeclar);
@@ -61,7 +64,7 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
   useEffect(() => {
     for (const passo of [1, -1]) {
       const vizinha = fotos[(indice + passo + fotos.length) % fotos.length];
-      if (vizinha) new Image().src = vizinha.arquivo;
+      if (vizinha && !eVideo(vizinha.arquivo)) new Image().src = vizinha.arquivo;
     }
   }, [indice, fotos]);
 
@@ -74,7 +77,7 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
       ref={painel}
       role="dialog"
       aria-modal="true"
-      aria-label={`Fotos — ${indice + 1} de ${fotos.length}`}
+      aria-label={`${indice + 1} de ${fotos.length} — fotos e vídeos do imóvel`}
       tabIndex={-1}
       className="fixed inset-0 z-[60] flex flex-col bg-noite-900/97 backdrop-blur-sm"
       onClick={(e) => e.target === e.currentTarget && aoFechar()}
@@ -93,7 +96,7 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
         <button
           type="button"
           onClick={aoFechar}
-          aria-label="Fechar fotos"
+          aria-label="Fechar"
           className="grid h-11 w-11 place-items-center rounded-full border border-osso-100/25 text-osso-100 transition-colors duration-400 hover:bg-osso-100 hover:text-noite-900"
         >
           <svg viewBox="0 0 24 24" className="h-4 w-4" aria-hidden="true">
@@ -103,12 +106,24 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
       </div>
 
       <figure className="site-container flex min-h-0 flex-1 flex-col justify-center gap-5 pb-8">
-        <img
-          key={foto.arquivo}
-          src={foto.arquivo}
-          alt={foto.alt}
-          className="foto mx-auto max-h-[70vh] w-auto max-w-full rounded-[20px] object-contain"
-        />
+        {eVideo(foto.arquivo) ? (
+          <video
+            key={foto.arquivo}
+            src={foto.arquivo}
+            controls
+            playsInline
+            preload="metadata"
+            aria-label={foto.alt}
+            className="mx-auto max-h-[70vh] w-auto max-w-full rounded-[20px] bg-noite-800"
+          />
+        ) : (
+          <img
+            key={foto.arquivo}
+            src={foto.arquivo}
+            alt={foto.alt}
+            className="foto mx-auto max-h-[70vh] w-auto max-w-full rounded-[20px] object-contain"
+          />
+        )}
         <figcaption className="text-center text-[0.85rem] text-osso-100/60">
           {foto.alt}
         </figcaption>
@@ -119,7 +134,7 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
           <button
             type="button"
             onClick={() => andar(-1)}
-            aria-label="Foto anterior"
+            aria-label="Anterior"
             className="grid h-12 w-12 place-items-center rounded-full border border-osso-100/25 text-osso-100 transition-colors duration-400 hover:bg-osso-100 hover:text-noite-900"
           >
             <Seta className="h-4 w-4 -rotate-[135deg]" />
@@ -127,7 +142,7 @@ export function Galeria({ fotos, inicial = 0, aoFechar }) {
           <button
             type="button"
             onClick={() => andar(1)}
-            aria-label="Próxima foto"
+            aria-label="Próxima"
             className="grid h-12 w-12 place-items-center rounded-full border border-osso-100/25 text-osso-100 transition-colors duration-400 hover:bg-osso-100 hover:text-noite-900"
           >
             <Seta className="h-4 w-4 rotate-45" />

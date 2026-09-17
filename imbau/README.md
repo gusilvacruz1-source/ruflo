@@ -79,18 +79,49 @@ Cada imóvel aceita **quantas fotos você quiser** — fachada, sala, cozinha,
 garagem, quintal. A primeira é a capa do cartão; o resto abre no visualizador
 quando alguém clica na foto.
 
-1. Coloque os arquivos em `public/imagens/`, com nomes que digam o que são:
-   `casa-122m2-garagem.webp`, `casa-122m2-cozinha.webp`. WebP ou JPG, de
-   preferência com pelo menos 1600 px de largura.
-2. Em `src/conteudo.js`, copie um bloco de `imoveis` e liste as fotos:
+1. Coloque os arquivos em `public/imagens/imoveis/`, com nomes que digam de
+   qual imóvel são: `casa-122m2-04.webp`. WebP ou JPG, de preferência com
+   pelo menos 1600 px de largura.
+2. Em `src/conteudo.js`, copie um bloco de `imoveis` e liste os arquivos:
 
 ```js
-fotos: [
-  { arquivo: 'imagens/casa-122m2.webp', alt: 'Fachada com garagem coberta e portão' },
-  { arquivo: 'imagens/casa-122m2-garagem.webp', alt: 'Garagem coberta para dois carros' },
-  { arquivo: 'imagens/casa-122m2-cozinha.webp', alt: 'Cozinha com armários planejados' },
-],
+{
+  id: 'casa-122m2',
+  nome: 'Casa 122 m²',
+  local: 'Rua Jacutinga · Bairro São Cristóvão',
+  preco: 'R$ 300 mil',
+  resumo: 'Casa térrea com garagem coberta e frente para rua calçada…',
+  ficha: ['122 m² construídos', '220 m² de terreno', '3 quartos'],
+  fotos: [
+    { arquivo: 'imagens/imoveis/casa-122m2-02.webp', alt: 'Fachada cinza vista da rua de paralelepípedo' },
+    { arquivo: 'imagens/imoveis/casa-122m2-04.webp', alt: 'Cozinha com armários brancos e mesa' },
+    { arquivo: 'imagens/imoveis/casa-122m2-14.mp4',  alt: 'Vídeo percorrendo os ambientes' },
+  ],
+},
 ```
+
+**Vídeo entra na mesma lista.** Arquivo terminado em `.mp4` vira player no
+visualizador, com controles e sem som automático — não precisa dizer nada no
+código. O cartão avisa quando há vídeo: *"Ver 13 fotos e 1 vídeo"*.
+
+**A capa precisa de uma versão leve.** O cartão carrega
+`<nome>-capa.webp` em vez da foto cheia, senão a vitrine baixa 7 arquivos
+grandes de uma vez. Gere a capa da primeira foto de cada imóvel a 1100 px:
+
+```bash
+npx sharp-cli -i public/imagens/imoveis/casa-122m2-02.webp \
+  -o public/imagens/imoveis/casa-122m2-02-capa.webp resize 1100
+```
+
+**O destaque.** `destaque: true` em **um** imóvel: é ele que ganha o cartão
+grande no topo da vitrine, e os outros vão para a grade de três colunas. Para
+mudar quem está em destaque, mova essa linha — nada mais. A grade fica cheia
+com 4 ou 7 imóveis no total (3 ou 6 fora do destaque); com outro número, uma
+fileira termina com um cartão sozinho.
+
+**A capa pede foto na horizontal.** O cartão corta em 4:3, e uma foto em pé
+perde o telhado e o chão. As em pé ficam ótimas dentro do visualizador, que
+mostra a foto inteira.
 
 3. **A ordem é a ordem em que a pessoa vai ver.** Fachada primeiro, depois o
    que convence — sala, cozinha, garagem, quintal.
