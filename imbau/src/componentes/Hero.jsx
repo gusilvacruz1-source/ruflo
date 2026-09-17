@@ -86,22 +86,34 @@ export function Hero() {
 
   return (
     <section id="inicio" data-tom="escuro" className="capa">
-      {/* Fundo da seção inteira: um imóvel da carteira, em laço e sem som.
-          A fonte muda com a tela — ver `emPe`. */}
+      {/* Fundo da seção inteira: um imóvel da carteira. No celular é a
+          filmagem da cliente, que ali fica quase na resolução nativa; em
+          tela larga é a foto em alta com uma deriva feita no CSS, porque a
+          filmagem de 576 px seria ampliada 2,5x e o movimento renderizado
+          no vídeo tremia. Ver `emPe` e `.capa__deriva`. */}
       <div className="capa__fundo" aria-hidden="true">
-        <video
-          key={emPe ? 'alto' : 'largo'}
-          className="foto-cenario capa__video"
-          poster={emPe ? hero.posterAlto : hero.poster}
-          autoPlay
-          muted
-          loop
-          playsInline
-          preload="metadata"
-          tabIndex={-1}
-        >
-          <source src={emPe ? hero.videoAlto : hero.video} type="video/mp4" />
-        </video>
+        {emPe ? (
+          <video
+            className="capa__video"
+            poster={hero.posterAlto}
+            autoPlay
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            tabIndex={-1}
+          >
+            <source src={hero.videoAlto} type="video/mp4" />
+          </video>
+        ) : (
+          <img
+            className="capa__video capa__deriva"
+            src={hero.poster}
+            alt=""
+            fetchPriority="high"
+            decoding="async"
+          />
+        )}
         <div ref={veu} className="capa__veu" />
       </div>
 

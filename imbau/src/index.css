@@ -232,6 +232,35 @@
     object-fit: cover;
   }
 
+  /* Deriva lenta sobre a foto da capa, feita aqui e não no arquivo de vídeo.
+     O `zoompan` do ffmpeg arredonda a janela de corte para pixel inteiro a
+     cada quadro: num movimento de 8% em seis segundos, isso dá um salto de
+     um pixel a cada quatro quadros — medido, e é o que se vê como tremor.
+     A GPU interpola em subpixel e não tem esse degrau. De graça: uma foto
+     de 178 KB no lugar de um vídeo de 549 KB, e mais nítida. */
+  @keyframes deriva {
+    from {
+      transform: scale(1.005);
+    }
+    to {
+      transform: scale(1.09);
+    }
+  }
+
+  .capa__deriva {
+    animation: deriva 28s ease-in-out infinite alternate;
+    will-change: transform;
+    /* O 1,005 do começo evita a borda de meio pixel que aparece em scale(1)
+       quando o navegador arredonda a caixa da imagem. */
+    transform: scale(1.005);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .capa__deriva {
+      animation: none;
+    }
+  }
+
   /* Véu: sem ele a Bodoni clara não se sustenta sobre o vídeo. Mais fechado
      embaixo, onde ficam o texto de apoio e os botões. */
   .capa__veu {
@@ -554,13 +583,6 @@
      vieram de câmeras e dias diferentes, sem tirar cor delas. */
   .foto {
     filter: contrast(1.05) saturate(1.04);
-  }
-
-  /* O único tratamento pesado que fica: o vídeo atrás do título da capa.
-     Ali a foto não é conteúdo, é fundo — e dessaturar é o que segura a
-     legibilidade da Bodoni clara por cima dela. */
-  .foto-cenario {
-    filter: grayscale(1) contrast(1.04);
   }
 
   .sobretexto {

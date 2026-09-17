@@ -51,21 +51,19 @@ export const hero = {
     'Compra, venda e locação com avaliação honesta e documentação em ordem. A Imbaú acompanha cada etapa — do primeiro contato à entrega das chaves.',
   botao: 'Falar no WhatsApp',
   ver: 'Ver os imóveis',
-  // Dois arquivos, porque paisagem e retrato não servem à mesma tela.
+  // Duas fontes, porque paisagem e retrato não servem à mesma tela.
   //
-  // Tela larga: uma deriva lenta sobre a foto da casa da Pedra do Sol, que
-  // tem 4160 px de largura — nítida, porque a origem é grande. A filmagem da
-  // cliente é de celular, 576 px na vertical: numa capa de 1440 ela é
-  // ampliada 2,5× e fica macia.
+  // Tela larga: `poster` é a foto da casa da Pedra do Sol, de 4160 px de
+  // largura, e a deriva é feita no CSS (`.capa__deriva`). A filmagem da
+  // cliente tem 576 px na vertical: numa capa de 1440 ela é ampliada 2,5× e
+  // fica macia. E o movimento renderizado dentro do vídeo tremia — o
+  // `zoompan` do ffmpeg salta um pixel a cada quatro quadros.
   //
-  // Celular: a filmagem da cliente mesmo, do terreno da Charqueada de Baixo.
-  // Ali ela enche a tela quase na resolução nativa, e é movimento de verdade
-  // em vez de uma foto que desliza.
-  //
-  // Os dois laços vão e voltam — sem isso a emenda dá um tranco justo onde o
-  // olho está. O poster cobre o intervalo até o vídeo tocar e fica no lugar
-  // dele se não tocar.
-  video: 'imagens/capa-fundo.mp4',
+  // Celular: `videoAlto` é a filmagem da cliente mesmo, do terreno da
+  // Charqueada de Baixo. Ali ela enche a tela quase na resolução nativa, e é
+  // movimento de verdade em vez de uma foto que desliza. O laço vai e volta
+  // — sem isso a emenda dá um tranco justo onde o olho está. O `posterAlto`
+  // cobre o intervalo até ele tocar e fica no lugar dele se não tocar.
   poster: 'imagens/capa-fundo.webp',
   videoAlto: 'imagens/capa-fundo-alto.mp4',
   posterAlto: 'imagens/capa-fundo-alto.webp',
