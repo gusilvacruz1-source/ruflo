@@ -859,6 +859,31 @@ body.is-locked{ overflow: hidden; }
 .ccard__fav.is-on svg path{ fill: currentColor; stroke: currentColor; }
 .ccard__name{ font-size: 1.25rem; letter-spacing: -.015em; line-height: 1.15; margin-bottom: 7px; }
 .ccard__desc{ font-size: .875rem; line-height: 1.6; color: var(--muted-dark); margin-bottom: 14px; }
+
+/* ---------- VARIAÇÕES DE COR ---------- */
+/* Texto que só o leitor de tela pega. O nome da cor precisa existir dentro do
+   botão: bolinha sem nome é um botão sem rótulo. */
+.soLeitor{
+  position: absolute; width: 1px; height: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+.ccard__cores{ display: flex; align-items: center; gap: 8px; margin: -4px 0 14px; }
+.swatch{
+  position: relative; width: 22px; height: 22px; padding: 0;
+  border-radius: 50%; border: 1px solid var(--hairline);
+  background: var(--tom); cursor: pointer;
+  transition: transform .18s var(--ease), box-shadow .18s var(--ease);
+}
+.swatch:hover{ transform: scale(1.12); }
+/* o anel fica FORA da bolinha: por dentro ele comeria a cor, que é justamente
+   a única informação que o botão carrega */
+.swatch.is-on{ box-shadow: 0 0 0 2px var(--paper), 0 0 0 3.5px var(--ink); }
+[data-theme="ink"] .swatch.is-on{ box-shadow: 0 0 0 2px var(--ink), 0 0 0 3.5px var(--paper); }
+.ccard__corNome{
+  font-family: var(--font-ui); font-size: .75rem; letter-spacing: .04em;
+  color: var(--muted-dark); margin-left: 2px;
+}
+.ditem__cor{ color: var(--muted-dark); font-style: normal; }
 [data-theme="ink"] .ccard__desc{ color: var(--muted); }
 .ccard__tiers{ border-top: 1px solid var(--hairline-d); margin-bottom: 16px; }
 [data-theme="ink"] .ccard__tiers{ border-top-color: var(--hairline); }
