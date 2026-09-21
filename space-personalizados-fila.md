@@ -123,6 +123,24 @@ Gravação: 7,5 × 6 cm
 
 ---
 
+## 7. Caneca Térmica 350 ml
+
+Foto: **falta** — a ficha chegou, a imagem não virou arquivo aqui.
+Corpo branco com faixas de inox e tampa acrílica azul.
+
+Não confundir com a `caneca-termica-700` já cadastrada: esta é de 350 ml.
+
+```js
+{ id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', cat:'copos', ph:'caneca',
+  desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança.',
+  tiers:[[1, /* PREÇO */ ]] },
+```
+
+Ficha: 11,6 cm de altura · 11,9 cm de largura · circunferência 27,6 cm · 299 g
+Gravação: 7,5 × 4 cm
+
+---
+
 ## Fichas de produtos que JÁ estão cadastrados
 
 Caso queira completar a descrição deles também.
