@@ -125,8 +125,14 @@ Gravação: 7,5 × 6 cm
 
 ## 7. Caneca Térmica 350 ml
 
-Foto: **falta** — a ficha chegou, a imagem não virou arquivo aqui.
-Corpo branco com faixas de inox e tampa acrílica azul.
+Foto: **chegou, mas não dá para recortar limpa.** A alça é branca e mede
+exatamente 255 — o mesmo valor do fundo branco da foto. Nenhum limiar separa
+dois números iguais. Tentei três caminhos: pelo brilho a alça sai rasgada;
+usando a aresta como represa ela fica inteira mas sobra halo claro em volta;
+comendo o halo, a passagem atravessa a tampa e fura o corpo.
+
+Precisa de outra foto deste item, ou de uma versão em cor que destaque a alça
+do fundo. Enquanto isso o card pode usar o desenho gerado.
 
 Não confundir com a `caneca-termica-700` já cadastrada: esta é de 350 ml.
 
