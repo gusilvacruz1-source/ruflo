@@ -344,8 +344,16 @@ const PRODUCTS = [
 
 const byId = id => PRODUCTS.find(p => p.id === id);
 
+/* SOB CONSULTA
+   Produto sem `tiers` nao tem preco no site: o valor sai por orcamento no
+   WhatsApp. Ele continua no catalogo, continua entrando no orcamento e
+   continua indo na mensagem - o que nao existe e o numero. Tudo que conta
+   dinheiro daqui para baixo pergunta isto primeiro. */
+const semPreco = p => !p.tiers || !p.tiers.length;
+
 /** Preço unitário para uma quantidade, respeitando as faixas. */
 function unitPrice(p, qty) {
+  if (semPreco(p)) return 0;
   let price = p.tiers[0][1];
   for (const [min, val] of p.tiers) if (qty >= min) price = val;
   return price;
@@ -354,9 +362,9 @@ function unitPrice(p, qty) {
    volume é a promessa, não a manchete: anunciar R$ 2,25 e riscar R$ 4,00 é
    mostrar um preço que exige 500 peças para existir. */
 const startPrice = p => unitPrice(p, 1);
-const bestPrice  = p => Math.min(...p.tiers.map(t => t[1]));
-const bestQty    = p => p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0];
-const hasVolume  = p => bestPrice(p) < startPrice(p);
+const bestPrice  = p => (semPreco(p) ? 0 : Math.min(...p.tiers.map(t => t[1])));
+const bestQty    = p => (semPreco(p) ? 0 : p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0]);
+const hasVolume  = p => !semPreco(p) && bestPrice(p) < startPrice(p);
 /* Quanto o preço da peça cai da unidade avulsa até a melhor faixa. É o único
    selo que o card carrega: sai direto da tabela do catálogo, ao contrário de
    "Mais vendido" ou "Premium", que eram rótulos que eu tinha inventado. */
@@ -516,9 +524,12 @@ function showcaseCard(p, wide) {
       <p class="pcard__desc">${p.desc}</p>
       <div class="pcard__foot">
         <div>
+          ${semPreco(p) ? `
+          <span class="pcard__price"><b>sob consulta</b></span>
+          <span class="pcard__unit">orçamento pelo WhatsApp</span>` : `
           <span class="pcard__price"><b>${money(base)}</b><span class="pcard__each">/un</span></span>
           <span class="pcard__unit">sem pedido mínimo${
-            hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : ''}</span>
+            hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : ''}</span>`}
         </div>
       </div>
     </div>
@@ -561,10 +572,14 @@ function catalogCard(p) {
     ${tiers ? `<ul class="ccard__tiers">${tiers}</ul>` : ''}
     <div class="ccard__foot">
       <div>
+        ${semPreco(p) ? `
+        <span class="ccard__from">valor</span>
+        <span class="ccard__price ccard__price--consulta">sob consulta</span>
+        <p class="ccard__min"><b>orçamento pelo WhatsApp</b><br>valor conforme a quantidade</p>` : `
         <span class="ccard__from">preço por unidade</span>
         <span class="ccard__price">${money(start)}<i class="ccard__each">/un</i></span>
         <p class="ccard__min"><b>sem pedido mínimo</b>${
-          hasVolume(p) ? `<br>cai para ${money(best)}/un a partir de ${bestQty(p)}` : ''}</p>
+          hasVolume(p) ? `<br>cai para ${money(best)}/un a partir de ${bestQty(p)}` : ''}</p>`}
       </div>
       <div class="ccard__qty">
         <button data-step="-1" aria-label="Diminuir">${ICO.minus}</button>
@@ -694,15 +709,35 @@ const Cart = (() => {
       const c = corDe(p, i.cor);
       // a cor tem que ir no texto: é o que a Space precisa para separar o
       // pedido, e o cliente escolheu na tela
-      return `• ${p.name}${c ? ' · ' + c.nome : ''}: ${i.qty} uni × ${money(u)} = ${money(u * i.qty)}`;
+      const valor = semPreco(p) ? 'a combinar' : `${money(u)} = ${money(u * i.qty)}`;
+      return `• ${p.name}${c ? ' · ' + c.nome : ''}: ${i.qty} uni × ${valor}`;
     });
-    return `Olá, Space! Montei meu orçamento no site:\n\n${lines.join('\n')}\n\nEstimativa: ${money(total())}\n\nPodem confirmar prazo e valor final?`;
+    /* Itens sob consulta entram na mensagem mas não na soma. Sem esta linha a
+       Estimativa pareceria o total do pedido inteiro, e ela é só a parte que
+       o site sabe calcular. */
+    const aConsultar = items.filter(i => semPreco(byId(i.id))).length;
+    const rodape = aConsultar
+      ? `\n\nEstimativa dos itens com preço em tabela: ${money(total())}` +
+        `\n(${aConsultar} ${aConsultar > 1 ? 'itens ficam' : 'item fica'} para orçamento)`
+      : `\n\nEstimativa: ${money(total())}`;
+    return `Olá, Space! Montei meu orçamento no site:\n\n${lines.join('\n')}${rodape}\n\nPodem confirmar prazo e valor final?`;
   }
 
   function paint() {
     const body = $('#drawerBody');
     $('#cartCount').textContent = String(items.length);
+    /* O total soma só o que tem preço. Mostrar R$ 0,00 para um orçamento com
+       três itens sob consulta seria mentira por omissão, então o aviso vai
+       junto do número. */
+    const aConsultar = items.filter(i => semPreco(byId(i.id))).length;
     $('#drawerTotal').textContent = money(total());
+    const nota = $('#drawerNota');
+    if (nota) {
+      nota.textContent = aConsultar
+        ? `+ ${aConsultar} ${aConsultar > 1 ? 'itens sob consulta' : 'item sob consulta'}`
+        : '';
+      nota.hidden = !aConsultar;
+    }
     const send = $('#drawerSend');
     send.href = `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(message())}`;
     send.setAttribute('aria-disabled', items.length ? 'false' : 'true');
@@ -717,21 +752,21 @@ const Cart = (() => {
       /* "faixa de 1+" nao dizia nada com o pedido minimo fora. No lugar entra
          a proxima faixa: quanto a peca custaria subindo o lote. E a unica
          informacao do orcamento que ajuda quem esta decidindo a quantidade. */
-      const prox = p.tiers.find(([q]) => q > i.qty);
+      const prox = semPreco(p) ? null : p.tiers.find(([q]) => q > i.qty);
       const dica = prox ? ` · a partir de ${prox[0]} uni sai a ${money(prox[1])}` : '';
       const c = corDe(p, i.cor);
       return `<div class="ditem" data-chave="${chaveItem(i.id, i.cor)}">
         <span class="ditem__thumb" data-ph="${p.ph}" data-src="${fotoDe(p, i.cor)}"></span>
         <div class="ditem__body">
           <p class="ditem__name">${p.name}${c ? ` <span class="ditem__cor">· ${c.nome}</span>` : ''}</p>
-          <p class="ditem__meta">${money(u)} / uni${dica}</p>
+          <p class="ditem__meta">${semPreco(p) ? 'sob consulta' : `${money(u)} / uni${dica}`}</p>
           <div class="ditem__row">
             <span class="ditem__qty">
               <button data-q="-1" aria-label="Diminuir">−</button>
               <b>${i.qty}</b>
               <button data-q="1" aria-label="Aumentar">+</button>
             </span>
-            <span class="ditem__price">${money(u * i.qty)}</span>
+            <span class="ditem__price">${semPreco(p) ? 'a combinar' : money(u * i.qty)}</span>
           </div>
           <button class="ditem__del" data-del>remover</button>
         </div>
@@ -1188,9 +1223,13 @@ function mostraDestaque(p) {
   if (!p) return;
   $('#dealName').textContent = p.name;
   $('#dealDesc').textContent = p.desc;
-  $('#dealPrice').innerHTML = `${money(startPrice(p))}<i class="dealCard__each">/un</i>`;
-  $('#dealUnit').textContent = 'sem pedido mínimo' +
-    (hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : '');
+  $('#dealPrice').innerHTML = semPreco(p)
+    ? 'sob consulta'
+    : `${money(startPrice(p))}<i class="dealCard__each">/un</i>`;
+  $('#dealUnit').textContent = semPreco(p)
+    ? 'orçamento pelo WhatsApp'
+    : 'sem pedido mínimo' +
+      (hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : '');
   $('#dealMin').textContent = 'a partir de 1 uni';
   $('#dealAdd').dataset.add = p.id;
   const media = $('#dealMedia');
@@ -1247,6 +1286,20 @@ function init() {
     });
     toast('Destaques renovados');
   });
+
+  /* O preço do card da capa estava escrito à mão no HTML e derrapou assim que
+     a tabela do copo mudou: dizia 29,90 com o produto já em 49,99. Agora sai
+     do catálogo, então não tem como divergir de novo. */
+  (function sincronizaCardDaCapa() {
+    const alvo = $('#floatPreco');
+    if (!alvo) return;
+    const botao = $('.floatCard [data-add]');
+    const p = botao && byId(botao.dataset.add);
+    if (!p) return;
+    alvo.innerHTML = semPreco(p)
+      ? 'sob consulta'
+      : `${money(startPrice(p))}<i class="floatCard__each">/un</i>`;
+  })();
 
   HeroSlider.init();
   wireNav();
