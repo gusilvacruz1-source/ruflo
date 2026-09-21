@@ -310,11 +310,11 @@ const PRODUCTS = [
     tiers:[[1,99.90],[10,79.90]] },
 
   { id:'churrasco-4', name:'Kit Churrasco Maleta 4 Peças', cat:'churrasco', ph:'churrasco',
-    desc:'Maleta de alumínio com travas: pegador, garfo, faca e espátula em inox.',
+    desc:'Maleta de alumínio com trava e forro em TNT. Faca de 8 polegadas, garfo de duas pontas, espátula e pegador em inox.',
     tiers:[[1,159.90],[10,119.90]] },
 
   { id:'churrasco-2-estojo', name:'Kit Churrasco 2 Peças · Estojo', cat:'churrasco', ph:'churrasco',
-    desc:'Garfo e faca de 8 polegadas acondicionados em estojo.',
+    desc:'Faca de 8 polegadas e garfo de duas pontas em inox, cabo de madeira, em estojo com zíper e alça.',
     tiers:[[1,75.90],[10,55.90]] },
 
   { id:'churrasco-2-caixa', name:'Kit Churrasco 2 Peças · Caixa', cat:'churrasco', ph:'churrasco',
