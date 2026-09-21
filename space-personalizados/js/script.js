@@ -271,11 +271,11 @@ function hydratePlaceholders(root = document) {
 const PRODUCTS = [
   { id:'copo-473', name:'Copo Térmico Inox 473ml', cat:'copos', ph:'copo',
     desc:'Dupla parede em inox, acompanha tampa e abridor personalizado a laser.',
-    tiers:[[1,29.90]] },
+    tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
 
   { id:'copo-360', name:'Copo Térmico Inox 360ml', cat:'copos', ph:'copo',
     desc:'Parede em inox com tampa, para bebidas quentes e frias.',
-    tiers:[[1,29.90]] },
+    tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
 
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',
     desc:'Dupla parede em inox de 700 ml personalizada a laser.',

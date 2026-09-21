@@ -151,6 +151,39 @@ Gravação: 7,5 × 4 cm
 
 ---
 
+## Preços recebidos sem produto ainda
+
+Chegaram antes das fotos e das descrições. Ficam aqui até o produto existir.
+
+Leitura usada em todos: **"acima de 10" = a partir de 10**, que é como a
+tabela do PDF anterior dizia ("a partir de 10 uni"). Se for ao pé da letra
+(11, 51, 101), é trocar os três números em cada linha — mas confirme, porque
+num pedido de exatamente 10 copos a diferença é de R$ 250.
+
+| Produto | 1 un | 10+ | 50+ | 100+ |
+|---|---|---|---|---|
+| Caneca chopp 810 ml | 69,90 | 49,90 | 48,90 | 45,90 |
+| Copo long neck | 49,90 | 39,99 | 36,90 | 35,99 |
+| Copo cuia | 49,99 | 29,90 | 28,90 | 25,90 |
+| Garrafa LED | 49,00 | 29,90 | 27,90 | 25,90 |
+
+```js
+// prontos para colar assim que houver foto e descrição
+{ id:'caneca-chopp-810', name:'Caneca Chopp 810ml',  cat:'copos',    ph:'caneca',
+  desc:'', tiers:[[1,69.90],[10,49.90],[50,48.90],[100,45.90]] },
+{ id:'copo-long-neck',   name:'Copo Long Neck',      cat:'copos',    ph:'copo',
+  desc:'', tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
+{ id:'copo-cuia',        name:'Copo Cuia',           cat:'copos',    ph:'copo',
+  desc:'', tiers:[[1,49.99],[10,29.90],[50,28.90],[100,25.90]] },
+{ id:'garrafa-led',      name:'Garrafa LED',         cat:'garrafas', ph:'garrafa',
+  desc:'', tiers:[[1,49.00],[10,29.90],[50,27.90],[100,25.90]] },
+```
+
+A "Garrafa LED" veio duas vezes na mensagem, com os mesmos valores. Tratei
+como um produto só.
+
+---
+
 ## Fichas de produtos que JÁ estão cadastrados
 
 Caso queira completar a descrição deles também.
