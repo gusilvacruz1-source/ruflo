@@ -137,7 +137,8 @@ o problema, porque a alça destaca do fundo.
 { id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', cat:'copos', ph:'caneca',
   desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança.',
   cores:[
-    { id:'cinza',  nome:'Cinza',  hex:'#636466' }
+    { id:'cinza',  nome:'Cinza',  hex:'#5d6061' },
+    { id:'preto',  nome:'Preto',  hex:'#2f3132' }
     // { id:'branco', nome:'Branco', hex:'#e6e6e6' }  ← falta foto que recorte
   ],
   tiers:[[1, /* PREÇO */ ]] },
