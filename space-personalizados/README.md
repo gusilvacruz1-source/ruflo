@@ -101,6 +101,34 @@ faixas de preço por quantidade exatamente como no PDF.
 das manchas de luz, revelação palavra a palavra nos títulos e contadores
 animados.
 
+### Produtos com variação de cor
+
+Um produto pode vir em mais de uma cor. Basta o campo `cores`:
+
+```js
+{ id:'caderneta-couro', name:'Caderneta Couro Sintético', cat:'escritorio', ph:'caneta',
+  desc:'...',
+  cores:[
+    { id:'preto',    nome:'Preto',    hex:'#26262a' },
+    { id:'caramelo', nome:'Caramelo', hex:'#a8703f' }
+  ],
+  tiers:[[1, 00.00]] }
+```
+
+A foto de cada cor vai em `assets/produtos/<id>-<cor>.webp`. Produto **sem**
+`cores` continua em `assets/produtos/<id>.webp`, como sempre: nada no catálogo
+antigo precisou mudar de nome.
+
+No card aparecem as bolinhas; clicar troca a foto e guarda a escolha no
+próprio card, de onde ADICIONAR e WHATSAPP leem na hora do clique.
+
+**Cada cor é uma linha do orçamento.** A chave de um item passou a ser
+`id|cor` em vez de só `id`, então duas cores da mesma caderneta somam como
+dois itens e não como um com o dobro da quantidade. Mexer na quantidade de
+uma não mexe na outra, e o nome da cor vai no texto do WhatsApp — é o que a
+Space precisa para separar o pedido. Carrinhos salvos antes disso continuam
+valendo: sem `cor`, a chave é o próprio id.
+
 ### Orçamento pelo WhatsApp
 
 O botão ORÇAMENTO abre uma gaveta lateral. O cliente escolhe produtos e

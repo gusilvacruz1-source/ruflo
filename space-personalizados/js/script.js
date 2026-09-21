@@ -361,6 +361,21 @@ const hasVolume  = p => bestPrice(p) < startPrice(p);
    selo que o card carrega: sai direto da tabela do catálogo, ao contrário de
    "Mais vendido" ou "Premium", que eram rótulos que eu tinha inventado. */
 const dropPct    = p => Math.round((1 - bestPrice(p) / startPrice(p)) * 100);
+/* --- VARIAÇÕES DE COR ----------------------------------------------------
+   Um produto pode vir em mais de uma cor. A foto de cada uma mora em
+   assets/produtos/<id>-<cor>.webp; produto sem cor segue em <id>.webp como
+   sempre foi, e nada no catálogo antigo precisou mudar de nome. */
+const corDe  = (p, id) => (p.cores ? (p.cores.find(c => c.id === id) || p.cores[0]) : null);
+const fotoDe = (p, id) => {
+  const c = corDe(p, id);
+  return `assets/produtos/${p.id}${c ? '-' + c.id : ''}.webp`;
+};
+/* Uma linha do orçamento é o produto MAIS a cor: duas cores da mesma
+   caderneta são duas linhas, e não uma com o dobro da quantidade. Sem cor a
+   chave continua sendo o próprio id, então os carrinhos já salvos no
+   navegador seguem valendo sem conversão nenhuma. */
+const chaveItem = (id, cor) => (cor ? id + '|' + cor : id);
+
 function selo(p) {
   if (!hasVolume(p)) return '';
   return `<span class="tag tag--drop">−${dropPct(p)}% no lote de ${bestQty(p)}</span>`;
@@ -525,13 +540,24 @@ function catalogCard(p) {
       }).join('')
     : '';
   const fav = favs.has(p.id) ? ' is-on' : '';
-  return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}">
-    <div class="ccard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp">
+  const inicial = p.cores ? p.cores[0] : null;
+  /* As bolinhas são botões de verdade, não spans com clique: dão foco pelo
+     teclado e anunciam o estado por aria-pressed. O nome da cor fica escrito
+     ao lado porque bolinha sozinha não diz nada a quem não enxerga bem —
+     e "cinza" e "caramelo" são difíceis de separar em tela de celular. */
+  const cores = p.cores ? `
+    <div class="ccard__cores" role="group" aria-label="Cor de ${p.name}">
+      ${p.cores.map((c, i) => `<button type="button" class="swatch${i ? '' : ' is-on'}" data-cor="${c.id}" style="--tom:${c.hex}" aria-pressed="${i ? 'false' : 'true'}" title="${c.nome}"><span class="soLeitor">${c.nome}</span></button>`).join('')}
+      <span class="ccard__corNome">${inicial.nome}</span>
+    </div>` : '';
+  return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}"${inicial ? ` data-cor="${inicial.id}"` : ''}>
+    <div class="ccard__media" data-ph="${p.ph}" data-src="${fotoDe(p, inicial && inicial.id)}">
       <div class="ccard__tags">${selo(p)}</div>
       <button class="iconbtn iconbtn--outline ccard__fav pcard__fav${fav}" data-fav="${p.id}" aria-label="Favoritar ${p.name}" aria-pressed="${!!fav}">${ICO.heart}</button>
     </div>
     <h3 class="ccard__name">${p.name}</h3>
     <p class="ccard__desc">${p.desc}</p>
+    ${cores}
     ${tiers ? `<ul class="ccard__tiers">${tiers}</ul>` : ''}
     <div class="ccard__foot">
       <div>
@@ -626,26 +652,35 @@ const Cart = (() => {
   // um id salvo no localStorage que saiu do catálogo derrubava o init()
   // inteiro — e como is-locked já estava aplicado, a página ficava preta
   // e travada em toda recarga. Saneia na entrada.
-  let items = store.get('cart', []).filter(i => i && byId(i.id) && i.qty > 0);
+  /* Saneia na entrada: um id que saiu do catálogo, ou uma cor que o produto
+     deixou de ter, não pode derrubar o init() inteiro — com is-locked já
+     aplicado a página ficaria preta e travada em toda recarga. */
+  let items = store.get('cart', []).filter(i => i && byId(i.id) && i.qty > 0)
+    .map(i => {
+      const c = corDe(byId(i.id), i.cor);
+      return c ? { id: i.id, qty: i.qty, cor: c.id } : { id: i.id, qty: i.qty };
+    });
   const save = () => { store.set('cart', items); paint(); };
+  const achaPor = ch => items.find(i => chaveItem(i.id, i.cor) === ch);
 
-  function add(id, qty) {
+  function add(id, qty, cor) {
     const p = byId(id);
     if (!p) return;
+    const c = corDe(p, cor);
     const q = Math.max(1, qty || 1);
-    const found = items.find(i => i.id === id);
-    if (found) found.qty += q; else items.push({ id, qty: q });
+    const found = achaPor(chaveItem(id, c && c.id));
+    if (found) found.qty += q;
+    else items.push(c ? { id, qty: q, cor: c.id } : { id, qty: q });
     save();
-    toast(`${q} uni de ${p.name} no orçamento`);
+    toast(`${q} uni de ${p.name}${c ? ' ' + c.nome.toLowerCase() : ''} no orçamento`);
   }
-  function setQty(id, qty) {
-    const p = byId(id);
-    const it = items.find(i => i.id === id);
-    if (!p || !it) return;
+  function setQty(chave, qty) {
+    const it = achaPor(chave);
+    if (!it) return;
     it.qty = Math.max(1, qty);
     save();
   }
-  function remove(id) { items = items.filter(i => i.id !== id); save(); }
+  function remove(chave) { items = items.filter(i => chaveItem(i.id, i.cor) !== chave); save(); }
   const total = () => items.reduce((s, i) => {
     const p = byId(i.id);
     return p ? s + unitPrice(p, i.qty) * i.qty : s;
@@ -656,7 +691,10 @@ const Cart = (() => {
     const lines = items.map(i => {
       const p = byId(i.id);
       const u = unitPrice(p, i.qty);
-      return `• ${p.name}: ${i.qty} uni × ${money(u)} = ${money(u * i.qty)}`;
+      const c = corDe(p, i.cor);
+      // a cor tem que ir no texto: é o que a Space precisa para separar o
+      // pedido, e o cliente escolheu na tela
+      return `• ${p.name}${c ? ' · ' + c.nome : ''}: ${i.qty} uni × ${money(u)} = ${money(u * i.qty)}`;
     });
     return `Olá, Space! Montei meu orçamento no site:\n\n${lines.join('\n')}\n\nEstimativa: ${money(total())}\n\nPodem confirmar prazo e valor final?`;
   }
@@ -681,10 +719,11 @@ const Cart = (() => {
          informacao do orcamento que ajuda quem esta decidindo a quantidade. */
       const prox = p.tiers.find(([q]) => q > i.qty);
       const dica = prox ? ` · a partir de ${prox[0]} uni sai a ${money(prox[1])}` : '';
-      return `<div class="ditem" data-id="${p.id}">
-        <span class="ditem__thumb" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp"></span>
+      const c = corDe(p, i.cor);
+      return `<div class="ditem" data-chave="${chaveItem(i.id, i.cor)}">
+        <span class="ditem__thumb" data-ph="${p.ph}" data-src="${fotoDe(p, i.cor)}"></span>
         <div class="ditem__body">
-          <p class="ditem__name">${p.name}</p>
+          <p class="ditem__name">${p.name}${c ? ` <span class="ditem__cor">· ${c.nome}</span>` : ''}</p>
           <p class="ditem__meta">${money(u)} / uni${dica}</p>
           <div class="ditem__row">
             <span class="ditem__qty">
@@ -704,11 +743,12 @@ const Cart = (() => {
   return { add, setQty, remove, paint, message, get items() { return items; } };
 })();
 
-function waLink(id, qty) {
+function waLink(id, qty, cor) {
   const p = byId(id);
   const q = qty || 1;
   const u = unitPrice(p, q);
-  const txt = `Olá, Space! Tenho interesse em:\n\n• ${p.name}\n• Quantidade: ${q} uni\n• Valor de referência: ${money(u)} / uni\n\nPodem me passar o orçamento?`;
+  const c = corDe(p, cor);
+  const txt = `Olá, Space! Tenho interesse em:\n\n• ${p.name}${c ? ' · ' + c.nome : ''}\n• Quantidade: ${q} uni\n• Valor de referência: ${money(u)} / uni\n\nPodem me passar o orçamento?`;
   return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
 }
 
@@ -738,7 +778,33 @@ document.addEventListener('click', e => {
   const add = e.target.closest('[data-add]');
   if (add) {
     e.preventDefault();
-    Cart.add(add.dataset.add, qtyOfCard(add));
+    const cardDoAdd = add.closest('[data-id]');
+    Cart.add(add.dataset.add, qtyOfCard(add), cardDoAdd && cardDoAdd.dataset.cor);
+    return;
+  }
+
+  /* troca de cor: repinta a foto e guarda a escolha no próprio card, que é
+     de onde ADICIONAR e WHATSAPP vão ler na hora do clique */
+  const tom = e.target.closest('[data-cor]');
+  if (tom && tom.tagName === 'BUTTON') {
+    const card = tom.closest('[data-id]');
+    const prod = byId(card.dataset.id);
+    const c = corDe(prod, tom.dataset.cor);
+    if (!c) return;
+    card.dataset.cor = c.id;
+    $$('.swatch', card).forEach(b => {
+      const on = b.dataset.cor === c.id;
+      b.classList.toggle('is-on', on);
+      b.setAttribute('aria-pressed', String(on));
+    });
+    const nome = $('.ccard__corNome', card);
+    if (nome) nome.textContent = c.nome;
+    const media = $('.ccard__media', card);
+    if (media) {
+      media.dataset.src = fotoDe(prod, c.id);
+      media.classList.remove('has-photo');
+      paint(media, prod.ph, PRODUCTS.indexOf(prod));
+    }
     return;
   }
 
@@ -759,7 +825,8 @@ document.addEventListener('click', e => {
   /* link direto de WhatsApp por produto */
   const wa = e.target.closest('[data-wa]');
   if (wa) {
-    wa.href = waLink(wa.dataset.wa, qtyOfCard(wa));
+    const cardDoWa = wa.closest('[data-id]');
+    wa.href = waLink(wa.dataset.wa, qtyOfCard(wa), cardDoWa && cardDoWa.dataset.cor);
     return;
   }
 
@@ -827,14 +894,13 @@ document.addEventListener('click', e => {
   /* itens do drawer */
   const q = e.target.closest('[data-q]');
   if (q) {
-    const id = q.closest('.ditem').dataset.id;
-    const p = byId(id);
-    const it = Cart.items.find(i => i.id === id);
-    Cart.setQty(id, it.qty + Number(q.dataset.q));
+    const ch = q.closest('.ditem').dataset.chave;
+    const it = Cart.items.find(i => chaveItem(i.id, i.cor) === ch);
+    if (it) Cart.setQty(ch, it.qty + Number(q.dataset.q));
     return;
   }
   const del = e.target.closest('[data-del]');
-  if (del) { Cart.remove(del.closest('.ditem').dataset.id); return; }
+  if (del) { Cart.remove(del.closest('.ditem').dataset.chave); return; }
 });
 
 document.addEventListener('input', e => {
@@ -1199,4 +1265,7 @@ if (document.readyState === 'loading') {
 }
 
 /* diagnóstico rápido no console */
-window.SPACE = { CONFIG, PRODUCTS, Cart };
+/* diagnóstico e testes: renderCatalog entra aqui para a suíte conseguir
+   injetar um produto de exemplo e conferir o seletor de cor sem que um item
+   inventado precise existir no catálogo de verdade. */
+window.SPACE = { CONFIG, PRODUCTS, Cart, renderCatalog };
