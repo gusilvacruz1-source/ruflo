@@ -103,6 +103,26 @@ Gravação: 11 × 9 cm
 
 ---
 
+## 6. Caneca Inox 180 ml — cód. 07392
+
+Fotos: `assets/produtos/caneca-inox-180.webp` ✅
+Também há uma foto de ambiente, `caneca-inox-180-ambiente.webp`, no estilo das
+quatro da capa. Serve para virar um quinto slide, se quiser.
+
+**Atenção na descrição:** o fornecedor avisa que NÃO é térmica. O site tem
+vários itens térmicos e seria fácil o cliente confundir.
+
+```js
+{ id:'caneca-inox-180', name:'Caneca Inox 180ml', cat:'copos', ph:'caneca',
+  desc:'Caneca em inox de 180 ml com cabo e tampa em plástico resistente. Não é térmica.',
+  tiers:[[1, /* PREÇO */ ]] },
+```
+
+Ficha: 8,1 cm de altura · 10 cm de largura · circunferência 21,5 cm · 84 g
+Gravação: 7,5 × 6 cm
+
+---
+
 ## Fichas de produtos que JÁ estão cadastrados
 
 Caso queira completar a descrição deles também.
