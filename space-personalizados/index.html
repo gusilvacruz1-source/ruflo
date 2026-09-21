@@ -132,7 +132,7 @@
           <h2 class="floatCard__name">COPO TÉRMICO INOX 473ML</h2>
           <p class="floatCard__desc">Dupla parede, tampa e abridor personalizado a laser com a sua marca. Sem pedido mínimo.</p>
           <div class="floatCard__foot">
-            <strong class="floatCard__price">R$ 29,90<i class="floatCard__each">/un</i></strong>
+            <strong class="floatCard__price" id="floatPreco">R$ 49,99<i class="floatCard__each">/un</i></strong>
             <button class="iconbtn iconbtn--dark" data-add="copo-473" aria-label="Adicionar copo térmico ao orçamento">
               <svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>
             </button>
@@ -445,6 +445,7 @@
     <div class="drawer__body" id="drawerBody"></div>
     <footer class="drawer__foot">
       <div class="drawer__total"><span>Estimativa</span><strong id="drawerTotal">R$ 0,00</strong></div>
+      <p class="drawer__nota" id="drawerNota" hidden></p>
       <p class="drawer__note">Estimativa baseada na faixa de preço da quantidade escolhida. O valor final é confirmado no WhatsApp.</p>
       <a class="pill pill--gold pill--lg drawer__send" id="drawerSend" href="https://wa.me/5542991343788" target="_blank" rel="noopener">ENVIAR NO WHATSAPP</a>
     </footer>
