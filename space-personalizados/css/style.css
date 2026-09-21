@@ -327,9 +327,15 @@ body.is-locked{ overflow: hidden; }
    para ser desfeita em quem tem folga para ela.
    Mora DEPOIS das duas declarações originais de propósito: mesma
    especificidade, então quem vem por último é que vale. */
-@media (max-width: 760px) and (max-resolution: 2dppx),
-       (max-width: 760px) and (-webkit-max-device-pixel-ratio: 2) {
-  .ambient{ background-image: url("../assets/fundo-site-p.webp"); }
+/* O fundo do site nao tem variante leve: ele vive atras das faixas de papel,
+   que o cobrem quase inteiro, e sob o veu do .ambient__grain. Comparei tres
+   resolucoes na tela e nao se distinguem - entao ele e pequeno para todo
+   mundo e um arquivo a menos existe.
+   O da abertura e outra historia: aparece inteiro, na primeira tela. Esse
+   tem duas versoes, e a leve agora vale para QUALQUER celular, nao so os de
+   densidade 2x - 900 px de largura cobrem um aparelho de 3x sem que se note,
+   e a diferenca no download e de 130 KB. */
+@media (max-width: 900px) {
   .cup__stage{ background-image: url("../assets/fundo-copo-p.webp"); }
 }
 /* Véu leve, só o suficiente para o HUD se sustentar nos cantos. O anterior
@@ -369,6 +375,11 @@ body.is-locked{ overflow: hidden; }
   width: min(70vw, 470px); height: auto;
   filter: drop-shadow(0 10px 40px rgba(0,0,0,.62));
   animation: marcaEntra 1.1s var(--ease) both;
+}
+/* entrada dos cards: era o GSAP, virou uma keyframe */
+@keyframes entraCard{
+  from{ opacity: 0; transform: translateY(22px); }
+  to  { opacity: 1; transform: none; }
 }
 @keyframes marcaEntra{
   from{ opacity: 0; transform: translateY(14px) scale(.965); }

@@ -1,6 +1,6 @@
 /* ============================================================================
    SPACE PERSONALIZADOS — script.js
-   Vanilla JS · GSAP
+   Vanilla JS · zero dependência externa
    ----------------------------------------------------------------------------
    [1] CONFIG          — tudo que você precisa editar fica aqui em cima
    [2] UTILS           — helpers
@@ -48,11 +48,20 @@ const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' 
 const money = n => BRL.format(n);
 
 const prefersReduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
-/* Só o gsap principal. O ScrollTrigger existia para prender a introdução do
-   copo e saiu junto com ela; as três animações que sobraram são de card e
-   nunca precisaram dele. Se continuasse sendo exigido aqui, elas parariam de
-   rodar no dia em que o arquivo deixou de ser baixado. */
-const hasGSAP = () => typeof window.gsap !== 'undefined';
+/* ENTRADA DOS CARDS
+   Eram três chamadas ao GSAP, e o GSAP era um arquivo baixado de um CDN só
+   para elas: uma biblioteca inteira para três fades de entrada. Isto aqui faz
+   o mesmo em CSS. O `void el.offsetWidth` força o reflow, senão trocar de
+   filtro não reinicia a animação — o navegador vê a mesma classe e não
+   repete. */
+function animaEntrada(host, atraso = 55) {
+  if (prefersReduced || !host) return;
+  Array.from(host.children).forEach((el, i) => {
+    el.style.animation = 'none';
+    void el.offsetWidth;
+    el.style.animation = `entraCard .55s var(--ease) ${i * atraso}ms both`;
+  });
+}
 
 const store = {
   get(k, fb) { try { return JSON.parse(localStorage.getItem('space.' + k)) ?? fb; } catch { return fb; } },
@@ -70,105 +79,19 @@ function toast(msg) {
 }
 
 /* ============================================================================
-   [3] PLACEHOLDERS — arte gerada, zero dependência externa
+   [3] ESPAÇO DA FOTO
    --------------------------------------------------------------------------
-   Cada <img>/bloco tem data-ph="chave" e (opcional) data-src="foto real".
-   Se a foto existir em assets/produtos/ ela entra; se não, fica a arte SVG.
+   Aqui havia um gerador de arte: silhuetas SVG preenchidas com gradiente
+   metálico, poça de luz, sombra de contato e grão, montadas em tempo de
+   execução para cada produto e para cada cena. Saiu a pedido, e a razão era
+   boa — aquilo aparecia ANTES da foto e o cliente via um desenho falso do
+   produto antes de ver o produto. Duas imagens diferentes da mesma coisa em
+   sequência, e a primeira inventada.
+
+   No lugar fica um tom liso. O card já tem a cor certa, a foto entra por
+   cima quando chega, e no intervalo não há nada para o olho corrigir.
    ========================================================================== */
 
-/* Silhuetas PREENCHIDAS (não contorno): com gradiente metálico e sombra de
-   contato elas leem como render de estúdio, não como ícone de clipart. */
-const SHAPES = {
-  copo:      '<path d="M28 15h44v8l-1 2-5 54a8 8 0 0 1-8 7H42a8 8 0 0 1-8-7l-5-54-1-2Z"/>',
-  caneca:    '<path d="M23 29h44v35a11 11 0 0 1-11 11H34a11 11 0 0 1-11-11Z"/><path d="M67 37h5a12 12 0 0 1 0 24h-5v-7h5a5 5 0 0 0 0-10h-5Z"/>',
-  garrafa:   '<path d="M41 5h18v8H41Z"/><path d="M43 15h14v13l9 14v45a8 8 0 0 1-8 8H42a8 8 0 0 1-8-8V42l9-14Z"/>',
-  churrasco: '<path d="M20 6h5v22h-5ZM31 6h5v22h-5ZM42 6h5v22h-5Z"/>'
-           + '<path d="M18 28h31v6a12 12 0 0 1-9 11v49H27V45a12 12 0 0 1-9-11Z"/>'
-           + '<path d="M70 6c10 10 14 26 11 40-1 6-5 9-11 10-6-1-10-4-11-10-3-14 1-30 11-40Z"/>'
-           + '<path d="M64 58h12v36a6 6 0 0 1-12 0Z"/>',
-  canivete:  '<path d="M20 60c22-5 44-17 58-32l7 10c-14 17-35 30-59 37Z"/><path d="M11 63h16v14H11a5 5 0 0 1-5-5v-4a5 5 0 0 1 5-5Z"/>',
-  caneta:    '<path d="M63 8 92 37 44 85l-4-4 44-44-8-8-44 44-4-4Z"/><path d="M36 81 14 92l9-23 9 3 4 9Z"/>',
-  chaveiro:  '<path fill-rule="evenodd" d="M33 10a24 24 0 1 1 0 48 24 24 0 0 1 0-48Zm0 12a12 12 0 1 0 0 24 12 12 0 0 0 0-24Z"/><path d="M50 47 82 79l-9 9-32-32Z"/>',
-  chapeu:    '<path d="M30 55V38a20 20 0 0 1 40 0v17Z"/><ellipse cx="50" cy="60" rx="40" ry="13"/>',
-  xicara:    '<path d="M28 32h44l-5 28a11 11 0 0 1-11 9H44a11 11 0 0 1-11-9Z"/><path d="M71 39h5a9 9 0 0 1 0 18h-4v-6h4a3 3 0 0 0 0-6h-5Z"/><path d="M20 76h60v6H20Z"/>',
-  laser:     '<path fill-rule="evenodd" d="M50 22a28 28 0 1 1 0 56 28 28 0 0 1 0-56Zm0 9a19 19 0 1 0 0 38 19 19 0 0 0 0-38Z"/><circle cx="50" cy="50" r="7"/><path d="M47 2h6v14h-6ZM47 84h6v14h-6ZM2 47h14v6H2ZM84 47h14v6H84Z"/>',
-  caixa:     '<path d="M50 8 88 25 50 42 12 25Z"/><path d="M10 31 47 48v40L10 71Z"/><path d="M90 31 53 48v40l37-17Z"/>'
-};
-
-/** Fundo de estúdio + objeto preenchido + sombra de contato + grão. */
-function phProduct(key, seed = 0) { return cached('p|'+key+'|'+(seed%4), () => buildProduct(key, seed)); }
-function buildProduct(key, seed = 0) {
-  const shape = SHAPES[key] || SHAPES.copo;
-  const lx = 34 + (seed % 4) * 8;            // posição da luz varia por produto
-  const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 600">
-<defs>
-<linearGradient id="sw" x1="0" y1="0" x2="0.15" y2="1">
-<stop offset="0" stop-color="#1c1b19"/><stop offset="0.62" stop-color="#121110"/><stop offset="1" stop-color="#090908"/>
-</linearGradient>
-<radialGradient id="pool" cx="${lx}%" cy="38%" r="46%">
-<stop offset="0" stop-color="#38342c"/><stop offset="1" stop-color="#38342c" stop-opacity="0"/>
-</radialGradient>
-<linearGradient id="mt" x1="0" y1="0" x2="1" y2="0.1">
-<stop offset="0" stop-color="#2a2a2c"/><stop offset="0.22" stop-color="#6e6f73"/>
-<stop offset="0.42" stop-color="#d9dade"/><stop offset="0.56" stop-color="#8b8c90"/>
-<stop offset="0.78" stop-color="#3a3a3d"/><stop offset="1" stop-color="#1e1e20"/>
-</linearGradient>
-<linearGradient id="rim" x1="0" y1="0" x2="1" y2="0">
-<stop offset="0" stop-color="#e6c88a" stop-opacity="0"/><stop offset="0.9" stop-color="#e6c88a" stop-opacity="0.55"/>
-</linearGradient>
-<radialGradient id="cast" cx="50%" cy="50%" r="50%">
-<stop offset="0" stop-color="#000" stop-opacity="0.75"/><stop offset="1" stop-color="#000" stop-opacity="0"/>
-</radialGradient>
-<filter id="gr"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="3"/>
-<feColorMatrix type="saturate" values="0"/></filter>
-</defs>
-<rect width="600" height="600" fill="url(#sw)"/>
-<rect width="600" height="600" fill="url(#pool)"/>
-<ellipse cx="300" cy="470" rx="180" ry="34" fill="url(#cast)"/>
-<g transform="translate(300 296) scale(3.5) translate(-50 -52)">
-<g fill="url(#mt)">${shape}</g>
-<g fill="url(#rim)" opacity="0.7">${shape}</g>
-</g>
-<rect width="600" height="600" filter="url(#gr)" opacity="0.055"/>
-</svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-/** Fundo de hero: pura atmosfera de estúdio. Sem ícone, sem desenho. */
-function phScene(key, seed = 0) { return cached('s|'+key+'|'+(seed%4), () => buildScene(key, seed)); }
-function buildScene(key, seed = 0) {
-  const lx = [64, 72, 30, 56][seed % 4];
-  const svg =
-`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1600 900">
-<defs>
-<linearGradient id="b" x1="0" y1="0" x2="0.4" y2="1">
-<stop offset="0" stop-color="#232019"/><stop offset="0.55" stop-color="#131211"/><stop offset="1" stop-color="#070707"/>
-</linearGradient>
-<radialGradient id="k" cx="${lx}%" cy="26%" r="44%">
-<stop offset="0" stop-color="#6b5c3d" stop-opacity="0.55"/><stop offset="1" stop-color="#6b5c3d" stop-opacity="0"/>
-</radialGradient>
-<radialGradient id="f" cx="${lx - 26}%" cy="86%" r="40%">
-<stop offset="0" stop-color="#2e2a22" stop-opacity="0.6"/><stop offset="1" stop-color="#2e2a22" stop-opacity="0"/>
-</radialGradient>
-<linearGradient id="v" x1="0" y1="0" x2="1" y2="0">
-<stop offset="0" stop-color="#000" stop-opacity="0.72"/><stop offset="0.55" stop-color="#000" stop-opacity="0"/>
-</linearGradient>
-<filter id="g2"><feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3"/>
-<feColorMatrix type="saturate" values="0"/></filter>
-</defs>
-<rect width="1600" height="900" fill="url(#b)"/>
-<rect width="1600" height="900" fill="url(#k)"/>
-<rect width="1600" height="900" fill="url(#f)"/>
-<rect width="1600" height="900" fill="url(#v)"/>
-<rect width="1600" height="900" filter="url(#g2)" opacity="0.07"/>
-</svg>`;
-  return `url("data:image/svg+xml,${encodeURIComponent(svg)}")`;
-}
-
-/* A foto real só é buscada quando o card chega perto da tela. Com 18 cards no
-   catálogo mais o hero, pedir as 22 no boot enfileirava tudo antes de a
-   primeira dobra terminar de pintar. */
 const fotoIO = 'IntersectionObserver' in window
   ? new IntersectionObserver((entradas, obs) => {
       entradas.forEach(en => {
@@ -230,11 +153,10 @@ function buscaFoto(el) {
 }
 
 /** Aplica o placeholder e agenda a troca pela foto real, se ela existir. */
-function paint(el, key, seed = 0) {
-  const isScene = el.hasAttribute('data-scene');
-  el.style.backgroundImage = isScene ? phScene(key, seed) : phProduct(key, seed);
-  el.style.backgroundSize = 'cover';
-  el.style.backgroundPosition = 'center';
+function paint(el) {
+  /* Nada de imagem enquanto a foto não chega: o CSS já pinta o tom do card.
+     `seed` e `key` sumiram junto com a arte gerada. */
+  el.style.removeProperty('background-image');
   el.classList.remove('has-photo');
   if (!el.dataset.src) return;
   if (!fotoIO) { buscaFoto(el); return; }
@@ -244,21 +166,8 @@ function paint(el, key, seed = 0) {
   else fotoIO.observe(el);
 }
 
-function hashSeed(str) {
-  let h = 0;
-  for (let i = 0; i < str.length; i++) h = (h * 31 + str.charCodeAt(i)) | 0;
-  return Math.abs(h);
-}
-
 function hydratePlaceholders(root = document) {
-  $$('[data-ph]', root).forEach(el => {
-    const card = el.closest('[data-id]');
-    const idx = card ? PRODUCTS.findIndex(x => x.id === card.dataset.id) : -1;
-    // semente estável: do produto quando há um, senão da própria chave.
-    // Usar o índice no documento fazia o mesmo cliente virar três logos.
-    const seed = idx >= 0 ? idx : hashSeed(el.dataset.ph);
-    paint(el, el.dataset.ph, seed);
-  });
+  $$('[data-ph]', root).forEach(paint);
 }
 
 /* ============================================================================
@@ -474,13 +383,6 @@ const Abertura = (() => {
    [8] UI — vitrine, catálogo, filtros, favoritos e orçamento
    ========================================================================== */
 
-const PH_CACHE = new Map();
-function cached(key, build) {
-  let v = PH_CACHE.get(key);
-  if (v === undefined) { v = build(); PH_CACHE.set(key, v); }
-  return v;
-}
-
 const ICO = {
   arrow: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
   heart: '<svg viewBox="0 0 24 24"><path d="M12 20s-7.2-4.4-7.2-9.3A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.2 3.1C19.2 15.6 12 20 12 20Z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
@@ -634,11 +536,7 @@ function renderShowcase(filter) {
   $('#showcaseTotal').textContent = String(list.length);
   $('#showcaseIndex').textContent = String(showcaseStart + 1);
 
-  if (hasGSAP() && !prefersReduced) {
-    gsap.fromTo(host.children,
-      { y: 26, opacity: 0 },
-      { y: 0, opacity: 1, duration: .7, stagger: .07, ease: 'power3.out', overwrite: true });
-  }
+  animaEntrada(host, 70);
 }
 
 function shiftShowcase(dir) {
@@ -655,10 +553,7 @@ function renderCatalog(filter = 'todos') {
   // é calculado por nth-child, então card escondido quebraria as linhas.
   host.innerHTML = list.map(catalogCard).join('');
   hydratePlaceholders(host);
-  if (hasGSAP() && !prefersReduced) {
-    gsap.fromTo(host.children, { y: 22, opacity: 0 },
-      { y: 0, opacity: 1, duration: .6, stagger: .045, ease: 'power3.out', overwrite: true });
-  }
+  animaEntrada(host, 45);
 }
 
 /* --- orçamento (carrinho) -------------------------------------------------- */
@@ -838,7 +733,7 @@ document.addEventListener('click', e => {
     if (media) {
       media.dataset.src = fotoDe(prod, c.id);
       media.classList.remove('has-photo');
-      paint(media, prod.ph, PRODUCTS.indexOf(prod));
+      paint(media);
     }
     return;
   }
@@ -1236,9 +1131,11 @@ function mostraDestaque(p) {
   media.dataset.ph = p.ph;
   media.dataset.src = `assets/produtos/${p.id}.webp`;
   media.setAttribute('aria-label', p.name);
-  paint(media, p.ph, PRODUCTS.indexOf(p));
-  if (hasGSAP() && !prefersReduced) {
-    gsap.fromTo('#dealCard', { y: 14, opacity: .4 }, { y: 0, opacity: 1, duration: .5, ease: 'power2.out' });
+  paint(media);
+  const card = $('#dealCard');
+  if (card && !prefersReduced) {
+    card.style.animation = 'none'; void card.offsetWidth;
+    card.style.animation = 'entraCard .5s var(--ease) both';
   }
 }
 
