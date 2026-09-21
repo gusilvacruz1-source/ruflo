@@ -123,24 +123,27 @@ Gravação: 7,5 × 6 cm
 
 ---
 
-## 7. Caneca Térmica 350 ml
+## 7. Caneca Térmica 350 ml — com cores
 
-Foto: **chegou, mas não dá para recortar limpa.** A alça é branca e mede
-exatamente 255 — o mesmo valor do fundo branco da foto. Nenhum limiar separa
-dois números iguais. Tentei três caminhos: pelo brilho a alça sai rasgada;
-usando a aresta como represa ela fica inteira mas sobra halo claro em volta;
-comendo o halo, a passagem atravessa a tampa e fura o corpo.
+Fotos: `caneca-termica-350-cinza.webp` ✅ · branca **não dá para recortar**
 
-Precisa de outra foto deste item, ou de uma versão em cor que destaque a alça
-do fundo. Enquanto isso o card pode usar o desenho gerado.
-
-Não confundir com a `caneca-termica-700` já cadastrada: esta é de 350 ml.
+A branca tem a alça branca medindo exatamente 255, o mesmo valor do fundo da
+foto: nenhum limiar separa dois números iguais. Pelo brilho a alça rasga; com
+a aresta de represa ela fica inteira mas sobra halo; comendo o halo, a
+passagem atravessa a tampa. Precisa de outra foto dessa cor. A cinza não tem
+o problema, porque a alça destaca do fundo.
 
 ```js
 { id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', cat:'copos', ph:'caneca',
   desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança.',
+  cores:[
+    { id:'cinza',  nome:'Cinza',  hex:'#636466' }
+    // { id:'branco', nome:'Branco', hex:'#e6e6e6' }  ← falta foto que recorte
+  ],
   tiers:[[1, /* PREÇO */ ]] },
 ```
+
+Não confundir com a `caneca-termica-700` já cadastrada nem com a de 1,2 L.
 
 Ficha: 11,6 cm de altura · 11,9 cm de largura · circunferência 27,6 cm · 299 g
 Gravação: 7,5 × 4 cm

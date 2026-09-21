@@ -13,7 +13,7 @@ from PIL import Image, ImageFilter
 from scipy import ndimage
 
 def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
-            represa=False, franja=2):
+            represa=False, franja=2, sombra=0):
     """represa: usa a aresta como barreira do preenchimento. So e preciso
     quando a peca tem parte BRANCA encostando no fundo branco - a alca da
     caneca termica de 350 ml mede 255, igual ao fundo, e sem a represa ela
@@ -76,6 +76,16 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
     # de volta - duas passadas de dilatacao que so avancam sobre quase-branco
     # SEM a barreira. Dois pixels e o suficiente para a franja e pouco demais
     # para estragar a alca branca, que e o que a represa protegia.
+    # SOMBRA SUAVE. As fotos de estudio tem uma sombra de contato sob a peca
+    # que desce de 255 ate uns 225 e nunca cruza o limiar do fundo: sobrava
+    # como mancha clara colada na base. Ela e cinza e MUITO mais clara que
+    # qualquer parte pintada da peca - o corpo da caneca cinza esta em 85 -,
+    # entao alguns passos de crescimento sobre cinza claro a levam embora.
+    if sombra:
+        claro_cinza = (a.min(axis=2) >= 205) & (a.max(axis=2) - a.min(axis=2) <= 14)
+        for _ in range(sombra):
+            fundo |= ndimage.binary_dilation(fundo) & claro_cinza
+
     if represa and franja:
         claro = (a.min(axis=2) >= limiar) & (a.max(axis=2) - a.min(axis=2) <= 12)
         for _ in range(franja):
