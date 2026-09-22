@@ -881,7 +881,13 @@ body.is-locked{ overflow: hidden; }
 .ccard__cores{ display: flex; align-items: center; gap: 8px; margin: -4px 0 14px; }
 .swatch{
   position: relative; width: 22px; height: 22px; padding: 0;
-  border-radius: 50%; border: 1px solid var(--hairline);
+  /* O aro da bolinha nao pode seguir o tema, porque a bolinha aparece nos DOIS:
+     o catalogo e claro e a vitrine de mais desejados e escura. Com o fio claro
+     de sempre, o preto do kit de garrafa (#2c2d31) sumia no card escuro e o
+     inox (#bfbeb8) sumia no card claro. Um cinza medio fixo e o unico aro que
+     contrasta com fundo claro e escuro e com tinta clara e escura ao mesmo
+     tempo - a bolinha so carrega a cor, entao ela precisa ter contorno sempre. */
+  border-radius: 50%; border: 1px solid rgba(124,124,130,.9);
   background: var(--tom); cursor: pointer;
   transition: transform .18s var(--ease), box-shadow .18s var(--ease);
 }
