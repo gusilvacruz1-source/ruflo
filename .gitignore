@@ -1,3 +1,5 @@
 # cache do Python, gerado ao importar ferramentas-recorte.py como modulo
 __pycache__/
 *.pyc
+# o playwright da suite de regressao (space-personalizados-testes.mjs)
+node_modules/

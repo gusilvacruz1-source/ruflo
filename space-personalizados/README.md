@@ -34,8 +34,8 @@ Duas armadilhas de CSS que este layout encontrou, anotadas para não
 voltarem: `backdrop-filter` e `transform` num elemento **fixo** criam bloco
 de contenção para os descendentes fixos — com qualquer um dos dois na barra,
 o menu de tela cheia passa a medir a barra em vez da janela e o
-`translateY(-100%)` esconde só a altura dela. Os testes [19] e [20] cobrem
-isso.
+`translateY(-100%)` esconde só a altura dela. Os testes [19] e [20] da
+suíte de regressão cobrem isso (ver seção 3).
 
 ## 1. A abertura
 
@@ -79,76 +79,104 @@ existe mais progresso a fingir.
 
 ## 2. A loja
 
-Dark mode com acento champagne, **vidro translúcido** de verdade
-(`backdrop-filter` sobre uma camada de luz animada — desfocar preto liso não
-produz vidro nenhum), tipografia **serifada de alto contraste** (Playfair
-Display) com itálico de contraponto, contra Manrope no corpo. Bento grids
-assimétricos, pílulas e cantos generosos.
+Todas as seções saem do array `PRODUCTS`, no `js/script.js`: são os
+produtos reais do catálogo Space, com as faixas de preço por quantidade.
 
-Todas as seções usam os **18 produtos reais** do catálogo Space, com as
-faixas de preço por quantidade exatamente como no PDF.
-
-- **Hero** — título gigante, moldura fina com etiquetas de canto, card de
-  vidro do Copo Térmico, slider de 4 telas
-- **Bento** — "Personalize seu próprio brinde" + "Empresas que escolhem"
+- **Hero** — "Não é tinta. É o metal.", slider de 4 fotos e o card do Copo
+  Térmico, com o preço lido do catálogo
+- **Diferenciais** — "Grave o que é seu" e o índice do catálogo por
+  categoria, com a contagem de cada uma
 - **Novos Brindes / Por Tipo** — filtros em pílula, 4 cards em destaque e
   paginação que percorre o catálogo inteiro
-- **Descubra os Mais Desejados** — contador 14.500+ e card de oferta
-- **Catálogo completo** — os 18 itens num grid assimétrico de 12 colunas
+- **Mais Desejados** — 5.000+ copos vendidos e quatro abas que o catálogo
+  responde sozinho: maior queda no lote, até R$ 30, acima de R$ 70 e kits
+  de churrasco. O card grande mostra o 1º da aba; os dois atalhos ao lado,
+  o 2º e o 3º
+- **Catálogo completo** — todos os itens, com seletor de cor, foto de
+  detalhe, quantidade e WhatsApp direto
 - **Nossa História**, CTA final e rodapé
 
 **Movimento:** inclinação 3D nos cards, brilho que segue o cursor, paralaxe
 das manchas de luz, revelação palavra a palavra nos títulos e contadores
-animados.
+animados. Tudo desliga com `prefers-reduced-motion`.
+
+### Cadastrar um produto
+
+```js
+{ id:'caneca-inox-180', name:'Caneca Inox 180ml', cat:'copos', ph:'caneca',
+  desc:'Caneca em inox de 180 ml com cabo e tampa em plástico resistente.',
+  tiers:[[1,19.90],[50,16.90]] }
+```
+
+`cat` é uma de `copos`, `garrafas`, `churrasco`, `canivetes`, `escritorio`,
+`estilo`. `tiers` são as faixas `[a partir de quantas, preço da unidade]` e
+a primeira começa sempre em 1: não há pedido mínimo em item nenhum.
+
+A foto vai em `assets/produtos/<id>.webp`. Nada mais precisa ser mexido: a
+contagem de itens, o índice por categoria e os filtros acompanham sozinhos.
+
+### Produto sob consulta
+
+Produto **sem** `tiers` não tem preço no site: o card diz "sob consulta" e o
+valor sai por orçamento no WhatsApp. Ele entra no orçamento normalmente, mas
+não na soma — a gaveta mostra "+ N itens sob consulta" junto da estimativa, e
+a mensagem marca o item como "a combinar". As abas de preço dos Mais
+Desejados deixam esses itens de fora.
 
 ### Produtos com variação de cor
 
-Um produto pode vir em mais de uma cor. Basta o campo `cores`:
-
 ```js
-{ id:'caderneta-couro', name:'Caderneta Couro Sintético', cat:'escritorio', ph:'caneta',
+{ id:'caderneta', name:'Caderneta Couro Sintético', cat:'escritorio', ph:'caneta',
   desc:'...',
   cores:[
-    { id:'preto',    nome:'Preto',    hex:'#26262a' },
-    { id:'caramelo', nome:'Caramelo', hex:'#a8703f' }
-  ],
-  tiers:[[1, 00.00]] }
+    { id:'preto',    nome:'Preto',    hex:'#433f42' },
+    { id:'caramelo', nome:'Caramelo', hex:'#8c5633' }
+  ] }
 ```
 
-A foto de cada cor vai em `assets/produtos/<id>-<cor>.webp`. Produto **sem**
-`cores` continua em `assets/produtos/<id>.webp`, como sempre: nada no catálogo
-antigo precisou mudar de nome.
+A foto de cada cor vai em `assets/produtos/<id>-<cor>.webp` — e aí **não**
+existe `<id>.webp`. Onde o site precisa da foto de um produto sem saber a
+cor (vitrine, card de destaque) ele usa a primeira cor da lista, pela função
+`fotoDe`. Nunca monte o caminho da foto na mão.
 
 No card aparecem as bolinhas; clicar troca a foto e guarda a escolha no
 próprio card, de onde ADICIONAR e WHATSAPP leem na hora do clique.
 
-**Cada cor é uma linha do orçamento.** A chave de um item passou a ser
-`id|cor` em vez de só `id`, então duas cores da mesma caderneta somam como
-dois itens e não como um com o dobro da quantidade. Mexer na quantidade de
-uma não mexe na outra, e o nome da cor vai no texto do WhatsApp — é o que a
-Space precisa para separar o pedido. Carrinhos salvos antes disso continuam
-valendo: sem `cor`, a chave é o próprio id.
+**Cada cor é uma linha do orçamento.** A chave de um item é `id|cor`, então
+duas cores da mesma caderneta são dois itens, e o nome da cor vai no texto
+do WhatsApp — é o que a Space precisa para separar o pedido.
 
 ### Foto de detalhe
 
-Um produto pode ter uma segunda imagem: um macro de um recurso que a foto
-principal não mostra, como a trava da tampa. Basta o campo `detalhe`:
-
 ```js
-{ id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', /* … */
-  detalhe: true }
+{ id:'kit-garrafa-450', /* … */ detalhe: true }
 ```
 
-A imagem vai em `assets/produtos/<id>-detalhe.webp`. O card ganha uma lupa no
-canto e clicar nela troca a foto.
+A imagem vai em `assets/produtos/<id>-detalhe.webp` e o card ganha uma lupa.
+Ela é **uma por produto**, não uma por cor; por isso trocar de cor com o
+detalhe aberto fecha o detalhe, senão a bolinha diria "Verde" com a foto
+mostrando o azul.
 
-**Ela só é baixada quando alguém abre.** A camada nasce vazia e o `background`
-só recebe a URL no primeiro clique. Um produto que ninguém abre não custa um
-byte, o que importa num site que acabou de cortar metade do peso.
+**Ela só é baixada quando alguém abre.** A camada nasce vazia e só recebe a
+URL no primeiro clique. É um **botão**, não hover: hover não existe em
+celular.
 
-É um **botão**, não hover. Hover não existe em celular, e misturar hover no
-computador com toque no celular dá dois comportamentos para a mesma coisa. O
-botão funciona igual nos dois e ainda pega foco pelo teclado.
+### Números e preços no texto
+
+O texto corrido cita o catálogo ("26 itens", "o copo sai a R$ 49,99", o
+índice por categoria). Nada disso é escrito à mão — foi escrito, e ficou para
+trás assim que o catálogo cresceu. Quem cita o catálogo pergunta a ele:
+
+```html
+<span data-conta="produtos">26</span>              quantos itens no total
+<span data-conta="copos" data-pad>09</span>         quantos numa categoria, 2 dígitos
+<span data-preco="copo-473">R$ 49,99</span>         preço da unidade avulsa
+<span data-preco="copo-473" data-qtd="50">…</span>  preço na faixa de 50
+<span data-preco="copo-473" data-qtd="melhor">…</span>  o melhor preço
+<span data-lote="copo-473">100</span>               quantas peças para o melhor preço
+```
+
+O número escrito no HTML fica só para quem abrir sem JavaScript.
 
 ### Orçamento pelo WhatsApp
 
@@ -157,44 +185,54 @@ quantidades, o site calcula o preço unitário **na faixa certa** e monta uma
 mensagem pronta para o WhatsApp `(42) 99134-3788`. Carrinho e favoritos
 ficam salvos no navegador.
 
-**Não há pedido mínimo em item nenhum**: dá para comprar uma peça só, pelo
-mesmo preço unitário da tabela. Os `tiers` de cada produto começam em 1, e as
-faixas acima disso são descontos por volume, não exigências.
+Aberta, a gaveta leva o foco para o X e deixa o resto da página `inert`; o
+Esc fecha e devolve o foco a quem abriu. Fechada, ela mesma fica `inert`,
+para o Tab não passear pelos botões invisíveis dela.
 
 O preço em destaque é sempre o da **unidade avulsa** e o de volume vira nota.
 Anunciar R$ 2,25 num chaveiro que só chega a esse preço em 500 peças é
 anunciar um preço que o cliente não consegue.
 
+### Prévia do link
+
+O `<head>` tem `og:image` (`assets/compartilhar.jpg`, 1200×630: a nebulosa
+com a marca no meio) e os dados da loja em JSON-LD. Os endereços são
+**absolutos**, apontando para o GitHub Pages — o WhatsApp não busca imagem
+por caminho relativo. Se o site mudar de endereço, é trocar o prefixo
+`https://gusilvacruz1-source.github.io/ruflo/space-personalizados/` nas
+metas do `<head>`.
+
 ### Fotos dos produtos
 
-Os 18 produtos já usam as fotos do catálogo PDF, em
-`assets/produtos/<id>.webp`, recortadas com alfa e enquadradas em `contain`
-sobre um halo dourado. Para trocar uma, basta sobrescrever o arquivo com o id
-do produto (ex.: `copo-473.webp`) — a lista completa está em
-`assets/produtos/LEIA-ME.txt`. Se um arquivo faltar, o card cai sozinho numa
-arte SVG gerada na hora.
+Ficam em `assets/produtos/`, recortadas com fundo transparente e enquadradas
+em `contain`. Enquanto a foto não chega o card mostra só o tom liso dele — a
+arte SVG gerada que existia antes saiu, porque aparecia antes da foto e
+mostrava um desenho falso do produto. A lista de nomes está em
+`assets/produtos/LEIA-ME.txt`.
 
-**Atenção:** as fotos vieram do catálogo do fornecedor e várias mostram peças
-já gravadas com a marca, o Instagram e o telefone de outros clientes.
+**Atenção:** várias fotos mostram peças já gravadas com a marca, o Instagram
+e o telefone de outros clientes.
 
 ---
 
-## 3. Rodar
+## 3. Rodar e testar
 
 ```bash
-python3 -m http.server 8000    # depois abra http://localhost:8000
+python3 -m http.server 8099    # depois abra http://localhost:8099
 ```
 
-Abrir o `index.html` direto pelo arquivo também funciona.
+A suíte de regressão mora **fora** desta pasta, em
+`space-personalizados-testes.mjs` na raiz do repositório — esta pasta vai
+inteira para o ar e teste não é coisa de publicar. Com o servidor de pé:
+
+```bash
+node space-personalizados-testes.mjs
+```
+
+Precisa do Playwright com Chromium. Cada bug que já apareceu no site virou
+uma asserção numerada, e o número aparece nos comentários do código.
 
 ## 4. Dependências
 
-Duas, ambas por CDN e ambas com plano B:
-
-- **GSAP + ScrollTrigger** — se o CDN não carregar, o scroll cai num
-  fallback nativo com a mesma matemática.
-- **Google Fonts** (Playfair Display + Manrope) — se não carregar, cai na
-  fonte do sistema.
-
-A abertura não depende de nenhuma das duas: é uma imagem de fundo e um
-`<img>`. Sem framework, sem build, sem asset que possa faltar.
+Uma só: **Google Fonts** (Bodoni Moda + Archivo). Se não carregar, cai na
+fonte do sistema. Sem framework, sem biblioteca de animação, sem build.
