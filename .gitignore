@@ -1,0 +1,3 @@
+# cache do Python, gerado ao importar ferramentas-recorte.py como modulo
+__pycache__/
+*.pyc
