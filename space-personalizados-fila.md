@@ -123,9 +123,9 @@ Gravação: 7,5 × 6 cm
 
 ---
 
-## 7. Caneca Térmica 350 ml — cód. 06061 — três cores
+## 7. Caneca Térmica 350 ml — cód. 06061 — quatro cores
 
-Fotos: `caneca-termica-350-cinza` `-preto` `-branco` ✅
+Fotos: `caneca-termica-350-cinza` `-preto` `-branco` `-verde` ✅
 
 A branca deu trabalho: a alça é branca sobre fundo branco. Na primeira foto
 ela media exatamente 255, o mesmo valor do fundo, e não havia recorte
@@ -140,7 +140,8 @@ visível só sobre card escuro.
   cores:[
     { id:'cinza',  nome:'Cinza',  hex:'#5c5f5f' },
     { id:'preto',  nome:'Preto',  hex:'#333535' },
-    { id:'branco', nome:'Branco', hex:'#e2e2e4' }
+    { id:'branco', nome:'Branco', hex:'#e2e2e4' },
+    { id:'verde',  nome:'Verde',  hex:'#435030' }
   ],
   tiers:[[1, /* PREÇO */ ]] },
 ```
