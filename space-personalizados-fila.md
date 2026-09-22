@@ -153,7 +153,15 @@ Há também uma **foto de família** com as cores juntas, em
 `caneca-termica-350-familia.webp`. Não serve para recorte (as peças se
 sobrepõem e apoiam em suportes), mas serve de imagem de seção.
 
-Duas coisas que essa foto revelou e precisam de resposta:
+Há também um **detalhe da tampa** em `caneca-termica-350-detalhe-tampa.webp`:
+macro do fecho acrílico com a trava de segurança, na cor preta. Vinha com uma
+tira de miniaturas do site do fornecedor no rodapé, que eu cortei.
+
+**O site não tem onde mostrar esse detalhe hoje.** Cada produto exibe uma foto
+por cor, e só. Se quiser, dá para o card aceitar uma segunda imagem que
+aparece ao passar o mouse ou ao tocar.
+
+Duas coisas que a foto de família revelou e precisam de resposta:
 
 1. **Existe uma cor AZUL** (aproximadamente `#0e439a`) que não veio em foto
    solta. Se quiser essa cor no site, preciso da foto individual dela.
