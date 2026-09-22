@@ -174,6 +174,24 @@ Gravação: 7,5 × 4 cm
 
 ---
 
+## 8. Kit Garrafa Térmica 450 ml — cód. KIT18639
+
+Foto: `assets/produtos/kit-garrafa-450.webp` ✅
+
+```js
+{ id:'kit-garrafa-450', name:'Kit Garrafa Térmica 450ml', cat:'garrafas', ph:'garrafa',
+  desc:'Garrafa em inox de 450 ml com base antiderrapante e duas tampas extras que viram xícaras. Acompanha sacola de papel com berço de papelão.',
+  tiers:[[1, /* PREÇO */ ]] },
+```
+
+Ficha: 25,5 × 16 × 7,2 cm · 354 g
+Gravação: embalagem 19 × 15,5 cm
+
+Atenção na gravação: o fornecedor só informa medida **da embalagem**, não da
+garrafa. Se a personalização for na garrafa, vale confirmar a área.
+
+---
+
 ## Preços recebidos sem produto ainda
 
 Chegaram antes das fotos e das descrições. Ficam aqui até o produto existir.
