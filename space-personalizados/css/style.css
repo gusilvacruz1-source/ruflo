@@ -896,6 +896,31 @@ body.is-locked{ overflow: hidden; }
 }
 .ditem__cor{ color: var(--muted-dark); font-style: normal; }
 
+/* ---------- FOTO DE DETALHE ---------- */
+/* A camada nasce vazia e sem custo: a imagem só entra no background quando
+   alguém abre. Enquanto isso não há requisição nenhuma. */
+.ccard__detalhe{
+  position: absolute; inset: 0; z-index: 1;
+  background-color: inherit;
+  background-repeat: no-repeat; background-position: center; background-size: cover;
+  opacity: 0; pointer-events: none;
+  transition: opacity .28s var(--ease);
+}
+.ccard__detalhe.is-on{ opacity: 1; }
+.ccard__lupa{
+  position: absolute; right: 10px; bottom: 10px; z-index: 3;
+  width: 34px; height: 34px; display: grid; place-items: center;
+  border-radius: 50%; cursor: pointer;
+  border: 1px solid color-mix(in srgb, var(--ink) 12%, transparent);
+  background: color-mix(in srgb, var(--paper) 90%, transparent);
+  color: var(--ink);
+  transition: background .2s var(--ease), color .2s var(--ease);
+}
+.ccard__lupa svg{ width: 17px; height: 17px; }
+.ccard__lupa:hover{ background: var(--paper); }
+.ccard__lupa.is-on{ background: var(--ink); color: var(--paper); border-color: transparent; }
+@media (prefers-reduced-motion: reduce){ .ccard__detalhe{ transition: none; } }
+
 /* ---------- SOB CONSULTA ---------- */
 /* O preço sai da fonte de número e volta para a de texto: "sob consulta" com
    o corpo de um preço grande fica com cara de valor, e não é. */

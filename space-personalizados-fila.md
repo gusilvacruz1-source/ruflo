@@ -157,9 +157,9 @@ Há também um **detalhe da tampa** em `caneca-termica-350-detalhe-tampa.webp`:
 macro do fecho acrílico com a trava de segurança, na cor preta. Vinha com uma
 tira de miniaturas do site do fornecedor no rodapé, que eu cortei.
 
-**O site não tem onde mostrar esse detalhe hoje.** Cada produto exibe uma foto
-por cor, e só. Se quiser, dá para o card aceitar uma segunda imagem que
-aparece ao passar o mouse ou ao tocar.
+O card já sabe mostrar essa foto: basta o produto ter `detalhe: true` e o
+arquivo se chamar `<id>-detalhe.webp`. Uma lupa aparece no canto e a imagem
+só é baixada quando alguém abre.
 
 Duas coisas que a foto de família revelou e precisam de resposta:
 

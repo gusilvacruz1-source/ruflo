@@ -129,6 +129,27 @@ uma não mexe na outra, e o nome da cor vai no texto do WhatsApp — é o que a
 Space precisa para separar o pedido. Carrinhos salvos antes disso continuam
 valendo: sem `cor`, a chave é o próprio id.
 
+### Foto de detalhe
+
+Um produto pode ter uma segunda imagem: um macro de um recurso que a foto
+principal não mostra, como a trava da tampa. Basta o campo `detalhe`:
+
+```js
+{ id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', /* … */
+  detalhe: true }
+```
+
+A imagem vai em `assets/produtos/<id>-detalhe.webp`. O card ganha uma lupa no
+canto e clicar nela troca a foto.
+
+**Ela só é baixada quando alguém abre.** A camada nasce vazia e o `background`
+só recebe a URL no primeiro clique. Um produto que ninguém abre não custa um
+byte, o que importa num site que acabou de cortar metade do peso.
+
+É um **botão**, não hover. Hover não existe em celular, e misturar hover no
+computador com toque no celular dá dois comportamentos para a mesma coisa. O
+botão funciona igual nos dois e ainda pega foco pelo teclado.
+
 ### Orçamento pelo WhatsApp
 
 O botão ORÇAMENTO abre uma gaveta lateral. O cliente escolhe produtos e

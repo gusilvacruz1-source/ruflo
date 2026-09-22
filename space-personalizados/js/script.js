@@ -287,6 +287,15 @@ const fotoDe = (p, id) => {
   const c = corDe(p, id);
   return `assets/produtos/${p.id}${c ? '-' + c.id : ''}.webp`;
 };
+/* FOTO DE DETALHE
+   Alguns produtos têm uma segunda imagem: um macro de um recurso que a foto
+   principal não mostra, como a trava da tampa. Ela mora em
+   assets/produtos/<id>-detalhe.webp e só é BAIXADA quando alguém pede para
+   ver — um site que acabou de cortar metade do peso não vai carregar uma
+   segunda foto por produto que quase ninguém abre. */
+const temDetalhe = p => !!p.detalhe;
+const fotoDetalhe = p => `assets/produtos/${p.id}-detalhe.webp`;
+
 /* Uma linha do orçamento é o produto MAIS a cor: duas cores da mesma
    caderneta são duas linhas, e não uma com o dobro da quantidade. Sem cor a
    chave continua sendo o próprio id, então os carrinhos já salvos no
@@ -384,6 +393,7 @@ const Abertura = (() => {
    ========================================================================== */
 
 const ICO = {
+  lupa: '<svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="6.5" fill="none" stroke="currentColor" stroke-width="1.7"/><path d="M15.8 15.8 21 21" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
   arrow: '<svg viewBox="0 0 24 24"><path d="M7 17 17 7M9 7h8v8" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>',
   heart: '<svg viewBox="0 0 24 24"><path d="M12 20s-7.2-4.4-7.2-9.3A4.2 4.2 0 0 1 12 7.6a4.2 4.2 0 0 1 7.2 3.1C19.2 15.6 12 20 12 20Z" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>',
   minus: '<svg viewBox="0 0 24 24"><path d="M6 12h12" stroke="currentColor" stroke-width="1.8"/></svg>',
@@ -465,6 +475,9 @@ function catalogCard(p) {
     </div>` : '';
   return `<article class="ccard" data-cat="${p.cat}" data-id="${p.id}" id="p-${p.id}"${inicial ? ` data-cor="${inicial.id}"` : ''}>
     <div class="ccard__media" data-ph="${p.ph}" data-src="${fotoDe(p, inicial && inicial.id)}">
+      ${temDetalhe(p) ? `<div class="ccard__detalhe" aria-hidden="true"></div>
+      <button type="button" class="ccard__lupa" data-detalhe="${p.id}" aria-pressed="false"
+              title="Ver detalhe"><span class="soLeitor">Ver detalhe de ${p.name}</span>${ICO.lupa}</button>` : ''}
       <div class="ccard__tags">${selo(p)}</div>
       <button class="iconbtn iconbtn--outline ccard__fav pcard__fav${fav}" data-fav="${p.id}" aria-label="Favoritar ${p.name}" aria-pressed="${!!fav}">${ICO.heart}</button>
     </div>
@@ -710,6 +723,31 @@ document.addEventListener('click', e => {
     e.preventDefault();
     const cardDoAdd = add.closest('[data-id]');
     Cart.add(add.dataset.add, qtyOfCard(add), cardDoAdd && cardDoAdd.dataset.cor);
+    return;
+  }
+
+  /* foto de detalhe: um BOTÃO, não hover. Hover não existe em celular, e
+     misturar hover no computador com toque no celular dá dois comportamentos
+     para a mesma coisa. O botão funciona igual nos dois e ainda pega foco
+     pelo teclado. */
+  const lupa = e.target.closest('[data-detalhe]');
+  if (lupa) {
+    const card = lupa.closest('[data-id]');
+    const capa = $('.ccard__detalhe', card);
+    const prod = byId(lupa.dataset.detalhe);
+    if (!capa || !prod) return;
+    const ligado = capa.classList.toggle('is-on');
+    lupa.setAttribute('aria-pressed', String(ligado));
+    lupa.classList.toggle('is-on', ligado);
+    // baixa só na primeira vez que alguém abre
+    if (ligado && !capa.dataset.pronta) {
+      capa.dataset.pronta = '1';
+      const im = new Image();
+      im.src = fotoDetalhe(prod);
+      const mostra = () => { capa.style.backgroundImage = `url("${im.src}")`; };
+      if (im.decode) im.decode().then(mostra).catch(() => { if (im.complete) mostra(); });
+      else im.onload = mostra;
+    }
     return;
   }
 
