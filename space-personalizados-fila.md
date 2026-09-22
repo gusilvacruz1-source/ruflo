@@ -176,11 +176,15 @@ Gravação: 7,5 × 4 cm
 
 ## 8. Kit Garrafa Térmica 450 ml — cód. KIT18639
 
-Foto: `assets/produtos/kit-garrafa-450.webp` ✅
+Fotos: `kit-garrafa-450-azul` `kit-garrafa-450-cinza` ✅
 
 ```js
 { id:'kit-garrafa-450', name:'Kit Garrafa Térmica 450ml', cat:'garrafas', ph:'garrafa',
   desc:'Garrafa em inox de 450 ml com base antiderrapante e duas tampas extras que viram xícaras. Acompanha sacola de papel com berço de papelão.',
+  cores:[
+    { id:'azul',  nome:'Azul',  hex:'#364c5d' },
+    { id:'cinza', nome:'Cinza', hex:'#616462' }
+  ],
   tiers:[[1, /* PREÇO */ ]] },
 ```
 
