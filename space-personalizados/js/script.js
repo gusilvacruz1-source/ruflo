@@ -4,8 +4,8 @@
    ----------------------------------------------------------------------------
    [1] CONFIG          — tudo que você precisa editar fica aqui em cima
    [2] UTILS           — helpers
-   [3] PLACEHOLDERS    — arte SVG gerada em runtime (some quando entram as fotos)
-   [4] CATALOGO        — os 18 produtos reais do catálogo Space
+   [3] ESPAÇO DA FOTO  — tom liso até a foto chegar; foto só perto da tela
+   [4] CATALOGO        — os produtos reais do catálogo Space
    [6] ABERTURA        — a nebulosa com a marca no meio + preloader
    [8] UI              — hero, filtros, favoritos, contadores, orçamento
    ========================================================================== */
@@ -461,7 +461,9 @@ const saveFavs = () => store.set('favs', [...favs]);
 function showcaseCard(p, wide) {
   const base = startPrice(p);
   const fav = favs.has(p.id) ? ' is-on' : '';
-  const media = `<div class="pcard__media" data-ph="${p.ph}" data-src="assets/produtos/${p.id}.webp"></div>`;
+  // fotoDe e nao `${p.id}.webp`: produto com cor so tem <id>-<cor>.webp, e a
+  // vitrine pedia um arquivo que nao existe - 404 e card vazio
+  const media = `<div class="pcard__media" data-ph="${p.ph}" data-src="${fotoDe(p)}"></div>`;
   const top2 = `
     <div class="pcard__top">
       <button class="iconbtn iconbtn--outline" data-add="${p.id}" aria-label="Adicionar ${p.name} ao orçamento">${ICO.arrow}</button>
@@ -744,8 +746,46 @@ function waLink(id, qty, cor) {
   const q = qty || 1;
   const u = unitPrice(p, q);
   const c = corDe(p, cor);
-  const txt = `Olá, Space! Tenho interesse em:\n\n• ${p.name}${c ? ' · ' + c.nome : ''}\n• Quantidade: ${q} uni\n• Valor de referência: ${money(u)} / uni\n\nPodem me passar o orçamento?`;
+  // sem preco na tabela nao ha valor de referencia a mandar: "R$ 0,00 / uni"
+  // no WhatsApp parecia brinde de graca
+  const ref = semPreco(p) ? '' : `\n• Valor de referência: ${money(u)} / uni`;
+  const txt = `Olá, Space! Tenho interesse em:\n\n• ${p.name}${c ? ' · ' + c.nome : ''}\n• Quantidade: ${q} uni${ref}\n\nPodem me passar o orçamento?`;
   return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
+}
+
+/* --- gaveta do orçamento ---------------------------------------------------
+   Abrir e fechar estavam escritos três vezes (botão, fundo, Esc), e nenhuma
+   das três mexia no foco: a gaveta abria e o teclado continuava no botão lá
+   atrás, com Tab passeando pela página escondida. E fechada, off-canvas, ela
+   ainda recebia Tab — os botões invisíveis dela entravam na fila.
+   Agora a gaveta fechada é `inert`; aberta, inert fica o resto da página, o
+   foco vai para o X e volta para onde estava ao fechar. */
+const FORA_DA_GAVETA = ['#cup', '#nav', '#top', '.footer', '.wafab'];
+let focoAntesDaGaveta = null;
+const gavetaAberta = () => $('#drawer').classList.contains('is-open');
+
+function abreGaveta() {
+  const d = $('#drawer');
+  focoAntesDaGaveta = document.activeElement;
+  d.inert = false;
+  d.classList.add('is-open');
+  d.setAttribute('aria-hidden', 'false');
+  document.body.classList.add('is-locked');
+  FORA_DA_GAVETA.forEach(sel => { const el = $(sel); if (el) el.inert = true; });
+  const x = $('.drawer__head [data-close]', d);
+  if (x) x.focus({ preventScroll: true });
+}
+
+function fechaGaveta() {
+  const d = $('#drawer');
+  if (!gavetaAberta()) return;
+  d.classList.remove('is-open');
+  d.setAttribute('aria-hidden', 'true');
+  document.body.classList.remove('is-locked');
+  FORA_DA_GAVETA.forEach(sel => { const el = $(sel); if (el) el.inert = false; });
+  d.inert = true;
+  if (focoAntesDaGaveta && focoAntesDaGaveta.focus) focoAntesDaGaveta.focus({ preventScroll: true });
+  focoAntesDaGaveta = null;
 }
 
 /* ============================================================================
@@ -869,7 +909,6 @@ document.addEventListener('click', e => {
   if (step) {
     const card = step.closest('.ccard');
     const input = $('input', card);
-    const p = byId(card.dataset.id);
     // campo vazio dava NaN, que o input[type=number] apagava — e os
     // botões ficavam mortos até alguém digitar um número na mão
     const cur = parseInt(input.value, 10);
@@ -912,18 +951,8 @@ document.addEventListener('click', e => {
   }
 
   /* drawer */
-  if (e.target.closest('#cartBtn') || e.target.closest('#ctaCart')) {
-    $('#drawer').classList.add('is-open');
-    $('#drawer').setAttribute('aria-hidden', 'false');
-    document.body.classList.add('is-locked');
-    return;
-  }
-  if (e.target.closest('[data-close]')) {
-    $('#drawer').classList.remove('is-open');
-    $('#drawer').setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('is-locked');
-    return;
-  }
+  if (e.target.closest('#cartBtn') || e.target.closest('#ctaCart')) { abreGaveta(); return; }
+  if (e.target.closest('[data-close]')) { fechaGaveta(); return; }
 
   /* itens do drawer */
   const q = e.target.closest('[data-q]');
@@ -939,18 +968,13 @@ document.addEventListener('click', e => {
 
 document.addEventListener('input', e => {
   if (e.target.matches('.ccard__qty input')) {
-    const p = byId(e.target.closest('.ccard').dataset.id);
     if (e.target.value !== '' && +e.target.value < 1) e.target.setAttribute('aria-invalid', 'true');
     else e.target.removeAttribute('aria-invalid');
   }
 });
 
 addEventListener('keydown', e => {
-  if (e.key === 'Escape' && $('#drawer').classList.contains('is-open')) {
-    $('#drawer').classList.remove('is-open');
-    $('#drawer').setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('is-locked');
-  }
+  if (e.key === 'Escape' && gavetaAberta()) fechaGaveta();
 });
 
 /* --- filtros --------------------------------------------------------------- */
@@ -1206,11 +1230,17 @@ function wireMagnetic() {
    a lista de cada um era escrita na mão — a loja não tem ranking de venda nem
    data de entrada de produto para sustentar nenhum dos quatro. Agora cada
    grupo é uma pergunta que o catálogo responde sozinho. */
+/* Item sob consulta tem preco 0 para as contas, e 0 e menor que 30: a aba
+   "Ate R$ 30/un" abria com uma caneca SOB CONSULTA na manchete, e a de kits
+   de churrasco, ordenada do mais barato, tambem. Quem compara preco so olha
+   para quem tem preco; em churrasco os sob consulta vao para o fim da fila. */
+const comPreco = p => !semPreco(p);
+const porPreco = (a, b) => (semPreco(a) - semPreco(b)) || (startPrice(a) - startPrice(b));
 const GRUPOS = {
-  queda:   { ordem: (a, b) => dropPct(b) - dropPct(a),           filtra: hasVolume },
-  ate30:    { ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => startPrice(p) <= 30 },
-  acima70:  { ordem: (a, b) => startPrice(b) - startPrice(a),     filtra: p => startPrice(p) > 70 },
-  churrasco:{ ordem: (a, b) => startPrice(a) - startPrice(b),     filtra: p => p.cat === 'churrasco' }
+  queda:    { ordem: (a, b) => dropPct(b) - dropPct(a),           filtra: hasVolume },
+  ate30:    { ordem: porPreco,                                     filtra: p => comPreco(p) && startPrice(p) <= 30 },
+  acima70:  { ordem: (a, b) => startPrice(b) - startPrice(a),     filtra: p => comPreco(p) && startPrice(p) > 70 },
+  churrasco:{ ordem: porPreco,                                     filtra: p => p.cat === 'churrasco' }
 };
 
 function grupo(key) {
@@ -1233,7 +1263,7 @@ function mostraDestaque(p) {
   $('#dealAdd').dataset.add = p.id;
   const media = $('#dealMedia');
   media.dataset.ph = p.ph;
-  media.dataset.src = `assets/produtos/${p.id}.webp`;
+  media.dataset.src = fotoDe(p);
   media.setAttribute('aria-label', p.name);
   paint(media);
   const card = $('#dealCard');
@@ -1243,10 +1273,31 @@ function mostraDestaque(p) {
   }
 }
 
+/* Os dois atalhos ao lado do card diziam "17 Caneca de Porcelana" e "18 Torre
+   de Xícaras", fixos no HTML: dois produtos escolhidos a mão com números que
+   não eram posição, preço nem nada. Agora são o 2º e o 3º da mesma aba, com o
+   preço da unidade no lugar do número — o card grande mostra o primeiro da
+   pergunta, os atalhos mostram quem vem logo atrás. */
+const ICO_SOBE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
+function mostraAtalhos(lista) {
+  const host = $('.vcards');
+  if (!host) return;
+  host.innerHTML = lista.slice(1, 3).map(p => `
+    <button class="vcard" data-jump="${p.id}" aria-label="Ver ${p.name} no catálogo">
+      <b>${semPreco(p) ? 'sob consulta' : money(startPrice(p))}</b><span>${p.name}</span>${ICO_SOBE}
+    </button>`).join('');
+}
+
+function mostraGrupo(key) {
+  const lista = grupo(key);
+  mostraDestaque(lista[0]);
+  mostraAtalhos(lista);
+}
+
 function wireDeals() {
-  wireFilters('#dealFilters', 'deal', key => mostraDestaque(grupo(key)[0]));
+  wireFilters('#dealFilters', 'deal', mostraGrupo);
   // o HTML já nasce com a primeira aba marcada; deixa o card de acordo com ela
-  mostraDestaque(grupo('queda')[0]);
+  mostraGrupo('queda');
 }
 
 /* ============================================================================
@@ -1255,6 +1306,7 @@ function wireDeals() {
 
 function init() {
   document.body.classList.add('is-locked');
+  $('#drawer').inert = true;
   $('#year').textContent = String(new Date().getFullYear());
 
   hydratePlaceholders();
@@ -1302,15 +1354,36 @@ function init() {
       : `${money(startPrice(p))}<i class="floatCard__each">/un</i>`;
   })();
 
-  /* Dois lugares diziam "18 itens" a mao e ficaram para tras assim que o
-     catalogo cresceu para 26. Agora os dois saem de PRODUCTS.length, entao
-     cadastrar produto ja acerta o numero sozinho. */
-  (function sincronizaContagem() {
-    const total = PRODUCTS.length;
+  /* NÚMEROS NO TEXTO
+     O texto corrido citava o catálogo à mão em sete lugares: "Dezoito itens",
+     "o copo sai a R$ 29,90 levando uma ou cem", o índice 06/03/04/02/02/01,
+     "CATÁLOGO 2025 · 18 ITENS"... O catálogo cresceu para 26 e o copo foi
+     para R$ 49,99, e o texto continuou jurando o contrário. Agora quem cita
+     o catálogo pergunta a ele:
+       data-conta="produtos" | "<categoria>"   quantos itens (data-pad: 2 dígitos)
+       data-preco="<id>" [data-qtd="N"|"melhor"] preço da unidade naquela faixa
+       data-lote="<id>"                          quantas peças para o melhor preço
+     O número escrito no HTML fica só para quem abrir sem JavaScript. */
+  (function amarraTextoAoCatalogo() {
+    $$('[data-conta]').forEach(el => {
+      const k = el.dataset.conta;
+      const n = k === 'produtos' ? PRODUCTS.length : PRODUCTS.filter(p => p.cat === k).length;
+      el.textContent = 'pad' in el.dataset ? String(n).padStart(2, '0') : String(n);
+    });
+    $$('[data-preco]').forEach(el => {
+      const p = byId(el.dataset.preco);
+      if (!p) return;
+      if (semPreco(p)) { el.textContent = 'sob consulta'; return; }
+      const q = el.dataset.qtd;
+      el.textContent = money(q === 'melhor' ? bestPrice(p) : unitPrice(p, Number(q) || 1));
+    });
+    $$('[data-lote]').forEach(el => {
+      const p = byId(el.dataset.lote);
+      if (p && !semPreco(p)) el.textContent = String(bestQty(p));
+    });
+    // o contador animado lê o alvo de data-count-to, não do texto
     const contador = $('#contaProdutos');
-    if (contador) contador.dataset.countTo = String(total);
-    const noTexto = $('#statItens');
-    if (noTexto) noTexto.textContent = String(total);
+    if (contador) contador.dataset.countTo = String(PRODUCTS.length);
   })();
 
   HeroSlider.init();

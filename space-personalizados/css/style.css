@@ -197,6 +197,12 @@ svg{ display: block; }
 [data-theme="paper"] .pill--filter.is-active,
 [data-theme="paper-deep"] .pill--filter.is-active{ --btn-bg: var(--ink); color: var(--paper); --btn-line: var(--ink); }
 
+/* O ícone da sacola do ORÇAMENTO não tinha tamanho nenhum: um <svg> só com
+   viewBox, dentro de flex, encolhe a zero. Media 0x0 em toda largura de
+   tela — e no celular, onde o texto some, o botão virava uma pílula vazia
+   com um número dentro. */
+#cartBtn svg{ width: 18px; height: 18px; flex: none; }
+
 .badge{
   display: inline-grid; place-items: center;
   min-width: 20px; height: 20px; padding-inline: 6px; margin-left: 4px;
@@ -419,13 +425,16 @@ body.is-locked{ overflow: hidden; }
    página fixa pode pedir. Fundo sólido entrega a mesma leitura. */
 .nav.is-stuck{
   padding-block: 11px;
-  background: color-mix(in srgb, var(--ink) 92%, transparent);
+  /* Opaco de verdade. A 92% sem desfoque não sobra vidro nenhum, só o que
+     passa por baixo aparecendo em marca-d'água: no celular o coração de um
+     card surgia ao lado do botão de menu, como se fosse um ícone solto. */
+  background: var(--ink);
   border-bottom-color: var(--hairline);
 }
 /* Sobre as seções claras o cabeçalho inverte. */
 .nav.is-light{ color: var(--ink); }
 .nav.is-light.is-stuck{
-  background: color-mix(in srgb, var(--paper) 94%, transparent);
+  background: var(--paper);
   border-bottom-color: var(--hairline-d);
 }
 .nav.is-light .iconbtn, .nav.is-light .pill--ghost{ border-color: var(--hairline-d); }
@@ -485,6 +494,11 @@ body.is-locked{ overflow: hidden; }
      ela fica só com o ícone e o contador. */
   #cartBtn .pill__txt{ display: none; }
   #cartBtn{ padding-inline: 14px; }
+  /* No largo quem empurra os botões para a direita é o menu, com margem
+     automática dos dois lados. Aqui o menu vira tela cheia fixa e sai do
+     fluxo, então os botões ficavam colados na marca com 80 px vazios à
+     direita. */
+  .nav__actions{ margin-left: auto; }
 }
 
 /* ---------- 13. HERO ---------- */
@@ -1096,8 +1110,16 @@ body.is-locked{ overflow: hidden; }
 .drawer__head h2{ font-size: 1.625rem; letter-spacing: -.02em; }
 .drawer__body{ flex: 1; overflow-y: auto; padding: 20px var(--pad-x); }
 .drawer__empty{ color: var(--muted); font-size: .9375rem; padding-block: 34px; }
-.ditem{ padding-block: 18px; border-bottom: 1px solid var(--hairline); }
-.ditem__row{ display: grid; grid-template-columns: 62px minmax(0,1fr); gap: 14px; }
+/* A grade de duas colunas (miniatura | texto) estava na .ditem__row, que no
+   HTML é a linha de dentro com quantidade e preço. Resultado: a miniatura,
+   filha direta do .ditem, ficava sem largura e sumia (0x0), e o seletor de
+   quantidade era espremido na coluna de 62px e o + vazava para fora da
+   pílula. A grade volta para o .ditem e a linha vira uma fileira comum. */
+.ditem{
+  display: grid; grid-template-columns: 62px minmax(0,1fr); gap: 14px; align-items: start;
+  padding-block: 18px; border-bottom: 1px solid var(--hairline);
+}
+.ditem__row{ display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .ditem__thumb{ aspect-ratio: 1; border-radius: 6px; background-color: var(--ink-soft); }
 .ditem__thumb.has-photo{ background-size: contain !important; }
 .ditem__body{ min-width: 0; }
@@ -1105,7 +1127,7 @@ body.is-locked{ overflow: hidden; }
 .ditem__meta{ font-size: .75rem; color: var(--muted); margin-bottom: 10px; }
 .ditem__qty{ display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--hairline); border-radius: 999px; padding: 3px; }
 .ditem__qty button{ width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; }
-.ditem__qty span{ min-width: 30px; text-align: center; font-size: .8125rem; font-variant-numeric: tabular-nums; }
+.ditem__qty b{ min-width: 30px; text-align: center; font-size: .8125rem; font-variant-numeric: tabular-nums; }
 .ditem__price{ font-size: 1.125rem; letter-spacing: -.02em; }
 .ditem__del{ margin-top: 8px; }
 .ditem__del:hover{ color: var(--brass); }
