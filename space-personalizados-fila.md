@@ -149,6 +149,18 @@ visível só sobre card escuro.
 
 Não confundir com a `caneca-termica-700` já cadastrada nem com a de 1,2 L.
 
+Há também uma **foto de família** com as cores juntas, em
+`caneca-termica-350-familia.webp`. Não serve para recorte (as peças se
+sobrepõem e apoiam em suportes), mas serve de imagem de seção.
+
+Duas coisas que essa foto revelou e precisam de resposta:
+
+1. **Existe uma cor AZUL** (aproximadamente `#0e439a`) que não veio em foto
+   solta. Se quiser essa cor no site, preciso da foto individual dela.
+2. **Existe uma versão SEM ALÇA**, mais baixa, que aparece em verde e azul na
+   mesma foto. É outro produto, não outra cor desta caneca. Se for para
+   vender, precisa de código, ficha e fotos próprias.
+
 Ficha: 11,6 cm de altura · 11,9 cm de largura · circunferência 27,6 cm · 299 g
 Gravação: 7,5 × 4 cm
 
