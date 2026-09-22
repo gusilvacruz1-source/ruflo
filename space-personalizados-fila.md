@@ -123,23 +123,24 @@ Gravação: 7,5 × 6 cm
 
 ---
 
-## 7. Caneca Térmica 350 ml — cód. 06061 — com cores
+## 7. Caneca Térmica 350 ml — cód. 06061 — três cores
 
-Fotos: `caneca-termica-350-cinza.webp` ✅ · branca **não dá para recortar**
+Fotos: `caneca-termica-350-cinza` `-preto` `-branco` ✅
 
-A branca tem a alça branca medindo exatamente 255, o mesmo valor do fundo da
-foto: nenhum limiar separa dois números iguais. Pelo brilho a alça rasga; com
-a aresta de represa ela fica inteira mas sobra halo; comendo o halo, a
-passagem atravessa a tampa. Precisa de outra foto dessa cor. A cinza não tem
-o problema, porque a alça destaca do fundo.
+A branca deu trabalho: a alça é branca sobre fundo branco. Na primeira foto
+ela media exatamente 255, o mesmo valor do fundo, e não havia recorte
+possível. A segunda foto tem contorno na alça (mínimo 219), e com a aresta
+usada como represa mais um corte por área (o vão da alça tem 8.556 px e os
+realces do inox, 436 e 354) ela saiu. Resta um contorno claro fino na base,
+visível só sobre card escuro.
 
 ```js
 { id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', cat:'copos', ph:'caneca',
   desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança.',
   cores:[
-    { id:'cinza',  nome:'Cinza',  hex:'#5d6061' },
-    { id:'preto',  nome:'Preto',  hex:'#2f3132' }
-    // { id:'branco', nome:'Branco', hex:'#e6e6e6' }  ← falta foto que recorte
+    { id:'cinza',  nome:'Cinza',  hex:'#5c5f5f' },
+    { id:'preto',  nome:'Preto',  hex:'#333535' },
+    { id:'branco', nome:'Branco', hex:'#e2e2e4' }
   ],
   tiers:[[1, /* PREÇO */ ]] },
 ```

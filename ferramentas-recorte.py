@@ -13,7 +13,7 @@ from PIL import Image, ImageFilter
 from scipy import ndimage
 
 def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
-            represa=False, franja=2, sombra=0):
+            represa=False, franja=2, sombra=0, vao_min=40, sombra_base=0.0):
     """represa: usa a aresta como barreira do preenchimento. So e preciso
     quando a peca tem parte BRANCA encostando no fundo branco - a alca da
     caneca termica de 350 ml mede 255, igual ao fundo, e sem a represa ela
@@ -65,10 +65,18 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
     cor_borda = a[fundo].mean(axis=0) if fundo.any() else np.array([255., 255., 255.])
     for r in range(1, n + 1):
         reg = regioes == r
-        if fundo[reg].any() or reg.sum() < 40:
+        if fundo[reg].any() or reg.sum() < vao_min:
             continue
         px = a[reg]
-        if px.std() < 2.0 and np.abs(px.mean(axis=0) - cor_borda).max() < 3.0:
+        # Duas peneiras, e as duas foram precisas.
+        # O desvio separa fundo de superficie: fundo de estudio e chapado,
+        # produto tem sombreado. Um realce do inox media 1,96 com o limite em
+        # 2,0 e passava raspando; o vao da alca, que e fundo de verdade, mede
+        # 0,75. Dai 1,2.
+        # A AREA separa o que o desvio nao separa: na caneca BRANCA os realces
+        # chapados tambem sao lisos E da cor do fundo (436 e 354 px), enquanto
+        # o vao da alca tem 8.556. Por isso vao_min existe como parametro.
+        if px.std() < 1.2 and np.abs(px.mean(axis=0) - cor_borda).max() < 3.0:
             fundo |= reg
 
     # A represa cobra um preco: o anel de pixels da propria aresta nunca entra
@@ -83,6 +91,14 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
     # entao alguns passos de crescimento sobre cinza claro a levam embora.
     if sombra:
         claro_cinza = (a.min(axis=2) >= 205) & (a.max(axis=2) - a.min(axis=2) <= 14)
+        # Peca CLARA nao aceita a limpeza no quadro inteiro: o corpo da caneca
+        # branca esta acima do piso de 205 e seria comido pelas beiradas. Mas a
+        # sombra de contato mora EMBAIXO da peca, entao basta restringir a
+        # limpeza a essa faixa. sombra_base=0.16 = so os 16% de baixo.
+        if sombra_base:
+            faixa = np.zeros(claro_cinza.shape, bool)
+            faixa[int(claro_cinza.shape[0] * (1 - sombra_base)):, :] = True
+            claro_cinza &= faixa
         for _ in range(sombra):
             fundo |= ndimage.binary_dilation(fundo) & claro_cinza
 
@@ -91,6 +107,13 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
         for _ in range(franja):
             fundo |= ndimage.binary_dilation(fundo) & claro
 
+    # NOTA sobre a franja que a represa deixa em peca clara: o anel e feito de
+    # pixels de GRADIENTE, abaixo do limiar de claro, entao a dilatacao da
+    # franja nao avanca sobre eles. Tentei encolher a silhueta em 1 e 2 px para
+    # descartar o anel inteiro: funciona na peca, mas come a alca, que e fina e
+    # perde metade da espessura. Nao ha parametro para isso porque nao houve
+    # valor que servisse - em peca branca sobre fundo branco fica um contorno
+    # claro fino na base, visivel so sobre card escuro.
     alfa = np.where(fundo, 0, 255).astype(np.uint8)
     # tira pontinhos soltos que sobraram de sombra suave
     alfa = ndimage.binary_closing(alfa > 0, np.ones((3, 3))).astype(np.uint8) * 255
