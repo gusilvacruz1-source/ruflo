@@ -1,12 +1,32 @@
-# Fila de cadastro — Space Personalizados
+# Fichas dos produtos — Space Personalizados
 
-Produtos extraídos dos prints do fornecedor. **Fotos prontas, faltam os preços.**
-Assim que os valores chegarem, é preencher `tiers` e colar em `PRODUCTS`,
-no `js/script.js`.
+**Os 8 produtos abaixo JÁ ESTÃO no site**, cadastrados como *sob consulta*:
+sem preço na tela, o valor sai por orçamento no WhatsApp. Quando os preços
+chegarem, é preencher `tiers` em cada um no `js/script.js` e o card passa a
+mostrar valor e faixas sozinho.
+
+O que este arquivo guarda a partir de agora são as **fichas técnicas**:
+códigos de fornecedor, medidas, área de gravação e as ressalvas de cada
+peça — informação que não cabe no card mas que você precisa na hora de
+orçar.
 
 Este arquivo mora FORA da pasta do site de propósito: ele tem códigos de
 fornecedor, e a pasta `space-personalizados/` inteira vai para o ar no
 GitHub Pages.
+
+## Pendências que precisam de você
+
+1. **Preço dos 8.** Enquanto não vierem, todos ficam como sob consulta.
+2. **"Acima de 10"** nos copos: li como *a partir de 10*. Num pedido de
+   exatamente dez copos a diferença é R$ 250.
+3. **Kit churrasco de 5 peças:** cadastrei o novo (sem espetos) ao lado do
+   antigo (com dois espetos). São SKUs diferentes. Se for para o novo
+   substituir o antigo, é só dizer que eu tiro o velho.
+4. **Caneca 350 ml:** falta a foto solta da cor **azul** (`#0e439a`), que só
+   apareceu na foto de família. E a **versão sem alça** da mesma foto é outro
+   produto — precisa de código, ficha e fotos próprias.
+5. **Kit garrafa:** o fornecedor só informa a área de gravação **da
+   embalagem**. Se a personalização for na garrafa, confirme a área.
 
 ---
 

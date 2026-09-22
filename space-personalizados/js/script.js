@@ -202,6 +202,29 @@ const PRODUCTS = [
     desc:'Jogo de xícaras com suporte em metal, presente corporativo de alto impacto.',
     tiers:[[1,70.00],[20,68.00],[25,65.00]] },
 
+  { id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', cat:'copos', ph:'caneca',
+    desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança.',
+    detalhe:true,
+    cores:[
+      { id:'cinza',    nome:'Cinza',    hex:'#5c5f5f' },
+      { id:'preto',    nome:'Preto',    hex:'#333535' },
+      { id:'branco',   nome:'Branco',   hex:'#e2e2e4' },
+      { id:'verde',    nome:'Verde',    hex:'#435030' },
+      { id:'vermelho', nome:'Vermelho', hex:'#a02d35' }
+    ] },
+
+  { id:'caneca-termica-1200', name:'Caneca Térmica 1,2L', cat:'copos', ph:'caneca',
+    desc:'Inox 304 de parede dupla, tampa acrílica rosqueável com bico flexível e pegador plástico. Acompanha canudo.',
+    cores:[
+      { id:'petroleo',   nome:'Azul petróleo', hex:'#3e5968' },
+      { id:'azul-claro', nome:'Azul claro',    hex:'#a7cedf' },
+      { id:'branco',     nome:'Branco',        hex:'#e2e1e1' },
+      { id:'preto',      nome:'Preto',         hex:'#1b1b1b' }
+    ] },
+
+  { id:'caneca-inox-180', name:'Caneca Inox 180ml', cat:'copos', ph:'caneca',
+    desc:'Caneca em inox de 180 ml com cabo e tampa em plástico resistente. Não é térmica.' },
+
   { id:'garrafa-500', name:'Garrafa Térmica 500ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 500 ml com infusor para chá.',
     tiers:[[1,29.90]] },
@@ -213,6 +236,18 @@ const PRODUCTS = [
   { id:'garrafa-aluminio-600', name:'Garrafa em Alumínio 600ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa esportiva em alumínio de 600 ml, gravada a laser.',
     tiers:[[1,44.90],[20,42.90],[50,39.90]] },
+
+  { id:'kit-garrafa-450', name:'Kit Garrafa Térmica 450ml', cat:'garrafas', ph:'garrafa',
+    desc:'Garrafa em inox de 450 ml com base antiderrapante e duas tampas extras que viram xícaras. Acompanha sacola de papel com berço de papelão.',
+    detalhe:true,
+    cores:[
+      { id:'azul',  nome:'Azul',  hex:'#364c5d' },
+      { id:'cinza', nome:'Cinza', hex:'#616462' },
+      { id:'inox',  nome:'Inox',  hex:'#bfbeb8' },
+      { id:'preto', nome:'Preto', hex:'#2c2d31' },
+      { id:'rose',  nome:'Rosé',  hex:'#d6b3a2' },
+      { id:'verde', nome:'Verde', hex:'#7d9d80' }
+    ] },
 
   { id:'churrasco-5', name:'Kit Churrasco 5 Peças', cat:'churrasco', ph:'churrasco',
     desc:'Garfo, faca, pegador, espátula, pincel e espetos. Acompanha bolsa.',
@@ -230,6 +265,15 @@ const PRODUCTS = [
     desc:'Garfo e faca de 8 polegadas, acompanha caixa para presente.',
     tiers:[[1,75.90],[10,55.90]] },
 
+  { id:'churrasco-5-nylon', name:'Kit Churrasco 5 Peças · Nylon', cat:'churrasco', ph:'churrasco',
+    desc:'Faca de 6 polegadas, garfo, espátula, pincel com cerdas de silicone e pegador em inox, em estojo de nylon com par de alças. Acompanha placa metálica personalizável.' },
+
+  { id:'churrasco-4-nylon', name:'Kit Churrasco 4 Peças · Nylon', cat:'churrasco', ph:'churrasco',
+    desc:'Espátula, garfo, pegador e faca de 7 polegadas em inox com cabo de madeira, em estojo de nylon. Acompanha plaquinha metálica personalizável.' },
+
+  { id:'churrasco-3', name:'Kit Churrasco 3 Peças', cat:'churrasco', ph:'churrasco',
+    desc:'Faca de 8 polegadas, garfo de duas pontas e pegador em inox com detalhes em madeira, em estojo de nylon com alça. Acompanha plaquinha adesiva personalizável.' },
+
   { id:'canivete-inox', name:'Canivete Inox com Presilha', cat:'canivetes', ph:'canivete',
     desc:'Canivete em aço inox com presilha de bolso e gravação a laser.',
     tiers:[[1,99.90],[10,49.90]] },
@@ -237,6 +281,15 @@ const PRODUCTS = [
   { id:'canivete-aco', name:'Canivete com Lâmina de Aço', cat:'canivetes', ph:'canivete',
     desc:'Lâmina de aço com cabo ergonômico, ideal para brinde masculino.',
     tiers:[[1,69.90],[10,39.90]] },
+
+  { id:'caderneta', name:'Caderneta Couro Sintético', cat:'escritorio', ph:'caneta',
+    desc:'Capa em couro sintético com plaquinha metálica personalizável, porta-canetas lateral e marca-páginas em fita de cetim. Cerca de 96 folhas pautadas.',
+    cores:[
+      { id:'preto',    nome:'Preto',    hex:'#433f42' },
+      { id:'azul',     nome:'Azul',     hex:'#374e6a' },
+      { id:'caramelo', nome:'Caramelo', hex:'#8c5633' },
+      { id:'cinza',    nome:'Cinza',    hex:'#8b887f' }
+    ] },
 
   { id:'caneta-metal', name:'Caneta Esferográfica em Metal', cat:'escritorio', ph:'caneta',
     desc:'Caneta em metal escovado com gravação a laser da sua marca.',
@@ -773,6 +826,19 @@ document.addEventListener('click', e => {
       media.classList.remove('has-photo');
       paint(media);
     }
+    /* A foto de detalhe e uma so para o produto inteiro, nao uma por cor. Com
+       ela aberta, trocar a bolinha deixava a bolinha dizendo VERDE e a foto
+       mostrando o azul - o cliente escolhe uma cor e ve outra. Trocar de cor
+       fecha o detalhe e devolve o card para a foto da cor escolhida. */
+    const capaDet = $('.ccard__detalhe', card);
+    if (capaDet && capaDet.classList.contains('is-on')) {
+      capaDet.classList.remove('is-on');
+      const lupaDoCard = $('[data-detalhe]', card);
+      if (lupaDoCard) {
+        lupaDoCard.classList.remove('is-on');
+        lupaDoCard.setAttribute('aria-pressed', 'false');
+      }
+    }
     return;
   }
 
@@ -1234,6 +1300,17 @@ function init() {
     alvo.innerHTML = semPreco(p)
       ? 'sob consulta'
       : `${money(startPrice(p))}<i class="floatCard__each">/un</i>`;
+  })();
+
+  /* Dois lugares diziam "18 itens" a mao e ficaram para tras assim que o
+     catalogo cresceu para 26. Agora os dois saem de PRODUCTS.length, entao
+     cadastrar produto ja acerta o numero sozinho. */
+  (function sincronizaContagem() {
+    const total = PRODUCTS.length;
+    const contador = $('#contaProdutos');
+    if (contador) contador.dataset.countTo = String(total);
+    const noTexto = $('#statItens');
+    if (noTexto) noTexto.textContent = String(total);
   })();
 
   HeroSlider.init();
