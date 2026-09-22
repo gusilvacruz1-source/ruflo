@@ -123,7 +123,7 @@ Gravação: 7,5 × 6 cm
 
 ---
 
-## 7. Caneca Térmica 350 ml — com cores
+## 7. Caneca Térmica 350 ml — cód. 06061 — com cores
 
 Fotos: `caneca-termica-350-cinza.webp` ✅ · branca **não dá para recortar**
 
