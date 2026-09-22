@@ -13,7 +13,8 @@ from PIL import Image, ImageFilter
 from scipy import ndimage
 
 def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
-            represa=False, franja=2, sombra=0, vao_min=40, sombra_base=0.0):
+            represa=False, franja=2, sombra=0, vao_min=40, sombra_base=0.0,
+            sombra_piso=205):
     """represa: usa a aresta como barreira do preenchimento. So e preciso
     quando a peca tem parte BRANCA encostando no fundo branco - a alca da
     caneca termica de 350 ml mede 255, igual ao fundo, e sem a represa ela
@@ -89,8 +90,17 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
     # como mancha clara colada na base. Ela e cinza e MUITO mais clara que
     # qualquer parte pintada da peca - o corpo da caneca cinza esta em 85 -,
     # entao alguns passos de crescimento sobre cinza claro a levam embora.
+    # O piso de 205 serve para peca clara, onde ele e a unica coisa que impede
+    # a limpeza de entrar na peca. No kit de garrafa PRETO nao ha nada claro na
+    # peca, e a sombra de contato desce ate 155 - com o piso em 205 a dilatacao
+    # parava no meio dela e sobrava uma cunha cinza colada na base do saco, bem
+    # visivel sobre o card escuro. Baixar o piso so e seguro junto com
+    # sombra_base, que limita a limpeza a faixa onde a sombra mora: no kit a
+    # sombra comeca em y=466 de 520 e o aro de inox mais baixo das xicaras para
+    # em y=460, entao sombra_base=0.11 passa entre os dois.
     if sombra:
-        claro_cinza = (a.min(axis=2) >= 205) & (a.max(axis=2) - a.min(axis=2) <= 14)
+        claro_cinza = ((a.min(axis=2) >= sombra_piso)
+                       & (a.max(axis=2) - a.min(axis=2) <= 14))
         # Peca CLARA nao aceita a limpeza no quadro inteiro: o corpo da caneca
         # branca esta acima do piso de 205 e seria comido pelas beiradas. Mas a
         # sombra de contato mora EMBAIXO da peca, entao basta restringir a
@@ -203,8 +213,17 @@ def corta(entrada, saida, lado=720, folga=0.055, vao_min=3000, suavizar=1.0, som
 
     # sombra de contato: cinza claro colado na base, que a silhueta abraca
     # junto. Cresce o lado de fora sobre cinza claro e ela sai.
+    # O piso de 205 serve para peca clara, onde ele e a unica coisa que impede
+    # a limpeza de entrar na peca. No kit de garrafa PRETO nao ha nada claro na
+    # peca, e a sombra de contato desce ate 155 - com o piso em 205 a dilatacao
+    # parava no meio dela e sobrava uma cunha cinza colada na base do saco, bem
+    # visivel sobre o card escuro. Baixar o piso so e seguro junto com
+    # sombra_base, que limita a limpeza a faixa onde a sombra mora: no kit a
+    # sombra comeca em y=466 de 520 e o aro de inox mais baixo das xicaras para
+    # em y=460, entao sombra_base=0.11 passa entre os dois.
     if sombra:
-        claro_cinza = (a.min(axis=2) >= 205) & (a.max(axis=2) - a.min(axis=2) <= 14)
+        claro_cinza = ((a.min(axis=2) >= sombra_piso)
+                       & (a.max(axis=2) - a.min(axis=2) <= 14))
         fora = ~dentro
         for _ in range(sombra):
             fora |= ndimage.binary_dilation(fora) & claro_cinza
