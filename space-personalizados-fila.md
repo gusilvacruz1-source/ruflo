@@ -1,6 +1,6 @@
 # Fichas dos produtos — Space Personalizados
 
-**Os 8 produtos abaixo JÁ ESTÃO no site**, cadastrados como *sob consulta*:
+**Os 9 produtos abaixo JÁ ESTÃO no site**, cadastrados como *sob consulta*:
 sem preço na tela, o valor sai por orçamento no WhatsApp. Quando os preços
 chegarem, é preencher `tiers` em cada um no `js/script.js` e o card passa a
 mostrar valor e faixas sozinho.
@@ -16,7 +16,7 @@ GitHub Pages.
 
 ## Pendências que precisam de você
 
-1. **Preço dos 8.** Enquanto não vierem, todos ficam como sob consulta.
+1. **Preço dos 9.** Enquanto não vierem, todos ficam como sob consulta.
 2. **"Acima de 10"** nos copos: li como *a partir de 10*. Num pedido de
    exatamente dez copos a diferença é R$ 250.
 3. **Kit churrasco de 5 peças:** cadastrei o novo (sem espetos) ao lado do
@@ -217,6 +217,23 @@ Gravação: embalagem 19 × 15,5 cm
 
 Atenção na gravação: o fornecedor só informa medida **da embalagem**, não da
 garrafa. Se a personalização for na garrafa, vale confirmar a área.
+
+---
+
+## 9. Garrafa Térmica 800 ml · Base de Silicone — preta
+
+Foto: `assets/produtos/garrafa-800-silicone.webp` ✅ · **já no site, sob consulta**
+
+Veio de print de anúncio do Mercado Livre: "Kit 50 Garrafa Térmica 800 Ml Com
+Base Silicone Cor Preta", loja **Invictopresentes**, **R$ 1.399 o kit de 50**
+(R$ 27,98 a unidade). O valor ficou fora do site a pedido.
+
+É um modelo diferente da `garrafa-800` que já estava cadastrada: aquela tem
+tampa com trava lateral; esta tem tampa com bico, alça na tampa e base de
+silicone. Ficha do anúncio: exterior e interior em aço inox, cor preta.
+
+A foto é a do anúncio dessa loja. Se tiver foto própria ou do fornecedor
+direto, vale trocar.
 
 ---
 

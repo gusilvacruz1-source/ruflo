@@ -14,7 +14,7 @@ from scipy import ndimage
 
 def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
             represa=False, franja=2, sombra=0, vao_min=40, sombra_base=0.0,
-            sombra_piso=205):
+            sombra_piso=205, desvio_max=1.2, desfranja=0):
     """represa: usa a aresta como barreira do preenchimento. So e preciso
     quando a peca tem parte BRANCA encostando no fundo branco - a alca da
     caneca termica de 350 ml mede 255, igual ao fundo, e sem a represa ela
@@ -77,7 +77,13 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
         # A AREA separa o que o desvio nao separa: na caneca BRANCA os realces
         # chapados tambem sao lisos E da cor do fundo (436 e 354 px), enquanto
         # o vao da alca tem 8.556. Por isso vao_min existe como parametro.
-        if px.std() < 1.2 and np.abs(px.mean(axis=0) - cor_borda).max() < 3.0:
+        # desvio_max: 1.2 vale para foto de estudio limpa. Print de anuncio
+        # (Mercado Livre, JPEG recomprimido) tem ruido de compressao ate no
+        # fundo liso: o vao da alca da garrafa de 800 ml com base de silicone
+        # media 1.38 com a cor a 0.53 do fundo - era fundo, e ficava cinza
+        # dentro da alca. Nesses prints, 1.6 com vao_min alto pra nao abrir
+        # realce de metal.
+        if px.std() < desvio_max and np.abs(px.mean(axis=0) - cor_borda).max() < 3.0:
             fundo |= reg
 
     # A represa cobra um preco: o anel de pixels da propria aresta nunca entra
@@ -127,9 +133,25 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
     alfa = np.where(fundo, 0, 255).astype(np.uint8)
     # tira pontinhos soltos que sobraram de sombra suave
     alfa = ndimage.binary_closing(alfa > 0, np.ones((3, 3))).astype(np.uint8) * 255
+    # DESFRANJA. Peca escura sobre fundo claro deixa um contorno de pixels
+    # meio-a-meio: na garrafa preta de 800 ml os 2 px da borda tinham brilho
+    # 116 contra 37 do corpo, e sobre card escuro isso vira um fio branco em
+    # volta da peca. Encolher a silhueta resolveria e comeria a alca (ver a
+    # nota acima); aqui a silhueta fica igual e so a COR da faixa de borda e
+    # trocada pela do pixel de dentro mais proximo. Desligado por padrao: em
+    # peca clara a borda clara e a propria peca.
+    rgb = np.asarray(im).copy()
+    if desfranja:
+        solido = alfa > 0
+        miolo = ndimage.binary_erosion(solido, iterations=desfranja)
+        if miolo.any():
+            _, (iy, ix) = ndimage.distance_transform_edt(~miolo, return_indices=True)
+            faixa = solido & ~miolo
+            rgb[faixa] = rgb[iy[faixa], ix[faixa]]
+
     alfa = np.asarray(Image.fromarray(alfa).filter(ImageFilter.GaussianBlur(0.6)))
 
-    rgba = np.dstack([np.asarray(im), alfa])
+    rgba = np.dstack([rgb, alfa])
     corte = Image.fromarray(rgba, 'RGBA')
     caixa = corte.getbbox()
     if not caixa:

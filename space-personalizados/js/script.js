@@ -233,6 +233,9 @@ const PRODUCTS = [
     desc:'Garrafa térmica de 800 ml com tampa rosqueável e vedação reforçada.',
     tiers:[[1,49.90]] },
 
+  { id:'garrafa-800-silicone', name:'Garrafa Térmica 800ml · Base de Silicone', cat:'garrafas', ph:'garrafa',
+    desc:'Aço inox por dentro e por fora, tampa com bico e alça, e base de silicone. Na cor preta.' },
+
   { id:'garrafa-aluminio-600', name:'Garrafa em Alumínio 600ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa esportiva em alumínio de 600 ml, gravada a laser.',
     tiers:[[1,44.90],[20,42.90],[50,39.90]] },
