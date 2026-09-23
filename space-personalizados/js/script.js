@@ -243,6 +243,10 @@ const PRODUCTS = [
     desc:'Garrafa térmica de 500 ml com infusor para chá.',
     tiers:[[1,29.90]] },
 
+  { id:'garrafa-led', name:'Garrafa Térmica LED 500ml', cat:'garrafas', ph:'garrafa',
+    desc:'Inox por dentro e por fora, com visor de LED na tampa que mostra a temperatura da bebida. Na cor preta.',
+    tiers:[[1,49.00],[10,29.90],[50,27.90],[100,25.90]] },
+
   { id:'garrafa-800', name:'Garrafa Térmica 800ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa térmica de 800 ml com tampa rosqueável e vedação reforçada.',
     tiers:[[1,49.90]] },

@@ -1,10 +1,10 @@
 # Fichas dos produtos — Space Personalizados
 
-**Os 10 produtos abaixo JÁ ESTÃO no site.** O copo long neck entrou com
-preço; os outros 9 estão *sob consulta*: sem preço na tela, o valor sai por
-orçamento no WhatsApp. Quando os preços
-chegarem, é preencher `tiers` em cada um no `js/script.js` e o card passa a
-mostrar valor e faixas sozinho.
+**Os 11 produtos abaixo JÁ ESTÃO no site.** O copo long neck e a garrafa
+LED entraram com preço; os outros 9 estão *sob consulta*: sem preço na tela,
+o valor sai por orçamento no WhatsApp. Quando os preços chegarem, é
+preencher `tiers` em cada um no `js/script.js` e o card passa a mostrar valor
+e faixas sozinho.
 
 O que este arquivo guarda a partir de agora são as **fichas técnicas**:
 códigos de fornecedor, medidas, área de gravação e as ressalvas de cada
@@ -279,6 +279,24 @@ personalização até funciona, mas é o selo de outra loja.
 
 ---
 
+## 11. Garrafa Térmica LED 500 ml — preta
+
+Foto: `assets/produtos/garrafa-led.webp` ✅ · **já no site, COM PREÇO**
+
+Veio de print de anúncio do Mercado Livre ("Kit 10 Garrafas Térmica 500ml
+Inox Termometro Digital Preto", loja **Invictopresentes**, **R$ 171,19 o kit
+de 10** — R$ 17,12 a unidade). É a "Garrafa LED" da sua lista de preços:
+49,00 · 29,90 a partir de 10 · 27,90 a partir de 50 · 25,90 a partir de 100.
+
+**Não é a `garrafa-500`** que já estava no site (R$ 29,90, foto na mão com a
+gravação da Klabin): as duas são pretas, finas e de 500 ml, mas você
+confirmou que são produtos diferentes. As duas ficam no catálogo.
+
+A foto mostra a garrafa e a tampa ao lado com o visor em "58°C"; o recorte
+manteve as duas peças.
+
+---
+
 ## Preços recebidos sem produto ainda
 
 Chegaram antes das fotos e das descrições. Ficam aqui até o produto existir.
@@ -292,7 +310,6 @@ num pedido de exatamente 10 copos a diferença é de R$ 250.
 |---|---|---|---|---|
 | Caneca chopp 810 ml | 69,90 | 49,90 | 48,90 | 45,90 |
 | Copo cuia | 49,99 | 29,90 | 28,90 | 25,90 |
-| Garrafa LED | 49,00 | 29,90 | 27,90 | 25,90 |
 
 ```js
 // prontos para colar assim que houver foto e descrição
@@ -300,12 +317,7 @@ num pedido de exatamente 10 copos a diferença é de R$ 250.
   desc:'', tiers:[[1,69.90],[10,49.90],[50,48.90],[100,45.90]] },
 { id:'copo-cuia',        name:'Copo Cuia',           cat:'copos',    ph:'copo',
   desc:'', tiers:[[1,49.99],[10,29.90],[50,28.90],[100,25.90]] },
-{ id:'garrafa-led',      name:'Garrafa LED',         cat:'garrafas', ph:'garrafa',
-  desc:'', tiers:[[1,49.00],[10,29.90],[50,27.90],[100,25.90]] },
 ```
-
-A "Garrafa LED" veio duas vezes na mensagem, com os mesmos valores. Tratei
-como um produto só.
 
 ---
 
