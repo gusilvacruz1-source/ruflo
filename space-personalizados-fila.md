@@ -1,7 +1,7 @@
 # Fichas dos produtos — Space Personalizados
 
-**Os 11 produtos abaixo JÁ ESTÃO no site.** O copo long neck e a garrafa
-LED entraram com preço; os outros 9 estão *sob consulta*: sem preço na tela,
+**Os 12 produtos abaixo JÁ ESTÃO no site.** O copo long neck, a garrafa
+LED e o copo 360 com tampa entraram com preço; os outros 9 estão *sob consulta*: sem preço na tela,
 o valor sai por orçamento no WhatsApp. Quando os preços chegarem, é
 preencher `tiers` em cada um no `js/script.js` e o card passa a mostrar valor
 e faixas sozinho.
@@ -294,6 +294,31 @@ confirmou que são produtos diferentes. As duas ficam no catálogo.
 
 A foto mostra a garrafa e a tampa ao lado com o visor em "58°C"; o recorte
 manteve as duas peças.
+
+---
+
+## 12. Copo Térmico 360 ml · Tampa Transparente — preto e branco
+
+Foto: `assets/produtos/copo-360-tampa.webp` (as duas cores juntas) ✅ ·
+**já no site, COM PREÇO**
+
+Veio de print de anúncio do Mercado Livre ("Copo Térmico 360ml Personalizado
+Com A Sua Arte", R$ 35). Entrou com a tabela de **"Copos 360ml"** da sua
+lista: 49,99 · 24,90 a partir de 10 · 23,90 a partir de 50 · 22,90 a partir
+de 100 — a mesma do `copo-360` que já estava no site.
+
+**Não é o `copo-360`** que já estava lá: aquele tem formato de ovo, com o
+fundo arredondado; este é reto, cônico, com aro de inox e tampa
+transparente. O anúncio diz 360 ml no título e 350 ml na ficha.
+
+A foto tem o preto na frente do branco, cobrindo a tampa e o aro dele: não
+dá para recortar o branco sozinho. As duas bolinhas apontam para a mesma
+foto (campo `foto` da cor) e a cor escolhida vai para o orçamento. O chão
+refletido embaixo dos copos (cinza 226–245, igual ao corpo do branco) foi
+apagado abaixo da linha de contato de cada copo com o chão, coluna por
+coluna, e o vão entre os dois copos, linha por linha.
+
+Se chegar uma foto de cada cor separada, é trocar para uma foto por cor.
 
 ---
 

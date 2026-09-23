@@ -446,6 +446,36 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   await q.close();
 }
 
+
+// [35] cor com foto compartilhada (campo `foto`): as duas bolinhas mostram a
+// mesma foto, que existe, e a cor escolhida continua indo para o orcamento
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  const r = await q.evaluate(async()=>{
+    localStorage.clear();
+    const alvo = SPACE.PRODUCTS.find(p=>p.cores && p.cores.some(c=>c.foto));
+    if (!alvo) return { semProduto:true };
+    const card=document.querySelector(`.ccard[data-id="${alvo.id}"]`);
+    const fotos=[];
+    for (const b of card.querySelectorAll('.swatch')) { b.click(); fotos.push(card.querySelector('.ccard__media').dataset.src); }
+    const ult=alvo.cores[alvo.cores.length-1];
+    card.querySelector('[data-add]').click();
+    const it=SPACE.Cart.items[0];
+    const ok=(await fetch(fotos[0],{method:'HEAD'})).ok;
+    return { fotos, ok, cor: it && it.cor, esperada: ult.id, msg: SPACE.Cart.message() , nomeCor: ult.nome };
+  });
+  if (r.semProduto) T('[35] ha produto com foto compartilhada', false);
+  else {
+    T('[35] todas as cores apontam para a mesma foto', new Set(r.fotos).size===1);
+    T('[35] e a foto existe', r.ok);
+    T('[35] a cor escolhida vai para o orcamento ('+r.cor+')', r.cor===r.esperada);
+    T('[35] e para a mensagem do WhatsApp', r.msg.includes(r.nomeCor));
+  }
+  await q.close();
+}
+
 console.log('PASSOU:'); ok.forEach(x=>console.log('  ✔',x));
 if(bad.length){ console.log('FALHOU:'); bad.forEach(x=>console.log('  ✘',x)); }
 console.log('ERROS JS:', errs.length? errs.join('\n'):'nenhum');

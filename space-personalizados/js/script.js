@@ -186,6 +186,14 @@ const PRODUCTS = [
     desc:'Parede em inox com tampa, para bebidas quentes e frias.',
     tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
 
+  { id:'copo-360-tampa', name:'Copo Térmico 360ml · Tampa Transparente', cat:'copos', ph:'copo',
+    desc:'Copo térmico com aro de inox e tampa transparente, em preto ou branco. A foto mostra as duas cores lado a lado.',
+    cores:[
+      { id:'preto',  nome:'Preto',  hex:'#1f1f1f', foto:'copo-360-tampa' },
+      { id:'branco', nome:'Branco', hex:'#e6e8ec', foto:'copo-360-tampa' }
+    ],
+    tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
+
   { id:'copo-long-neck', name:'Copo Térmico Long Neck 420ml', cat:'copos', ph:'copo',
     desc:'Inox de 420 ml que serve de copo ou de porta-lata e porta long neck. Vem com tampa, anel de borracha e abridor de garrafa. 19 cm de altura.',
     cores:[
@@ -357,8 +365,15 @@ const dropPct    = p => Math.round((1 - bestPrice(p) / startPrice(p)) * 100);
    assets/produtos/<id>-<cor>.webp; produto sem cor segue em <id>.webp como
    sempre foi, e nada no catálogo antigo precisou mudar de nome. */
 const corDe  = (p, id) => (p.cores ? (p.cores.find(c => c.id === id) || p.cores[0]) : null);
+/* Uma cor pode apontar para uma foto compartilhada (campo `foto`). Foi o
+   caso do copo de 360 ml com tampa: o anúncio só tem uma foto com o preto e o
+   branco juntos, e o preto fica NA FRENTE do branco, então não dá para
+   recortar o branco sozinho sem ele sair com um pedaço faltando. As duas
+   bolinhas mostram a mesma foto, e a cor escolhida continua indo para o
+   orçamento e para o WhatsApp, que é o que a Space precisa. */
 const fotoDe = (p, id) => {
   const c = corDe(p, id);
+  if (c && c.foto) return `assets/produtos/${c.foto}.webp`;
   return `assets/produtos/${p.id}${c ? '-' + c.id : ''}.webp`;
 };
 /* FOTO DE DETALHE
