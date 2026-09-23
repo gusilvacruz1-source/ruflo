@@ -191,7 +191,8 @@ const PRODUCTS = [
     cores:[
       { id:'preto',   nome:'Preto',   hex:'#2e2e2e' },
       { id:'amarelo', nome:'Amarelo', hex:'#d2bc1c' },
-      { id:'turquesa', nome:'Azul-turquesa', hex:'#44bbb4' }
+      { id:'turquesa', nome:'Azul-turquesa', hex:'#44bbb4' },
+      { id:'laranja',  nome:'Laranja',       hex:'#d1752f' }
     ],
     tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
 

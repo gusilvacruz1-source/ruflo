@@ -240,7 +240,7 @@ direto, vale trocar.
 
 ## 10. Copo Térmico Long Neck 420 ml
 
-Fotos: `copo-long-neck-preto` `copo-long-neck-amarelo` `copo-long-neck-turquesa` ✅ · **já no site, COM PREÇO**
+Fotos: `copo-long-neck-preto` `copo-long-neck-amarelo` `copo-long-neck-turquesa` `copo-long-neck-laranja` ✅ · **já no site, COM PREÇO**
 
 Veio de print de anúncio do Mercado Livre ("Copo Térmico Porta Long Neck
 Cerveja Lata Inox Personalizado", R$ 49,90). É o "Copo long neck" da tabela
@@ -252,7 +252,7 @@ Ficha do anúncio: 420 ml · 19 cm de altura × 9 cm de largura · 1 suporte de
 lata. A foto mostra tampa, anel de borracha e tampa-abridor de garrafa.
 
 O anúncio tem **8 cores** (amarelo, turquesa, laranja, nude, pink, preto,
-rosa claro, lilás). No site estão **preto, amarelo e azul-turquesa**, com seletor de cor;
+rosa claro, lilás). No site estão **preto, amarelo, azul-turquesa e laranja**, com seletor de cor;
 as outras entram conforme chegarem os prints, um por cor.
 
 O print do amarelo dizia "Cor: Nude" no rótulo, mas a bolinha marcada e a
@@ -260,6 +260,12 @@ foto eram amarelas — era o mouse passando sobre outra cor na hora do print.
 Na foto do amarelo, o copo turquesa com cerveja da direita encostava no
 copo; o canto dele (de y=355 para baixo, onde o copo já afinou) foi coberto
 com o cinza do fundo antes do recorte.
+
+O laranja veio de outra foto do anúncio (a de detalhe, com os círculos à
+direita), com fundo cinza 238–241 que escurece até 223 em volta da base. O
+recorte automático nunca corta abaixo de 238, então foi com o corte fixo em
+216 (`limiar_fixo`), limpeza de sombra só na faixa de baixo e descartando os
+pontinhos soltos (`so_maior`).
 
 A foto traz o carimbo "SUA LOGO AQUI" do anúncio. Numa loja de
 personalização até funciona, mas é o selo de outra loja.

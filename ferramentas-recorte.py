@@ -14,7 +14,8 @@ from scipy import ndimage
 
 def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
             represa=False, franja=2, sombra=0, vao_min=40, sombra_base=0.0,
-            sombra_piso=205, desvio_max=1.2, desfranja=0):
+            sombra_piso=205, desvio_max=1.2, desfranja=0, so_maior=False,
+            limiar_fixo=None):
     """represa: usa a aresta como barreira do preenchimento. So e preciso
     quando a peca tem parte BRANCA encostando no fundo branco - a alca da
     caneca termica de 350 ml mede 255, igual ao fundo, e sem a represa ela
@@ -37,6 +38,13 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
     borda = np.concatenate([a[0, :], a[-1, :], a[:, 0], a[:, -1]])
     piso = int(np.median(borda.min(axis=1))) - 10
     limiar = max(limiar, piso)
+    # limiar_fixo: o max() acima nunca deixa o corte cair abaixo de 238. Com
+    # fundo branco ou o cinza 247 do Mercado Livre isso e o certo. Mas a foto
+    # de detalhe do copo long neck laranja tem fundo 238-241 que escurece ate
+    # 223 em volta da base: com o corte em 238 todo esse cinza virava produto
+    # e o copo saia com um halo. Aqui o corte e dado na mao.
+    if limiar_fixo is not None:
+        limiar = limiar_fixo
 
     quase_branco = (a.min(axis=2) >= limiar) & (a.max(axis=2) - a.min(axis=2) <= 12)
 
@@ -133,6 +141,15 @@ def recorta(entrada, saida, lado=720, folga=0.055, limiar=238, altura=None,
     alfa = np.where(fundo, 0, 255).astype(np.uint8)
     # tira pontinhos soltos que sobraram de sombra suave
     alfa = ndimage.binary_closing(alfa > 0, np.ones((3, 3))).astype(np.uint8) * 255
+    # so_maior: fica so a maior peca opaca. No print do copo long neck laranja
+    # a sombra das fotos redondas ao lado deixava pontinhos soltos acima da
+    # tampa. Desligado por padrao porque ha fotos com mais de uma peca separada
+    # (kit com caixa e sacola), e ai todas tem que ficar.
+    if so_maior:
+        lab, n = ndimage.label(alfa > 0)
+        if n > 1:
+            tam = ndimage.sum(alfa > 0, lab, range(1, n + 1))
+            alfa = np.where(lab == int(np.argmax(tam)) + 1, 255, 0).astype(np.uint8)
     # DESFRANJA. Peca escura sobre fundo claro deixa um contorno de pixels
     # meio-a-meio: na garrafa preta de 800 ml os 2 px da borda tinham brilho
     # 116 contra 37 do corpo, e sobre card escuro isso vira um fio branco em
@@ -199,7 +216,8 @@ if __name__ == '__main__':
 #   o resto                           -> recorta()
 # ---------------------------------------------------------------------------
 
-def corta(entrada, saida, lado=720, folga=0.055, vao_min=3000, suavizar=1.0, sombra=0):
+def corta(entrada, saida, lado=720, folga=0.055, vao_min=3000, suavizar=1.0, sombra=0,
+          sombra_piso=205):
     im = Image.open(entrada).convert('RGB')
     a = np.asarray(im).astype(np.int16)
     g = a.mean(axis=2)
@@ -235,14 +253,9 @@ def corta(entrada, saida, lado=720, folga=0.055, vao_min=3000, suavizar=1.0, som
 
     # sombra de contato: cinza claro colado na base, que a silhueta abraca
     # junto. Cresce o lado de fora sobre cinza claro e ela sai.
-    # O piso de 205 serve para peca clara, onde ele e a unica coisa que impede
-    # a limpeza de entrar na peca. No kit de garrafa PRETO nao ha nada claro na
-    # peca, e a sombra de contato desce ate 155 - com o piso em 205 a dilatacao
-    # parava no meio dela e sobrava uma cunha cinza colada na base do saco, bem
-    # visivel sobre o card escuro. Baixar o piso so e seguro junto com
-    # sombra_base, que limita a limpeza a faixa onde a sombra mora: no kit a
-    # sombra comeca em y=466 de 520 e o aro de inox mais baixo das xicaras para
-    # em y=460, entao sombra_base=0.11 passa entre os dois.
+    # sombra_piso: ver a nota em recorta(). Este parametro faltava aqui e a
+    # linha abaixo ja o usava - corta(..., sombra=N) dava NameError desde
+    # que o piso virou parametro.
     if sombra:
         claro_cinza = ((a.min(axis=2) >= sombra_piso)
                        & (a.max(axis=2) - a.min(axis=2) <= 14))
