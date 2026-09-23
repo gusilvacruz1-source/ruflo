@@ -16,10 +16,11 @@ faltar, o card fica nesse tom — não aparece desenho no lugar.
 Tamanho que funciona bem: 480 x 480 px para a peça recortada, 600 x 600 para
 a foto de detalhe. Leve importa: o site inteiro rola com menos de 1 MB.
 
-A LISTA DE HOJE (29 produtos)
+A LISTA DE HOJE (30 produtos)
 
   copo-473.webp                           Copo Térmico Inox 473ml
   copo-360.webp                           Copo Térmico Inox 360ml
+  copo-360-tampa.webp                     Copo Térmico 360ml · Tampa Transparente  (foto das cores juntas)
   copo-long-neck-preto.webp               Copo Térmico Long Neck 420ml
   copo-long-neck-amarelo.webp
   copo-long-neck-turquesa.webp

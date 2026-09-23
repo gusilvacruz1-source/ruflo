@@ -139,6 +139,11 @@ existe `<id>.webp`. Onde o site precisa da foto de um produto sem saber a
 cor (vitrine, card de destaque) ele usa a primeira cor da lista, pela função
 `fotoDe`. Nunca monte o caminho da foto na mão.
 
+Quando só existe uma foto com as cores juntas, a cor pode apontar para ela
+com `foto`: `{ id:'branco', nome:'Branco', hex:'#e6e8ec', foto:'copo-360-tampa' }`
+usa `assets/produtos/copo-360-tampa.webp`. A foto não muda ao trocar a
+bolinha, mas a cor escolhida vai para o orçamento e para o WhatsApp.
+
 No card aparecem as bolinhas; clicar troca a foto e guarda a escolha no
 próprio card, de onde ADICIONAR e WHATSAPP leem na hora do clique.
 
