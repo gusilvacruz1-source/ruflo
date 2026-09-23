@@ -16,7 +16,7 @@ faltar, o card fica nesse tom — não aparece desenho no lugar.
 Tamanho que funciona bem: 480 x 480 px para a peça recortada, 600 x 600 para
 a foto de detalhe. Leve importa: o site inteiro rola com menos de 1 MB.
 
-A LISTA DE HOJE (26 produtos)
+A LISTA DE HOJE (27 produtos)
 
   copo-473.webp                           Copo Térmico Inox 473ml
   copo-360.webp                           Copo Térmico Inox 360ml
@@ -37,6 +37,7 @@ A LISTA DE HOJE (26 produtos)
   caneca-inox-180.webp                    Caneca Inox 180ml
   garrafa-500.webp                        Garrafa Térmica 500ml
   garrafa-800.webp                        Garrafa Térmica 800ml
+  garrafa-800-silicone.webp               Garrafa Térmica 800ml · Base de Silicone
   garrafa-aluminio-600.webp               Garrafa em Alumínio 600ml
   kit-garrafa-450-azul.webp               Kit Garrafa Térmica 450ml
   kit-garrafa-450-cinza.webp
