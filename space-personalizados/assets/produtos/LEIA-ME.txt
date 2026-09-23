@@ -16,10 +16,11 @@ faltar, o card fica nesse tom — não aparece desenho no lugar.
 Tamanho que funciona bem: 480 x 480 px para a peça recortada, 600 x 600 para
 a foto de detalhe. Leve importa: o site inteiro rola com menos de 1 MB.
 
-A LISTA DE HOJE (27 produtos)
+A LISTA DE HOJE (28 produtos)
 
   copo-473.webp                           Copo Térmico Inox 473ml
   copo-360.webp                           Copo Térmico Inox 360ml
+  copo-long-neck.webp                     Copo Térmico Long Neck 420ml
   caneca-termica-700.webp                 Caneca Térmica Inox 700ml
   caneca-aluminio-350.webp                Caneca em Alumínio 350ml
   caneca-porcelana.webp                   Caneca de Porcelana 325ml

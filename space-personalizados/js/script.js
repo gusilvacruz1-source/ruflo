@@ -186,6 +186,10 @@ const PRODUCTS = [
     desc:'Parede em inox com tampa, para bebidas quentes e frias.',
     tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
 
+  { id:'copo-long-neck', name:'Copo Térmico Long Neck 420ml', cat:'copos', ph:'copo',
+    desc:'Inox de 420 ml que serve de copo ou de porta-lata e porta long neck. Vem com tampa, anel de borracha e abridor de garrafa. 19 cm de altura.',
+    tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
+
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',
     desc:'Dupla parede em inox de 700 ml personalizada a laser.',
     tiers:[[1,69.90],[20,49.90],[50,48.90]] },
