@@ -22,6 +22,7 @@ A LISTA DE HOJE (28 produtos)
   copo-360.webp                           Copo Térmico Inox 360ml
   copo-long-neck-preto.webp               Copo Térmico Long Neck 420ml
   copo-long-neck-amarelo.webp
+  copo-long-neck-turquesa.webp
   caneca-termica-700.webp                 Caneca Térmica Inox 700ml
   caneca-aluminio-350.webp                Caneca em Alumínio 350ml
   caneca-porcelana.webp                   Caneca de Porcelana 325ml
