@@ -21,6 +21,7 @@ A LISTA DE HOJE (30 produtos)
   copo-473.webp                           Copo Térmico Inox 473ml
   copo-360.webp                           Copo Térmico Inox 360ml
   copo-360-tampa.webp                     Copo Térmico 360ml · Tampa Transparente  (foto das cores juntas)
+  copo-360-tampa-detalhe.webp               (foto de detalhe)
   copo-long-neck-preto.webp               Copo Térmico Long Neck 420ml
   copo-long-neck-amarelo.webp
   copo-long-neck-turquesa.webp

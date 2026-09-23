@@ -188,6 +188,7 @@ const PRODUCTS = [
 
   { id:'copo-360-tampa', name:'Copo Térmico 360ml · Tampa Transparente', cat:'copos', ph:'copo',
     desc:'Copo térmico com aro de inox e tampa transparente, em preto ou branco. A foto mostra as duas cores lado a lado.',
+    detalhe:true,
     cores:[
       { id:'preto',  nome:'Preto',  hex:'#1f1f1f', foto:'copo-360-tampa' },
       { id:'branco', nome:'Branco', hex:'#e6e8ec', foto:'copo-360-tampa' }
