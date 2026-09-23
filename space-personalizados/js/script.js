@@ -190,7 +190,8 @@ const PRODUCTS = [
     desc:'Inox de 420 ml que serve de copo ou de porta-lata e porta long neck. Vem com tampa, anel de borracha e abridor de garrafa. 19 cm de altura.',
     cores:[
       { id:'preto',   nome:'Preto',   hex:'#2e2e2e' },
-      { id:'amarelo', nome:'Amarelo', hex:'#d2bc1c' }
+      { id:'amarelo', nome:'Amarelo', hex:'#d2bc1c' },
+      { id:'turquesa', nome:'Azul-turquesa', hex:'#44bbb4' }
     ],
     tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
 
