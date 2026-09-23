@@ -320,6 +320,12 @@ coluna, e o vão entre os dois copos, linha por linha.
 
 Se chegar uma foto de cada cor separada, é trocar para uma foto por cor.
 
+**Foto de detalhe** (lupa): `copo-360-tampa-detalhe.webp`, a segunda foto do
+anúncio — os dois copos abertos, com as tampas na frente. Ela não serve para
+separar as cores porque cada tampa fica na frente da base do seu copo. O
+selo "360 ml" do anúncio, um círculo chapado sobre o fundo liso, foi
+coberto com a cor do fundo.
+
 ---
 
 ## Preços recebidos sem produto ainda
