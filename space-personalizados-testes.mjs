@@ -476,6 +476,32 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   await q.close();
 }
 
+
+// [36] trocar de cor nao pode deixar o card sem foto nem por um quadro: a
+// foto antiga fica ate a nova estar pronta (e, com foto compartilhada, fica)
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  const alvos = await q.evaluate(()=>SPACE.PRODUCTS.filter(p=>p.cores&&p.cores.length>1).map(p=>p.id).slice(0,3));
+  let vazios=0, erradas=0;
+  for (const id of alvos) {
+    const c=q.locator(`.ccard[data-id="${id}"]`); await c.scrollIntoViewIfNeeded(); await q.waitForTimeout(900);
+    const r = await c.evaluate(async el=>{
+      const m=el.querySelector('.ccard__media'); let vazio=0;
+      const mo=new MutationObserver(()=>{ if(!m.style.backgroundImage) vazio++; }); mo.observe(m,{attributes:true});
+      const bs=el.querySelectorAll('.swatch'); const ult=bs[bs.length-1]; ult.click();
+      if(!m.style.backgroundImage) vazio++;
+      await new Promise(r=>setTimeout(r,900)); mo.disconnect();
+      return { vazio, certa: m.style.backgroundImage.includes(m.dataset.src) };
+    });
+    vazios+=r.vazio; if(!r.certa) erradas++;
+  }
+  T('[36] trocar de cor nao deixa o card sem foto ('+vazios+' momentos vazios em '+alvos.length+' produtos)', vazios===0);
+  T('[36] e a foto pintada e a da cor escolhida', erradas===0);
+  await q.close();
+}
+
 console.log('PASSOU:'); ok.forEach(x=>console.log('  ✔',x));
 if(bad.length){ console.log('FALHOU:'); bad.forEach(x=>console.log('  ✘',x)); }
 console.log('ERROS JS:', errs.length? errs.join('\n'):'nenhum');

@@ -603,7 +603,10 @@ function catalogCard(p) {
 
 /* --- vitrine (4 destaques, 3º em card largo) ------------------------------ */
 
-const SHOWCASE_IDS = ['copo-473', 'caneca-termica-700', 'garrafa-800', 'churrasco-4'];
+/* A seção se chama "Novos Brindes" e abria com os quatro produtos mais
+   antigos do catálogo. Abre agora com os que acabaram de chegar; o resto do
+   catálogo vem depois, nas setas. Ao cadastrar novidade, é trocar aqui. */
+const SHOWCASE_IDS = ['copo-long-neck', 'garrafa-led', 'copo-360-tampa', 'kit-garrafa-450'];
 const PAGE = 4;
 let showcaseFilter = 'todos';
 let showcaseStart = 0;
@@ -897,11 +900,17 @@ document.addEventListener('click', e => {
     });
     const nome = $('.ccard__corNome', card);
     if (nome) nome.textContent = c.nome;
+    /* Troca sem piscar. paint() limpa a foto antes de buscar a nova - certo
+       para um card entrando na tela, errado aqui: o card ficava vazio por um
+       ou dois quadros a cada bolinha, e no copo de 360 ml, em que as duas
+       cores dividem a mesma foto, piscava para mostrar a MESMA imagem. Agora
+       a foto antiga fica até a nova estar decodificada (buscaFoto só pinta
+       depois do decode e ignora resposta de uma troca já superada). */
     const media = $('.ccard__media', card);
-    if (media) {
-      media.dataset.src = fotoDe(prod, c.id);
-      media.classList.remove('has-photo');
-      paint(media);
+    const nova = fotoDe(prod, c.id);
+    if (media && media.dataset.src !== nova) {
+      media.dataset.src = nova;
+      buscaFoto(media);
     }
     /* A foto de detalhe e uma so para o produto inteiro, nao uma por cor. Com
        ela aberta, trocar a bolinha deixava a bolinha dizendo VERDE e a foto
