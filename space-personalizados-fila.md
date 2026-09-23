@@ -1,7 +1,8 @@
 # Fichas dos produtos — Space Personalizados
 
-**Os 9 produtos abaixo JÁ ESTÃO no site**, cadastrados como *sob consulta*:
-sem preço na tela, o valor sai por orçamento no WhatsApp. Quando os preços
+**Os 10 produtos abaixo JÁ ESTÃO no site.** O copo long neck entrou com
+preço; os outros 9 estão *sob consulta*: sem preço na tela, o valor sai por
+orçamento no WhatsApp. Quando os preços
 chegarem, é preencher `tiers` em cada um no `js/script.js` e o card passa a
 mostrar valor e faixas sozinho.
 
@@ -16,7 +17,7 @@ GitHub Pages.
 
 ## Pendências que precisam de você
 
-1. **Preço dos 9.** Enquanto não vierem, todos ficam como sob consulta.
+1. **Preço dos 9 sob consulta.** Enquanto não vierem, todos ficam como sob consulta.
 2. **"Acima de 10"** nos copos: li como *a partir de 10*. Num pedido de
    exatamente dez copos a diferença é R$ 250.
 3. **Kit churrasco de 5 peças:** cadastrei o novo (sem espetos) ao lado do
@@ -237,6 +238,28 @@ direto, vale trocar.
 
 ---
 
+## 10. Copo Térmico Long Neck 420 ml
+
+Foto: `assets/produtos/copo-long-neck.webp` ✅ · **já no site, COM PREÇO**
+
+Veio de print de anúncio do Mercado Livre ("Copo Térmico Porta Long Neck
+Cerveja Lata Inox Personalizado", R$ 49,90). É o "Copo long neck" da tabela
+de preços que você mandou antes, que também começa em R$ 49,90 — entrou com
+essa tabela: 49,90 · 39,99 a partir de 10 · 36,90 a partir de 50 · 35,99 a
+partir de 100.
+
+Ficha do anúncio: 420 ml · 19 cm de altura × 9 cm de largura · 1 suporte de
+lata. A foto mostra tampa, anel de borracha e tampa-abridor de garrafa.
+
+O anúncio tem **8 cores** (amarelo, turquesa, laranja, nude, pink, preto,
+rosa claro, lilás). No site só entrou o preto, que é a foto que veio. Para
+ter o seletor de cor, é mandar um print por cor, como no kit garrafa.
+
+A foto traz o carimbo "SUA LOGO AQUI" do anúncio. Numa loja de
+personalização até funciona, mas é o selo de outra loja.
+
+---
+
 ## Preços recebidos sem produto ainda
 
 Chegaram antes das fotos e das descrições. Ficam aqui até o produto existir.
@@ -249,7 +272,6 @@ num pedido de exatamente 10 copos a diferença é de R$ 250.
 | Produto | 1 un | 10+ | 50+ | 100+ |
 |---|---|---|---|---|
 | Caneca chopp 810 ml | 69,90 | 49,90 | 48,90 | 45,90 |
-| Copo long neck | 49,90 | 39,99 | 36,90 | 35,99 |
 | Copo cuia | 49,99 | 29,90 | 28,90 | 25,90 |
 | Garrafa LED | 49,00 | 29,90 | 27,90 | 25,90 |
 
@@ -257,8 +279,6 @@ num pedido de exatamente 10 copos a diferença é de R$ 250.
 // prontos para colar assim que houver foto e descrição
 { id:'caneca-chopp-810', name:'Caneca Chopp 810ml',  cat:'copos',    ph:'caneca',
   desc:'', tiers:[[1,69.90],[10,49.90],[50,48.90],[100,45.90]] },
-{ id:'copo-long-neck',   name:'Copo Long Neck',      cat:'copos',    ph:'copo',
-  desc:'', tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
 { id:'copo-cuia',        name:'Copo Cuia',           cat:'copos',    ph:'copo',
   desc:'', tiers:[[1,49.99],[10,29.90],[50,28.90],[100,25.90]] },
 { id:'garrafa-led',      name:'Garrafa LED',         cat:'garrafas', ph:'garrafa',
