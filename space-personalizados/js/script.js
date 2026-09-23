@@ -188,6 +188,10 @@ const PRODUCTS = [
 
   { id:'copo-long-neck', name:'Copo Térmico Long Neck 420ml', cat:'copos', ph:'copo',
     desc:'Inox de 420 ml que serve de copo ou de porta-lata e porta long neck. Vem com tampa, anel de borracha e abridor de garrafa. 19 cm de altura.',
+    cores:[
+      { id:'preto',   nome:'Preto',   hex:'#2e2e2e' },
+      { id:'amarelo', nome:'Amarelo', hex:'#d2bc1c' }
+    ],
     tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
 
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',

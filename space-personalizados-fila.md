@@ -240,7 +240,7 @@ direto, vale trocar.
 
 ## 10. Copo Térmico Long Neck 420 ml
 
-Foto: `assets/produtos/copo-long-neck.webp` ✅ · **já no site, COM PREÇO**
+Fotos: `copo-long-neck-preto` `copo-long-neck-amarelo` ✅ · **já no site, COM PREÇO**
 
 Veio de print de anúncio do Mercado Livre ("Copo Térmico Porta Long Neck
 Cerveja Lata Inox Personalizado", R$ 49,90). É o "Copo long neck" da tabela
@@ -252,8 +252,14 @@ Ficha do anúncio: 420 ml · 19 cm de altura × 9 cm de largura · 1 suporte de
 lata. A foto mostra tampa, anel de borracha e tampa-abridor de garrafa.
 
 O anúncio tem **8 cores** (amarelo, turquesa, laranja, nude, pink, preto,
-rosa claro, lilás). No site só entrou o preto, que é a foto que veio. Para
-ter o seletor de cor, é mandar um print por cor, como no kit garrafa.
+rosa claro, lilás). No site estão **preto e amarelo**, com seletor de cor;
+as outras entram conforme chegarem os prints, um por cor.
+
+O print do amarelo dizia "Cor: Nude" no rótulo, mas a bolinha marcada e a
+foto eram amarelas — era o mouse passando sobre outra cor na hora do print.
+Na foto do amarelo, o copo turquesa com cerveja da direita encostava no
+copo; o canto dele (de y=355 para baixo, onde o copo já afinou) foi coberto
+com o cinza do fundo antes do recorte.
 
 A foto traz o carimbo "SUA LOGO AQUI" do anúncio. Numa loja de
 personalização até funciona, mas é o selo de outra loja.
