@@ -26,6 +26,7 @@ A LISTA DE HOJE (28 produtos)
   copo-long-neck-laranja.webp
   copo-long-neck-nude.webp
   copo-long-neck-pink.webp
+  copo-long-neck-rosa.webp
   caneca-termica-700.webp                 Caneca Térmica Inox 700ml
   caneca-aluminio-350.webp                Caneca em Alumínio 350ml
   caneca-porcelana.webp                   Caneca de Porcelana 325ml
