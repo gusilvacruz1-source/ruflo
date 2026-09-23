@@ -195,7 +195,8 @@ const PRODUCTS = [
       { id:'laranja',  nome:'Laranja',       hex:'#d1752f' },
       { id:'nude',     nome:'Nude',          hex:'#cc9d82' },
       { id:'pink',     nome:'Pink',          hex:'#c93781' },
-      { id:'rosa',     nome:'Rosa',          hex:'#c88398' }
+      { id:'rosa',     nome:'Rosa',          hex:'#c88398' },
+      { id:'roxo',     nome:'Roxo',          hex:'#7f627e' }
     ],
     tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
 
