@@ -240,7 +240,7 @@ direto, vale trocar.
 
 ## 10. Copo Térmico Long Neck 420 ml
 
-Fotos: `copo-long-neck-preto` `copo-long-neck-amarelo` `copo-long-neck-turquesa` `copo-long-neck-laranja` `copo-long-neck-nude` `copo-long-neck-pink` `copo-long-neck-rosa` ✅ · **já no site, COM PREÇO**
+Fotos: `copo-long-neck-preto` `copo-long-neck-amarelo` `copo-long-neck-turquesa` `copo-long-neck-laranja` `copo-long-neck-nude` `copo-long-neck-pink` `copo-long-neck-rosa` `copo-long-neck-roxo` ✅ · **já no site, COM PREÇO**
 
 Veio de print de anúncio do Mercado Livre ("Copo Térmico Porta Long Neck
 Cerveja Lata Inox Personalizado", R$ 49,90). É o "Copo long neck" da tabela
@@ -251,9 +251,9 @@ partir de 100.
 Ficha do anúncio: 420 ml · 19 cm de altura × 9 cm de largura · 1 suporte de
 lata. A foto mostra tampa, anel de borracha e tampa-abridor de garrafa.
 
-O anúncio tem **8 cores** (amarelo, turquesa, laranja, nude, pink, preto,
-rosa, lilás). No site estão **preto, amarelo, azul-turquesa, laranja, nude, pink e rosa**, com seletor de cor;
-as outras entram conforme chegarem os prints, um por cor.
+O anúncio tem **8 cores** e as **8 estão no site**, com seletor de cor:
+preto, amarelo, azul-turquesa, laranja, nude, pink, rosa e roxo (os nomes
+são os do anúncio).
 
 O print do amarelo dizia "Cor: Nude" no rótulo, mas a bolinha marcada e a
 foto eram amarelas — era o mouse passando sobre outra cor na hora do print.
@@ -270,6 +270,9 @@ pontinhos soltos (`so_maior`).
 O nude é uma foto de frente, maior e mais nítida (a boca do copo não
 aparece). A base de inox fica toda abaixo de 211 e a sombra de contato à
 direita dela entre 230 e 237: corte fixo em 222.
+
+O roxo veio da mesma foto de detalhe do laranja e saiu com os mesmos
+ajustes: corte fixo em 216, sombra limpa só embaixo, pontinhos descartados.
 
 A foto traz o carimbo "SUA LOGO AQUI" do anúncio. Numa loja de
 personalização até funciona, mas é o selo de outra loja.
