@@ -437,7 +437,9 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
     const m=document.querySelector('meta[property="og:image"]');
     if (!m) return { absoluto:false, existe:false };
     const u=m.content;
-    const local = u.replace(/^https:\/\/[^/]+\/ruflo\/space-personalizados\//,'');
+    // tanto faz o endereco (Netlify ou GitHub Pages): o que importa e o
+    // caminho do arquivo dentro do site existir
+    const local = u.replace(/^https:\/\/[^/]+\/(ruflo\/space-personalizados\/)?/,'');
     const r = await fetch(local,{method:'HEAD'});
     return { absoluto: /^https:\/\//.test(u), existe: r.ok };
   });
