@@ -220,7 +220,15 @@ e o telefone de outros clientes.
 
 ---
 
-## 3. Rodar e testar
+## 3. Publicar: troque a versão
+
+Toda foto, o CSS e o JS são pedidos com `?v=<versão>`, e a versão é a que
+está no `index.html`, em `<script src="js/script.js?v=...">` (o CSS usa a
+mesma). **A cada publicação que troca foto, CSS ou JS, mude esse número nos
+dois lugares.** Sem isso, quem já visitou o site continua vendo a versão
+antiga guardada no navegador, porque o nome do arquivo não mudou.
+
+## 4. Rodar e testar
 
 ```bash
 python3 -m http.server 8099    # depois abra http://localhost:8099
@@ -237,7 +245,7 @@ node space-personalizados-testes.mjs
 Precisa do Playwright com Chromium. Cada bug que já apareceu no site virou
 uma asserção numerada, e o número aparece nos comentários do código.
 
-## 4. Dependências
+## 5. Dependências
 
 Uma só: **Google Fonts** (Bodoni Moda + Archivo). Se não carregar, cai na
 fonte do sistema. Sem framework, sem biblioteca de animação, sem build.
