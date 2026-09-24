@@ -502,6 +502,29 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   await q.close();
 }
 
+
+// [37] versao nos enderecos: foto trocada com o mesmo nome nao chegava a quem
+// ja tinha visitado (cache). CSS, JS e toda foto tem que sair com ?v=
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  const fotos=[];
+  q.on('request', r=>{ const u=r.url(); if(/assets\/produtos\/.+\.webp/.test(u)) fotos.push(u); });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  await q.evaluate(()=>document.querySelector('#catalogo').scrollIntoView());
+  for(let i=0;i<8;i++){ await q.mouse.wheel(0,900); await q.waitForTimeout(200); }
+  await q.waitForTimeout(800);
+  const v = await q.evaluate(()=>{
+    const js=document.querySelector('script[src*="js/script.js"]').getAttribute('src');
+    const css=document.querySelector('link[href*="css/style.css"]').getAttribute('href');
+    return { js, css, v: new URL(js, location.href).searchParams.get('v') };
+  });
+  T('[37] CSS e JS saem com versao ('+v.v+')', !!v.v && v.css.includes('v='+v.v));
+  const sem = fotos.filter(u=>!u.includes('v='+v.v));
+  T('[37] toda foto sai com a mesma versao ('+fotos.length+' fotos, '+sem.length+' sem)', fotos.length>0 && sem.length===0);
+  await q.close();
+}
+
 console.log('PASSOU:'); ok.forEach(x=>console.log('  ✔',x));
 if(bad.length){ console.log('FALHOU:'); bad.forEach(x=>console.log('  ✘',x)); }
 console.log('ERROS JS:', errs.length? errs.join('\n'):'nenhum');

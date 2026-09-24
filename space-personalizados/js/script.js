@@ -44,6 +44,19 @@ const easeIn    = t => t * t * t;
 const easeOut   = t => 1 - Math.pow(1 - t, 3);
 const smoothstep = (a, b, v) => { const t = invLerp(a, b, v); return t * t * (3 - 2 * t); };
 
+/* VERSÃO DOS ARQUIVOS
+   Foto corrigida com o mesmo nome não chegava a quem já tinha visitado: o
+   navegador (e o GitHub Pages, que manda guardar por 10 min) seguia
+   entregando a antiga - a correção das bordas quadradas estava no ar e o
+   site continuava igual na tela. Agora toda foto sai com ?v=<versão>, e a
+   versão vem do próprio <script src="js/script.js?v=..."> do index.html:
+   é só trocar o número lá a cada publicação e tudo é buscado de novo. */
+const VERSAO = (() => {
+  try { return new URL(document.currentScript.src).searchParams.get('v') || ''; }
+  catch { return ''; }
+})();
+const comVersao = u => (VERSAO ? `${u}${u.includes('?') ? '&' : '?'}v=${VERSAO}` : u);
+
 const BRL = new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' });
 const money = n => BRL.format(n);
 
@@ -130,8 +143,8 @@ function buscaFoto(el) {
     // o #dealMedia é reaproveitado entre produtos: sem esta checagem uma
     // sondagem lenta pinta a foto do produto anterior sobre o novo
     if (el.dataset.src !== real) return;
-    el.style.setProperty('--photo', `url("${real}")`);
-    el.style.backgroundImage = `url("${real}")`;
+    el.style.setProperty('--photo', `url("${comVersao(real)}")`);
+    el.style.backgroundImage = `url("${comVersao(real)}")`;
     // Quem enquadra a foto real é o CSS (.has-photo e companhia). O tamanho e
     // a posição escritos no placeholder são inline e venciam a folha de
     // estilo — qualquer regra de enquadramento da foto virava letra morta.
@@ -143,7 +156,7 @@ function buscaFoto(el) {
      decodificação sobrava para a hora de pintar, dentro do quadro. decode()
      faz esse trabalho fora da thread principal e só resolve com o bitmap
      pronto — aí pintar é só copiar. */
-  probe.src = real;
+  probe.src = comVersao(real);
   if (probe.decode) {
     probe.decode().then(() => enfileiraFoto(aplica))
                   .catch(() => { if (probe.complete && probe.naturalWidth) enfileiraFoto(aplica); });
@@ -876,7 +889,7 @@ document.addEventListener('click', e => {
     if (ligado && !capa.dataset.pronta) {
       capa.dataset.pronta = '1';
       const im = new Image();
-      im.src = fotoDetalhe(prod);
+      im.src = comVersao(fotoDetalhe(prod));
       const mostra = () => { capa.style.backgroundImage = `url("${im.src}")`; };
       if (im.decode) im.decode().then(mostra).catch(() => { if (im.complete) mostra(); });
       else im.onload = mostra;
