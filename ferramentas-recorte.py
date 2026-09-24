@@ -280,32 +280,86 @@ def corta(entrada, saida, lado=720, folga=0.055, vao_min=3000, suavizar=1.0, som
 # ---------------------------------------------------------------------------
 # BRAÇO CORTADO RETO. Foto de peça na mão sai da câmera com o braço cortado
 # pela borda da foto. Recortado, esse corte vira uma linha reta com canto
-# quadrado no meio do card - a manga do copo 473, a mão da caneca 700. Aqui o
-# braço some suave em direção ao corte (smoothstep sobre a distância até ele),
-# e a peça não é tocada porque só os lados indicados contam como corte.
+# quadrado no meio do card - a manga do copo 473, a mão da caneca 700, o
+# braço da foto 3 da capa.
+#
+# A primeira versão esmaecia pela distância ATÉ O CORTE. Não resolveu: as
+# linhas de mesmo esmaecido ficam paralelas ao corte, então o braço continuava
+# terminando num "L" reto, só que borrado - a dona reclamou de novo na foto 3.
+#
+# Esta amarra as duas pontas: t=1 dentro de 'mantem' (polígono com a peça e a
+# parte da mão que segura), t=0 no corte, e no meio a fração dK/(dK+dC) -
+# distância até a peça sobre a soma das duas distâncias - passada por um
+# smoothstep. O esmaecido se estica onde há espaço e encurta onde a peça
+# encosta no corte, e as linhas nascem com o formato da mão, não do corte.
+# 'fim' < 1 termina o esmaecido antes do corte: os últimos 25% do caminho,
+# onde as linhas já copiam o corte, ficam invisíveis.
 #
 #   lados: quais lados da caixa da silhueta são o corte - 'baixo', 'esq',
-#          'dir', 'cima'. Olhar a foto antes: copo e caixa também têm lado
-#          reto, e esmaecer esses estraga o produto.
-#   fundo_preto: para as fotos da capa, que são RGB com fundo 0,0,0 - o braço
-#          escurece até o preto em vez de ficar transparente.
+#          'dir'. Só contam trechos retos de 12 px ou mais: a ponta da aba do
+#          chapéu encosta no lado esquerdo e não é corte.
+#   Fotos RGB (as da capa, fundo 0,0,0): o braço escurece até o preto em vez
+#   de ficar transparente.
+#
+# A ORIGEM é a foto ANTES de qualquer esmaecido - a do commit 2f7830a. Rodar
+# sobre uma foto já esmaecida esmaece duas vezes.
+#   git show 2f7830a:space-personalizados/assets/produtos/copo-473.webp > /tmp/o.webp
+#   python3 -c "import importlib; f=importlib.import_module('ferramentas-recorte'); \
+#     f.esmaece_braco('/tmp/o.webp', 'space-personalizados/assets/produtos/copo-473.webp', *f.BRACOS['copo-473'])"
 # ---------------------------------------------------------------------------
-def esmaece_corte(entrada, saida, lados, alcance=70, fundo_preto=False):
+BRACOS = {  # nome: (lados, mantem) - coordenadas da foto de origem
+    'caneca-aluminio-350':  (['esq', 'baixo'], [(160,20),(420,20),(420,320),(290,330),(230,320),(150,240),(135,160)]),
+    'caneca-porcelana':     (['esq'],          [(140,115),(160,20),(480,0),(480,480),(215,480),(215,340),(190,300),(140,290),(118,265),(106,225),(106,180),(118,140)]),
+    'caneca-termica-700':   (['esq'],          [(97,140),(160,20),(430,20),(430,430),(170,430),(160,350),(135,342),(112,315),(100,270),(97,200)]),
+    'canivete-inox':        (['esq', 'baixo'], [(150,30),(400,30),(400,380),(300,375),(240,300),(180,230),(150,120)]),
+    'chapeu-juta':          (['esq', 'baixo'], [(30,40),(450,40),(450,305),(230,310),(165,300),(30,285)]),
+    'copo-360':             (['esq', 'baixo'], [(175,20),(400,20),(400,320),(300,320),(240,330),(190,300),(175,110)]),
+    'copo-473':             (['esq', 'baixo'], [(215,30),(390,30),(390,400),(195,400),(180,345),(150,325),(120,290),(120,120),(215,110)]),
+    'garrafa-500':          (['esq', 'baixo'], [(240,30),(360,30),(360,420),(240,420),(215,375),(185,330),(195,180),(240,150)]),
+    'garrafa-800':          (['esq', 'baixo'], [(220,20),(360,20),(360,410),(225,410),(200,355),(190,300),(195,180)]),
+    'garrafa-aluminio-600': (['baixo'],        [(180,20),(360,20),(360,420),(250,420),(215,405),(185,390),(180,215)]),
+    'hero-1':               (['esq', 'baixo'], [(230,0),(900,0),(900,1200),(330,1200),(290,1020),(240,860),(200,760),(150,700),(180,500),(260,330)]),
+    'hero-3':               (['esq', 'baixo'], [(440,0),(760,0),(760,1040),(460,1040),(335,855),(330,700),(380,450),(440,400)]),
+    'hero-4':               (['esq'],          [(95,380),(200,300),(420,40),(900,40),(900,1100),(420,1100),(215,860),(175,805),(145,755),(128,700),(100,600),(95,500)]),
+}
+
+def _trechos_retos(v, minimo):
+    out = np.zeros_like(v); ini = None
+    for i, b in enumerate(list(v) + [False]):
+        if b and ini is None: ini = i
+        if not b and ini is not None:
+            if i - ini >= minimo: out[ini:i] = True
+            ini = None
+    return out
+
+def esmaece_braco(entrada, saida, lados, mantem, fim=0.75):
+    from PIL import ImageDraw
     im = Image.open(entrada)
-    a = np.asarray(im.convert('RGB' if fundo_preto else 'RGBA')).astype(float)
-    peca = (a.max(axis=2) > 12) if fundo_preto else (a[..., 3] > 200)
+    preto = im.mode == 'RGB'
+    a = np.asarray(im.convert('RGB' if preto else 'RGBA')).astype(float)
+    peca = (a.max(axis=2) > 12) if preto else (a[..., 3] > 200)
     ys, xs = np.nonzero(peca)
-    y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
+    y1, x0, x1 = ys.max(), xs.min(), xs.max()
     corte = np.zeros(peca.shape, bool)
-    if 'baixo' in lados: corte[y1 - 3:y1 + 1, :] |= peca[y1 - 3:y1 + 1, :]
-    if 'cima' in lados:  corte[y0:y0 + 4, :] |= peca[y0:y0 + 4, :]
-    if 'esq' in lados:   corte[:, x0:x0 + 4] |= peca[:, x0:x0 + 4]
-    if 'dir' in lados:   corte[:, x1 - 3:x1 + 1] |= peca[:, x1 - 3:x1 + 1]
-    t = np.clip(ndimage.distance_transform_edt(~corte) / alcance, 0, 1)
-    t = t * t * (3 - 2 * t)
-    if fundo_preto:
-        a = a * t[..., None]
+    if 'baixo' in lados:
+        v = _trechos_retos(peca[y1 - 3:y1 + 1, :].any(0), 12)
+        corte[y1 - 3:y1 + 1, :] |= peca[y1 - 3:y1 + 1, :] & v[None, :]
+    if 'esq' in lados:
+        v = _trechos_retos(peca[:, x0:x0 + 4].any(1), 12)
+        corte[:, x0:x0 + 4] |= peca[:, x0:x0 + 4] & v[:, None]
+    if 'dir' in lados:
+        v = _trechos_retos(peca[:, x1 - 3:x1 + 1].any(1), 12)
+        corte[:, x1 - 3:x1 + 1] |= peca[:, x1 - 3:x1 + 1] & v[:, None]
+    k = Image.new('L', im.size, 0)
+    ImageDraw.Draw(k).polygon([tuple(p) for p in mantem], fill=255)
+    k = np.asarray(k) > 0
+    dk = ndimage.distance_transform_edt(~k)
+    dc = ndimage.distance_transform_edt(~corte)
+    s = np.clip(dk / np.maximum(dk + dc, 1e-6) / fim, 0, 1)
+    t = 1 - s * s * (3 - 2 * s)
+    if preto:
+        a = a * t[..., None]; resto = a.max(axis=2)[corte].max()
     else:
-        a[..., 3] = a[..., 3] * t
+        a[..., 3] = a[..., 3] * t; resto = a[..., 3][corte].max()
     Image.fromarray(a.clip(0, 255).astype(np.uint8)).save(saida, quality=86, method=6)
-    print(saida.split('/')[-1], 'esmaecido em', lados)
+    print(saida.split('/')[-1], 'esmaecido; o que sobra no corte:', round(float(resto), 1))

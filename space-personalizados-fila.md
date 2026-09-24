@@ -371,6 +371,14 @@ garfo 1,5 × 7,5 · 223 g
   passou a ser preto, da cor do fundo das fotos.
 - **Peças na mão** (copo 473, copo 360, garrafas 500/800/alumínio, canecas
   alumínio/porcelana/700, canivete inox, chapéu, e as fotos 1, 3 e 4 da
-  capa): o braço terminava num corte reto com canto quadrado. Agora some
-  suave em direção ao corte — `esmaece_corte()` na ferramenta de recorte.
+  capa): o braço terminava num corte reto com canto quadrado.
+  - 1ª tentativa (`esmaece_corte`, 24/09): esmaecia pela distância até o
+    corte. Não serviu — o braço continuava terminando num "L", só que
+    borrado. A dona mandou print da foto 3 da capa: "continua esses
+    quadrados".
+  - Agora (`esmaece_braco` + tabela `BRACOS` na ferramenta): a peça e a mão
+    que segura ficam inteiras, e o braço some aos poucos a partir da mão até
+    zerar antes do corte, sem linha paralela a ele. Refeito a partir das
+    fotos do commit 2f7830a (antes de qualquer esmaecido). Conferido no card
+    claro, no escuro e na capa, no computador e no celular.
 - **Caneca 350 ml branca:** a sombra do chão embaixo da base saiu.
