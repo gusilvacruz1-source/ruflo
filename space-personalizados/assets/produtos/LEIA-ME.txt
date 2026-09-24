@@ -1,0 +1,81 @@
+FOTOS DOS PRODUTOS
+
+Cada produto do catálogo (o array PRODUCTS, em js/script.js) procura a
+foto aqui pelo próprio id. Formato WEBP, com fundo transparente: o site
+enquadra a peça sozinho dentro do card.
+
+  <id>.webp            produto sem variação de cor
+  <id>-<cor>.webp      uma por cor, quando o produto tem o campo cores
+                       (aí NÃO existe <id>.webp)
+  <id>-detalhe.webp    foto de detalhe, quando o produto tem detalhe: true.
+                       Só é baixada quando alguém clica na lupa.
+
+Enquanto a foto não chega o card mostra só o tom liso dele. Se um arquivo
+faltar, o card fica nesse tom — não aparece desenho no lugar.
+
+Tamanho que funciona bem: 480 x 480 px para a peça recortada, 600 x 600 para
+a foto de detalhe. Leve importa: o site inteiro rola com menos de 1 MB.
+
+A LISTA DE HOJE (30 produtos)
+
+  copo-473.webp                           Copo Térmico Inox 473ml
+  copo-360.webp                           Copo Térmico Inox 360ml
+  copo-360-tampa.webp                     Copo Térmico 360ml · Tampa Transparente  (foto das cores juntas)
+  copo-360-tampa-detalhe.webp               (foto de detalhe)
+  copo-long-neck-preto.webp               Copo Térmico Long Neck 420ml
+  copo-long-neck-amarelo.webp
+  copo-long-neck-turquesa.webp
+  copo-long-neck-laranja.webp
+  copo-long-neck-nude.webp
+  copo-long-neck-pink.webp
+  copo-long-neck-rosa.webp
+  copo-long-neck-roxo.webp
+  caneca-termica-700.webp                 Caneca Térmica Inox 700ml
+  caneca-aluminio-350.webp                Caneca em Alumínio 350ml
+  caneca-porcelana.webp                   Caneca de Porcelana 325ml
+  torre-xicaras.webp                      Torre de Xícaras 150ml
+  caneca-termica-350-cinza.webp           Caneca Térmica Inox 350ml
+  caneca-termica-350-preto.webp
+  caneca-termica-350-branco.webp
+  caneca-termica-350-verde.webp
+  caneca-termica-350-vermelho.webp
+  caneca-termica-350-detalhe.webp           (foto de detalhe)
+  caneca-termica-1200-petroleo.webp       Caneca Térmica 1,2L
+  caneca-termica-1200-azul-claro.webp
+  caneca-termica-1200-branco.webp
+  caneca-termica-1200-preto.webp
+  caneca-inox-180.webp                    Caneca Inox 180ml
+  garrafa-500.webp                        Garrafa Térmica 500ml
+  garrafa-led.webp                        Garrafa Térmica LED 500ml
+  garrafa-800.webp                        Garrafa Térmica 800ml
+  garrafa-800-silicone.webp               Garrafa Térmica 800ml · Base de Silicone
+  garrafa-aluminio-600.webp               Garrafa em Alumínio 600ml
+  kit-garrafa-450-azul.webp               Kit Garrafa Térmica 450ml
+  kit-garrafa-450-cinza.webp
+  kit-garrafa-450-inox.webp
+  kit-garrafa-450-preto.webp
+  kit-garrafa-450-rose.webp
+  kit-garrafa-450-verde.webp
+  kit-garrafa-450-detalhe.webp              (foto de detalhe)
+  churrasco-5.webp                        Kit Churrasco 5 Peças
+  churrasco-4.webp                        Kit Churrasco Maleta 4 Peças
+  churrasco-2-estojo.webp                 Kit Churrasco 2 Peças · Estojo
+  churrasco-2-caixa.webp                  Kit Churrasco 2 Peças · Caixa
+  churrasco-5-nylon.webp                  Kit Churrasco 5 Peças · Nylon
+  churrasco-4-nylon.webp                  Kit Churrasco 4 Peças · Nylon
+  churrasco-3.webp                        Kit Churrasco 3 Peças
+  canivete-inox.webp                      Canivete Inox com Presilha
+  canivete-aco.webp                       Canivete com Lâmina de Aço
+  caderneta-preto.webp                    Caderneta Couro Sintético
+  caderneta-azul.webp
+  caderneta-caramelo.webp
+  caderneta-cinza.webp
+  caneta-metal.webp                       Caneta Esferográfica em Metal
+  chaveiro-abridor.webp                   Chaveiro Abridor a Laser
+  chapeu-juta.webp                        Chapéu de Juta
+
+Fotos da capa (4 cenas de uso): hero-1.webp a hero-4.webp.
+
+Estão aqui e o site não usa (ficam de reserva):
+  caneca-inox-180-ambiente.webp    foto de ambiente, serviria de 5ª cena da capa
+  caneca-termica-350-familia.webp  as cores da caneca 350 ml juntas
