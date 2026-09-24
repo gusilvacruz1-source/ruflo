@@ -202,10 +202,12 @@ anunciar um preço que o cliente não consegue.
 
 O `<head>` tem `og:image` (`assets/compartilhar.jpg`, 1200×630: a nebulosa
 com a marca no meio) e os dados da loja em JSON-LD. Os endereços são
-**absolutos**, apontando para o GitHub Pages — o WhatsApp não busca imagem
-por caminho relativo. Se o site mudar de endereço, é trocar o prefixo
-`https://gusilvacruz1-source.github.io/ruflo/space-personalizados/` nas
-metas do `<head>`.
+**absolutos**, apontando para o endereço principal, o do Netlify
+(`https://spacepersonalizados.netlify.app/`) — o WhatsApp não busca imagem
+por caminho relativo. O Netlify está ligado ao branch `space-personalizados`
+e publica sozinho a cada envio; a cópia no GitHub Pages continua no ar e
+aponta para o Netlify pelo `canonical`. Se o endereço mudar (domínio
+próprio, por exemplo), é trocar esse prefixo nas metas do `<head>`.
 
 ### Fotos dos produtos
 
