@@ -534,11 +534,19 @@ body.is-locked{ overflow: hidden; }
   grid-column: 2; grid-row: 1;
   position: relative; aspect-ratio: 3/4;
   border-radius: 50vw 50vw var(--radius-sm) var(--radius-sm);
-  overflow: hidden; background: var(--ink-soft);
+  /* Preto puro, não --ink-soft. As quatro fotos da capa têm fundo preto
+     chapado (0,0,0) e ocupam 84% do arco: com o arco em #17181A sobrava um
+     retângulo preto dentro dele, com a borda à vista. Com o arco da mesma
+     cor do fundo das fotos, a emenda some - e sem pesar nada, ao contrário
+     de devolver transparência às fotos, que dobrava o tamanho delas. */
+  overflow: hidden; background: #000;
 }
 .hero__slide{ position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
 .hero__slide.is-active{ opacity: 1; }
-.hero__slide.has-photo{ background-size: 84% auto !important; background-position: center 62%; }
+/* Encostada no pé do arco: as fotos são de peça na mão, e o braço é cortado
+   pela borda de baixo da própria foto. Com a foto a 62% da altura, o braço
+   terminava no ar, a uns 20 px do fundo do arco; embaixo, ele sai pela borda. */
+.hero__slide.has-photo{ background-size: 84% auto !important; background-position: center bottom; }
 /* O véu existia para o texto se sustentar em cima da foto sangrada. Com a
    foto na coluna dela, não há mais nada para velar. */
 .hero__scrim{ display: none; }
