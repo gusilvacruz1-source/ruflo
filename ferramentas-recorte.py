@@ -275,3 +275,37 @@ def corta(entrada, saida, lado=720, folga=0.055, vao_min=3000, suavizar=1.0, som
     f.paste(corte, ((lado - corte.width) // 2, (lado - corte.height) // 2), corte)
     f.save(saida, quality=86, method=6)
     print(saida.split('/')[-1], corte.size)
+
+
+# ---------------------------------------------------------------------------
+# BRAÇO CORTADO RETO. Foto de peça na mão sai da câmera com o braço cortado
+# pela borda da foto. Recortado, esse corte vira uma linha reta com canto
+# quadrado no meio do card - a manga do copo 473, a mão da caneca 700. Aqui o
+# braço some suave em direção ao corte (smoothstep sobre a distância até ele),
+# e a peça não é tocada porque só os lados indicados contam como corte.
+#
+#   lados: quais lados da caixa da silhueta são o corte - 'baixo', 'esq',
+#          'dir', 'cima'. Olhar a foto antes: copo e caixa também têm lado
+#          reto, e esmaecer esses estraga o produto.
+#   fundo_preto: para as fotos da capa, que são RGB com fundo 0,0,0 - o braço
+#          escurece até o preto em vez de ficar transparente.
+# ---------------------------------------------------------------------------
+def esmaece_corte(entrada, saida, lados, alcance=70, fundo_preto=False):
+    im = Image.open(entrada)
+    a = np.asarray(im.convert('RGB' if fundo_preto else 'RGBA')).astype(float)
+    peca = (a.max(axis=2) > 12) if fundo_preto else (a[..., 3] > 200)
+    ys, xs = np.nonzero(peca)
+    y0, y1, x0, x1 = ys.min(), ys.max(), xs.min(), xs.max()
+    corte = np.zeros(peca.shape, bool)
+    if 'baixo' in lados: corte[y1 - 3:y1 + 1, :] |= peca[y1 - 3:y1 + 1, :]
+    if 'cima' in lados:  corte[y0:y0 + 4, :] |= peca[y0:y0 + 4, :]
+    if 'esq' in lados:   corte[:, x0:x0 + 4] |= peca[:, x0:x0 + 4]
+    if 'dir' in lados:   corte[:, x1 - 3:x1 + 1] |= peca[:, x1 - 3:x1 + 1]
+    t = np.clip(ndimage.distance_transform_edt(~corte) / alcance, 0, 1)
+    t = t * t * (3 - 2 * t)
+    if fundo_preto:
+        a = a * t[..., None]
+    else:
+        a[..., 3] = a[..., 3] * t
+    Image.fromarray(a.clip(0, 255).astype(np.uint8)).save(saida, quality=86, method=6)
+    print(saida.split('/')[-1], 'esmaecido em', lados)

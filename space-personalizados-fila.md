@@ -361,3 +361,16 @@ faca 29,9 × 3,8 · garfo 28,5 × 2,3 · gravação estojo 9 × 31, faca 1,5 × 
 garfo 1,5 × 7,5 · 223 g
 
 **churrasco-4** (cód. 01644) e **churrasco-2-estojo**: descrições já atualizadas.
+
+---
+
+## Bordas quadradas nas fotos (corrigido)
+
+- **Capa:** as 4 fotos têm fundo preto chapado e ocupavam 84% de um arco
+  cinza-escuro, deixando um retângulo preto com cantos à vista. O arco
+  passou a ser preto, da cor do fundo das fotos.
+- **Peças na mão** (copo 473, copo 360, garrafas 500/800/alumínio, canecas
+  alumínio/porcelana/700, canivete inox, chapéu, e as fotos 1, 3 e 4 da
+  capa): o braço terminava num corte reto com canto quadrado. Agora some
+  suave em direção ao corte — `esmaece_corte()` na ferramenta de recorte.
+- **Caneca 350 ml branca:** a sombra do chão embaixo da base saiu.
