@@ -1,0 +1,6 @@
+# Netlify: publica so a pasta do site da Space Personalizados.
+# Ao importar o repositorio no Netlify (branch space-personalizados), ele le
+# este arquivo e ja sabe o que publicar - nao ha build, o site e estatico.
+[build]
+  publish = "space-personalizados"
+  command = ""
