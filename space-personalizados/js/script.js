@@ -7,7 +7,7 @@
    [3] ESPAÇO DA FOTO  — tom liso até a foto chegar; foto só perto da tela
    [4] CATALOGO        — os produtos reais do catálogo Space
    [6] ABERTURA        — a nebulosa com a marca no meio + preloader
-   [8] UI              — hero, filtros, favoritos, contadores, orçamento
+   [8] UI              — filtros, favoritos, contadores, orçamento
    ========================================================================== */
 
 'use strict';
@@ -26,7 +26,11 @@ const CONFIG = {
   /* --- NEGÓCIO ----------------------------------------------------------- */
   whatsapp: '5542991343788',
   instagram: 'https://www.instagram.com/space_personalizados/',
-  heroSlideMs: 6000
+  /* A partir de quantas peças o site mostra preço. A tabela de cada produto
+     continua como veio da Space, com o preço da unidade avulsa; o que fica
+     abaixo deste número não aparece em lugar nenhum e sai por orçamento no
+     WhatsApp. Voltar a mostrar a peça avulsa é trocar para 1. */
+  qtdMinima: 10
 };
 
 /* ============================================================================
@@ -140,8 +144,8 @@ function buscaFoto(el) {
   if (!real) return;
   const probe = new Image();
   const aplica = () => {
-    // o #dealMedia é reaproveitado entre produtos: sem esta checagem uma
-    // sondagem lenta pinta a foto do produto anterior sobre o novo
+    // a foto do card troca quando muda a cor: sem esta checagem uma
+    // sondagem lenta pinta a foto da cor anterior sobre a nova
     if (el.dataset.src !== real) return;
     el.style.setProperty('--photo', `url("${comVersao(real)}")`);
     el.style.backgroundImage = `url("${comVersao(real)}")`;
@@ -173,7 +177,7 @@ function paint(el) {
   el.classList.remove('has-photo');
   if (!el.dataset.src) return;
   if (!fotoIO) { buscaFoto(el); return; }
-  fotoIO.unobserve(el);                       // o #dealMedia volta aqui trocado
+  fotoIO.unobserve(el);                       // um card repintado volta aqui
   const r = el.getBoundingClientRect();
   if (r.top < innerHeight + 700 && r.bottom > -700) buscaFoto(el);
   else fotoIO.observe(el);
@@ -186,8 +190,9 @@ function hydratePlaceholders(root = document) {
 /* ============================================================================
    [4] CATÁLOGO — dados reais do catálogo Space Personalizados
    --------------------------------------------------------------------------
-   tiers: faixas de preço por quantidade [a partir de quantas, preço unitário]
-           A primeira faixa começa em 1: não há pedido mínimo em item nenhum.
+   tiers: faixas de preço por quantidade [a partir de quantas, preço unitário],
+          como a Space passou. O site corta tudo abaixo de CONFIG.qtdMinima
+          logo depois da lista (veja "A PARTIR DE 10").
    ========================================================================== */
 
 const PRODUCTS = [
@@ -347,6 +352,20 @@ const PRODUCTS = [
     tiers:[[1,80.00],[5,70.00],[10,60.00]] }
 ];
 
+/* A PARTIR DE 10
+   A dona pediu para tirar o preço de 1 a 9 unidades. A faixa que cobre a
+   quantidade mínima passa a começar nela, e as abaixo somem:
+     copo 473   [1] 49,99 [10] 24,90 ...  ->  [10] 24,90 ...
+     caneca 700 [1] 69,90 [20] 49,90 ...  ->  [10] 69,90 [20] 49,90 ...
+     chapéu     [1] 80 [5] 70 [10] 60     ->  [10] 60
+   Daqui para baixo nenhuma conta conhece o preço avulso. */
+function aPartirDe(tiers, min) {
+  const cobre = tiers.filter(([q]) => q <= min).pop();
+  const depois = tiers.filter(([q]) => q > min);
+  return cobre ? [[min, cobre[1]], ...depois] : depois;
+}
+PRODUCTS.forEach(p => { if (p.tiers) p.tiers = aPartirDe(p.tiers, CONFIG.qtdMinima); });
+
 const byId = id => PRODUCTS.find(p => p.id === id);
 
 /* SOB CONSULTA
@@ -355,25 +374,26 @@ const byId = id => PRODUCTS.find(p => p.id === id);
    continua indo na mensagem - o que nao existe e o numero. Tudo que conta
    dinheiro daqui para baixo pergunta isto primeiro. */
 const semPreco = p => !p.tiers || !p.tiers.length;
+/* Abaixo da primeira faixa (menos de 10 peças) o produto também fica sem
+   preço: entra no orçamento e na mensagem, com o valor a combinar. */
+const semPrecoPara = (p, qty) => semPreco(p) || qty < p.tiers[0][0];
 
-/** Preço unitário para uma quantidade, respeitando as faixas. */
+/** Preço unitário para uma quantidade, respeitando as faixas. 0 = a combinar. */
 function unitPrice(p, qty) {
-  if (semPreco(p)) return 0;
+  if (semPrecoPara(p, qty)) return 0;
   let price = p.tiers[0][1];
   for (const [min, val] of p.tiers) if (qty >= min) price = val;
   return price;
 }
-/* O número em destaque é o que o cliente paga levando UMA peça. O preço de
-   volume é a promessa, não a manchete: anunciar R$ 2,25 e riscar R$ 4,00 é
-   mostrar um preço que exige 500 peças para existir. */
-const startPrice = p => unitPrice(p, 1);
+/* O número em destaque é o da primeira faixa, a menor quantidade com preço.
+   O preço de volume é a promessa, não a manchete: anunciar R$ 2,25 é mostrar
+   um preço que exige 500 peças para existir. */
+const startPrice = p => (semPreco(p) ? 0 : p.tiers[0][1]);
 const bestPrice  = p => (semPreco(p) ? 0 : Math.min(...p.tiers.map(t => t[1])));
 const bestQty    = p => (semPreco(p) ? 0 : p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0]);
 const hasVolume  = p => !semPreco(p) && bestPrice(p) < startPrice(p);
-/* Quanto o preço da peça cai da unidade avulsa até a melhor faixa. É o único
-   selo que o card carrega: sai direto da tabela do catálogo, ao contrário de
-   "Mais vendido" ou "Premium", que eram rótulos que eu tinha inventado. */
-const dropPct    = p => Math.round((1 - bestPrice(p) / startPrice(p)) * 100);
+/* Quantidade com que o card e o orçamento começam. */
+const qtdInicial = () => CONFIG.qtdMinima;
 /* --- VARIAÇÕES DE COR ----------------------------------------------------
    Um produto pode vir em mais de uma cor. A foto de cada uma mora em
    assets/produtos/<id>-<cor>.webp; produto sem cor segue em <id>.webp como
@@ -404,11 +424,6 @@ const fotoDetalhe = p => `assets/produtos/${p.id}-detalhe.webp`;
    chave continua sendo o próprio id, então os carrinhos já salvos no
    navegador seguem valendo sem conversão nenhuma. */
 const chaveItem = (id, cor) => (cor ? id + '|' + cor : id);
-
-function selo(p) {
-  if (!hasVolume(p)) return '';
-  return `<span class="tag tag--drop">−${dropPct(p)}% no lote de ${bestQty(p)}</span>`;
-}
 
 /* ============================================================================
    [6] ABERTURA — a nebulosa com a marca no meio
@@ -508,62 +523,16 @@ const saveFavs = () => store.set('favs', [...favs]);
 
 /* --- templates ------------------------------------------------------------ */
 
-function showcaseCard(p, wide) {
-  const base = startPrice(p);
-  const fav = favs.has(p.id) ? ' is-on' : '';
-  // fotoDe e nao `${p.id}.webp`: produto com cor so tem <id>-<cor>.webp, e a
-  // vitrine pedia um arquivo que nao existe - 404 e card vazio
-  const media = `<div class="pcard__media" data-ph="${p.ph}" data-src="${fotoDe(p)}"></div>`;
-  const top2 = `
-    <div class="pcard__top">
-      <button class="iconbtn iconbtn--outline" data-add="${p.id}" aria-label="Adicionar ${p.name} ao orçamento">${ICO.arrow}</button>
-      <button class="iconbtn iconbtn--outline pcard__fav${fav}" data-fav="${p.id}" aria-label="Favoritar ${p.name}" aria-pressed="${!!fav}">${ICO.heart}</button>
-    </div>`;
-
-  if (wide) {
-    return `<article class="pcard pcard--wide" data-cat="${p.cat}" data-id="${p.id}">
-      ${media}${top2}
-      <div class="pcard__corpo">
-        <h3 class="pcard__name">${p.name}</h3>
-        <div class="pcard__foot">
-          <a class="pill pill--light pcard__more" href="#catalogo" data-jump="${p.id}">SAIBA MAIS ${ICO.arrow.replace('<svg', '<svg class="ico-arrow"')}</a>
-          <span class="minlot">a partir de 1 uni</span>
-        </div>
-      </div>
-    </article>`;
-  }
-
-  return `<article class="pcard" data-cat="${p.cat}" data-id="${p.id}">
-    ${media}${top2}
-    <div class="pcard__corpo">
-      <div class="pcard__tags">${selo(p)}</div>
-      <h3 class="pcard__name">${p.name}</h3>
-      <p class="pcard__desc">${p.desc}</p>
-      <div class="pcard__foot">
-        <div>
-          ${semPreco(p) ? `
-          <span class="pcard__price"><b>sob consulta</b></span>
-          <span class="pcard__unit">orçamento pelo WhatsApp</span>` : `
-          <span class="pcard__price"><b>${money(base)}</b><span class="pcard__each">/un</span></span>
-          <span class="pcard__unit">sem pedido mínimo${
-            hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : ''}</span>`}
-        </div>
-      </div>
-    </div>
-  </article>`;
-}
-
 function catalogCard(p) {
   const best = bestPrice(p), start = startPrice(p);
   // Com uma faixa só, a tabela repete o preço que já está em destaque logo
   // abaixo — quatro vezes a mesma informação no mesmo card.
-  // Sem pedido mínimo a primeira faixa começa em 1, e "1+ unidades" lê torto.
-  // Intervalo fechado diz a mesma coisa sem ambiguidade: quem leva 12 vê na
-  // hora que está na faixa de 1 a 29, não na de 30.
+  // Intervalo fechado em vez de "10+": quem leva 12 vê na hora que está na
+  // faixa de 10 a 29, não na de 30.
   const tiers = hasVolume(p)
     ? p.tiers.map(([q, v], i) => {
         const ate = p.tiers[i + 1] ? p.tiers[i + 1][0] - 1 : 0;
-        const faixa = ate ? `${q} a ${ate} unidades` : `${q} unidades ou mais`;
+        const faixa = ate ? `${q} a ${ate} peças` : `${q} peças ou mais`;
         return `<li class="${v === best ? 'is-best' : ''}"><span>${faixa}</span><b>${money(v)} <i>/un</i></b></li>`;
       }).join('')
     : '';
@@ -583,7 +552,6 @@ function catalogCard(p) {
       ${temDetalhe(p) ? `<div class="ccard__detalhe" aria-hidden="true"></div>
       <button type="button" class="ccard__lupa" data-detalhe="${p.id}" aria-pressed="false"
               title="Ver detalhe"><span class="soLeitor">Ver detalhe de ${p.name}</span>${ICO.lupa}</button>` : ''}
-      <div class="ccard__tags">${selo(p)}</div>
       <button class="iconbtn iconbtn--outline ccard__fav pcard__fav${fav}" data-fav="${p.id}" aria-label="Favoritar ${p.name}" aria-pressed="${!!fav}">${ICO.heart}</button>
     </div>
     <h3 class="ccard__name">${p.name}</h3>
@@ -596,14 +564,13 @@ function catalogCard(p) {
         <span class="ccard__from">valor</span>
         <span class="ccard__price ccard__price--consulta">sob consulta</span>
         <p class="ccard__min"><b>orçamento pelo WhatsApp</b><br>valor conforme a quantidade</p>` : `
-        <span class="ccard__from">preço por unidade</span>
+        <span class="ccard__from">a partir de ${p.tiers[0][0]} peças</span>
         <span class="ccard__price">${money(start)}<i class="ccard__each">/un</i></span>
-        <p class="ccard__min"><b>sem pedido mínimo</b>${
-          hasVolume(p) ? `<br>cai para ${money(best)}/un a partir de ${bestQty(p)}` : ''}</p>`}
+        ${hasVolume(p) ? `<p class="ccard__min">cai para <b>${money(best)}</b>/un a partir de ${bestQty(p)}</p>` : ''}`}
       </div>
       <div class="ccard__qty">
         <button data-step="-1" aria-label="Diminuir">${ICO.minus}</button>
-        <input type="number" value="1" min="1" step="1" aria-label="Quantidade de ${p.name}">
+        <input type="number" value="${qtdInicial(p)}" min="1" step="1" aria-label="Quantidade de ${p.name}">
         <button data-step="1" aria-label="Aumentar">${ICO.plus}</button>
       </div>
     </div>
@@ -612,59 +579,6 @@ function catalogCard(p) {
       <a class="pill pill--ghost" data-wa="${p.id}" href="#" target="_blank" rel="noopener">WHATSAPP</a>
     </div>
   </article>`;
-}
-
-/* --- vitrine (4 destaques, 3º em card largo) ------------------------------ */
-
-/* A seção se chama "Novos Brindes" e abria com os quatro produtos mais
-   antigos do catálogo. Abre agora com os que acabaram de chegar; o resto do
-   catálogo vem depois, nas setas. Ao cadastrar novidade, é trocar aqui. */
-const SHOWCASE_IDS = ['copo-long-neck', 'garrafa-led', 'copo-360-tampa', 'kit-garrafa-450'];
-const PAGE = 4;
-let showcaseFilter = 'todos';
-let showcaseStart = 0;
-let showcaseOrder = [...SHOWCASE_IDS, ...PRODUCTS.map(p => p.id).filter(id => !SHOWCASE_IDS.includes(id))];
-
-function showcaseList() {
-  const ids = showcaseFilter === 'todos'
-    ? showcaseOrder
-    : PRODUCTS.filter(p => p.cat === showcaseFilter).map(p => p.id);
-  return ids.map(byId).filter(Boolean);
-}
-
-function renderShowcase(filter) {
-  if (filter !== undefined && filter !== showcaseFilter) { showcaseFilter = filter; showcaseStart = 0; }
-  const host = $('#showcase');
-  const list = showcaseList();
-  if (!list.length) return;
-
-  showcaseStart = ((showcaseStart % list.length) + list.length) % list.length;
-  const pool = Array.from({ length: Math.min(PAGE, list.length) },
-                          (_, k) => list[(showcaseStart + k) % list.length]);
-
-  // o grid acompanha quantos cards realmente existem: uma categoria com
-  // 2 itens não pode deixar 60% da linha vazia
-  // atributo de layout do CSS (.showcase[data-count="N"]); o contador animado
-  // usa data-count-to justamente para não escrever por cima destes cards
-  host.dataset.count = String(pool.length);
-  // O terceiro card era largo, ocupando duas colunas: com quatro cards em
-  // quatro colunas isso pede cinco vagas e o último caía sozinho numa linha
-  // nova, deixando meia seção vazia. Agora todos têm a mesma medida e o
-  // ritmo vem do degrau vertical, no CSS.
-  host.innerHTML = pool.map(p => showcaseCard(p, false)).join('');
-  hydratePlaceholders(host);
-
-  $('#showcaseTotal').textContent = String(list.length);
-  $('#showcaseIndex').textContent = String(showcaseStart + 1);
-
-  animaEntrada(host, 70);
-}
-
-function shiftShowcase(dir) {
-  const n = showcaseList().length;
-  if (!n) return;
-  showcaseStart = (showcaseStart + dir * PAGE % n + n) % n;
-  renderShowcase();
 }
 
 function renderCatalog(filter = 'todos') {
@@ -698,7 +612,7 @@ const Cart = (() => {
     const p = byId(id);
     if (!p) return;
     const c = corDe(p, cor);
-    const q = Math.max(1, qty || 1);
+    const q = Math.max(1, qty || qtdInicial(p));
     const found = achaPor(chaveItem(id, c && c.id));
     if (found) found.qty += q;
     else items.push(c ? { id, qty: q, cor: c.id } : { id, qty: q });
@@ -725,13 +639,13 @@ const Cart = (() => {
       const c = corDe(p, i.cor);
       // a cor tem que ir no texto: é o que a Space precisa para separar o
       // pedido, e o cliente escolheu na tela
-      const valor = semPreco(p) ? 'a combinar' : `${money(u)} = ${money(u * i.qty)}`;
+      const valor = semPrecoPara(p, i.qty) ? 'a combinar' : `${money(u)} = ${money(u * i.qty)}`;
       return `• ${p.name}${c ? ' · ' + c.nome : ''}: ${i.qty} uni × ${valor}`;
     });
     /* Itens sob consulta entram na mensagem mas não na soma. Sem esta linha a
        Estimativa pareceria o total do pedido inteiro, e ela é só a parte que
        o site sabe calcular. */
-    const aConsultar = items.filter(i => semPreco(byId(i.id))).length;
+    const aConsultar = items.filter(i => semPrecoPara(byId(i.id), i.qty)).length;
     const rodape = aConsultar
       ? `\n\nEstimativa dos itens com preço em tabela: ${money(total())}` +
         `\n(${aConsultar} ${aConsultar > 1 ? 'itens ficam' : 'item fica'} para orçamento)`
@@ -745,7 +659,7 @@ const Cart = (() => {
     /* O total soma só o que tem preço. Mostrar R$ 0,00 para um orçamento com
        três itens sob consulta seria mentira por omissão, então o aviso vai
        junto do número. */
-    const aConsultar = items.filter(i => semPreco(byId(i.id))).length;
+    const aConsultar = items.filter(i => semPrecoPara(byId(i.id), i.qty)).length;
     $('#drawerTotal').textContent = money(total());
     const nota = $('#drawerNota');
     if (nota) {
@@ -765,24 +679,27 @@ const Cart = (() => {
     body.innerHTML = items.map(i => {
       const p = byId(i.id);
       const u = unitPrice(p, i.qty);
-      /* "faixa de 1+" nao dizia nada com o pedido minimo fora. No lugar entra
-         a proxima faixa: quanto a peca custaria subindo o lote. E a unica
-         informacao do orcamento que ajuda quem esta decidindo a quantidade. */
+      /* A próxima faixa: quanto a peça custaria subindo o lote. É a única
+         informação do orçamento que ajuda quem está decidindo a quantidade.
+         Abaixo de 10 peças ela vira o aviso de onde o preço começa. */
       const prox = semPreco(p) ? null : p.tiers.find(([q]) => q > i.qty);
       const dica = prox ? ` · a partir de ${prox[0]} uni sai a ${money(prox[1])}` : '';
+      const meta = semPreco(p) ? 'sob consulta'
+        : semPrecoPara(p, i.qty) ? `menos de ${p.tiers[0][0]} peças: a combinar${dica}`
+        : `${money(u)} / uni${dica}`;
       const c = corDe(p, i.cor);
       return `<div class="ditem" data-chave="${chaveItem(i.id, i.cor)}">
         <span class="ditem__thumb" data-ph="${p.ph}" data-src="${fotoDe(p, i.cor)}"></span>
         <div class="ditem__body">
           <p class="ditem__name">${p.name}${c ? ` <span class="ditem__cor">· ${c.nome}</span>` : ''}</p>
-          <p class="ditem__meta">${semPreco(p) ? 'sob consulta' : `${money(u)} / uni${dica}`}</p>
+          <p class="ditem__meta">${meta}</p>
           <div class="ditem__row">
             <span class="ditem__qty">
               <button data-q="-1" aria-label="Diminuir">−</button>
               <b>${i.qty}</b>
               <button data-q="1" aria-label="Aumentar">+</button>
             </span>
-            <span class="ditem__price">${semPreco(p) ? 'a combinar' : money(u * i.qty)}</span>
+            <span class="ditem__price">${semPrecoPara(p, i.qty) ? 'a combinar' : money(u * i.qty)}</span>
           </div>
           <button class="ditem__del" data-del>remover</button>
         </div>
@@ -796,12 +713,12 @@ const Cart = (() => {
 
 function waLink(id, qty, cor) {
   const p = byId(id);
-  const q = qty || 1;
+  const q = qty || qtdInicial(p);
   const u = unitPrice(p, q);
   const c = corDe(p, cor);
   // sem preco na tabela nao ha valor de referencia a mandar: "R$ 0,00 / uni"
   // no WhatsApp parecia brinde de graca
-  const ref = semPreco(p) ? '' : `\n• Valor de referência: ${money(u)} / uni`;
+  const ref = semPrecoPara(p, q) ? '' : `\n• Valor de referência: ${money(u)} / uni`;
   const txt = `Olá, Space! Tenho interesse em:\n\n• ${p.name}${c ? ' · ' + c.nome : ''}\n• Quantidade: ${q} uni${ref}\n\nPodem me passar o orçamento?`;
   return `https://wa.me/${CONFIG.whatsapp}?text=${encodeURIComponent(txt)}`;
 }
@@ -971,7 +888,7 @@ document.addEventListener('click', e => {
     // campo vazio dava NaN, que o input[type=number] apagava — e os
     // botões ficavam mortos até alguém digitar um número na mão
     const cur = parseInt(input.value, 10);
-    const from = Number.isFinite(cur) ? cur : 1;
+    const from = Number.isFinite(cur) ? cur : qtdInicial();
     const next = from + Number(step.dataset.step);
     input.value = Math.max(1, next);
     return;
@@ -984,28 +901,6 @@ document.addEventListener('click', e => {
     const alvo = $(`#catalogFilters [data-cfilter="${cjump.dataset.cjump}"]`);
     if (alvo) alvo.click();
     $('#catalogo').scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth' });
-    return;
-  }
-
-  /* ir até o produto no catálogo */
-  const jump = e.target.closest('[data-jump]');
-  if (jump) {
-    e.preventDefault();
-    const id = jump.dataset.jump;
-    let el = $('#p-' + id);
-    if (!el) {
-      // o card não está na tela porque o catálogo está filtrado noutra
-      // categoria: volta para "Todos" e procura de novo
-      resetCatalogFilter();
-      el = $('#p-' + id);
-    }
-    if (el) {
-      el.scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth', block: 'center' });
-      el.classList.add('is-target');
-      setTimeout(() => el.classList.remove('is-target'), 2400);
-    } else {
-      $('#catalogo').scrollIntoView({ behavior: prefersReduced ? 'auto' : 'smooth' });
-    }
     return;
   }
 
@@ -1052,35 +947,6 @@ function wireFilters(hostSel, attr, cb) {
   });
 }
 
-/* --- hero slider ----------------------------------------------------------- */
-
-const HeroSlider = (() => {
-  const slides = $$('.hero__slide');
-  const now = $('#heroStepNow');
-  const fill = $('#heroStepFill');
-  let i = 0, timer;
-
-  function go(n) {
-    i = (n + slides.length) % slides.length;
-    slides.forEach((s, k) => s.classList.toggle('is-active', k === i));
-    now.textContent = String(i + 1).padStart(2, '0');
-    fill.style.transform = `translateY(${i * 100}%)`;
-    restart();
-  }
-  function restart() {
-    clearInterval(timer);
-    if (!prefersReduced) timer = setInterval(() => go(i + 1), CONFIG.heroSlideMs);
-  }
-  function init() {
-    if (!slides.length) return;
-    fill.style.height = (100 / slides.length) + '%';
-    $('#heroNext').addEventListener('click', () => go(i + 1));
-    $('#heroPrev').addEventListener('click', () => go(i - 1));
-    go(0);
-  }
-  return { init };
-})();
-
 /* --- nav ------------------------------------------------------------------- */
 
 function wireNav() {
@@ -1119,10 +985,9 @@ function wireNav() {
   corDaBarra();
   if (intro) nav.classList.toggle('is-hidden', intro.getBoundingClientRect().bottom > 90);
 
-  // #top é o <main> inteiro: cruzava a faixa do observer desde o load e
-  // nunca mais emitia, então INÍCIO jamais voltava a acender
+  // um alvo por link, na mesma ordem do menu
   const links = $$('#navMenu a');
-  const targets = [$('.hero'), $('#novidades'), $('#produtos'), $('#historia'), $('#catalogo')];
+  const targets = links.map(a => $(a.getAttribute('href')));
   const spy = new IntersectionObserver(entries => {
     entries.forEach(en => {
       if (!en.isIntersecting) return;
@@ -1194,50 +1059,6 @@ function wireReveal() {
   $$('.reveal, [data-count-to]').forEach(el => io.observe(el));
 }
 
-/* ── Inclinação 3D + brilho que segue o cursor ─────────────────────────
-   Um único listener delegado no documento: 30 cards com listener cada um
-   custaria caro e não daria nada a mais. */
-function wireTilt() {
-  if (prefersReduced || matchMedia('(hover: none)').matches) return;
-
-  const SEL = '.pcard, .ccard, .feat--dark, .dealCard, .statCard';
-  let active = null, rect = null, pending = null, queued = false;
-
-  document.addEventListener('mousemove', e => {
-    const card = e.target.closest(SEL);
-    if (card !== active) {
-      if (active) reset(active);
-      active = card;
-      // o rect só muda com scroll ou resize, não a cada movimento do mouse
-      rect = card ? card.getBoundingClientRect() : null;
-      if (card) card.classList.add('is-tilting');
-    }
-    if (!card || !rect) return;
-    pending = [(e.clientX - rect.left) / rect.width, (e.clientY - rect.top) / rect.height];
-    if (queued) return;
-    queued = true;
-    requestAnimationFrame(apply);
-  }, { passive: true });
-
-  function apply() {
-    queued = false;
-    if (!active || !pending) return;
-    const [px, py] = pending;
-    active.style.setProperty('--mx', (px * 100).toFixed(1) + '%');
-    active.style.setProperty('--my', (py * 100).toFixed(1) + '%');
-    active.style.transform =
-      `perspective(1100px) rotateX(${((0.5 - py) * 7).toFixed(2)}deg) `
-      + `rotateY(${((px - 0.5) * 9).toFixed(2)}deg) translateY(-6px)`;
-  }
-
-  function reset(card) {
-    card.classList.remove('is-tilting');
-    card.style.transform = '';
-  }
-  addEventListener('scroll', () => { if (active) rect = active.getBoundingClientRect(); }, { passive: true });
-  document.addEventListener('mouseleave', () => { if (active) { reset(active); active = null; rect = null; } });
-}
-
 /* ── Paralaxe da luz de fundo ──────────────────────────────────────────
    As manchas derivam com o scroll além da própria animação, então o
    material atrás do vidro nunca fica parado. */
@@ -1270,95 +1091,6 @@ function wireParallax() {
   frame();
 }
 
-function wireMagnetic() {
-  if (prefersReduced || matchMedia('(hover: none)').matches) return;
-  $$('.magnetic').forEach(el => {
-    el.addEventListener('mousemove', e => {
-      const r = el.getBoundingClientRect();
-      const x = (e.clientX - r.left - r.width / 2) * 0.22;
-      const y = (e.clientY - r.top - r.height / 2) * 0.32;
-      el.style.transform = `translate(${x}px, ${y}px)`;
-    });
-    el.addEventListener('mouseleave', () => { el.style.transform = ''; });
-  });
-}
-
-/* --- destaque "Mais desejados" -------------------------------------------- */
-
-/* Os quatro grupos eram Oferta / Mais vendidos / Novidades / Recomendados, e
-   a lista de cada um era escrita na mão — a loja não tem ranking de venda nem
-   data de entrada de produto para sustentar nenhum dos quatro. Agora cada
-   grupo é uma pergunta que o catálogo responde sozinho. */
-/* Item sob consulta tem preco 0 para as contas, e 0 e menor que 30: a aba
-   "Ate R$ 30/un" abria com uma caneca SOB CONSULTA na manchete, e a de kits
-   de churrasco, ordenada do mais barato, tambem. Quem compara preco so olha
-   para quem tem preco; em churrasco os sob consulta vao para o fim da fila. */
-const comPreco = p => !semPreco(p);
-const porPreco = (a, b) => (semPreco(a) - semPreco(b)) || (startPrice(a) - startPrice(b));
-const GRUPOS = {
-  queda:    { ordem: (a, b) => dropPct(b) - dropPct(a),           filtra: hasVolume },
-  ate30:    { ordem: porPreco,                                     filtra: p => comPreco(p) && startPrice(p) <= 30 },
-  acima70:  { ordem: (a, b) => startPrice(b) - startPrice(a),     filtra: p => comPreco(p) && startPrice(p) > 70 },
-  churrasco:{ ordem: porPreco,                                     filtra: p => p.cat === 'churrasco' }
-};
-
-function grupo(key) {
-  const g = GRUPOS[key] || GRUPOS.queda;
-  return PRODUCTS.filter(g.filtra).sort(g.ordem);
-}
-
-function mostraDestaque(p) {
-  if (!p) return;
-  $('#dealName').textContent = p.name;
-  $('#dealDesc').textContent = p.desc;
-  $('#dealPrice').innerHTML = semPreco(p)
-    ? 'sob consulta'
-    : `${money(startPrice(p))}<i class="dealCard__each">/un</i>`;
-  $('#dealUnit').textContent = semPreco(p)
-    ? 'orçamento pelo WhatsApp'
-    : 'sem pedido mínimo' +
-      (hasVolume(p) ? ` · até ${money(bestPrice(p))}/un a partir de ${bestQty(p)}` : '');
-  $('#dealMin').textContent = 'a partir de 1 uni';
-  $('#dealAdd').dataset.add = p.id;
-  const media = $('#dealMedia');
-  media.dataset.ph = p.ph;
-  media.dataset.src = fotoDe(p);
-  media.setAttribute('aria-label', p.name);
-  paint(media);
-  const card = $('#dealCard');
-  if (card && !prefersReduced) {
-    card.style.animation = 'none'; void card.offsetWidth;
-    card.style.animation = 'entraCard .5s var(--ease) both';
-  }
-}
-
-/* Os dois atalhos ao lado do card diziam "17 Caneca de Porcelana" e "18 Torre
-   de Xícaras", fixos no HTML: dois produtos escolhidos a mão com números que
-   não eram posição, preço nem nada. Agora são o 2º e o 3º da mesma aba, com o
-   preço da unidade no lugar do número — o card grande mostra o primeiro da
-   pergunta, os atalhos mostram quem vem logo atrás. */
-const ICO_SOBE = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M6 11l6-6 6 6" fill="none" stroke="currentColor" stroke-width="1.8"/></svg>';
-function mostraAtalhos(lista) {
-  const host = $('.vcards');
-  if (!host) return;
-  host.innerHTML = lista.slice(1, 3).map(p => `
-    <button class="vcard" data-jump="${p.id}" aria-label="Ver ${p.name} no catálogo">
-      <b>${semPreco(p) ? 'sob consulta' : money(startPrice(p))}</b><span>${p.name}</span>${ICO_SOBE}
-    </button>`).join('');
-}
-
-function mostraGrupo(key) {
-  const lista = grupo(key);
-  mostraDestaque(lista[0]);
-  mostraAtalhos(lista);
-}
-
-function wireDeals() {
-  wireFilters('#dealFilters', 'deal', mostraGrupo);
-  // o HTML já nasce com a primeira aba marcada; deixa o card de acordo com ela
-  mostraGrupo('queda');
-}
-
 /* ============================================================================
    INIT
    ========================================================================== */
@@ -1370,48 +1102,10 @@ function init() {
 
   hydratePlaceholders();
   wireSplit();
-  renderShowcase('todos');
   renderCatalog();
   Cart.paint();
 
-  wireFilters('#filters', 'filter', renderShowcase);
   wireFilters('#catalogFilters', 'cfilter', renderCatalog);
-  wireDeals();
-
-  $('#showcaseNext').addEventListener('click', () => shiftShowcase(1));
-  $('#showcasePrev').addEventListener('click', () => shiftShowcase(-1));
-  $('#typesShuffle').addEventListener('click', () => {
-    // Fisher-Yates: sort(() => Math.random() - .5) não é embaralhamento,
-    // é um comparador inconsistente que deixa o começo quase intacto
-    const ids = PRODUCTS.map(p => p.id);
-    for (let i = ids.length - 1; i > 0; i--) {
-      const k = Math.floor(Math.random() * (i + 1));
-      [ids[i], ids[k]] = [ids[k], ids[i]];
-    }
-    showcaseOrder = ids;
-    showcaseStart = 0;
-    renderShowcase('todos');
-    $$('#filters [role="tab"]').forEach(b => {
-      const on = b.dataset.filter === 'todos';
-      b.classList.toggle('is-active', on);
-      b.setAttribute('aria-selected', String(on));
-    });
-    toast('Destaques renovados');
-  });
-
-  /* O preço do card da capa estava escrito à mão no HTML e derrapou assim que
-     a tabela do copo mudou: dizia 29,90 com o produto já em 49,99. Agora sai
-     do catálogo, então não tem como divergir de novo. */
-  (function sincronizaCardDaCapa() {
-    const alvo = $('#floatPreco');
-    if (!alvo) return;
-    const botao = $('.floatCard [data-add]');
-    const p = botao && byId(botao.dataset.add);
-    if (!p) return;
-    alvo.innerHTML = semPreco(p)
-      ? 'sob consulta'
-      : `${money(startPrice(p))}<i class="floatCard__each">/un</i>`;
-  })();
 
   /* NÚMEROS NO TEXTO
      O texto corrido citava o catálogo à mão em sete lugares: "Dezoito itens",
@@ -1421,7 +1115,9 @@ function init() {
      o catálogo pergunta a ele:
        data-conta="produtos" | "<categoria>"   quantos itens (data-pad: 2 dígitos)
        data-preco="<id>" [data-qtd="N"|"melhor"] preço da unidade naquela faixa
+                                                 (sem data-qtd: a primeira faixa)
        data-lote="<id>"                          quantas peças para o melhor preço
+       data-minimo                               a partir de quantas peças há preço
      O número escrito no HTML fica só para quem abrir sem JavaScript. */
   (function amarraTextoAoCatalogo() {
     $$('[data-conta]').forEach(el => {
@@ -1434,22 +1130,20 @@ function init() {
       if (!p) return;
       if (semPreco(p)) { el.textContent = 'sob consulta'; return; }
       const q = el.dataset.qtd;
-      el.textContent = money(q === 'melhor' ? bestPrice(p) : unitPrice(p, Number(q) || 1));
+      el.textContent = money(q === 'melhor' ? bestPrice(p) : q ? unitPrice(p, Number(q)) : startPrice(p));
     });
     $$('[data-lote]').forEach(el => {
       const p = byId(el.dataset.lote);
       if (p && !semPreco(p)) el.textContent = String(bestQty(p));
     });
+    $$('[data-minimo]').forEach(el => { el.textContent = String(CONFIG.qtdMinima); });
     // o contador animado lê o alvo de data-count-to, não do texto
     const contador = $('#contaProdutos');
     if (contador) contador.dataset.countTo = String(PRODUCTS.length);
   })();
 
-  HeroSlider.init();
   wireNav();
   wireReveal();
-  wireMagnetic();
-  wireTilt();
   wireParallax();
 
   Abertura.boot().catch(err => { console.error('[abertura]', err); Abertura.libera(); });

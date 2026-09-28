@@ -82,23 +82,19 @@ existe mais progresso a fingir.
 Todas as seções saem do array `PRODUCTS`, no `js/script.js`: são os
 produtos reais do catálogo Space, com as faixas de preço por quantidade.
 
-- **Hero** — "Não é tinta. É o metal.", slider de 4 fotos e o card do Copo
-  Térmico, com o preço lido do catálogo
-- **Diferenciais** — "Grave o que é seu" e o índice do catálogo por
-  categoria, com a contagem de cada uma
-- **Novos Brindes / Por Tipo** — filtros em pílula, 4 cards em destaque e
-  paginação que percorre o catálogo inteiro
-- **Mais Desejados** — 5.000+ copos vendidos e quatro abas que o catálogo
-  responde sozinho: maior queda no lote, até R$ 30, acima de R$ 70 e kits
-  de churrasco. O card grande mostra o 1º da aba; os dois atalhos ao lado,
-  o 2º e o 3º
-- **Catálogo completo** — todos os itens, com seletor de cor, foto de
-  detalhe, quantidade e WhatsApp direto
-- **Nossa História**, CTA final e rodapé
+Da marca na abertura o site vai **direto para o catálogo** (pedido da dona
+em 28/09). Saíram o destaque "Não é tinta. É o metal.", os diferenciais com o
+índice, "Novos Brindes / Por Tipo" e "Mais Desejados". Ficou:
 
-**Movimento:** inclinação 3D nos cards, brilho que segue o cursor, paralaxe
-das manchas de luz, revelação palavra a palavra nos títulos e contadores
-animados. Tudo desliga com `prefers-reduced-motion`.
+- **Catálogo completo** — todos os itens, com filtro por categoria, seletor
+  de cor, foto de detalhe, tabela de faixas, quantidade e WhatsApp direto
+- **Nossa História** — quem é a Space, com os números da loja
+- **Chamada final** e **rodapé**, que é o CONTATO do menu (`#contato`)
+
+**Movimento:** só o que ajuda a ler — revelação dos títulos, contadores e a
+paralaxe da luz de fundo. A inclinação 3D dos cards e os botões "magnéticos"
+saíram: catálogo é para comparar preço, e card que gira atrás do mouse
+atrapalha. Tudo desliga com `prefers-reduced-motion`.
 
 ### Cadastrar um produto
 
@@ -109,19 +105,35 @@ animados. Tudo desliga com `prefers-reduced-motion`.
 ```
 
 `cat` é uma de `copos`, `garrafas`, `churrasco`, `canivetes`, `escritorio`,
-`estilo`. `tiers` são as faixas `[a partir de quantas, preço da unidade]` e
-a primeira começa sempre em 1: não há pedido mínimo em item nenhum.
+`estilo`. `tiers` são as faixas `[a partir de quantas, preço da unidade]`,
+do jeito que a Space passou — pode incluir a unidade avulsa.
 
 A foto vai em `assets/produtos/<id>.webp`. Nada mais precisa ser mexido: a
-contagem de itens, o índice por categoria e os filtros acompanham sozinhos.
+contagem de itens e os filtros acompanham sozinhos.
+
+### Preço a partir de 10 peças
+
+O site não mostra preço abaixo de `CONFIG.qtdMinima` (10). Logo depois da
+lista, a faixa que cobre 10 passa a começar em 10 e as de baixo somem:
+
+```
+copo 473    [1] 49,99  [10] 24,90 ...   ->  [10] 24,90 ...
+caneca 700  [1] 69,90  [20] 49,90 ...   ->  [10] 69,90  [20] 49,90 ...
+chapéu      [1] 80  [5] 70  [10] 60      ->  [10] 60
+```
+
+O card abre com "a partir de 10 peças" e a quantidade já em 10. Dá para
+descer abaixo de 10: o item entra no orçamento e na mensagem como "a
+combinar", fora da soma, com o aviso de onde o preço começa. Voltar a
+mostrar a peça avulsa é trocar `qtdMinima` para 1. O texto que cita esse
+número usa `<span data-minimo>10</span>`, que sai da mesma configuração.
 
 ### Produto sob consulta
 
 Produto **sem** `tiers` não tem preço no site: o card diz "sob consulta" e o
 valor sai por orçamento no WhatsApp. Ele entra no orçamento normalmente, mas
 não na soma — a gaveta mostra "+ N itens sob consulta" junto da estimativa, e
-a mensagem marca o item como "a combinar". As abas de preço dos Mais
-Desejados deixam esses itens de fora.
+a mensagem marca o item como "a combinar".
 
 ### Produtos com variação de cor
 
@@ -136,8 +148,8 @@ Desejados deixam esses itens de fora.
 
 A foto de cada cor vai em `assets/produtos/<id>-<cor>.webp` — e aí **não**
 existe `<id>.webp`. Onde o site precisa da foto de um produto sem saber a
-cor (vitrine, card de destaque) ele usa a primeira cor da lista, pela função
-`fotoDe`. Nunca monte o caminho da foto na mão.
+cor (o card antes da escolha, a gaveta) ele usa a primeira cor da lista,
+pela função `fotoDe`. Nunca monte o caminho da foto na mão.
 
 Quando só existe uma foto com as cores juntas, a cor pode apontar para ela
 com `foto`: `{ id:'branco', nome:'Branco', hex:'#e6e8ec', foto:'copo-360-tampa' }`
@@ -168,17 +180,18 @@ celular.
 
 ### Números e preços no texto
 
-O texto corrido cita o catálogo ("26 itens", "o copo sai a R$ 49,99", o
-índice por categoria). Nada disso é escrito à mão — foi escrito, e ficou para
+O texto corrido cita o catálogo ("30 itens", "no chaveiro, de R$ 4,00 a
+R$ 2,25"). Nada disso é escrito à mão — foi escrito, e ficou para
 trás assim que o catálogo cresceu. Quem cita o catálogo pergunta a ele:
 
 ```html
 <span data-conta="produtos">26</span>              quantos itens no total
 <span data-conta="copos" data-pad>09</span>         quantos numa categoria, 2 dígitos
-<span data-preco="copo-473">R$ 49,99</span>         preço da unidade avulsa
+<span data-preco="copo-473">R$ 24,90</span>         preço da primeira faixa (10 peças)
 <span data-preco="copo-473" data-qtd="50">…</span>  preço na faixa de 50
 <span data-preco="copo-473" data-qtd="melhor">…</span>  o melhor preço
 <span data-lote="copo-473">100</span>               quantas peças para o melhor preço
+<span data-minimo>10</span>                         a partir de quantas peças há preço
 ```
 
 O número escrito no HTML fica só para quem abrir sem JavaScript.
@@ -194,9 +207,9 @@ Aberta, a gaveta leva o foco para o X e deixa o resto da página `inert`; o
 Esc fecha e devolve o foco a quem abriu. Fechada, ela mesma fica `inert`,
 para o Tab não passear pelos botões invisíveis dela.
 
-O preço em destaque é sempre o da **unidade avulsa** e o de volume vira nota.
-Anunciar R$ 2,25 num chaveiro que só chega a esse preço em 500 peças é
-anunciar um preço que o cliente não consegue.
+O preço em destaque é sempre o da **primeira faixa** (10 peças) e o de volume
+vira nota. Anunciar R$ 2,25 num chaveiro que só chega a esse preço em 500
+peças é anunciar um preço que o cliente não consegue.
 
 ### Prévia do link
 

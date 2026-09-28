@@ -74,7 +74,8 @@ A LISTA DE HOJE (30 produtos)
   chaveiro-abridor.webp                   Chaveiro Abridor a Laser
   chapeu-juta.webp                        Chapéu de Juta
 
-Fotos da capa (4 cenas de uso): hero-1.webp a hero-4.webp.
+As 4 fotos de uso (hero-1 a hero-4) saíram junto com o destaque do topo,
+em 28/09. Estão no histórico do git (commit 714000f) se voltarem.
 
 Estão aqui e o site não usa (ficam de reserva):
   caneca-inox-180-ambiente.webp    foto de ambiente, serviria de 5ª cena da capa
