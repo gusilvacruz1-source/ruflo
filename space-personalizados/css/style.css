@@ -96,12 +96,10 @@ svg{ display: block; }
 [data-theme="paper-deep"]{ background: var(--paper-deep); color: var(--ink); }
 
 /* ---------- 5. TIPOGRAFIA ---------- */
-.hero__title, .h2, .h3,
-.types__title, .coveted__title, .catalog__title, .story__title, .cta__title,
-.feat__title, .pcard__name, .ccard__name, .dealCard__name, .idx__nome,
-.statCard__number, .story__stats strong, .floatCard__price, .drawer__head h2,
+.h2, .h3, .catalog__title, .story__title, .cta__title,
+.ccard__name, .story__stats strong, .drawer__head h2,
 .nav__name, .preloader__brand, .ditem__price, .drawer__total strong,
-.ccard__price, .dealCard__price, .vcard b, .story__card h3{
+.ccard__price, .story__card h3{
   font-family: var(--font-display);
   font-weight: 400;
   font-optical-sizing: auto;
@@ -112,10 +110,9 @@ svg{ display: block; }
 .lt{ font-style: italic; }
 
 /* Micro-rótulo — assinatura da referência. Poucos pontos do site. */
-.micro, .eyebrow, .mark, .cup__kicker, .cup__hint,
-.pcard__unit, .ccard__from, .minlot, .tag,
-.types__count, .footer__col h3, .drawer__total span, .statCard__peopleTxt,
-.story__stats span, .dealCard__unit, .ditem__del, .hero__eyebrow{
+.micro, .eyebrow, .cup__kicker, .cup__hint,
+.ccard__from, .footer__col h3, .drawer__total span,
+.story__stats span, .ditem__del{
   font-family: var(--font-ui);
   font-weight: 500;
   font-size: var(--fs-micro);
@@ -126,11 +123,7 @@ svg{ display: block; }
 }
 [data-theme="paper"] .micro, [data-theme="paper"] .eyebrow,
 [data-theme="paper-deep"] .micro, [data-theme="paper-deep"] .eyebrow,
-[data-theme="paper"] .pcard__unit,
-[data-theme="paper"] .ccard__from, [data-theme="paper"] .minlot,
-[data-theme="paper-deep"] .pcard__unit,
-[data-theme="paper-deep"] .ccard__from, [data-theme="paper-deep"] .minlot,
-[data-theme="paper"] .types__count, [data-theme="paper-deep"] .types__count,
+[data-theme="paper"] .ccard__from, [data-theme="paper-deep"] .ccard__from,
 [data-theme="paper"] .story__stats span, [data-theme="paper-deep"] .story__stats span{
   color: var(--muted-dark);
 }
@@ -227,27 +220,10 @@ svg{ display: block; }
 .iconbtn--dark:hover{ background: var(--brass); border-color: var(--brass); color: #0D0D0E; }
 .ico-arrow{ width: 15px; height: 15px; }
 
-/* Link com sublinhado que recua */
-.coveted__seeAll{
-  position: relative;
-  display: inline-flex; align-items: center; gap: 9px;
-  font-size: .75rem; text-transform: uppercase; letter-spacing: .14em;
-  padding-block: 6px;
-}
-.coveted__seeAll svg{ width: 14px; height: 14px; }
-.coveted__seeAll::after{
-  content: ""; position: absolute; left: 0; bottom: 0;
-  width: 100%; height: 1px; background: currentColor;
-  transform: scaleX(1); transform-origin: right;
-  transition: transform .5s var(--ease);
-}
-.coveted__seeAll:hover::after{ transform: scaleX(0); }
-
 /* ---------- 7. MÍDIA ---------- */
 /* Um tratamento só para toda foto do site. As peças do catálogo são
    recortes com alfa vindos do PDF: em 'cover' sairiam cortadas. */
-.pcard__media, .ccard__media, .dealCard__media, .floatCard__thumb,
-.hero__slide, .ditem__thumb{
+.ccard__media, .ditem__thumb{
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
@@ -370,6 +346,7 @@ body.is-locked{ overflow: hidden; }
   pointer-events: none;
 }
 .cup__hudTop{ display: flex; justify-content: space-between; align-items: flex-start; }
+.cup__titulo{ font-size: inherit; font-weight: inherit; line-height: 0; }
 .cup__brand{ font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .28em; }
 .cup__brand em{ font-style: normal; color: var(--muted); }
 .cup__hudMid{ place-self: center; text-align: center; }
@@ -474,7 +451,7 @@ body.is-locked{ overflow: hidden; }
   /* A barra não pode ganhar backdrop-filter nem transform: qualquer um dos
      dois cria BLOCO DE CONTENÇÃO para descendentes fixos, e o menu de tela
      cheia passa a medir os 70px da barra em vez da janela — o
-     translateY(-100%) esconderia só 70px e o menu ficaria por cima do hero.
+     translateY(-100%) esconderia só 70px e o menu ficaria por cima da página.
      Testes [19] e [20]. */
   .nav__menu{
     position: fixed; inset: 0; z-index: 65;
@@ -501,365 +478,9 @@ body.is-locked{ overflow: hidden; }
   .nav__actions{ margin-left: auto; }
 }
 
-/* ---------- 13. HERO ---------- */
-.hero{
-  position: relative; overflow: hidden;
-  min-height: min(100svh, 900px); display: flex; align-items: center;
-  padding-top: clamp(110px, 15vh, 168px);
-  padding-bottom: clamp(58px, 9vh, 104px);
-  background: color-mix(in srgb, var(--ink) 58%, transparent);
-}
-/* Duas colunas: a manchete manda na largura, e a direita empilha a foto e a
-   ficha do produto. Antes as duas disputavam o mesmo canto e a foto sumia
-   atrás dos cartões. */
-.hero__frame{
-  position: relative; width: 100%; max-width: var(--container);
-  margin-inline: auto; padding-inline: var(--pad-x);
-  display: grid;
-  grid-template-columns: minmax(0,1fr) clamp(206px, 24vw, 320px);
-  grid-template-rows: auto auto;
-  column-gap: clamp(26px, 4vw, 64px); row-gap: 14px;
-  align-items: center;
-}
-.hero__rule, .hero__markTL, .hero__markTR{ display: none; }
-/* No HTML esta linha vem antes do conteúdo; no fluxo ela cairia em cima da
-   sobrancelha, então fica ancorada no pé do quadro. */
-.hero__markBR{
-  display: block; position: absolute; left: var(--pad-x); bottom: 0; z-index: 3;
-}
-
-/* A foto é o fundo da seção, não um retrato dentro de um quadro. */
-/* A foto ganha um quadro em arco — a peça fica de pé nele, inteira. */
-.hero__media{
-  grid-column: 2; grid-row: 1;
-  position: relative; aspect-ratio: 3/4;
-  border-radius: 50vw 50vw var(--radius-sm) var(--radius-sm);
-  /* Preto puro, não --ink-soft. As quatro fotos da capa têm fundo preto
-     chapado (0,0,0) e ocupam 84% do arco: com o arco em #17181A sobrava um
-     retângulo preto dentro dele, com a borda à vista. Com o arco da mesma
-     cor do fundo das fotos, a emenda some - e sem pesar nada, ao contrário
-     de devolver transparência às fotos, que dobrava o tamanho delas. */
-  overflow: hidden; background: #000;
-}
-.hero__slide{ position: absolute; inset: 0; margin: 0; opacity: 0; transition: opacity 1.4s var(--ease); }
-.hero__slide.is-active{ opacity: 1; }
-/* Encostada no pé do arco: as fotos são de peça na mão, e o braço é cortado
-   pela borda de baixo da própria foto. Com a foto a 62% da altura, o braço
-   terminava no ar, a uns 20 px do fundo do arco; embaixo, ele sai pela borda. */
-.hero__slide.has-photo{ background-size: 84% auto !important; background-position: center bottom; }
-/* O véu existia para o texto se sustentar em cima da foto sangrada. Com a
-   foto na coluna dela, não há mais nada para velar. */
-.hero__scrim{ display: none; }
-.hero__content{ grid-column: 1; grid-row: 1 / span 2; position: relative; z-index: 2; }
-.hero__eyebrow{ position: relative; padding-left: 36px; margin-bottom: clamp(22px, 4vh, 40px); line-height: 1.9; }
-.hero__eyebrowIcon{ position: absolute; left: 0; top: 1px; width: 22px; color: var(--brass); }
-.hero__eyebrowIcon svg{ width: 100%; height: auto; }
-.hero__title{
-  font-size: clamp(2.75rem, 7.4vw, 6.75rem);
-  line-height: .92; letter-spacing: -.025em;
-  margin-left: -.03em;                        /* transbordo óptico à esquerda */
-  margin-bottom: clamp(26px, 4vh, 46px);
-}
-.hero__cta{ display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
-.hero__plus{ width: 18px; color: var(--muted); }
-.hero__plus svg{ width: 100%; height: auto; }
-
-/* Ficha do produto em destaque: um bloco de papel sobre a tinta, embaixo
-   da foto e na mesma coluna. */
-.hero__float{
-  grid-column: 2; grid-row: 2; z-index: 3;
-  display: flex; flex-direction: column; gap: 10px;
-}
-.floatCard{
-  background: var(--paper); color: var(--ink);
-  border-radius: var(--radius-sm); padding: 14px;
-  transition: transform .6s var(--ease);
-}
-.floatCard:hover{ transform: translateY(-4px); }
-.floatCard__thumb{ aspect-ratio: 4/3; border-radius: 6px; background-color: var(--paper-deep); margin-bottom: 12px; }
-.floatCard__thumb.has-photo{ background-size: contain !important; }
-.floatCard__name{
-  font-family: var(--font-ui); font-size: var(--fs-micro);
-  text-transform: uppercase; letter-spacing: .18em; margin-bottom: 6px;
-}
-.floatCard__desc{ font-size: .8125rem; line-height: 1.5; color: var(--muted-dark); margin-bottom: 12px; }
-.floatCard__foot{ display: flex; align-items: center; justify-content: space-between; gap: 10px; }
-.floatCard__price{ font-size: 1.5rem; letter-spacing: -.02em; }
-.floatCard--note{
-  background: transparent; color: var(--paper);
-  border: 1px solid var(--hairline);
-  display: flex; align-items: center; justify-content: space-between; gap: 12px;
-}
-.floatCard--note p{ font-size: .8125rem; line-height: 1.5; color: var(--muted); }
-.floatCard--note:hover{ transform: none; border-color: var(--brass); }
-
-/* O indicador de slides ficava no pé do quadro, bem onde a ficha do produto
-   termina. Agora ele mora dentro do arco da foto, que é o que ele conta. */
-.hero__steps{
-  grid-column: 2; grid-row: 1; align-self: end; justify-self: center;
-  z-index: 3; display: flex; align-items: center; gap: 10px;
-  margin-bottom: 16px; padding: 7px 14px;
-  border-radius: 999px; background: color-mix(in srgb, var(--ink) 62%, transparent);
-  -webkit-backdrop-filter: blur(10px);
-          backdrop-filter: blur(10px);
-  font-size: var(--fs-micro); letter-spacing: .2em; color: var(--muted);
-  font-variant-numeric: tabular-nums;
-}
-.hero__stepNow{ color: var(--paper); }
-.hero__stepLine{ width: clamp(40px, 7vw, 88px); height: 1px; background: var(--hairline); position: relative; overflow: hidden; }
-.hero__stepLine i{ position: absolute; left: 0; top: 0; height: 100%; width: 25%; background: var(--brass); transition: width .6s var(--ease); }
-.hero__arrows{ position: absolute; right: var(--pad-x); bottom: 44px; z-index: 3; display: none; gap: 9px; }
-
-@media (max-width: 1080px){
-  .hero{ align-items: stretch; min-height: auto; }
-  .hero__frame{ grid-template-columns: minmax(0,1fr); grid-template-rows: auto; }
-  .hero__content{ grid-column: 1; grid-row: auto; order: 1; }
-  .hero__media{
-    grid-column: 1; grid-row: auto; order: 2;
-    aspect-ratio: 4/3; margin-top: clamp(20px, 4vw, 30px);
-    border-radius: var(--radius-sm);
-  }
-  .hero__slide.has-photo{ background-size: contain !important; background-position: center 54%; }
-  .hero__float{ grid-column: 1; grid-row: auto; order: 3; flex-direction: row; }
-  .floatCard{ flex: 1; }
-  .hero__markBR{ order: 4; position: static; margin-top: 22px; }
-  .hero__steps{ display: none; }
-  .hero__arrows{ position: static; order: 5; display: flex; margin-top: 16px; }
-}
-@media (max-width: 560px){
-  .hero__float{ flex-direction: column; }
-  .hero__plus{ display: none; }
-  .hero__cta{ flex-wrap: nowrap; }
-  .hero__cta .pill{ flex: 1 1 0; min-width: 0; }
-  .hero__cta .pill--lg{ padding-inline: 14px; font-size: .6875rem; }
-  .floatCard{ display: grid; grid-template-columns: 84px minmax(0,1fr); gap: 12px; align-items: center; }
-  .floatCard__thumb{ aspect-ratio: 1; margin-bottom: 0; }
-  .floatCard--note{ display: flex; }
-}
-
-/* ---------- 14. DIFERENCIAIS + ÍNDICE ---------- */
-/* A faixa pinta o fundo de ponta a ponta; a grade mora no container. */
-.features .site-container{
-  display: grid; grid-template-columns: repeat(12, minmax(0,1fr));
-  gap: var(--gap); align-items: start;
-}
-.feat{ position: relative; min-width: 0; }
-.feat--dark{
-  grid-column: 1 / span 6;
-  display: flex; align-items: flex-start; gap: clamp(18px, 2.6vw, 36px);
-  padding-right: clamp(18px, 3vw, 48px);
-}
-.feat--index{ grid-column: 8 / span 5; margin-top: clamp(0px, 4vw, 54px); }
-.feat__mark{ width: clamp(72px, 8vw, 110px); flex: none; color: var(--brass); }
-.feat__mark svg{ width: 100%; height: auto; animation: girar 64s linear infinite; }
-@keyframes girar{ to{ transform: rotate(360deg); } }
-.feat__body{ min-width: 0; }
-.feat__kicker{ margin-bottom: 16px; line-height: 1.8; font-size: .875rem; color: var(--muted-dark); }
-[data-theme="ink"] .feat__kicker{ color: var(--muted); }
-/* No índice o rótulo é cabeçalho de sumário, não texto corrido. */
-.feat--index .feat__kicker{
-  font-size: var(--fs-micro); text-transform: uppercase; letter-spacing: .22em;
-  margin-bottom: 20px;
-}
-.feat__title{ font-size: var(--fs-h2); line-height: 1.02; letter-spacing: -.02em; }
-.feat__go{ position: absolute; right: 0; top: 0; }
-
-/* Índice do catálogo: sumário de publicação, em fios. */
-.idx__row{ border-top: 1px solid var(--hairline-d); }
-[data-theme="ink"] .idx__row{ border-top-color: var(--hairline); }
-.idx__row:last-child{ border-bottom: 1px solid var(--hairline-d); }
-[data-theme="ink"] .idx__row:last-child{ border-bottom-color: var(--hairline); }
-.idx__row a{
-  display: grid; grid-template-columns: auto minmax(0,1fr) auto;
-  align-items: baseline; gap: 14px;
-  padding: clamp(9px, 1.1vw, 14px) 0;
-  color: var(--muted-dark);
-  transition: color .4s var(--ease), padding-left .4s var(--ease);
-}
-[data-theme="ink"] .idx__row a{ color: var(--muted); }
-.idx__row a:hover{ color: inherit; padding-left: 8px; }
-.idx__n{ font-size: var(--fs-micro); letter-spacing: .18em; font-variant-numeric: tabular-nums; }
-.idx__nome{ font-size: clamp(1.0625rem, 1.5vw, 1.375rem); letter-spacing: -.015em; }
-
-@media (max-width: 900px){
-  .feat--dark, .feat--index{ grid-column: 1 / -1; }
-  .feat--index{ margin-top: clamp(28px, 6vw, 48px); }
-  .feat--dark{ flex-direction: column; padding-right: 0; }
-  .feat__go{ position: static; margin-top: 18px; }
-}
-
-/* ---------- 15. PRODUTOS POR TIPO ---------- */
-.types__head{ display: flex; align-items: flex-end; justify-content: space-between; gap: var(--gap); flex-wrap: wrap; }
-.types__title{ font-size: var(--fs-h2); line-height: 1.02; letter-spacing: -.02em; }
-.types__title--alt{ font-size: clamp(2.25rem, 6vw, 5rem); }
-.types__headRight{ display: flex; align-items: center; gap: 12px; }
-.types__sub{
-  display: grid; grid-template-columns: repeat(12, minmax(0,1fr));
-  gap: var(--gap); align-items: end;
-  margin-block: clamp(28px, 5vh, 56px);
-}
-.types__lead{ grid-column: 1 / span 5; color: var(--muted-dark); }
-[data-theme="ink"] .types__lead{ color: var(--muted); }
-.types__titleRow{ grid-column: 7 / span 6; display: flex; align-items: center; gap: 18px; justify-content: flex-end; }
-.types__burst{ width: clamp(46px, 5vw, 76px); color: var(--brass); flex: none; }
-.types__burst svg{ width: 100%; height: auto; }
-
-.filters{ display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: clamp(24px, 4vh, 44px); }
-.filters--mini{ margin-bottom: 0; }
-
-.showcase{ display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: var(--gap); }
-.showcase[data-count="1"]{ grid-template-columns: minmax(0,1.3fr) minmax(0,1fr); }
-.showcase[data-count="2"]{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-.showcase[data-count="3"]{ grid-template-columns: repeat(3, minmax(0,1fr)); }
-
-/* align-content:stretch distribuía a sobra de altura (os cards da fileira
-   têm todos a altura do mais alto) para a linha da foto; a aspect-ratio
-   convertia essa altura em LARGURA e o painel passava por cima da coluna
-   vizinha. Com o conteúdo ancorado no topo e a largura fixada em 100%, a
-   proporção volta a sair da largura. */
-.pcard{
-  position: relative; min-width: 0;
-  display: grid; grid-template-rows: auto auto; align-content: start; gap: 16px;
-}
-.pcard__media{
-  width: 100%; align-self: start;
-  aspect-ratio: 4/5; border-radius: var(--radius-sm);
-  background-color: #E1DDD7;              /* separa do papel: em --paper-deep
-                                             dois painéis vizinhos viravam um */
-  transition: transform 1.1s var(--ease);
-}
-[data-theme="ink"] .pcard__media{ background-color: var(--ink-soft); }
-.pcard:hover .pcard__media{ transform: translateY(-5px); }
-.pcard__top{ position: absolute; left: 12px; right: 12px; top: 12px; z-index: 2; display: flex; justify-content: space-between; }
-.pcard__top .iconbtn{ width: 36px; height: 36px; background: color-mix(in srgb, var(--paper) 88%, transparent); border-color: transparent; color: var(--ink); }
-.pcard__top .iconbtn:hover{ background: var(--ink); color: var(--paper); }
-.pcard__fav.is-on{ background: var(--brass); color: #0D0D0E; }
-.pcard__fav.is-on svg path{ fill: currentColor; stroke: currentColor; }
-.pcard__corpo{ min-width: 0; }
-.pcard__tags{ display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
-.tag{ display: inline-flex; align-items: center; letter-spacing: .14em; }
-.tag--drop{ color: var(--brass); font-variant-numeric: tabular-nums; }
-.pcard__name{ font-size: clamp(1.125rem, 1.5vw, 1.4375rem); line-height: 1.12; letter-spacing: -.015em; margin-bottom: 8px; }
-.pcard__desc{
-  font-size: .875rem; line-height: 1.6; margin-bottom: 14px; max-width: 40ch;
-  color: var(--muted-dark);
-}
-[data-theme="ink"] .pcard__desc{ color: var(--muted); }
-.pcard__foot{ display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; }
-.pcard__price{ display: flex; align-items: baseline; gap: 8px; }
-.pcard__price b{ font-family: var(--font-display); font-size: clamp(1.3125rem, 1.9vw, 1.625rem); font-weight: 400; letter-spacing: -.02em; }
-.pcard__each{ font-size: .75rem; color: var(--muted-dark); }
-[data-theme="ink"] .pcard__each{ color: var(--muted); }
-.pcard__unit{ display: block; letter-spacing: .12em; margin-top: 4px; }
-.pcard__more{ align-self: flex-start; }
-/* Degrau vertical alternado: é o que dá ritmo à fileira agora que todos os
-   cards têm a mesma medida. */
-.showcase .pcard:nth-child(even){ margin-top: clamp(0px, 3.4vw, 54px); }
-
-.types__foot{ display: flex; align-items: center; justify-content: space-between; margin-top: clamp(20px, 3vh, 34px); }
-.types__count{ letter-spacing: .18em; font-variant-numeric: tabular-nums; }
-.types__count strong{ color: inherit; font-weight: 600; }
-.types__arrows{ display: flex; gap: 9px; }
-
-@media (max-width: 1080px){
-  .showcase, .showcase[data-count="3"]{ grid-template-columns: repeat(2, minmax(0,1fr)); }
-  .types__lead{ grid-column: 1 / -1; }
-  .types__titleRow{ grid-column: 1 / -1; justify-content: flex-start; }
-}
-@media (max-width: 620px){
-  .showcase, .showcase[data-count="1"], .showcase[data-count="2"], .showcase[data-count="3"]{ grid-template-columns: minmax(0,1fr); }
-  .showcase .pcard:nth-child(even){ margin-top: 0; }
-}
-
-/* ---------- 16. MAIS DESEJADOS ---------- */
-.coveted__title{ font-size: clamp(2rem, 5vw, 4.25rem); line-height: 1.06; letter-spacing: -.02em; }
-.coveted__line{ display: flex; align-items: center; gap: .28em; flex-wrap: wrap; }
-.coveted__line--2{ margin-top: .1em; }
-.chip{ display: inline-flex; align-items: center; padding: .04em .32em; border: 1px solid currentColor; border-radius: 999px; }
-.chip--gold{ color: var(--brass); border-color: var(--brass); }
-.coveted__orbs{ display: inline-flex; align-items: center; gap: 6px; }
-.coveted__orbs i{ width: clamp(12px,1.6vw,20px); height: clamp(12px,1.6vw,20px); border-radius: 50%; background: var(--brass); }
-.coveted__orbs i.coveted__orb--ring{ background: none; border: 1px solid var(--brass); }
-.coveted__ornament{ width: clamp(78px, 9vw, 128px); color: var(--brass); }
-.coveted__ornament svg{ width: 100%; height: auto; }
-
-.coveted__grid{
-  display: grid; grid-template-columns: repeat(12, minmax(0,1fr));
-  gap: var(--gap); margin-top: clamp(30px, 5vh, 60px); align-items: start;
-}
-.statCard{ grid-column: 1 / span 4; min-width: 0; border-top: 1px solid var(--hairline); padding-top: 22px; }
-[data-theme="paper"] .statCard, [data-theme="paper-deep"] .statCard{ border-top-color: var(--hairline-d); }
-.statCard__top{ display: flex; align-items: flex-start; justify-content: space-between; gap: 14px; margin-bottom: 26px; }
-.statCard__mark{ width: clamp(52px, 6vw, 76px); color: var(--brass); opacity: .75; }
-.statCard__mark svg{ width: 100%; height: auto; }
-.statCard__number{
-  font-size: clamp(2.75rem, 6vw, 4.5rem); line-height: 1; letter-spacing: -.02em;
-  font-variant-numeric: tabular-nums; overflow-wrap: anywhere;
-}
-.statCard__people{ margin-top: 8px; }
-.statCard__copy{ margin-top: 20px; color: var(--muted); max-width: 42ch; font-size: .9375rem; }
-[data-theme="paper"] .statCard__copy, [data-theme="paper-deep"] .statCard__copy{ color: var(--muted-dark); }
-.statCard__copy strong{ color: inherit; font-weight: 500; }
-
-.coveted__right{ grid-column: 6 / span 7; min-width: 0; }
-.coveted__lead{ color: var(--muted); max-width: 54ch; }
-[data-theme="paper"] .coveted__lead, [data-theme="paper-deep"] .coveted__lead{ color: var(--muted-dark); }
-.coveted__tools{
-  display: flex; align-items: center; justify-content: space-between;
-  gap: var(--gap); flex-wrap: wrap; margin-block: clamp(22px, 3.4vh, 34px);
-}
-.coveted__cards{ display: grid; grid-template-columns: minmax(0,1.5fr) minmax(0,1fr); gap: var(--gap); align-items: start; }
-.dealCard{ min-width: 0; }
-.dealCard__media{
-  position: relative; aspect-ratio: 4/3; border-radius: var(--radius-sm);
-  background-color: var(--ink-soft); margin-bottom: 18px;
-}
-[data-theme="paper"] .dealCard__media, [data-theme="paper-deep"] .dealCard__media{ background-color: var(--paper-deep); }
-.dealCard__go{ position: absolute; right: 12px; top: 12px; }
-.dealCard__body{ display: flex; flex-direction: column; gap: 10px; }
-.dealCard__name{ font-size: clamp(1.25rem, 2vw, 1.75rem); letter-spacing: -.015em; line-height: 1.1; }
-.dealCard__desc{ font-size: .875rem; line-height: 1.6; color: var(--muted); max-width: 46ch; }
-[data-theme="paper"] .dealCard__desc, [data-theme="paper-deep"] .dealCard__desc{ color: var(--muted-dark); }
-.dealCard__foot{ display: flex; align-items: center; gap: 14px; }
-.dealCard__buy{
-  display: flex; align-items: flex-end; justify-content: space-between;
-  gap: 16px; flex-wrap: wrap; margin-top: 6px;
-  border-top: 1px solid var(--hairline); padding-top: 16px;
-}
-[data-theme="paper"] .dealCard__buy, [data-theme="paper-deep"] .dealCard__buy{ border-top-color: var(--hairline-d); }
-.dealCard__priceWrap{ display: flex; flex-direction: column; gap: 4px; }
-.dealCard__price{ font-size: clamp(1.5rem, 2.4vw, 2.125rem); letter-spacing: -.02em; }
-.dealCard__unit{ letter-spacing: .16em; }
-
-.vcards{ display: flex; flex-direction: column; }
-/* Número e nome à esquerda, seta encostada na direita: empilhados os três,
-   a seta ficava solta numa linha só dela. */
-.vcard{
-  display: grid; grid-template-columns: minmax(0,1fr) auto;
-  align-items: center; gap: 2px 14px;
-  width: 100%; text-align: left;
-  padding: 18px 0; border-top: 1px solid var(--hairline);
-  transition: padding-left .4s var(--ease), color .4s var(--ease);
-}
-.vcard b{ grid-column: 1; grid-row: 1; }
-.vcard span{ grid-column: 1; grid-row: 2; }
-.vcard svg{ grid-column: 2; grid-row: 1 / span 2; }
-[data-theme="paper"] .vcard, [data-theme="paper-deep"] .vcard{ border-top-color: var(--hairline-d); }
-.vcard:last-child{ border-bottom: 1px solid var(--hairline); }
-[data-theme="paper"] .vcard:last-child, [data-theme="paper-deep"] .vcard:last-child{ border-bottom-color: var(--hairline-d); }
-.vcard:hover{ padding-left: 8px; color: var(--brass); }
-.vcard b{ font-size: 1.5rem; letter-spacing: -.02em; }
-.vcard span{ font-size: .8125rem; color: var(--muted); white-space: normal; }
-[data-theme="paper"] .vcard span, [data-theme="paper-deep"] .vcard span{ color: var(--muted-dark); }
-.vcard svg{ width: 15px; height: 15px; }
-
-@media (max-width: 1080px){
-  .statCard, .coveted__right{ grid-column: 1 / -1; }
-  .coveted__right{ margin-top: clamp(26px, 5vw, 44px); }
-}
-@media (max-width: 720px){ .coveted__cards{ grid-template-columns: minmax(0,1fr); } }
-
 /* ---------- 17. CATÁLOGO ---------- */
+/* Filtros por categoria: moravam em "Produtos por tipo", que saiu. */
+.filters{ display: flex; flex-wrap: wrap; gap: 9px; margin-bottom: clamp(24px, 4vh, 44px); }
 .catalog__head{
   display: grid; grid-template-columns: repeat(12, minmax(0,1fr));
   gap: var(--gap); align-items: end; margin-bottom: clamp(28px, 5vh, 52px);
@@ -952,11 +573,13 @@ body.is-locked{ overflow: hidden; }
 /* ---------- SOB CONSULTA ---------- */
 /* O preço sai da fonte de número e volta para a de texto: "sob consulta" com
    o corpo de um preço grande fica com cara de valor, e não é. */
-.ccard__price--consulta{
+/* Classe dobrada: a regra do .ccard__price vem depois no arquivo e, com o
+   mesmo peso, ganhava - "sob consulta" saía no corpo de 40 px de um preço. */
+.ccard__price.ccard__price--consulta{
   font-family: var(--font-ui); font-size: 1.0625rem; font-weight: 500;
   letter-spacing: .02em; color: var(--ink);
 }
-[data-theme="ink"] .ccard__price--consulta{ color: var(--paper); }
+[data-theme="ink"] .ccard__price.ccard__price--consulta{ color: var(--paper); }
 .drawer__nota{
   margin-top: 6px; text-align: right;
   font-family: var(--font-ui); font-size: .75rem; letter-spacing: .04em;
@@ -965,47 +588,54 @@ body.is-locked{ overflow: hidden; }
 [data-theme="ink"] .ccard__desc{ color: var(--muted); }
 .ccard__tiers{ border-top: 1px solid var(--hairline-d); margin-bottom: 16px; }
 [data-theme="ink"] .ccard__tiers{ border-top-color: var(--hairline); }
+/* Números maiores, a pedido da dona: a tabela era corpo 13 e o preço da
+   faixa se perdia no cinza da linha. Agora a faixa fica em 15 e o preço em
+   17, na cor do texto, com algarismos de largura igual para as colunas
+   alinharem. */
 .ccard__tiers li{
-  display: flex; justify-content: space-between; gap: 10px;
-  padding-block: 7px; border-bottom: 1px solid var(--hairline-d);
-  font-size: .8125rem; color: var(--muted-dark);
+  display: flex; justify-content: space-between; align-items: baseline; gap: 10px;
+  padding-block: 9px; border-bottom: 1px solid var(--hairline-d);
+  font-size: .9375rem; color: var(--muted-dark);
 }
 [data-theme="ink"] .ccard__tiers li{ border-bottom-color: var(--hairline); color: var(--muted); }
-.ccard__tiers li b{ font-weight: 500; color: inherit; font-variant-numeric: tabular-nums; }
+.ccard__tiers li b{ font-size: 1.0625rem; font-weight: 600; color: var(--ink); font-variant-numeric: tabular-nums; }
+[data-theme="ink"] .ccard__tiers li b{ color: var(--paper); }
 .ccard__tiers li.is-best b{ color: var(--brass); }
-.ccard__foot{ display: flex; align-items: flex-end; justify-content: space-between; gap: 14px; margin-top: auto; flex-wrap: wrap; }
+/* Preço em cima, quantidade embaixo, sempre. Lado a lado, o seletor caía para
+   a linha de baixo só nos cards com a frase "cai para ..." e cada card do
+   catálogo terminava de um jeito. */
+.ccard__foot{ display: flex; flex-direction: column; align-items: flex-start; gap: 12px; margin-top: auto; }
 .ccard__from{ display: block; letter-spacing: .16em; }
 /* O "/un" fica colado no preço, em corpo pequeno. O rótulo de unidade
    morava só na linha de baixo e o olho lia o preço grande como o total do
    lote mínimo: "pedido mínimo de 10" seguido de "R$ 29,90". */
-.ccard__each, .dealCard__each, .floatCard__each{
+.ccard__each{
   font-family: var(--font-ui); font-style: normal; font-weight: 500;
   font-size: .5em; letter-spacing: .06em; margin-left: .28em;
   color: var(--muted-dark); vertical-align: .18em;
 }
-[data-theme="ink"] .ccard__each, [data-theme="ink"] .dealCard__each{ color: var(--muted); }
+[data-theme="ink"] .ccard__each{ color: var(--muted); }
 .ccard__tiers li b i{
   font-family: var(--font-ui); font-style: normal; font-size: .78em;
   letter-spacing: .04em; color: var(--muted-dark); margin-left: .2em;
 }
 [data-theme="ink"] .ccard__tiers li b i{ color: var(--muted); }
 .ccard__min b{ font-weight: 600; color: inherit; }
-.ccard__price{ display: block; font-size: 1.875rem; letter-spacing: -.025em; line-height: 1.2; }
-.ccard__min{ font-size: .75rem; color: var(--muted-dark); margin-top: 2px; }
+.ccard__price{ display: block; font-size: 2.5rem; letter-spacing: -.025em; line-height: 1.15; font-variant-numeric: lining-nums; }
+.ccard__min{ font-size: .875rem; color: var(--muted-dark); margin-top: 4px; }
 [data-theme="ink"] .ccard__min{ color: var(--muted); }
 .ccard__qty{ display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--hairline-d); border-radius: 999px; padding: 4px; }
 [data-theme="ink"] .ccard__qty{ border-color: var(--hairline); }
 .ccard__qty button{ width: 32px; height: 32px; display: grid; place-items: center; border-radius: 50%; }
 .ccard__qty button:hover{ background: color-mix(in srgb, currentColor 12%, transparent); }
 .ccard__qty input{
-  width: 44px; text-align: center; background: none; border: 0;
-  font-size: .875rem; font-variant-numeric: tabular-nums; -moz-appearance: textfield;
+  width: 52px; text-align: center; background: none; border: 0;
+  font-size: 1.125rem; font-weight: 600; font-variant-numeric: tabular-nums; -moz-appearance: textfield;
 }
 .ccard__qty input::-webkit-outer-spin-button,
 .ccard__qty input::-webkit-inner-spin-button{ -webkit-appearance: none; margin: 0; }
 .ccard__actions{ display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
 .ccard__actions .pill{ flex: 1 1 auto; }
-.minlot{ letter-spacing: .16em; }
 
 @media (max-width: 1080px){ .catalog__grid{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
 @media (max-width: 900px){ .catalog__head > div, .catalog__note{ grid-column: 1 / -1; } }
@@ -1132,16 +762,16 @@ body.is-locked{ overflow: hidden; }
 .ditem__thumb.has-photo{ background-size: contain !important; }
 .ditem__body{ min-width: 0; }
 .ditem__name{ font-size: .9375rem; line-height: 1.3; margin-bottom: 4px; }
-.ditem__meta{ font-size: .75rem; color: var(--muted); margin-bottom: 10px; }
+.ditem__meta{ font-size: .875rem; color: var(--muted); margin-bottom: 10px; }
 .ditem__qty{ display: inline-flex; align-items: center; gap: 4px; border: 1px solid var(--hairline); border-radius: 999px; padding: 3px; }
 .ditem__qty button{ width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; }
-.ditem__qty b{ min-width: 30px; text-align: center; font-size: .8125rem; font-variant-numeric: tabular-nums; }
-.ditem__price{ font-size: 1.125rem; letter-spacing: -.02em; }
+.ditem__qty b{ min-width: 38px; text-align: center; font-size: 1.0625rem; font-variant-numeric: tabular-nums; }
+.ditem__price{ font-size: 1.5rem; letter-spacing: -.02em; }
 .ditem__del{ margin-top: 8px; }
 .ditem__del:hover{ color: var(--brass); }
 .drawer__foot{ padding: 20px var(--pad-x) calc(20px + env(safe-area-inset-bottom)); border-top: 1px solid var(--hairline); }
 .drawer__total{ display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
-.drawer__total strong{ font-size: 1.875rem; letter-spacing: -.025em; }
+.drawer__total strong{ font-size: 2.375rem; letter-spacing: -.025em; }
 .drawer__note{ font-size: .75rem; color: var(--muted); margin-block: 10px 16px; }
 .drawer__send{ width: 100%; }
 

@@ -40,7 +40,7 @@ T('[1] carrinho com id morto nao trava', await p.evaluate(()=>!document.body.cla
 T('[1] item valido sobrevive', await p.evaluate(()=>document.querySelector('#cartCount').textContent==='1'));
 await p.evaluate(()=>localStorage.clear());
 
-// [3] preco em destaque = o da unidade avulsa, nao o do melhor lote
+// [3] preco em destaque = o da primeira faixa (10 pecas), nao o do melhor lote
 await p.reload({waitUntil:'domcontentloaded'});
 await p.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
 await p.waitForTimeout(400);
@@ -48,35 +48,20 @@ const chav = await p.evaluate(()=>{
   const c=[...document.querySelectorAll('#catalogGrid .ccard')].find(x=>x.dataset.id==='chaveiro-abridor');
   return { preco:c.querySelector('.ccard__price').textContent, nota:c.querySelector('.ccard__min').textContent };
 });
-T('[3] chaveiro mostra R$ 4,00 avulso, nao R$ 2,25 de 500 pecas', chav.preco.includes('4,00'));
+T('[3] chaveiro mostra R$ 4,00 de 10 pecas, nao R$ 2,25 de 500', chav.preco.includes('4,00'));
 T('[3] volume vira nota, nao manchete', chav.nota.includes('2,25'));
 
-// [6][8][12] vitrine
-await p.evaluate(()=>document.querySelector('[data-filter="canivetes"]').click());
-await p.waitForTimeout(500);
-T('[12] grid adapta a 2 cards', await p.evaluate(()=>document.querySelector('#showcase').dataset.count==='2'));
-await p.evaluate(()=>document.querySelector('#showcaseNext').click());
-await p.waitForTimeout(500);
-T('[8] prev/next mantem o filtro ativo', await p.evaluate(()=>document.querySelector('[data-filter="canivetes"]').classList.contains('is-active') && document.querySelectorAll('#showcase .pcard').length===2));
-await p.evaluate(()=>document.querySelector('[data-filter="todos"]').click());
+// [4] link de categoria do rodape cai no catalogo ja filtrado
+// ([6][8][12] eram da vitrine "Novos Brindes", que saiu do site)
+await p.evaluate(()=>document.querySelector('.footer [data-cjump="garrafas"]').click());
+await p.waitForTimeout(600);
+const filtro = await p.evaluate(()=>({
+  aba: document.querySelector('#catalogFilters [data-cfilter="garrafas"]').getAttribute('aria-selected'),
+  cats: [...new Set([...document.querySelectorAll('#catalogGrid .ccard')].map(c=>c.dataset.cat))]
+}));
+T('[4] rodape filtra o catalogo ('+filtro.cats.join(',')+')', filtro.aba==='true' && filtro.cats.length===1 && filtro.cats[0]==='garrafas');
+await p.evaluate(()=>document.querySelector('#catalogFilters [data-cfilter="todos"]').click());
 await p.waitForTimeout(400);
-const i1 = await p.evaluate(()=>document.querySelector('#showcaseIndex').textContent);
-await p.evaluate(()=>document.querySelector('#showcaseNext').click());
-await p.waitForTimeout(500);
-const i2 = await p.evaluate(()=>document.querySelector('#showcaseIndex').textContent);
-T('[6] contador anda ('+i1+' -> '+i2+')', i1!==i2);
-
-// [4] saiba mais com catalogo filtrado noutra categoria
-await p.evaluate(()=>document.querySelector('[data-cfilter="garrafas"]').click());
-await p.waitForTimeout(500);
-// os atalhos agora seguem a aba ativa dos mais desejados: pega o que houver,
-// desde que NAO seja garrafa, para o reset do filtro ser de fato exercitado
-const alvoJump = await p.evaluate(()=>{
-  const v=[...document.querySelectorAll('.vcard[data-jump]')].find(x=>SPACE.PRODUCTS.find(q=>q.id===x.dataset.jump).cat!=='garrafas');
-  v.click(); return v.dataset.jump;
-});
-await p.waitForTimeout(900);
-T('[4] jump reseta o filtro e acha o card ('+alvoJump+')', await p.evaluate(id=>!!document.querySelector('#p-'+id), alvoJump));
 
 // [7] stepper com campo vazio
 const st = await p.evaluate(()=>{
@@ -87,30 +72,30 @@ const st = await p.evaluate(()=>{
 T('[7] stepper sobrevive a campo vazio (='+st+')', st!=='' && !isNaN(+st));
 
 // [5] contador dispara uma vez so quando a secao entra em cena
-await p.evaluate(()=>document.querySelector('#desejados').scrollIntoView({block:'center'}));
+await p.evaluate(()=>document.querySelector('#historia').scrollIntoView({block:'center'}));
 let contou=true;
-try{ await p.waitForFunction(()=>document.querySelector('[data-count-to="5000"]').dataset.counted==='1',{timeout:8000}); }
+try{ await p.waitForFunction(()=>document.querySelector('#contaProdutos').dataset.counted==='1',{timeout:8000}); }
 catch(e){ contou=false; }
 T('[5] contador marcado uma vez', contou);
 
 
-// [13] scroll-spy volta para INICIO
-await p.evaluate(()=>document.querySelector('#produtos').scrollIntoView({block:'start'}));
-await p.waitForTimeout(1200);
-await p.evaluate(()=>document.querySelector('.hero').scrollIntoView({block:'start'}));
-// espera pela condicao, nao por um prazo: o scroll-spy depende do rAF e o
-// tempo ate acender varia com a maquina
+// [13] scroll-spy: o link acende conforme a secao, e volta ao subir
+await p.evaluate(()=>document.querySelector('#historia').scrollIntoView({block:'start'}));
+let foi=true;
+try{ await p.waitForFunction(()=>document.querySelector('#navMenu a[href="#historia"]').classList.contains('is-active'),{timeout:8000}); }
+catch(e){ foi=false; }
+T('[13] NOSSA HISTORIA acende na secao dela', foi);
+await p.evaluate(()=>document.querySelector('#catalogo').scrollIntoView({block:'start'}));
 let voltou=true;
-try{ await p.waitForFunction(()=>document.querySelectorAll('#navMenu a')[0].classList.contains('is-active'),{timeout:8000}); }
+try{ await p.waitForFunction(()=>document.querySelector('#navMenu a[href="#catalogo"]').classList.contains('is-active'),{timeout:8000}); }
 catch(e){ voltou=false; }
-T('[13] INICIO reacende ao voltar', voltou);
+T('[13] CATALOGO reacende ao voltar', voltou);
 
-// [16] o contador animado NAO pode apagar a vitrine (#showcase usa data-count como layout)
+// [17] o contador de produtos chega ao tamanho do catalogo
 await p.evaluate(async()=>{ for(let y=0;y<document.body.scrollHeight;y+=400){ scrollTo(0,y); await new Promise(r=>setTimeout(r,60)); } });
-await p.waitForTimeout(1200);
-const vit = await p.evaluate(()=>({ cards:document.querySelectorAll('#showcase .pcard').length, txt:document.querySelector('#showcase').textContent.trim().slice(0,12) }));
-T('[16] vitrine sobrevive ao contador ('+vit.cards+' cards)', vit.cards>0);
-T('[17] numero real conta ate 5.000+', (await p.evaluate(()=>document.querySelector('[data-count-to="5000"]').textContent)).includes('5.000'));
+await p.waitForTimeout(1800);
+const cont = await p.evaluate(()=>({ txt:document.querySelector('#contaProdutos').textContent, n:SPACE.PRODUCTS.length }));
+T('[17] contador de produtos chega a '+cont.n+' (mostra '+cont.txt+')', cont.txt===String(cont.n));
 // [18] foto de produto nao pode ladrilhar (o atalho background: zera o no-repeat)
 const rep = await p.evaluate(()=>[...document.querySelectorAll('.has-photo')]
   .map(e=>getComputedStyle(e).backgroundRepeat).filter(v=>!v.startsWith('no-repeat')));
@@ -135,10 +120,10 @@ await mm.close();
 
 // [21] nenhum painel de foto pode passar da largura do proprio card
 const vaza = await p.evaluate(()=>{
-  const sels=['#showcase .pcard','#catalogGrid .ccard'];
+  const sels=['#catalogGrid .ccard'];
   const fora=[];
   for (const s of sels) for (const c of document.querySelectorAll(s)){
-    const m=c.querySelector('.pcard__media,.ccard__media'); if(!m) continue;
+    const m=c.querySelector('.ccard__media'); if(!m) continue;
     const a=c.getBoundingClientRect(), b=m.getBoundingClientRect();
     if (b.width > a.width + 1) fora.push(s+' '+Math.round(b.width-a.width)+'px');
   }
@@ -153,9 +138,9 @@ const pu = await p.evaluate(()=>{
            preco:c.querySelector('.ccard__price').textContent.trim(),
            nota:c.querySelector('.ccard__min').textContent.trim() };
 });
-T('[22] o rotulo diz que o preco e por unidade', /por unidade/i.test(pu.rotulo));
+T('[22] o rotulo diz a partir de quantas pecas ('+pu.rotulo+')', /a partir de 10 pe/i.test(pu.rotulo));
 T('[22] o preco carrega /un colado', pu.preco.includes('/un'));
-T('[22] o card avisa que nao ha pedido minimo', /sem pedido m/i.test(pu.nota));
+T('[22] o volume vira nota embaixo', /22,90/.test(pu.nota));
 // e a conta do orcamento continua batendo. Pagina limpa: os testes
 // anteriores ja deixaram itens no carrinho desta sessao.
 await p.evaluate(()=>localStorage.clear());
@@ -165,22 +150,22 @@ await p.waitForTimeout(500);
 await p.evaluate(()=>[...document.querySelectorAll('#catalogGrid .ccard')].find(x=>x.dataset.id==='copo-473').querySelector('[data-add]').click());
 await p.waitForTimeout(500);
 const soma = await p.evaluate(()=>document.querySelector('#drawerTotal').textContent);
-T('[22] uma peca sozinha soma o preco de 1 un, nao o de lote (deu '+soma+')', soma.includes('49,99'));
+T('[22] ADICIONAR poe 10 pecas a 24,90, nao o preco de lote (deu '+soma+')', soma.includes('249,00'));
 
-// [23] da para comprar UMA peca: sem piso de quantidade e sem passo de 10
+// [23] o campo comeca em 10, anda de um em um e ainda desce abaixo de 10
+// (menos de 10 pecas nao tem preco no site, mas continua dando para pedir)
 const un = await p.evaluate(async ()=>{
   const c=[...document.querySelectorAll('#catalogGrid .ccard')].find(x=>x.dataset.id==='copo-473');
   const inp=c.querySelector('input[type=number]');
   const partida = inp.value;
-  c.querySelector('[data-step="1"]').click();          // 1 -> 2, nao 1 -> 11
+  c.querySelector('[data-step="1"]').click();          // 10 -> 11, nao 10 -> 20
   const subiu = inp.value;
-  c.querySelector('[data-step="-1"]').click();
-  c.querySelector('[data-step="-1"]').click();         // nao pode passar de 1
+  for (let k=0;k<12;k++) c.querySelector('[data-step="-1"]').click();   // nao pode passar de 1
   return { partida, subiu, piso: inp.value, minAttr: inp.getAttribute('min') };
 });
-T('[23] o campo comeca em 1 (veio '+un.partida+')', un.partida === '1');
-T('[23] o + anda de um em um (1 -> '+un.subiu+')', un.subiu === '2');
-T('[23] o - para em 1, nao em 10 (parou em '+un.piso+')', un.piso === '1');
+T('[23] o campo comeca em 10 (veio '+un.partida+')', un.partida === '10');
+T('[23] o + anda de um em um (10 -> '+un.subiu+')', un.subiu === '11');
+T('[23] o - desce ate 1 e para (parou em '+un.piso+')', un.piso === '1');
 T('[23] o campo aceita 1 como minimo', un.minAttr === '1');
 
 // [24] a abertura e a nebulosa com a marca no meio, e o copo saiu de verdade
@@ -217,7 +202,7 @@ await p.evaluate(()=>{
   SPACE.PRODUCTS.push({ id:'teste-cor', name:'Produto de Teste', cat:'escritorio', ph:'caneta',
     desc:'Injetado so para o teste do seletor de cor.',
     cores:[{id:'preto',nome:'Preto',hex:'#26262a'},{id:'azul',nome:'Azul',hex:'#2b4a6f'}],
-    tiers:[[1,10.00]] });
+    tiers:[[10,10.00]] });
   SPACE.renderCatalog('todos');
 });
 await p.waitForTimeout(400);
@@ -255,7 +240,7 @@ const c2 = await p.evaluate(()=>({
 }));
 T('[25] cada cor vira sua linha ('+c2.chaves.join(', ')+')',
   c2.chaves.includes('teste-cor|azul') && c2.chaves.includes('teste-cor|preto'));
-T('[25] a soma nao junta as duas ('+c2.total+')', c2.total.includes('20,00'));
+T('[25] a soma nao junta as duas ('+c2.total+')', c2.total.includes('200,00'));
 T('[25] a cor vai na mensagem do WhatsApp',
   /Produto de Teste · Azul/.test(c2.zap) && /Produto de Teste · Preto/.test(c2.zap));
 // e mexer numa nao pode mexer na outra
@@ -266,7 +251,7 @@ const c3 = await p.evaluate(()=>({
   preto:document.querySelector('.ditem[data-chave="teste-cor|preto"] .ditem__qty b').textContent
 }));
 T('[25] mexer numa cor nao mexe na outra (azul '+c3.azul+', preto '+c3.preto+')',
-  c3.azul === '2' && c3.preto === '1');
+  c3.azul === '11' && c3.preto === '10');
 
 // [26] produto sem preco: sai por orcamento, sem virar R$ 0,00 em lugar nenhum
 await p.evaluate(()=>{
@@ -302,10 +287,10 @@ const orc = await p.evaluate(()=>({
 }));
 T('[26] a linha nao mostra R$ 0,00 ('+orc.linha+')', /combinar/i.test(orc.linha));
 T('[26] o unitario tambem nao ('+orc.meta+')', /sob consulta/i.test(orc.meta));
-T('[26] o total soma so o que tem preco ('+orc.total+')', orc.total.includes('49,99'));
+T('[26] o total soma so o que tem preco ('+orc.total+')', orc.total.includes('249,00'));
 T('[26] e avisa do item sob consulta ('+orc.nota+')', /sob consulta/i.test(orc.nota));
 T('[26] a mensagem marca o item como a combinar',
-  /Produto Sob Consulta: 1 uni × a combinar/.test(orc.zap));
+  /Produto Sob Consulta: 10 uni × a combinar/.test(orc.zap));
 T('[26] a mensagem separa a estimativa do que fica para orcamento',
   /itens com preço em tabela/i.test(orc.zap) && /fica para orçamento/i.test(orc.zap));
 
@@ -352,41 +337,23 @@ const d2 = await p.evaluate(()=>{
 T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
 
 
-// [28] vitrine e card de destaque: produto COM COR tem que pedir <id>-<cor>.webp.
-// Pediam <id>.webp, que nao existe, e as canecas com cor apareciam vazias.
+// [28] catalogo: produto COM COR tem que pedir <id>-<cor>.webp, e nenhuma
+// foto pode dar 404. ([29] era das abas de "Mais desejados", que saiu.)
 {
   const q = await b.newPage({ viewport:{width:1440,height:900} });
   const f404=[]; q.on('response', r=>{ if(r.status()>=400) f404.push(r.url().split('/').pop()); });
   await q.goto(URL,{waitUntil:'domcontentloaded'});
   await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
-  await q.evaluate(()=>document.querySelector('#produtos').scrollIntoView());
-  const vistos = new Set();
-  for (const cat of ['copos','garrafas','escritorio']) {
-    await q.evaluate(c=>document.querySelector(`#filters [data-filter="${c}"]`).click(), cat);
-    for (let k=0;k<3;k++){
-      await q.waitForTimeout(350);
-      (await q.evaluate(()=>[...document.querySelectorAll('#showcase .pcard__media')].map(m=>m.dataset.src))).forEach(x=>vistos.add(x));
-      await q.evaluate(()=>document.querySelector('#showcaseNext').click());
-    }
-  }
+  await q.evaluate(()=>document.querySelector('#catalogo').scrollIntoView());
+  for(let i=0;i<14;i++){ await q.mouse.wheel(0,900); await q.waitForTimeout(150); }
   await q.waitForTimeout(800);
+  const vistos = await q.evaluate(()=>[...document.querySelectorAll('#catalogGrid .ccard__media')].map(m=>m.dataset.src));
   const semArquivo = await q.evaluate(async lst=>{
     const out=[]; for (const u of lst){ const r=await fetch(u,{method:'HEAD'}); if(!r.ok) out.push(u); } return out;
-  }, [...vistos]);
-  T('[28] vitrine pede fotos que existem ('+vistos.size+' vistas, '+semArquivo.length+' faltando)', semArquivo.length===0);
-  T('[28] canecas com cor aparecem na vitrine', [...vistos].some(u=>/caneca-termica-350-/.test(u)));
-  T('[28] nenhum 404 de foto', !f404.some(x=>/\.webp$/.test(x)));
-
-  // [29] abas que comparam preco nao podem abrir com item sem preco
-  await q.evaluate(()=>document.querySelector('#desejados').scrollIntoView());
-  const aba = async k => { await q.evaluate(k=>document.querySelector(`#dealFilters [data-deal="${k}"]`).click(), k); await q.waitForTimeout(250);
-    return q.evaluate(()=>document.querySelector('#dealPrice').textContent); };
-  T('[29] "Ate R$ 30" abre com item de preco', !/consulta/.test(await aba('ate30')));
-  T('[29] "Kits churrasco" abre com item de preco', !/consulta/.test(await aba('churrasco')));
-  T('[29] "Ate R$ 30" nao lista sob consulta',
-    await q.evaluate(()=>SPACE.PRODUCTS.filter(p=>!p.tiers).every(p=>![...document.querySelectorAll('.vcard')].some(v=>v.dataset.jump===p.id))));
-  T('[29] atalhos seguem a aba (nada de 17 e 18 fixos)',
-    await q.evaluate(()=>[...document.querySelectorAll('.vcard b')].every(b=>/R\$|consulta/.test(b.textContent))));
+  }, vistos);
+  T('[28] catalogo pede fotos que existem ('+vistos.length+' cards, '+semArquivo.length+' faltando)', semArquivo.length===0);
+  T('[28] canecas com cor aparecem no catalogo', vistos.some(u=>/caneca-termica-350-/.test(u)));
+  T('[28] nenhum 404 de foto', !f404.some(x=>/\.webp/.test(x)));
 
   // [30] WhatsApp direto de item sob consulta
   const zap = await q.evaluate(()=>{
@@ -425,11 +392,13 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
     const conta=[...document.querySelectorAll('[data-conta]')].every(el=>{
       const k=el.dataset.conta; const esp = k==='produtos'? n : SPACE.PRODUCTS.filter(p=>p.cat===k).length;
       return parseInt(el.textContent,10)===esp; });
-    const soma=[...document.querySelectorAll('.idx__row [data-conta]')].reduce((a,el)=>a+parseInt(el.textContent,10),0);
-    return { conta, soma, n, corpo: document.body.innerText };
+    return { conta, n, corpo: document.body.innerText,
+             minimo: [...document.querySelectorAll('[data-minimo]')].map(el=>el.textContent) };
   });
   T('[33] toda contagem no texto bate com o catalogo', txt.conta);
-  T('[33] o indice soma o catalogo inteiro ('+txt.soma+'/'+txt.n+')', txt.soma===txt.n);
+  T('[33] o "a partir de" do texto sai da configuracao ('+txt.minimo.join(',')+')',
+    txt.minimo.length>0 && txt.minimo.every(x=>x==='10'));
+  T('[33] nenhum texto promete "sem pedido minimo" ou "uma peca so"', !/sem pedido m[ií]nimo|uma pe[çc]a s[óo]/i.test(txt.corpo));
   T('[33] sumiram "Dezoito", "18 ITENS" e o copo a 29,90', !/Dezoito|18 ITENS|R\$ 29,90 a unidade/i.test(txt.corpo));
 
   // [34] previa de link: endereco absoluto e arquivo existe
@@ -524,6 +493,71 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   T('[37] CSS e JS saem com versao ('+v.v+')', !!v.v && v.css.includes('v='+v.v));
   const sem = fotos.filter(u=>!u.includes('v='+v.v));
   T('[37] toda foto sai com a mesma versao ('+fotos.length+' fotos, '+sem.length+' sem)', fotos.length>0 && sem.length===0);
+  await q.close();
+}
+
+// [38] sem preco de 1 a 9 unidades (pedido da dona, 28/09): a tabela comeca
+// em 10, o preco avulso nao aparece em lugar nenhum, e abaixo de 10 pecas o
+// orcamento fica "a combinar" em vez de inventar um valor
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  const r = await q.evaluate(()=>{
+    const cards=[...document.querySelectorAll('#catalogGrid .ccard')];
+    const faixas=cards.flatMap(c=>[...c.querySelectorAll('.ccard__tiers li span')].map(s=>s.textContent));
+    const comPreco=cards.filter(c=>!c.querySelector('.ccard__price--consulta'));
+    const copo=cards.find(c=>c.dataset.id==='copo-473');
+    return {
+      primeiras: cards.map(c=>c.querySelector('.ccard__tiers li span')).filter(Boolean).map(s=>s.textContent),
+      abaixo10: faixas.filter(t=>/^[1-9] a /.test(t)),
+      rotulos: comPreco.map(c=>c.querySelector('.ccard__from').textContent),
+      copo: copo.querySelector('.ccard__price').textContent,
+      corpo: document.body.innerText,
+      primeiraFaixa: SPACE.PRODUCTS.filter(p=>p.tiers).map(p=>p.tiers[0][0])
+    };
+  });
+  T('[38] nenhuma faixa comeca abaixo de 10 ('+r.abaixo10.length+')', r.abaixo10.length===0);
+  T('[38] toda tabela abre em "10 a ..." ou "10 pecas" ('+r.primeiras.length+' tabelas)', r.primeiras.every(t=>/^10 /.test(t)));
+  T('[38] todo preco diz "a partir de 10 pecas" ('+r.rotulos.length+')', r.rotulos.length>0 && r.rotulos.every(t=>/a partir de 10 pe/i.test(t)));
+  T('[38] o copo 473 mostra 24,90, nao os 49,99 da peca avulsa', r.copo.includes('24,90') && !/49,99/.test(r.corpo));
+  T('[38] todo produto com preco comeca em 10', r.primeiraFaixa.every(x=>x===10));
+  // 5 pecas: entra no orcamento, mas sem preco inventado
+  const o = await q.evaluate(()=>{
+    localStorage.clear(); [...SPACE.Cart.items].forEach(i=>SPACE.Cart.remove(i.cor?i.id+'|'+i.cor:i.id));
+    const c=document.querySelector('.ccard[data-id="garrafa-500"]');
+    c.querySelector('input').value='5'; c.querySelector('[data-add]').click();
+    const wa=c.querySelector('[data-wa]'); wa.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
+    return { linha:document.querySelector('.ditem[data-chave="garrafa-500"] .ditem__price').textContent,
+             meta:document.querySelector('.ditem[data-chave="garrafa-500"] .ditem__meta').textContent,
+             total:document.querySelector('#drawerTotal').textContent,
+             msg:SPACE.Cart.message(), zap:decodeURIComponent(wa.href.split('text=')[1]||'') };
+  });
+  T('[38] 5 pecas ficam a combinar no orcamento ('+o.linha+')', /combinar/i.test(o.linha) && o.total.includes('0,00'));
+  T('[38] e o item diz de onde o preco comeca ('+o.meta+')', /a partir de 10/.test(o.meta));
+  T('[38] a mensagem nao inventa valor para 5 pecas', /5 uni × a combinar/.test(o.msg));
+  T('[38] o WhatsApp direto com 5 pecas nao manda valor de referencia', !/refer[êe]ncia/i.test(o.zap) && /Quantidade: 5 uni/.test(o.zap));
+  await q.close();
+}
+
+// [39] do logo direto para o catalogo (pedido da dona, 28/09): sairam o
+// destaque "Nao e tinta", os diferenciais, "Novos Brindes" e "Mais desejados"
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  const r = await q.evaluate(()=>({
+    sairam: ['.hero','#novidades','#produtos','#desejados','#showcase','#dealCard'].filter(s=>document.querySelector(s)),
+    primeira: document.querySelector('main > section')?.id,
+    depoisDaCapa: document.querySelector('#cup').nextElementSibling.nextElementSibling?.id, // capa, barra, main
+    links: [...document.querySelectorAll('#navMenu a, .footer a[href^="#"]')].map(a=>a.getAttribute('href')),
+    h1: document.querySelectorAll('h1').length
+  }));
+  T('[39] as secoes pedidas sairam ('+(r.sairam.join(',')||'nenhuma sobrou')+')', r.sairam.length===0);
+  T('[39] a primeira secao depois do logo e o catalogo ('+r.primeira+')', r.primeira==='catalogo');
+  const mortos = await q.evaluate(ls=>ls.filter(h=>!document.querySelector(h)), r.links);
+  T('[39] nenhum link do menu ou do rodape aponta para secao que saiu ('+mortos.join(',')+')', mortos.length===0);
+  T('[39] a pagina continua com um h1 ('+r.h1+')', r.h1===1);
   await q.close();
 }
 
