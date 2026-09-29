@@ -214,17 +214,7 @@ const PRODUCTS = [
     tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
 
   { id:'copo-long-neck', name:'Copo Térmico Long Neck 420ml', cat:'copos', ph:'copo',
-    desc:'Inox de 420 ml que serve de copo ou de porta-lata e porta long neck. Vem com tampa, anel de borracha e abridor de garrafa. 19 cm de altura.',
-    cores:[
-      { id:'preto',   nome:'Preto',   hex:'#2e2e2e' },
-      { id:'amarelo', nome:'Amarelo', hex:'#d2bc1c' },
-      { id:'turquesa', nome:'Azul-turquesa', hex:'#44bbb4' },
-      { id:'laranja',  nome:'Laranja',       hex:'#d1752f' },
-      { id:'nude',     nome:'Nude',          hex:'#cc9d82' },
-      { id:'pink',     nome:'Pink',          hex:'#c93781' },
-      { id:'rosa',     nome:'Rosa',          hex:'#c88398' },
-      { id:'roxo',     nome:'Roxo',          hex:'#7f627e' }
-    ],
+    desc:'Inox de 420 ml que serve de copo ou de porta-lata e porta long neck. Vem com tampa, anel de borracha e abridor de garrafa. 19 cm de altura. Na cor preta.',
     tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
 
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',
@@ -244,34 +234,22 @@ const PRODUCTS = [
     tiers:[[1,70.00],[20,68.00],[25,65.00]] },
 
   { id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', cat:'copos', ph:'caneca',
-    desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança.',
-    detalhe:true,
-    cores:[
-      { id:'cinza',    nome:'Cinza',    hex:'#5c5f5f' },
-      { id:'preto',    nome:'Preto',    hex:'#333535' },
-      { id:'branco',   nome:'Branco',   hex:'#e2e2e4' },
-      { id:'verde',    nome:'Verde',    hex:'#435030' },
-      { id:'vermelho', nome:'Vermelho', hex:'#a02d35' }
-    ] },
+    desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança. Na cor preta.',
+    detalhe:true },
 
   { id:'caneca-termica-1200', name:'Caneca Térmica 1,2L', cat:'copos', ph:'caneca',
-    desc:'Inox 304 de parede dupla, tampa acrílica rosqueável com bico flexível e pegador plástico. Acompanha canudo.',
-    cores:[
-      { id:'petroleo',   nome:'Azul petróleo', hex:'#3e5968' },
-      { id:'azul-claro', nome:'Azul claro',    hex:'#a7cedf' },
-      { id:'branco',     nome:'Branco',        hex:'#e2e1e1' },
-      { id:'preto',      nome:'Preto',         hex:'#1b1b1b' }
-    ] },
+    desc:'Inox 304 de parede dupla, tampa acrílica rosqueável com bico flexível e pegador plástico. Acompanha canudo. Na cor preta.' },
 
   { id:'caneca-inox-180', name:'Caneca Inox 180ml', cat:'copos', ph:'caneca',
     desc:'Caneca em inox de 180 ml com cabo e tampa em plástico resistente. Não é térmica.' },
 
-  { id:'garrafa-500', name:'Garrafa Térmica 500ml', cat:'garrafas', ph:'garrafa',
-    desc:'Garrafa térmica de 500 ml com infusor para chá.',
-    tiers:[[1,29.90]] },
-
+  /* Uma garrafa LED só. Estavam no catálogo "Garrafa Térmica 500ml" (foto na
+     mão, gravada) e "Garrafa Térmica LED 500ml" (foto do anúncio), e são a
+     mesma garrafa: o visor fica em cima da tampa e não aparece de lado. A foto
+     principal é a gravada; a lupa mostra a tampa com o visor. */
   { id:'garrafa-led', name:'Garrafa Térmica LED 500ml', cat:'garrafas', ph:'garrafa',
     desc:'Inox por dentro e por fora, com visor de LED na tampa que mostra a temperatura da bebida. Na cor preta.',
+    detalhe:true,
     tiers:[[1,49.00],[10,29.90],[50,27.90],[100,25.90]] },
 
   { id:'garrafa-800', name:'Garrafa Térmica 800ml', cat:'garrafas', ph:'garrafa',

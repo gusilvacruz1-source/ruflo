@@ -107,6 +107,8 @@ Gravação: plaquinha 2 × 4,5 cm · capa 16 × 8,5 cm
 
 Fotos: `caneca-termica-1200-petroleo` `-azul-claro` `-branco` `-preto` ✅
 
+> **29/09 — só em preto**, a pedido: saíram as outras cores (bolinhas e fotos). A foto preta virou `caneca-termica-1200.webp`. As fotos das outras cores estão no histórico do git (commit 26bd43b).
+
 ```js
 { id:'caneca-termica-1200', name:'Caneca Térmica 1,2L', cat:'copos', ph:'caneca',
   desc:'Inox 304 de parede dupla, tampa acrílica rosqueável com bico flexível e pegador plástico. Acompanha canudo.',
@@ -147,6 +149,9 @@ Gravação: 7,5 × 6 cm
 ## 7. Caneca Térmica 350 ml — cód. 06061 — cinco cores
 
 Fotos: `caneca-termica-350-cinza` `-preto` `-branco` `-verde` `-vermelho` ✅
+
+> **29/09 — só em preto**, a pedido: saíram as outras cores (bolinhas e fotos). A foto preta virou `caneca-termica-350.webp`. As fotos das outras cores estão no histórico do git (commit 26bd43b).
+> A foto de detalhe (tampa do preto) continua.
 
 A branca deu trabalho: a alça é branca sobre fundo branco. Na primeira foto
 ela media exatamente 255, o mesmo valor do fundo, e não havia recorte
@@ -242,6 +247,8 @@ direto, vale trocar.
 
 Fotos: `copo-long-neck-preto` `copo-long-neck-amarelo` `copo-long-neck-turquesa` `copo-long-neck-laranja` `copo-long-neck-nude` `copo-long-neck-pink` `copo-long-neck-rosa` `copo-long-neck-roxo` ✅ · **já no site, COM PREÇO**
 
+> **29/09 — só em preto**, a pedido: saíram as outras cores (bolinhas e fotos). A foto preta virou `copo-long-neck.webp`. As fotos das outras cores estão no histórico do git (commit 26bd43b).
+
 Veio de print de anúncio do Mercado Livre ("Copo Térmico Porta Long Neck
 Cerveja Lata Inox Personalizado", R$ 49,90). É o "Copo long neck" da tabela
 de preços que você mandou antes, que também começa em R$ 49,90 — entrou com
@@ -292,6 +299,16 @@ de 10** — R$ 17,12 a unidade). É a "Garrafa LED" da sua lista de preços:
 gravação da Klabin): as duas são pretas, finas e de 500 ml, mas você
 confirmou que são produtos diferentes. As duas ficam no catálogo.
 
+> **29/09 — é a mesma garrafa.** "Tem duas de LED no site, deixa só uma."
+> Comparadas lado a lado, têm o mesmo corpo e a mesma tampa; o visor fica em
+> cima da tampa e não aparece na foto de lado. Ficou um produto só,
+> `garrafa-led`, com a tabela da lista (29,90 a partir de 10 · 27,90 a partir
+> de 50 · 25,90 a partir de 100). A foto gravada da Klabin virou a foto
+> principal (`garrafa-led.webp`) e a do anúncio, com a tampa mostrando
+> "58°C", virou a foto de detalhe da lupa (`garrafa-led-detalhe.webp`). A
+> descrição "com infusor para chá" da antiga `garrafa-500` saiu: não está no
+> anúncio da LED. **Se a garrafa tiver infusor, me avise que eu ponho.**
+
 A foto mostra a garrafa e a tampa ao lado com o visor em "58°C"; o recorte
 manteve as duas peças.
 
@@ -319,6 +336,13 @@ apagado abaixo da linha de contato de cada copo com o chão, coluna por
 coluna, e o vão entre os dois copos, linha por linha.
 
 Se chegar uma foto de cada cor separada, é trocar para uma foto por cor.
+
+> **29/09 — "tira esses quadradinhos da borda".** O corte do chão coluna por
+> coluna tinha deixado mordidas de 2 a 4 px no lado do branco, um degrau no
+> pé dele e franja clara do fundo do anúncio na borda do preto. Os lados dos
+> dois copos (inclusive os do vão entre eles) viraram retas ajustadas, o
+> miolo de cada base uma curva, e o resto do contorno foi suavizado —
+> `refaz_copo_360_tampa()` na ferramenta de recorte.
 
 **Foto de detalhe** (lupa): `copo-360-tampa-detalhe.webp`, a segunda foto do
 anúncio — os dois copos abertos, com as tampas na frente. Ela não serve para

@@ -315,6 +315,7 @@ BRACOS = {  # nome: (lados, mantem) - coordenadas da foto de origem
     'chapeu-juta':          (['esq', 'baixo'], [(30,40),(450,40),(450,305),(230,310),(165,300),(30,285)]),
     'copo-360':             (['esq', 'baixo'], [(175,20),(400,20),(400,320),(300,320),(240,330),(190,300),(175,110)]),
     'copo-473':             (['esq', 'baixo'], [(215,30),(390,30),(390,400),(195,400),(180,345),(150,325),(120,290),(120,120),(215,110)]),
+    # garrafa-500: desde 29/09 publicada como garrafa-led.webp (era a mesma garrafa)
     'garrafa-500':          (['esq', 'baixo'], [(240,30),(360,30),(360,420),(240,420),(215,375),(185,330),(195,180),(240,150)]),
     'garrafa-800':          (['esq', 'baixo'], [(220,20),(360,20),(360,410),(225,410),(200,355),(190,300),(195,180)]),
     'garrafa-aluminio-600': (['baixo'],        [(180,20),(360,20),(360,420),(250,420),(215,405),(185,390),(180,215)]),
@@ -363,3 +364,118 @@ def esmaece_braco(entrada, saida, lados, mantem, fim=0.75):
         a[..., 3] = a[..., 3] * t; resto = a[..., 3][corte].max()
     Image.fromarray(a.clip(0, 255).astype(np.uint8)).save(saida, quality=86, method=6)
     print(saida.split('/')[-1], 'esmaecido; o que sobra no corte:', round(float(resto), 1))
+
+
+# ---------------------------------------------------------------------------
+# CONTORNO SERRILHADO (copo 360 com tampa, 29/09). A foto veio de print de
+# anúncio: os dois copos ocupavam uns 300 px no print e foram ampliados para
+# 480. O chão refletido foi apagado coluna por coluna e o vão entre os copos
+# linha por linha - e cada coluna parou num lugar. No card isso aparecia como
+# "quadradinhos" na borda: mordidas de 2 a 4 px no lado do copo branco, um
+# degrau no pé dele, e franja clara do fundo do anúncio na borda do preto.
+#
+# suaviza_contorno: fecha as mordidas e tira as rebarbas com um disco,
+#   desfoca o alfa e aperta de novo numa rampa curta (borda com ~1,5 px de
+#   transição), e troca a cor da franja pela do pixel de dentro mais próximo.
+#   A tampa é plástico transparente: onde o alfa já era parcial DENTRO da
+#   peça, ele continua valendo.
+# refaz_copo_360_tampa: os lados dos dois copos são retas (copo cônico). Cada
+#   lado vira uma reta ajustada aos pontos do contorno - inclusive os dois
+#   lados do vão entre os copos - com antisserrilhado exato; o miolo de cada
+#   base vira uma curva ajustada que se funde com o canto arredondado. Tampa,
+#   aro e cantos ficam com o contorno suavizado.
+#
+# ORIGEM: a foto do commit 5461d83, antes desta correção.
+#   git show 5461d83:space-personalizados/assets/produtos/copo-360-tampa.webp > /tmp/o.webp
+#   python3 -c "import importlib; f=importlib.import_module('ferramentas-recorte'); \
+#     f.refaz_copo_360_tampa('/tmp/o.webp', 'space-personalizados/assets/produtos/copo-360-tampa.webp')"
+# ---------------------------------------------------------------------------
+def _disco(r):
+    y, x = np.ogrid[-r:r + 1, -r:r + 1]
+    return x * x + y * y <= r * r + 0.5
+
+def _cor_de_dentro(A, confiavel):
+    _, (iy, ix) = ndimage.distance_transform_edt(~confiavel, return_indices=True)
+    fora = ~confiavel
+    for c in range(3):
+        canal = A[..., c]
+        canal[fora] = canal[iy[fora], ix[fora]]
+
+def suaviza_contorno(entrada, saida=None, raio=3, sigma=1.3, centro=0.5, largura=0.24):
+    im = Image.open(entrada).convert('RGBA')
+    A = np.asarray(im).astype(float)
+    alfa = A[..., 3] / 255.0
+    m = alfa > 0.5
+    m = ndimage.binary_closing(m, structure=_disco(raio))
+    m = ndimage.binary_opening(m, structure=_disco(raio))
+    _cor_de_dentro(A, ndimage.binary_erosion((alfa > 0.98) & m, iterations=2))
+    b = ndimage.gaussian_filter(m.astype(float), sigma)
+    t = np.clip((b - (centro - largura / 2)) / largura, 0, 1)
+    novo = t * t * (3 - 2 * t)
+    interior = ndimage.binary_erosion(m, iterations=3)
+    A[..., 3] = np.where(interior, np.minimum(novo, alfa), novo) * 255
+    out = Image.fromarray(A.clip(0, 255).astype(np.uint8))
+    if saida:
+        out.save(saida, quality=90, method=6)
+    return out
+
+def _reta(ys, xs):
+    """x = a*y + b, robusta: 3 passadas descartando os 20% piores."""
+    ys = np.asarray(ys, float); xs = np.asarray(xs, float); ok = np.ones(len(ys), bool)
+    for _ in range(3):
+        a, b = np.polyfit(ys[ok], xs[ok], 1)
+        r = np.abs(xs - (a * ys + b)); ok = r <= np.quantile(r[ok], 0.8) + 0.5
+    return a, b
+
+def _curva(xs, ys):
+    xs = np.asarray(xs, float); ys = np.asarray(ys, float); ok = np.ones(len(xs), bool)
+    for _ in range(3):
+        c = np.polyfit(xs[ok], ys[ok], 2)
+        r = np.abs(ys - np.polyval(c, xs)); ok = r <= np.quantile(r[ok], 0.8) + 0.5
+    return c
+
+def refaz_copo_360_tampa(entrada, saida):
+    A = np.asarray(suaviza_contorno(entrada)).astype(float)
+    S = A[..., 3] / 255.0
+    m = np.asarray(Image.open(entrada).convert('RGBA'))[..., 3] > 127
+    H, W = m.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    def vao(y):                           # o vão entre os dois copos naquela linha
+        g = [x for x in range(180, 300) if not m[y, x]]
+        return (min(g), max(g))
+    aL, bL = _reta(*zip(*[(y, np.nonzero(m[y])[0].min()) for y in range(130, 391)]))
+    aR, bR = _reta(*zip(*[(y, np.nonzero(m[y])[0].max()) for y in range(130, 353)]))
+    aP, bP = _reta(*zip(*[(y, vao(y)[0] - 1) for y in range(244, 411)]))
+    aB, bB = _reta(*zip(*[(y, vao(y)[1] + 1) for y in range(244, 371)]))
+    xPR = aP * yy + bP; xBL = aB * yy + bB; meio = (xPR + xBL) / 2
+    fundo = np.array([np.nonzero(S[:, x] > 0.5)[0].max() if (S[:, x] > 0.5).any() else 0
+                      for x in range(W)], float)[None, :]
+    lados = [  # (d > 0 = fora da peça, onde vale)
+        ((aL * yy + bL) - xx, (yy >= 124) & (xx < 150)),                  # preto, esquerda
+        (xx - xPR,            (yy >= 240) & (xx > 170) & (xx < meio)),     # preto, lado do vão
+        (xBL - xx,            (yy >= 240) & (xx >= meio) & (xx < 320)),    # branco, lado do vão
+        (xx - (aR * yy + bR), (yy >= 124) & (xx > 330)),                  # branco, direita
+    ]
+    alfa = S.copy(); zona = np.zeros((H, W), bool)
+    for d, onde in lados:
+        L = np.clip(0.5 - d, 0, 1)
+        z = onde & (d > -8)
+        corpo = z & (yy < fundo - 6)          # no meio do lado a reta preenche as mordidas
+        alfa = np.where(corpo, L, alfa)
+        alfa = np.where(z & ~corpo, np.minimum(alfa, L), alfa)   # perto do pé só apara
+        zona |= z
+    for x0, x1, r in ((88, 200, 14), (286, 404, 14)):              # miolo da base de cada copo
+        c = _curva(*zip(*[(x, np.nonzero(m[:, x])[0].max()) for x in range(x0, x1 + 1)]))
+        d = yy - np.polyval(c, xx)
+        w = np.clip(np.minimum(xx - (x0 - r), (x1 + r) - xx) / r, 0, 1)
+        z = (xx >= x0 - r) & (xx <= x1 + r) & (d > -8) & (yy > 330)
+        alfa = np.where(z, w * np.clip(0.5 - d, 0, 1) + (1 - w) * alfa, alfa)
+        zona |= z
+    # cor: 2 px para dentro; junto das bordas refeitas, 5 px - a faixa colada
+    # no contorno antigo ainda tem sobra do reflexo do chão
+    confiavel = ndimage.binary_erosion(alfa > 0.98, iterations=2) & (A[..., 3] > 250)
+    confiavel &= ~(ndimage.binary_dilation(zona) & ~ndimage.binary_erosion(alfa > 0.98, iterations=5))
+    _cor_de_dentro(A, confiavel)
+    A[..., 3] = alfa * 255
+    Image.fromarray(A.clip(0, 255).astype(np.uint8)).save(saida, quality=90, method=6)
+    print(saida.split('/')[-1], 'refeito: lados em reta, base em curva')

@@ -352,7 +352,7 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
     const out=[]; for (const u of lst){ const r=await fetch(u,{method:'HEAD'}); if(!r.ok) out.push(u); } return out;
   }, vistos);
   T('[28] catalogo pede fotos que existem ('+vistos.length+' cards, '+semArquivo.length+' faltando)', semArquivo.length===0);
-  T('[28] canecas com cor aparecem no catalogo', vistos.some(u=>/caneca-termica-350-/.test(u)));
+  T('[28] produto com cor pede a foto da cor (kit garrafa, caderneta)', vistos.some(u=>/kit-garrafa-450-/.test(u)) && vistos.some(u=>/caderneta-/.test(u)));
   T('[28] nenhum 404 de foto', !f404.some(x=>/\.webp/.test(x)));
 
   // [30] WhatsApp direto de item sob consulta
@@ -525,11 +525,11 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   // 5 pecas: entra no orcamento, mas sem preco inventado
   const o = await q.evaluate(()=>{
     localStorage.clear(); [...SPACE.Cart.items].forEach(i=>SPACE.Cart.remove(i.cor?i.id+'|'+i.cor:i.id));
-    const c=document.querySelector('.ccard[data-id="garrafa-500"]');
+    const c=document.querySelector('.ccard[data-id="garrafa-led"]');
     c.querySelector('input').value='5'; c.querySelector('[data-add]').click();
     const wa=c.querySelector('[data-wa]'); wa.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
-    return { linha:document.querySelector('.ditem[data-chave="garrafa-500"] .ditem__price').textContent,
-             meta:document.querySelector('.ditem[data-chave="garrafa-500"] .ditem__meta').textContent,
+    return { linha:document.querySelector('.ditem[data-chave="garrafa-led"] .ditem__price').textContent,
+             meta:document.querySelector('.ditem[data-chave="garrafa-led"] .ditem__meta').textContent,
              total:document.querySelector('#drawerTotal').textContent,
              msg:SPACE.Cart.message(), zap:decodeURIComponent(wa.href.split('text=')[1]||'') };
   });
@@ -558,6 +558,43 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   const mortos = await q.evaluate(ls=>ls.filter(h=>!document.querySelector(h)), r.links);
   T('[39] nenhum link do menu ou do rodape aponta para secao que saiu ('+mortos.join(',')+')', mortos.length===0);
   T('[39] a pagina continua com um h1 ('+r.h1+')', r.h1===1);
+  await q.close();
+}
+
+// [40] so em preto (pedido da dona, 29/09): Long Neck, caneca 350 ml e caneca
+// 1,2 L sem bolinhas de cor, com a foto preta como foto do produto
+// [41] uma garrafa LED so: "Garrafa Termica 500ml" e "Garrafa Termica LED
+// 500ml" eram a mesma garrafa
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  const r = await q.evaluate(async()=>{
+    const out={};
+    for (const id of ['copo-long-neck','caneca-termica-350','caneca-termica-1200']){
+      const c=document.querySelector(`.ccard[data-id="${id}"]`);
+      const foto=c.querySelector('.ccard__media').dataset.src;
+      out[id]={ bolinhas:c.querySelectorAll('.swatch').length, foto,
+                existe:(await fetch(foto,{method:'HEAD'})).ok,
+                preta:/cor preta/i.test(c.querySelector('.ccard__desc').textContent) };
+    }
+    const leds=SPACE.PRODUCTS.filter(p=>/LED/i.test(p.name)||/garrafa-500/.test(p.id));
+    const led=document.querySelector('.ccard[data-id="garrafa-led"]');
+    out.leds=leds.map(p=>p.id);
+    out.lupa=!!(led && led.querySelector('[data-detalhe]'));
+    out.detalheExiste=(await fetch('assets/produtos/garrafa-led-detalhe.webp',{method:'HEAD'})).ok;
+    out.precoLed=led && led.querySelector('.ccard__price').textContent;
+    return out;
+  });
+  for (const id of ['copo-long-neck','caneca-termica-350','caneca-termica-1200']){
+    const x=r[id];
+    T('[40] '+id+' sem bolinhas de cor ('+x.bolinhas+')', x.bolinhas===0);
+    T('[40] '+id+' usa a foto preta, que existe ('+x.foto+')', x.foto==='assets/produtos/'+id+'.webp' && x.existe);
+    T('[40] '+id+' diz que e preto', x.preta);
+  }
+  T('[41] uma garrafa LED so ('+r.leds.join(',')+')', r.leds.length===1 && r.leds[0]==='garrafa-led');
+  T('[41] a lupa mostra a tampa com o visor', r.lupa && r.detalheExiste);
+  T('[41] com a tabela da lista: R$ 29,90 a partir de 10 ('+r.precoLed+')', /29,90/.test(r.precoLed||''));
   await q.close();
 }
 
