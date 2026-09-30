@@ -205,12 +205,8 @@ const PRODUCTS = [
     tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
 
   { id:'copo-360-tampa', name:'Copo Térmico 360ml · Tampa Transparente', cat:'copos', ph:'copo',
-    desc:'Copo térmico com aro de inox e tampa transparente, em preto ou branco. A foto mostra as duas cores lado a lado.',
+    desc:'Copo térmico com aro de inox e tampa transparente. Na cor preta.',
     detalhe:true,
-    cores:[
-      { id:'preto',  nome:'Preto',  hex:'#1f1f1f', foto:'copo-360-tampa' },
-      { id:'branco', nome:'Branco', hex:'#e6e8ec', foto:'copo-360-tampa' }
-    ],
     tiers:[[1,49.99],[10,24.90],[50,23.90],[100,22.90]] },
 
   { id:'copo-long-neck', name:'Copo Térmico Long Neck 420ml', cat:'copos', ph:'copo',

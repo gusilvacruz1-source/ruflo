@@ -20,7 +20,7 @@ A LISTA DE HOJE (29 produtos)
 
   copo-473.webp                           Copo Térmico Inox 473ml
   copo-360.webp                           Copo Térmico Inox 360ml
-  copo-360-tampa.webp                     Copo Térmico 360ml · Tampa Transparente  (foto das cores juntas)
+  copo-360-tampa.webp                     Copo Térmico 360ml · Tampa Transparente
   copo-360-tampa-detalhe.webp               (foto de detalhe)
   copo-long-neck.webp                     Copo Térmico Long Neck 420ml
   caneca-termica-700.webp                 Caneca Térmica Inox 700ml

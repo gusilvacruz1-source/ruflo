@@ -155,6 +155,9 @@ Quando só existe uma foto com as cores juntas, a cor pode apontar para ela
 com `foto`: `{ id:'branco', nome:'Branco', hex:'#e6e8ec', foto:'copo-360-tampa' }`
 usa `assets/produtos/copo-360-tampa.webp`. A foto não muda ao trocar a
 bolinha, mas a cor escolhida vai para o orçamento e para o WhatsApp.
+Nenhum produto usa isso hoje — o copo 360 com tampa usava até 30/09, quando
+ficou só em preto, com foto própria —, mas o recurso continua e o teste [35]
+confere com um produto de exemplo.
 
 No card aparecem as bolinhas; clicar troca a foto e guarda a escolha no
 próprio card, de onde ADICIONAR e WHATSAPP leem na hora do clique.
