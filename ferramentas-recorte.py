@@ -479,3 +479,46 @@ def refaz_copo_360_tampa(entrada, saida):
     A[..., 3] = alfa * 255
     Image.fromarray(A.clip(0, 255).astype(np.uint8)).save(saida, quality=90, method=6)
     print(saida.split('/')[-1], 'refeito: lados em reta, base em curva')
+
+
+# Copo cônico sozinho (copo 360 com tampa, foto nova de 30/09, só o preto):
+# os dois lados do corpo viram retas e o miolo da base uma curva, como em
+# refaz_copo_360_tampa; tampa e aro ficam com o contorno suavizado.
+#   linhas: faixa de linhas do CORPO (abaixo do aro, acima do pé)
+#   base:   colunas do miolo da base
+def refaz_copo_conico(entrada, saida, linhas, base, rampa=14):
+    A = np.asarray(suaviza_contorno(entrada)).astype(float)
+    S = A[..., 3] / 255.0
+    m = np.asarray(Image.open(entrada).convert('RGBA'))[..., 3] > 127
+    H, W = m.shape
+    yy, xx = np.mgrid[0:H, 0:W].astype(float)
+    y0, y1 = linhas
+    aL, bL = _reta(*zip(*[(y, np.nonzero(m[y])[0].min()) for y in range(y0, y1 + 1)]))
+    aR, bR = _reta(*zip(*[(y, np.nonzero(m[y])[0].max()) for y in range(y0, y1 + 1)]))
+    meio = ((aL + aR) / 2) * yy + (bL + bR) / 2
+    fundo = np.array([np.nonzero(S[:, x] > 0.5)[0].max() if (S[:, x] > 0.5).any() else 0
+                      for x in range(W)], float)[None, :]
+    alfa = S.copy(); zona = np.zeros((H, W), bool)
+    for d, onde in (((aL * yy + bL) - xx, (yy >= y0 - 4) & (xx < meio)),
+                    (xx - (aR * yy + bR), (yy >= y0 - 4) & (xx >= meio))):
+        L = np.clip(0.5 - d, 0, 1)
+        z = onde & (d > -8)
+        corpo = z & (yy < fundo - 6)
+        alfa = np.where(corpo, L, alfa)
+        alfa = np.where(z & ~corpo, np.minimum(alfa, L), alfa)
+        zona |= z
+    x0, x1 = base
+    c = _curva(*zip(*[(x, np.nonzero(m[:, x])[0].max()) for x in range(x0, x1 + 1)]))
+    d = yy - np.polyval(c, xx)
+    w = np.clip(np.minimum(xx - (x0 - rampa), (x1 + rampa) - xx) / rampa, 0, 1)
+    z = (xx >= x0 - rampa) & (xx <= x1 + rampa) & (d > -8) & (yy > y1 - 40)
+    alfa = np.where(z, w * np.clip(0.5 - d, 0, 1) + (1 - w) * alfa, alfa)
+    zona |= z
+    # abaixo da base não fica nada: pingo solto do chão do anúncio
+    alfa = np.where((yy > np.polyval(c, xx) + 3) & (xx > x0 - 2 * rampa) & (xx < x1 + 2 * rampa), 0, alfa)
+    confiavel = ndimage.binary_erosion(alfa > 0.98, iterations=2) & (A[..., 3] > 250)
+    confiavel &= ~(ndimage.binary_dilation(zona) & ~ndimage.binary_erosion(alfa > 0.98, iterations=5))
+    _cor_de_dentro(A, confiavel)
+    A[..., 3] = alfa * 255
+    Image.fromarray(A.clip(0, 255).astype(np.uint8)).save(saida, quality=90, method=6)
+    print(saida.split('/')[-1], f'refeito: lados x={aL:.3f}y+{bL:.1f} e x={aR:.3f}y+{bR:.1f}')

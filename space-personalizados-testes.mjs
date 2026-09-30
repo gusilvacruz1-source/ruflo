@@ -426,8 +426,14 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
   const r = await q.evaluate(async()=>{
     localStorage.clear();
-    const alvo = SPACE.PRODUCTS.find(p=>p.cores && p.cores.some(c=>c.foto));
-    if (!alvo) return { semProduto:true };
+    // nenhum produto usa `foto` desde 30/09 (o copo 360 com tampa ficou so
+    // preto): o exemplo e injetado so na memoria da pagina
+    SPACE.PRODUCTS.push({ id:'teste-foto-junta', name:'Produto Foto Junta', cat:'copos', ph:'copo',
+      desc:'Injetado so para o teste da foto compartilhada.',
+      cores:[{id:'preto',nome:'Preto',hex:'#1f1f1f',foto:'copo-360-tampa'},{id:'branco',nome:'Branco',hex:'#e6e8ec',foto:'copo-360-tampa'}],
+      tiers:[[10,24.90]] });
+    SPACE.renderCatalog('todos');
+    const alvo = SPACE.PRODUCTS.find(p=>p.id==='teste-foto-junta');
     const card=document.querySelector(`.ccard[data-id="${alvo.id}"]`);
     const fotos=[];
     for (const b of card.querySelectorAll('.swatch')) { b.click(); fotos.push(card.querySelector('.ccard__media').dataset.src); }
@@ -595,6 +601,32 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   T('[41] uma garrafa LED so ('+r.leds.join(',')+')', r.leds.length===1 && r.leds[0]==='garrafa-led');
   T('[41] a lupa mostra a tampa com o visor', r.lupa && r.detalheExiste);
   T('[41] com a tabela da lista: R$ 29,90 a partir de 10 ('+r.precoLed+')', /29,90/.test(r.precoLed||''));
+  await q.close();
+}
+
+// [42] copo 360 com tampa so em preto (30/09): foto do copo preto sozinho,
+// sem bolinhas, e a lupa mostra so o preto aberto
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  const r = await q.evaluate(async()=>{
+    const c=document.querySelector('.ccard[data-id="copo-360-tampa"]');
+    const foto=c.querySelector('.ccard__media').dataset.src;
+    // proporcao da peca na foto: um copo sozinho e mais alto que largo;
+    // os dois copos lado a lado eram mais largos que altos
+    const im=new Image(); im.src=foto; await im.decode();
+    const cv=document.createElement('canvas'); cv.width=im.width; cv.height=im.height;
+    const g=cv.getContext('2d'); g.drawImage(im,0,0);
+    const d=g.getImageData(0,0,cv.width,cv.height).data;
+    let x0=1e9,x1=-1,y0=1e9,y1=-1;
+    for(let y=0;y<cv.height;y++) for(let x=0;x<cv.width;x++) if(d[(y*cv.width+x)*4+3]>127){ if(x<x0)x0=x; if(x>x1)x1=x; if(y<y0)y0=y; if(y>y1)y1=y; }
+    return { bolinhas:c.querySelectorAll('.swatch').length, foto, lupa:!!c.querySelector('[data-detalhe]'),
+             proporcao:(x1-x0)/(y1-y0), preta:/cor preta/i.test(c.querySelector('.ccard__desc').textContent) };
+  });
+  T('[42] copo 360 com tampa sem bolinhas ('+r.bolinhas+')', r.bolinhas===0);
+  T('[42] a foto e de um copo so (largura/altura '+r.proporcao.toFixed(2)+')', r.proporcao < 0.8);
+  T('[42] diz que e preto e mantem a lupa', r.preta && r.lupa);
   await q.close();
 }
 

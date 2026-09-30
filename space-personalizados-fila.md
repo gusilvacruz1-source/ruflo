@@ -344,6 +344,16 @@ Se chegar uma foto de cada cor separada, é trocar para uma foto por cor.
 > miolo de cada base uma curva, e o resto do contorno foi suavizado —
 > `refaz_copo_360_tampa()` na ferramenta de recorte.
 
+> **30/09 — só o preto, com foto nova.** "Troca esse que tem dois só por esse
+> outro sozinho, só tem preto daí." Chegou a foto do copo preto sozinho, com
+> a tampa (300 × 474, fundo 247). Recorte: `corta(..., lado=480)` — corpo
+> escuro com tampa translúcida — e depois
+> `refaz_copo_conico(..., linhas=(122, 425), base=(165, 315))`: lados em
+> reta, base em curva, pingo solto sob a base apagado. Saíram as bolinhas
+> preto/branco; a descrição diz "Na cor preta". A foto de detalhe foi
+> cortada na metade do preto (copo aberto e a tampa dele) e a sombra entre
+> os dois copos some aos poucos no fundo, sem linha de corte.
+
 **Foto de detalhe** (lupa): `copo-360-tampa-detalhe.webp`, a segunda foto do
 anúncio — os dois copos abertos, com as tampas na frente. Ela não serve para
 separar as cores porque cada tampa fica na frente da base do seu copo. O
