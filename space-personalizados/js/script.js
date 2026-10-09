@@ -193,6 +193,9 @@ function hydratePlaceholders(root = document) {
    tiers: faixas de preço por quantidade [a partir de quantas, preço unitário],
           como a Space passou. O site corta tudo abaixo de CONFIG.qtdMinima
           logo depois da lista (veja "A PARTIR DE 10").
+          Desde 09/10 SÓ OS COPOS têm tiers: a Space pediu o resto sob
+          consulta. Os preços tirados não ficam aqui (o arquivo vai para o
+          ar); estão em space-personalizados-fila.md, "Preço só nos copos".
    ========================================================================== */
 
 const PRODUCTS = [
@@ -214,20 +217,16 @@ const PRODUCTS = [
     tiers:[[1,49.90],[10,39.99],[50,36.90],[100,35.99]] },
 
   { id:'caneca-termica-700', name:'Caneca Térmica Inox 700ml', cat:'copos', ph:'caneca',
-    desc:'Dupla parede em inox de 700 ml personalizada a laser.',
-    tiers:[[1,69.90],[20,49.90],[50,48.90]] },
+    desc:'Dupla parede em inox de 700 ml personalizada a laser.' },
 
   { id:'caneca-aluminio-350', name:'Caneca em Alumínio 350ml', cat:'copos', ph:'caneca',
-    desc:'Leve, resistente e com ótimo custo por unidade em grandes volumes.',
-    tiers:[[1,17.99],[50,15.99],[100,14.99]] },
+    desc:'Leve, resistente e com ótimo custo por unidade em grandes volumes.' },
 
   { id:'caneca-porcelana', name:'Caneca de Porcelana 325ml', cat:'copos', ph:'xicara',
-    desc:'Clássica de escritório, acabamento liso e impressão de alta definição.',
-    tiers:[[1,35.00],[20,32.00],[25,29.00]] },
+    desc:'Clássica de escritório, acabamento liso e impressão de alta definição.' },
 
   { id:'torre-xicaras', name:'Torre de Xícaras 150ml', cat:'copos', ph:'xicara',
-    desc:'Jogo de xícaras com suporte em metal, presente corporativo de alto impacto.',
-    tiers:[[1,70.00],[20,68.00],[25,65.00]] },
+    desc:'Jogo de xícaras com suporte em metal, presente corporativo de alto impacto.' },
 
   { id:'caneca-termica-350', name:'Caneca Térmica Inox 350ml', cat:'copos', ph:'caneca',
     desc:'Inox de parede dupla com tampa acrílica, bocal e trava de segurança. Na cor preta.',
@@ -245,19 +244,16 @@ const PRODUCTS = [
      principal é a gravada; a lupa mostra a tampa com o visor. */
   { id:'garrafa-led', name:'Garrafa Térmica LED 500ml', cat:'garrafas', ph:'garrafa',
     desc:'Inox por dentro e por fora, com visor de LED na tampa que mostra a temperatura da bebida. Na cor preta.',
-    detalhe:true,
-    tiers:[[1,49.00],[10,29.90],[50,27.90],[100,25.90]] },
+    detalhe:true },
 
   { id:'garrafa-800', name:'Garrafa Térmica 800ml', cat:'garrafas', ph:'garrafa',
-    desc:'Garrafa térmica de 800 ml com tampa rosqueável e vedação reforçada.',
-    tiers:[[1,49.90]] },
+    desc:'Garrafa térmica de 800 ml com tampa rosqueável e vedação reforçada.' },
 
   { id:'garrafa-800-silicone', name:'Garrafa Térmica 800ml · Base de Silicone', cat:'garrafas', ph:'garrafa',
     desc:'Aço inox por dentro e por fora, tampa com bico e alça, e base de silicone. Na cor preta.' },
 
   { id:'garrafa-aluminio-600', name:'Garrafa em Alumínio 600ml', cat:'garrafas', ph:'garrafa',
-    desc:'Garrafa esportiva em alumínio de 600 ml, gravada a laser.',
-    tiers:[[1,44.90],[20,42.90],[50,39.90]] },
+    desc:'Garrafa esportiva em alumínio de 600 ml, gravada a laser.' },
 
   { id:'kit-garrafa-450', name:'Kit Garrafa Térmica 450ml', cat:'garrafas', ph:'garrafa',
     desc:'Garrafa em inox de 450 ml com base antiderrapante e duas tampas extras que viram xícaras. Acompanha sacola de papel com berço de papelão.',
@@ -272,20 +268,16 @@ const PRODUCTS = [
     ] },
 
   { id:'churrasco-5', name:'Kit Churrasco 5 Peças', cat:'churrasco', ph:'churrasco',
-    desc:'Garfo, faca, pegador, espátula, pincel e espetos. Acompanha bolsa.',
-    tiers:[[1,99.90],[10,79.90]] },
+    desc:'Garfo, faca, pegador, espátula, pincel e espetos. Acompanha bolsa.' },
 
   { id:'churrasco-4', name:'Kit Churrasco Maleta 4 Peças', cat:'churrasco', ph:'churrasco',
-    desc:'Maleta de alumínio com trava e forro em TNT. Faca de 8 polegadas, garfo de duas pontas, espátula e pegador em inox.',
-    tiers:[[1,159.90],[10,119.90]] },
+    desc:'Maleta de alumínio com trava e forro em TNT. Faca de 8 polegadas, garfo de duas pontas, espátula e pegador em inox.' },
 
   { id:'churrasco-2-estojo', name:'Kit Churrasco 2 Peças · Estojo', cat:'churrasco', ph:'churrasco',
-    desc:'Faca de 8 polegadas e garfo de duas pontas em inox, cabo de madeira, em estojo com zíper e alça.',
-    tiers:[[1,75.90],[10,55.90]] },
+    desc:'Faca de 8 polegadas e garfo de duas pontas em inox, cabo de madeira, em estojo com zíper e alça.' },
 
   { id:'churrasco-2-caixa', name:'Kit Churrasco 2 Peças · Caixa', cat:'churrasco', ph:'churrasco',
-    desc:'Garfo e faca de 8 polegadas, acompanha caixa para presente.',
-    tiers:[[1,75.90],[10,55.90]] },
+    desc:'Garfo e faca de 8 polegadas, acompanha caixa para presente.' },
 
   { id:'churrasco-5-nylon', name:'Kit Churrasco 5 Peças · Nylon', cat:'churrasco', ph:'churrasco',
     desc:'Faca de 6 polegadas, garfo, espátula, pincel com cerdas de silicone e pegador em inox, em estojo de nylon com par de alças. Acompanha placa metálica personalizável.' },
@@ -297,12 +289,10 @@ const PRODUCTS = [
     desc:'Faca de 8 polegadas, garfo de duas pontas e pegador em inox com detalhes em madeira, em estojo de nylon com alça. Acompanha plaquinha adesiva personalizável.' },
 
   { id:'canivete-inox', name:'Canivete Inox com Presilha', cat:'canivetes', ph:'canivete',
-    desc:'Canivete em aço inox com presilha de bolso e gravação a laser.',
-    tiers:[[1,99.90],[10,49.90]] },
+    desc:'Canivete em aço inox com presilha de bolso e gravação a laser.' },
 
   { id:'canivete-aco', name:'Canivete com Lâmina de Aço', cat:'canivetes', ph:'canivete',
-    desc:'Lâmina de aço com cabo ergonômico, ideal para brinde masculino.',
-    tiers:[[1,69.90],[10,39.90]] },
+    desc:'Lâmina de aço com cabo ergonômico, ideal para brinde masculino.' },
 
   { id:'caderneta', name:'Caderneta Couro Sintético', cat:'escritorio', ph:'caneta',
     desc:'Capa em couro sintético com plaquinha metálica personalizável, porta-canetas lateral e marca-páginas em fita de cetim. Cerca de 96 folhas pautadas.',
@@ -314,24 +304,21 @@ const PRODUCTS = [
     ] },
 
   { id:'caneta-metal', name:'Caneta Esferográfica em Metal', cat:'escritorio', ph:'caneta',
-    desc:'Caneta em metal escovado com gravação a laser da sua marca.',
-    tiers:[[1,6.00],[50,4.50],[100,4.00]] },
+    desc:'Caneta em metal escovado com gravação a laser da sua marca.' },
 
   { id:'chaveiro-abridor', name:'Chaveiro Abridor a Laser', cat:'escritorio', ph:'chaveiro',
-    desc:'Chaveiro abridor personalizado a laser, o brinde de maior giro.',
-    tiers:[[1,4.00],[30,3.50],[50,3.00],[100,2.50],[500,2.25]] },
+    desc:'Chaveiro abridor personalizado a laser, o brinde de maior giro.' },
 
   { id:'chapeu-juta', name:'Chapéu de Juta', cat:'estilo', ph:'chapeu',
-    desc:'Chapéu de juta com faixa em couro ecológico personalizada a laser.',
-    tiers:[[1,80.00],[5,70.00],[10,60.00]] }
+    desc:'Chapéu de juta com faixa em couro ecológico personalizada a laser.' }
 ];
 
 /* A PARTIR DE 10
    A dona pediu para tirar o preço de 1 a 9 unidades. A faixa que cobre a
    quantidade mínima passa a começar nela, e as abaixo somem:
-     copo 473   [1] 49,99 [10] 24,90 ...  ->  [10] 24,90 ...
-     caneca 700 [1] 69,90 [20] 49,90 ...  ->  [10] 69,90 [20] 49,90 ...
-     chapéu     [1] 80 [5] 70 [10] 60     ->  [10] 60
+     [1] A [10] B [50] C   ->  [10] B [50] C          (copo 473: B = 24,90)
+     [1] A [20] B          ->  [10] A [20] B          (faixa seguinte depois de 10)
+     [1] A [5] B [10] C    ->  [10] C
    Daqui para baixo nenhuma conta conhece o preço avulso. */
 function aPartirDe(tiers, min) {
   const cobre = tiers.filter(([q]) => q <= min).pop();
@@ -360,8 +347,8 @@ function unitPrice(p, qty) {
   return price;
 }
 /* O número em destaque é o da primeira faixa, a menor quantidade com preço.
-   O preço de volume é a promessa, não a manchete: anunciar R$ 2,25 é mostrar
-   um preço que exige 500 peças para existir. */
+   O preço de volume é a promessa, não a manchete: anunciar o preço da faixa
+   de 100 é mostrar um preço que exige 100 peças para existir. */
 const startPrice = p => (semPreco(p) ? 0 : p.tiers[0][1]);
 const bestPrice  = p => (semPreco(p) ? 0 : Math.min(...p.tiers.map(t => t[1])));
 const bestQty    = p => (semPreco(p) ? 0 : p.tiers.reduce((a, t) => t[1] <= a[1] ? t : a)[0]);
