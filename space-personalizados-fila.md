@@ -1,8 +1,8 @@
 # Fichas dos produtos — Space Personalizados
 
-**Os 12 produtos abaixo JÁ ESTÃO no site.** O copo long neck, a garrafa
-LED e o copo 360 com tampa entraram com preço; os outros 9 estão *sob consulta*: sem preço na tela,
-o valor sai por orçamento no WhatsApp. Quando os preços chegarem, é
+**Os 12 produtos abaixo JÁ ESTÃO no site.** Desde 09/10 só os copos têm
+preço na tela (veja "Preço só nos copos" logo abaixo); o resto está *sob
+consulta*: o valor sai por orçamento no WhatsApp. Quando os preços chegarem, é
 preencher `tiers` em cada um no `js/script.js` e o card passa a mostrar valor
 e faixas sozinho.
 
@@ -14,6 +14,43 @@ orçar.
 Este arquivo mora FORA da pasta do site de propósito: ele tem códigos de
 fornecedor, e a pasta `space-personalizados/` inteira vai para o ar no
 GitHub Pages.
+
+## Preço só nos copos (09/10)
+
+Recado da Space: *"tirar aqueles valor dos kit churrasco, deixar tudo sob
+consulta. Deixar só os preço dos copo. Daí as garrafas, os negócios deixar
+tudo sob consulta no WhatsApp."*
+
+No site ficaram com preço **só os quatro copos**: 473 ml, 360 ml, 360 ml com
+tampa transparente e Long Neck. Todo o resto — **canecas** inclusive (700 ml,
+alumínio, porcelana, torre de xícaras), garrafas, kits churrasco, canivetes,
+caneta, chaveiro e chapéu — está *sob consulta*: entra no orçamento e na
+mensagem como "a combinar", e o valor sai pelo WhatsApp.
+
+Os preços tirados **não estão mais no código publicado** (nem dá para achar
+abrindo o `script.js`). Ficam aqui, do jeito que estavam. Para voltar com um,
+é copiar a última coluna para o `tiers:` do produto no `js/script.js`.
+
+| id | produto | tabela | `tiers` |
+|---|---|---|---|
+| `caneca-termica-700` | Caneca Térmica Inox 700ml | 1 un: 69,90 · a partir de 20: 49,90 · a partir de 50: 48,90 | `[[1,69.9],[20,49.9],[50,48.9]]` |
+| `caneca-aluminio-350` | Caneca em Alumínio 350ml | 1 un: 17,99 · a partir de 50: 15,99 · a partir de 100: 14,99 | `[[1,17.99],[50,15.99],[100,14.99]]` |
+| `caneca-porcelana` | Caneca de Porcelana 325ml | 1 un: 35,00 · a partir de 20: 32,00 · a partir de 25: 29,00 | `[[1,35],[20,32],[25,29]]` |
+| `torre-xicaras` | Torre de Xícaras 150ml | 1 un: 70,00 · a partir de 20: 68,00 · a partir de 25: 65,00 | `[[1,70],[20,68],[25,65]]` |
+| `garrafa-led` | Garrafa Térmica LED 500ml | 1 un: 49,00 · a partir de 10: 29,90 · a partir de 50: 27,90 · a partir de 100: 25,90 | `[[1,49],[10,29.9],[50,27.9],[100,25.9]]` |
+| `garrafa-800` | Garrafa Térmica 800ml | 1 un: 49,90 | `[[1,49.9]]` |
+| `garrafa-aluminio-600` | Garrafa em Alumínio 600ml | 1 un: 44,90 · a partir de 20: 42,90 · a partir de 50: 39,90 | `[[1,44.9],[20,42.9],[50,39.9]]` |
+| `churrasco-5` | Kit Churrasco 5 Peças | 1 un: 99,90 · a partir de 10: 79,90 | `[[1,99.9],[10,79.9]]` |
+| `churrasco-4` | Kit Churrasco Maleta 4 Peças | 1 un: 159,90 · a partir de 10: 119,90 | `[[1,159.9],[10,119.9]]` |
+| `churrasco-2-estojo` | Kit Churrasco 2 Peças · Estojo | 1 un: 75,90 · a partir de 10: 55,90 | `[[1,75.9],[10,55.9]]` |
+| `churrasco-2-caixa` | Kit Churrasco 2 Peças · Caixa | 1 un: 75,90 · a partir de 10: 55,90 | `[[1,75.9],[10,55.9]]` |
+| `canivete-inox` | Canivete Inox com Presilha | 1 un: 99,90 · a partir de 10: 49,90 | `[[1,99.9],[10,49.9]]` |
+| `canivete-aco` | Canivete com Lâmina de Aço | 1 un: 69,90 · a partir de 10: 39,90 | `[[1,69.9],[10,39.9]]` |
+| `caneta-metal` | Caneta Esferográfica em Metal | 1 un: 6,00 · a partir de 50: 4,50 · a partir de 100: 4,00 | `[[1,6],[50,4.5],[100,4]]` |
+| `chaveiro-abridor` | Chaveiro Abridor a Laser | 1 un: 4,00 · a partir de 30: 3,50 · a partir de 50: 3,00 · a partir de 100: 2,50 · a partir de 500: 2,25 | `[[1,4],[30,3.5],[50,3],[100,2.5],[500,2.25]]` |
+| `chapeu-juta` | Chapéu de Juta | 1 un: 80,00 · a partir de 5: 70,00 · a partir de 10: 60,00 | `[[1,80],[5,70],[10,60]]` |
+
+---
 
 ## Pendências que precisam de você
 

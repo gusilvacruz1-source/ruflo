@@ -99,9 +99,9 @@ atrapalha. Tudo desliga com `prefers-reduced-motion`.
 ### Cadastrar um produto
 
 ```js
-{ id:'caneca-inox-180', name:'Caneca Inox 180ml', cat:'copos', ph:'caneca',
-  desc:'Caneca em inox de 180 ml com cabo e tampa em plástico resistente.',
-  tiers:[[1,19.90],[50,16.90]] }
+{ id:'copo-exemplo', name:'Copo de Exemplo 400ml', cat:'copos', ph:'copo',
+  desc:'Descrição curta, com o que vem junto.',
+  tiers:[[1,A],[10,B],[50,C]] }        // A, B, C = preço da unidade
 ```
 
 `cat` é uma de `copos`, `garrafas`, `churrasco`, `canivetes`, `escritorio`,
@@ -117,9 +117,9 @@ O site não mostra preço abaixo de `CONFIG.qtdMinima` (10). Logo depois da
 lista, a faixa que cobre 10 passa a começar em 10 e as de baixo somem:
 
 ```
-copo 473    [1] 49,99  [10] 24,90 ...   ->  [10] 24,90 ...
-caneca 700  [1] 69,90  [20] 49,90 ...   ->  [10] 69,90  [20] 49,90 ...
-chapéu      [1] 80  [5] 70  [10] 60      ->  [10] 60
+[1] A  [10] B  [50] C    ->  [10] B  [50] C      (copo 473: B = 24,90)
+[1] A  [20] B            ->  [10] A  [20] B      (a faixa seguinte vem depois de 10)
+[1] A  [5] B  [10] C     ->  [10] C
 ```
 
 O card abre com "a partir de 10 peças" e a quantidade já em 10. Dá para
@@ -127,6 +127,19 @@ descer abaixo de 10: o item entra no orçamento e na mensagem como "a
 combinar", fora da soma, com o aviso de onde o preço começa. Voltar a
 mostrar a peça avulsa é trocar `qtdMinima` para 1. O texto que cita esse
 número usa `<span data-minimo>10</span>`, que sai da mesma configuração.
+
+### Preço só nos copos (09/10)
+
+A Space pediu: preço só nos copos, o resto sob consulta pelo WhatsApp. Têm
+`tiers` hoje apenas `copo-473`, `copo-360`, `copo-360-tampa` e
+`copo-long-neck`. Canecas, garrafas, kits churrasco, canivetes, caneta,
+chaveiro e chapéu ficaram **sem** `tiers` — e os valores foram tirados do
+código, não escondidos: esta pasta vai inteira para o ar, e preço que fica no
+`script.js` qualquer um lê. As tabelas tiradas estão em
+`space-personalizados-fila.md` (fora da pasta publicada), seção "Preço só nos
+copos"; voltar com um produto é copiar a tabela dele para o `tiers`. O teste
+[43] confere que só os copos mostram preço e que os valores tirados não
+voltaram para o script.
 
 ### Produto sob consulta
 
@@ -183,8 +196,8 @@ celular.
 
 ### Números e preços no texto
 
-O texto corrido cita o catálogo ("30 itens", "no chaveiro, de R$ 4,00 a
-R$ 2,25"). Nada disso é escrito à mão — foi escrito, e ficou para
+O texto corrido cita o catálogo ("29 itens", "no copo de 473 ml, de R$ 24,90
+a R$ 22,90"). Nada disso é escrito à mão — foi escrito, e ficou para
 trás assim que o catálogo cresceu. Quem cita o catálogo pergunta a ele:
 
 ```html
@@ -211,8 +224,8 @@ Esc fecha e devolve o foco a quem abriu. Fechada, ela mesma fica `inert`,
 para o Tab não passear pelos botões invisíveis dela.
 
 O preço em destaque é sempre o da **primeira faixa** (10 peças) e o de volume
-vira nota. Anunciar R$ 2,25 num chaveiro que só chega a esse preço em 500
-peças é anunciar um preço que o cliente não consegue.
+vira nota. Anunciar o preço da faixa de 100 num copo que só chega a ele com
+100 peças é anunciar um preço que o cliente não consegue.
 
 ### Prévia do link
 

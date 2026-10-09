@@ -44,12 +44,13 @@ await p.evaluate(()=>localStorage.clear());
 await p.reload({waitUntil:'domcontentloaded'});
 await p.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
 await p.waitForTimeout(400);
+// (era o chaveiro, de 4,00 a 2,25; desde 09/10 so os copos tem preco)
 const chav = await p.evaluate(()=>{
-  const c=[...document.querySelectorAll('#catalogGrid .ccard')].find(x=>x.dataset.id==='chaveiro-abridor');
+  const c=[...document.querySelectorAll('#catalogGrid .ccard')].find(x=>x.dataset.id==='copo-473');
   return { preco:c.querySelector('.ccard__price').textContent, nota:c.querySelector('.ccard__min').textContent };
 });
-T('[3] chaveiro mostra R$ 4,00 de 10 pecas, nao R$ 2,25 de 500', chav.preco.includes('4,00'));
-T('[3] volume vira nota, nao manchete', chav.nota.includes('2,25'));
+T('[3] copo 473 mostra R$ 24,90 de 10 pecas, nao R$ 22,90 de 100', chav.preco.includes('24,90'));
+T('[3] volume vira nota, nao manchete', chav.nota.includes('22,90'));
 
 // [4] link de categoria do rodape cai no catalogo ja filtrado
 // ([6][8][12] eram da vitrine "Novos Brindes", que saiu do site)
@@ -531,11 +532,11 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   // 5 pecas: entra no orcamento, mas sem preco inventado
   const o = await q.evaluate(()=>{
     localStorage.clear(); [...SPACE.Cart.items].forEach(i=>SPACE.Cart.remove(i.cor?i.id+'|'+i.cor:i.id));
-    const c=document.querySelector('.ccard[data-id="garrafa-led"]');
+    const c=document.querySelector('.ccard[data-id="copo-360"]');
     c.querySelector('input').value='5'; c.querySelector('[data-add]').click();
     const wa=c.querySelector('[data-wa]'); wa.dispatchEvent(new MouseEvent('click',{bubbles:true,cancelable:true}));
-    return { linha:document.querySelector('.ditem[data-chave="garrafa-led"] .ditem__price').textContent,
-             meta:document.querySelector('.ditem[data-chave="garrafa-led"] .ditem__meta').textContent,
+    return { linha:document.querySelector('.ditem[data-chave="copo-360"] .ditem__price').textContent,
+             meta:document.querySelector('.ditem[data-chave="copo-360"] .ditem__meta').textContent,
              total:document.querySelector('#drawerTotal').textContent,
              msg:SPACE.Cart.message(), zap:decodeURIComponent(wa.href.split('text=')[1]||'') };
   });
@@ -600,7 +601,7 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   }
   T('[41] uma garrafa LED so ('+r.leds.join(',')+')', r.leds.length===1 && r.leds[0]==='garrafa-led');
   T('[41] a lupa mostra a tampa com o visor', r.lupa && r.detalheExiste);
-  T('[41] com a tabela da lista: R$ 29,90 a partir de 10 ('+r.precoLed+')', /29,90/.test(r.precoLed||''));
+  T('[41] e, desde 09/10, sob consulta como tudo que nao e copo ('+r.precoLed+')', /sob consulta/i.test(r.precoLed||''));
   await q.close();
 }
 
@@ -627,6 +628,32 @@ T('[27] clicar de novo fecha', !d2.aberto && d2.pressed === 'false');
   T('[42] copo 360 com tampa sem bolinhas ('+r.bolinhas+')', r.bolinhas===0);
   T('[42] a foto e de um copo so (largura/altura '+r.proporcao.toFixed(2)+')', r.proporcao < 0.8);
   T('[42] diz que e preto e mantem a lupa', r.preta && r.lupa);
+  await q.close();
+}
+
+// [43] preco so nos copos (recado da Space, 09/10): "tirar aqueles valor dos
+// kit churrasco ... deixar so os preco dos copo ... o resto sob consulta no
+// WhatsApp". E o preco tirado nao pode continuar no codigo publicado.
+{
+  const q = await b.newPage({ viewport:{width:1440,height:900} });
+  await q.goto(URL,{waitUntil:'domcontentloaded'});
+  await q.waitForFunction(()=>document.querySelector('#preloader')?.classList.contains('is-done'),{timeout:40000});
+  const r = await q.evaluate(async()=>{
+    const COPOS=['copo-473','copo-360','copo-360-tampa','copo-long-neck'];
+    const cards=[...document.querySelectorAll('#catalogGrid .ccard')];
+    const comPreco=cards.filter(c=>!c.querySelector('.ccard__price--consulta')).map(c=>c.dataset.id);
+    const outros=cards.filter(c=>!COPOS.includes(c.dataset.id));
+    const reais=outros.filter(c=>/R\$/.test(c.textContent)).map(c=>c.dataset.id);
+    const js=await (await fetch(document.querySelector('script[src*="js/script.js"]').getAttribute('src'))).text();
+    // valores que so existiam nas tabelas tiradas (kit churrasco, maleta, canivete, chaveiro)
+    const vazou=['79.90','159.90','119.90','55.90','2.25','69.90'].filter(v=>js.includes(v));
+    return { comPreco, reais, vazou, corpo:document.body.innerText };
+  });
+  T('[43] so os quatro copos tem preco ('+r.comPreco.join(', ')+')',
+    r.comPreco.length===4 && ['copo-473','copo-360','copo-360-tampa','copo-long-neck'].every(id=>r.comPreco.includes(id)));
+  T('[43] nenhum outro card mostra R$ ('+(r.reais.join(', ')||'nenhum')+')', r.reais.length===0);
+  T('[43] o preco tirado nao esta no script publicado ('+(r.vazou.join(', ')||'nada')+')', r.vazou.length===0);
+  T('[43] o texto avisa que o resto e sob consulta', /demais itens s[ãa]o sob consulta/i.test(r.corpo));
   await q.close();
 }
 
